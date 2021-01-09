@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.View", "TRGE.View\TRGE.View.csproj", "{04E976FA-F2A1-4EA6-BB0D-388B9A307817}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.Core", "TRGE.Core\TRGE.Core.csproj", "{D35A4948-923B-4EF7-87DE-81C27D156D93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.Core.Test", "TRGE.Core.Test\TRGE.Core.Test.csproj", "{C73A3268-30BA-474F-BF2B-622DE77D750A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04E976FA-F2A1-4EA6-BB0D-388B9A307817}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04E976FA-F2A1-4EA6-BB0D-388B9A307817}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04E976FA-F2A1-4EA6-BB0D-388B9A307817}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04E976FA-F2A1-4EA6-BB0D-388B9A307817}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D35A4948-923B-4EF7-87DE-81C27D156D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D35A4948-923B-4EF7-87DE-81C27D156D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D35A4948-923B-4EF7-87DE-81C27D156D93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C73A3268-30BA-474F-BF2B-622DE77D750A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C73A3268-30BA-474F-BF2B-622DE77D750A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C73A3268-30BA-474F-BF2B-622DE77D750A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C73A3268-30BA-474F-BF2B-622DE77D750A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52C24559-BA49-4FE5-B5C0-5724FF3B3407}
+	EndGlobalSection
+EndGlobal
