@@ -1,9 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.IO;
 
 namespace TRGE.Core.Test
 {
-    public class TR2PSXScriptReadTests : AbstractTestCollection
+    [TestClass]
+    public class TR2GPCScriptIOTests : AbstractTestCollection
     {
         private string _validFilePath, _invalidFilePath;
         private TR23Script _script;
@@ -12,7 +14,7 @@ namespace TRGE.Core.Test
         protected override void Setup()
         {
             _invalidFilePath = @"scripts\INVALID.dat";
-            _validFilePath = @"scripts\TOMBPSX_TR2.dat";
+            _validFilePath = @"scripts\TOMBPC_TR2G.dat";
         }
 
         [ClassCleanup]
@@ -39,7 +41,8 @@ namespace TRGE.Core.Test
             {
                 AbstractTRScript script = ScriptFactory.OpenScript(_validFilePath);
                 Assert.IsTrue(script is TR23Script);
-                Assert.IsTrue(script.Hardware == Hardware.PSX);
+                Assert.IsTrue(script.Edition == TREdition.TR2G);
+                
                 _script = script as TR23Script;
             }
             catch (UnsupportedScriptException)
@@ -51,47 +54,17 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestCutSceneData()
         {
-            List<string> expectedCutScenes = new List<string>
-            {
-                @"data\cut1.TR2", @"data\cut2.TR2", @"data\cut3.TR2", @"data\cut4.TR2"
-            };
-
-            Assert.IsTrue(_script.NumCutScenes == expectedCutScenes.Count);
-            CompareStrings(expectedCutScenes, _script.CutSceneFileNames);
+            Assert.IsTrue(_script.NumCutScenes == 0);
         }
 
         [TestMethod]
         protected void TestDemoData()
         {
-            List<ushort> expectedDemoData = new List<ushort>
-            {
-                19, 20, 21
-            };
-
             Assert.IsTrue(_script.DeathDemoMode == 1280);
-            CompareUShorts(expectedDemoData, _script.DemoData);
             Assert.IsTrue(_script.DemoEnd == 1280);
             Assert.IsTrue(_script.DemoInterrupt == 1280);
             Assert.IsTrue(_script.DemoTime == 900);
-            Assert.IsTrue(_script.NumDemoLevels == 3);
-        }
-
-        [TestMethod]
-        protected void TestFMVData()
-        {
-            List<uint[]> excpectedFMVData = new List<uint[]>
-            {
-                new uint[] { 1, 864 },
-                new uint[] { 1, 4355 },
-                new uint[] { 1, 300 },
-                new uint[] { 1, 350 },
-                new uint[] { 1, 975 },
-                new uint[] { 1, 1515 },
-                new uint[] { 1, 1841 },
-                new uint[] { 1, 603 }
-            };
-
-            CompareUIntArrays(excpectedFMVData, _script.PSXFMVData);
+            Assert.IsTrue(_script.NumDemoLevels == 0);
         }
 
         [TestMethod]
@@ -130,26 +103,22 @@ namespace TRGE.Core.Test
         {
             List<string> expectedKeys1 = new List<string>
             {
-                "K1","Guardhouse Key","Boathouse Key","Library Key","Ornate Key","Red Pass Card","Red Pass Card","K1","Rest Room Key","Theatre Key",
-                "K1","Drawbridge Key","Strongroom Key","K1","K1","K1","K1","K1","Gun Cupboard Key","Boathouse Key","Rest Room Key","Drawbridge Key"
+                "K1","Guardroom Key","CardKey 1","K1","K1","Hotel Key"
             };
 
             List<string> expectedKeys2 = new List<string>
             {
-                "K2","Rusty Key","Steel Key","Detonator Key","K2","Yellow Pass Card","K2","K2","Rusty Key","Rusty Key","Stern Key","Hut Key",
-                "Trapdoor Key","K2","Gong Hammer","Gold Key","K2","K2","K2","Steel Key","Rusty Key","Hut Key"
+                "K2","Shaft 'B' Key","K2","K2","K2","K2"
             };
 
             List<string> expectedKeys3 = new List<string>
             {
-                "K3","K3","Iron Key","K3","K3","Green Pass Card","K3","K3","Cabin Key","K3","Storage Key","K3","Rooftops Key","K3","K3",
-                "Silver Key","K3","K3","K3","Iron Key","Cabin Key","K3"
+                "K3","K3","K3","K3","K3","K3"
             };
 
             List<string> expectedKeys4 = new List<string>
             {
-                "K4","K4","K4","K4","K4","K4","Blue Pass Card","K4","K4","K4","Cabin Key","K4","Main Hall Key","K4","K4","Main Chamber Key",
-                "K4","K4","K4","K4","K4","K4"
+                "K4","K4","CardKey 2","K4","K4","K4"
             };
 
             CompareStrings(expectedKeys1, _script.KeyNames1);
@@ -164,21 +133,13 @@ namespace TRGE.Core.Test
             List<string> expectedLevelNames = new List<string>
             {
                 "Lara's Home",
-                "The Great Wall", "Venice", "Bartoli's Hideout", "Opera House", "Offshore Rig",
-                "Diving Area", "40 Fathoms", "Wreck of the Maria Doria", "Living Quarters",
-                "The Deck", "Tibetan Foothills", "Barkhang Monastery", "Catacombs of the Talion",
-                "Ice Palace", "Temple of Xian", "Floating Islands", "The Dragon's Lair", "Home Sweet Home",
-                "Venice", "Wreck of the Maria Doria", "Tibetan Foothills" //demos
+                "The Cold War", "Fool's Gold", "Furnace of the Gods", "Kingdom", "Nightmare In Vegas"
             };
 
             List<string> expectedLevelFileNames = new List<string>
             {
                 @"data\assault.TR2",
-                @"data\wall.TR2", @"data\boat.TR2", @"data\venice.TR2", @"data\opera.TR2", @"data\rig.TR2",
-                @"data\platform.TR2", @"data\unwater.TR2", @"data\keel.TR2", @"data\living.TR2",
-                @"data\deck.TR2", @"data\skidoo.TR2", @"data\monastry.TR2", @"data\catacomb.TR2",
-                @"data\icecave.TR2", @"data\emprtomb.TR2", @"data\floating.TR2", @"data\xian.TR2", @"data\house.TR2",
-                @"data\boat.tr2", @"data\keel.tr2", @"data\skidoo.tr2" //demos
+                @"data\level1.TR2", @"data\level2.TR2", @"data\level3.TR2", @"data\level4.TR2", @"data\level5.TR2"
             };
 
             Assert.IsTrue(_script.NumLevels == expectedLevelNames.Count);
@@ -209,14 +170,12 @@ namespace TRGE.Core.Test
         {
             List<string> expectedPickups1 = new List<string>
             {
-                "P1","P1","P1","P1","P1","P1","P1","P1","P1","P1","P1","P1",
-                "P1","Gong Hammer","P1","P1","P1","P1","P1","P1","P1","P1"
+                "P1","P1","P1","P1","P1","P1"
             };
 
             List<string> expectedPickups2 = new List<string>
             {
-                "P2","P2","P2","P2","P2","P2","P2","P2","P2","P2","P2","P2",
-                "P2","P2","Talion","P2","P2","P2","P2","P2","P2","P2"
+                "P2","P2","P2","P2","P2","P2"
             };
 
             CompareStrings(expectedPickups1, _script.PickupNames1);
@@ -236,26 +195,22 @@ namespace TRGE.Core.Test
         {
             List<string> expectedPuzzles1 = new List<string>
             {
-                "P1","P1","P1","P1","Relay Box","P1","Machine Chip","P1","Circuit Breaker","P1","P1","P1","Prayer Wheels","Tibetan Mask",
-                "Tibetan Mask","The Dragon Seal","Mystic Plaque","Mystic Plaque","Dagger of Xian","P1","Circuit Breaker","P1"
+                "P1","P1","Circuit Board","Mask Of Tornarsuk","Mask Of Tornarsuk","Elevator Junction"
             };
 
             List<string> expectedPuzzles2 = new List<string>
             {
-                "P2","P2","P2","P2","Circuit Board","P2","P2","P2","P2","P2","P2","P2","Gemstones","P2","P2","P2","Mystic Plaque",
-                "Dagger of Xian","P2","P2","P2","P2"
+                "P2","P2","P2","Gold Nugget","P2","Door Circuit"
             };
 
             List<string> expectedPuzzles3 = new List<string>
             {
-                "P3","P3","P3","P3","P3","P3","P3","P3","P3","P3","P3",
-                "P3","P3","P3","P3","P3","P3","P3","P3","P3","P3","P3"
+                "P3","P3","P3","P3","P3","P3"
             };
 
             List<string> expectedPuzzles4 = new List<string>
             {
-                "P4","P4","P4","P4","P4","P4","P4","P4","P4","P4","The Seraph","The Seraph",
-                "The Seraph","P4","P4","P4","P4","P4","P4","P4","P4","The Seraph"
+                "P4","P4","P4","P4","P4","P4"
             };
 
             CompareStrings(expectedPuzzles1, _script.PuzzleNames1);
@@ -269,8 +224,7 @@ namespace TRGE.Core.Test
         {
             List<string> expectedRPLs = new List<string>
             {
-                @"FMV\LOGO.RPL", @"FMV\ANCIENT.RPL", @"FMV\MODERN.RPL", @"FMV\LANDING.RPL",
-                @"FMV\MS.RPL", @"FMV\CRASH.RPL", @"FMV\JEEP.RPL", @"FMV\END.RPL"
+                @"FMV\LOGO.RPL"
             };
 
             Assert.IsTrue(_script.NumRPLs == expectedRPLs.Count);
@@ -282,29 +236,13 @@ namespace TRGE.Core.Test
         {
             List<ushort[]> expectedScriptData = new List<ushort[]>
             {
-                new ushort[] { 3, 0, 3, 1, 9 },
+                new ushort[] { 3, 0, 9 },
                 new ushort[] { 20, 0, 10, 0, 4, 0, 9 },
-                new ushort[] { 3, 2, 10, 33, 18, 6, 18, 13, 18, 13, 18, 15, 4, 1, 10, 3, 16, 0, 5, 0, 6, 9 },
-                new ushort[] { 10, 0, 18, 9, 18, 9, 18, 9, 18, 9, 4, 2, 6, 9 },
-                new ushort[] { 10, 0, 11, 18, 8, 18, 8, 18, 8, 18, 8, 4, 3, 6, 9 },
-                new ushort[] { 10, 31, 18, 3, 18, 10, 18, 10, 18, 10, 18, 10, 4, 4, 10, 4, 5, 1, 6, 9 },
-                new ushort[] { 3, 3, 10, 58, 19, 8, 14, 18, 3, 18, 10, 18, 10, 4, 5, 6, 9 },
-                new ushort[] { 10, 58, 18, 10, 18, 10, 18, 10, 18, 10, 4, 6, 10, 5, 5, 2, 6, 9 },
-                new ushort[] { 3, 4, 10, 34, 18, 11, 18, 11, 18, 11, 18, 11, 4, 7, 6, 9 },
-                new ushort[] { 10, 31, 18, 6, 18, 13, 18, 13, 4, 8, 6, 9 },
-                new ushort[] { 10, 34, 18, 12, 18, 12, 18, 12, 18, 12, 4, 9, 6, 9 },
-                new ushort[] { 10, 31, 18, 13, 18, 13, 18, 13, 18, 13, 4, 10, 6, 9 },
-                new ushort[] { 3, 5, 10, 33, 18, 1022, 18, 10, 18, 10, 18, 10, 18, 10, 4, 11, 6, 9 },
-                new ushort[] { 10, 0, 18, 1022, 18, 12, 18, 12, 18, 12, 18, 12, 4, 12, 6, 9 },
-                new ushort[] { 10, 31, 18, 13, 18, 13, 18, 12, 18, 12, 4, 13, 6, 9 },
-                new ushort[] { 10, 31, 13, 18, 13, 18, 13, 18, 13, 18, 13, 4, 14, 6, 9 },
-                new ushort[] { 3, 6, 10, 59, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 4, 15, 10, 30, 16, 0, 5, 3, 6, 9 },
-                new ushort[] { 10, 59, 17, 9728, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 4, 16, 6, 9 },
-                new ushort[] { 20, 0, 10, 59, 4, 17, 6, 3, 7, 9 },
-                new ushort[] { 20, 0, 18, 1023, 19, 9, 21, 10, 0, 14, 22, 4, 18, 10, 52, 15, 9 },
-                new ushort[] { 10, 0, 7, 19, 9 },
-                new ushort[] { 10, 32, 7, 20, 9 },
-                new ushort[] { 10, 33, 18, 1022, 7, 21, 9 }
+                new ushort[] { 10, 33, 4, 1, 6, 9 },
+                new ushort[] { 10, 58, 4, 2, 6, 9 },
+                new ushort[] { 10, 59, 4, 3, 6, 9 },
+                new ushort[] { 10, 31, 18, 1019, 4, 4, 15, 9 },
+                new ushort[] { 10, 34, 4, 5, 6, 9 }
             };
 
             CompareUShortArrays(expectedScriptData, _script.ScriptData);
@@ -321,6 +259,13 @@ namespace TRGE.Core.Test
 
             Assert.IsTrue(_script.NumTitles == expectedTitles.Count);
             CompareStrings(expectedTitles, _script.TitleFileNames);
+        }
+
+        [TestMethod]
+        protected void TestUntouchedWrite()
+        {
+            byte[] originalData = File.ReadAllBytes(_validFilePath);
+            CollectionAssert.AreEqual(originalData, _script.Serialise());
         }
     }
 }

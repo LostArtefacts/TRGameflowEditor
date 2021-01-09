@@ -52,14 +52,15 @@
     <Compile Include="AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tests\TR2PCScriptReadTests.cs" />
-    <Compile Include="tests\TR2PSXScriptReadTests.cs" />
-    <Compile Include="tests\TR2ScriptWriteTests.cs" />
+    <Compile Include="tests\TR2GPCScriptIOTests.cs" />
+    <Compile Include="tests\TR2PCScriptIOTests.cs" />
+    <Compile Include="tests\TR2PSXBetaScriptIOTests.cs" />
+    <Compile Include="tests\TR2PSXScriptIOTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="scripts\INVALID.DAT">
+    <None Include="scripts\INVALID.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="scripts\TOMBPC_TR3.dat">

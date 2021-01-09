@@ -1,10 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.IO;
 
 namespace TRGE.Core.Test
 {
     [TestClass]
-    public class TR2PCScriptReadTests : AbstractTestCollection
+    public class TR2PCScriptIOTests : AbstractTestCollection
     {
         private string _validFilePath, _invalidFilePath;
         private TR23Script _script;
@@ -40,7 +41,7 @@ namespace TRGE.Core.Test
             {
                 AbstractTRScript script = ScriptFactory.OpenScript(_validFilePath);
                 Assert.IsTrue(script is TR23Script);
-                Assert.IsTrue(script.Hardware == Hardware.PC);
+                Assert.IsTrue(script.Edition == TREdition.TR2PC);
                 _script = script as TR23Script;
             }
             catch (UnsupportedScriptException)
@@ -304,6 +305,13 @@ namespace TRGE.Core.Test
 
             Assert.IsTrue(_script.NumTitles == expectedTitles.Count);
             CompareStrings(expectedTitles, _script.TitleFileNames);
+        }
+
+        [TestMethod]
+        protected void TestUntouchedWrite()
+        {
+            byte[] originalData = File.ReadAllBytes(_validFilePath);
+            CollectionAssert.AreEqual(originalData, _script.Serialise());
         }
     }
 }

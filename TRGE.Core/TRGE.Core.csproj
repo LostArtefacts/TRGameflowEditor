@@ -47,6 +47,8 @@
     <Compile Include="script\ScriptFactory.cs" />
     <Compile Include="script\TR23Script.cs" />
     <Compile Include="script\UnsupportedScriptException.cs" />
+    <Compile Include="version\TREdition.cs" />
+    <Compile Include="version\TRVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

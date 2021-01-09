@@ -65,6 +65,8 @@ namespace TRGE.Core
 
         private List<string> _gameStrings1, _gameStrings2;
         private List<string> _puzzleNames1, _puzzleNames2, _puzzleNames3, _puzzleNames4;
+        private List<string> _secretNames1, _secretNames2, _secretNames3, _secretNames4;
+        private List<string> _specialNames1, _specialNames2;
         private List<string> _pickupNames1, _pickupNames2;
         private List<string> _keyNames1, _keyNames2, _keyNames3, _keyNames4;
 
@@ -77,7 +79,15 @@ namespace TRGE.Core
         internal IReadOnlyList<string> PuzzleNames2 => _puzzleNames2;
         internal IReadOnlyList<string> PuzzleNames3 => _puzzleNames3;
         internal IReadOnlyList<string> PuzzleNames4 => _puzzleNames4;
-                
+
+        internal IReadOnlyList<string> SecretNames1 => _secretNames1;
+        internal IReadOnlyList<string> SecretNames2 => _secretNames2;
+        internal IReadOnlyList<string> SecretNames3 => _secretNames3;
+        internal IReadOnlyList<string> SecretNames4 => _secretNames4;
+
+        internal IReadOnlyList<string> SpecialNames1 => _specialNames1;
+        internal IReadOnlyList<string> SpecialNames2 => _specialNames2;
+
         internal IReadOnlyList<string> PickupNames1 => _pickupNames1;
         internal IReadOnlyList<string> PickupNames2 => _pickupNames2;
                 
@@ -92,6 +102,43 @@ namespace TRGE.Core
         private byte[] _padding4;
         #endregion
 
+        protected override void CalculateEdition()
+        {
+            if (_levelFileNames == null)
+            {
+                return;
+            }
+
+            foreach (string levelFile in _levelFileNames)
+            {
+                string llf = levelFile.ToLower();
+                if (llf.EndsWith("wall.tr2"))
+                {
+                    Edition = TREdition.TR2PC;
+                }
+                else if (llf.EndsWith("wall.psx"))
+                {
+                    Edition = Xor == 0 ? TREdition.TR2PSXBETA : TREdition.TR2PSX;
+                }
+                else if (llf.EndsWith("level1.tr2"))
+                {
+                    Edition = TREdition.TR2G;
+                }
+                else if (llf.EndsWith("jungle.tr2"))
+                {
+                    Edition = TREdition.TR3PC;
+                }
+                else if (llf.EndsWith("jungle.psx"))
+                {
+                    Edition = TREdition.TR3PSX;
+                }
+                else if (llf.EndsWith("scotland.tr2"))
+                {
+                    Edition = TREdition.TR3G;
+                }
+            }
+        }
+        
         internal override void Read(BinaryReader br)
         {
             if (br.ReadUInt32() != Version)
@@ -148,7 +195,15 @@ namespace TRGE.Core
             NumGameStrings1 = br.ReadUInt16();
             _gameStrings1 = ReadStringData(br, NumGameStrings1);
 
-            if (Hardware == Hardware.PC)
+            //we know the level file names at this point, so a decent estimate
+            //can be made for the actual edition
+            CalculateEdition();
+
+            if (Edition == TREdition.TR2PSXBETA)
+            {
+                NumGameStrings2 = 79;
+            }
+            else if (Edition.Hardware == Hardware.PC)
             {
                 NumGameStrings2 = 41;
             }
@@ -162,6 +217,17 @@ namespace TRGE.Core
             _puzzleNames2 = ReadStringData(br, NumLevels);
             _puzzleNames3 = ReadStringData(br, NumLevels);
             _puzzleNames4 = ReadStringData(br, NumLevels);
+
+            if (Edition == TREdition.TR2PSXBETA)
+            {
+                _secretNames1 = ReadStringData(br, NumLevels);
+                _secretNames2 = ReadStringData(br, NumLevels);
+                _secretNames3 = ReadStringData(br, NumLevels);
+                _secretNames4 = ReadStringData(br, NumLevels);
+
+                _specialNames1 = ReadStringData(br, NumLevels);
+                _specialNames2 = ReadStringData(br, NumLevels);
+            }
 
             _pickupNames1 = ReadStringData(br, NumLevels);
             _pickupNames2 = ReadStringData(br, NumLevels);
@@ -238,7 +304,7 @@ namespace TRGE.Core
         private List<uint[]> ReadPSXFMVData(BinaryReader br)
         {
             List<uint[]> fmvData = new List<uint[]>(NumRPLs);
-            if (Hardware == Hardware.PSX)
+            if (Edition.Hardware == Hardware.PSX)
             {
                 for (int i = 0; i < NumRPLs; i++)
                 {
@@ -299,6 +365,7 @@ namespace TRGE.Core
 
                 WriteScriptData(bw);
                 WriteDemoData(bw);
+                WritePSXFMVData(bw);
 
                 bw.Write(NumGameStrings1);
                 WriteStringData(bw, _gameStrings1);
@@ -385,6 +452,20 @@ namespace TRGE.Core
                 foreach (ushort dd in DemoData)
                 {
                     bw.Write(dd);
+                }
+            }
+        }
+
+        private void WritePSXFMVData(BinaryWriter bw)
+        {
+            if (Edition.Hardware == Hardware.PSX)
+            {
+                foreach (uint[] fmvData in _psxFMVData)
+                {
+                    foreach (uint dd in fmvData)
+                    {
+                        bw.Write(dd);
+                    }
                 }
             }
         }

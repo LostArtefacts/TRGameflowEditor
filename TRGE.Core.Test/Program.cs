@@ -8,9 +8,10 @@ namespace TRGE.Core.Test
     {
         static void Main()
         {
-            RunTest(new TR2PCScriptReadTests());
-            RunTest(new TR2PSXScriptReadTests());
-            //RunTest(new TR2ScriptWriteTests());
+            RunTest(new TR2PCScriptIOTests());
+            RunTest(new TR2GPCScriptIOTests());
+            RunTest(new TR2PSXScriptIOTests());
+            RunTest(new TR2PSXBetaScriptIOTests());
             Console.Read();
         }
 
