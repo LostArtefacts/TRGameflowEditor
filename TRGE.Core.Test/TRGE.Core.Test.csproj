@@ -56,6 +56,9 @@
     <Compile Include="tests\TR2PCScriptIOTests.cs" />
     <Compile Include="tests\TR2PSXBetaScriptIOTests.cs" />
     <Compile Include="tests\TR2PSXScriptIOTests.cs" />
+    <Compile Include="tests\TR3GPCScriptIOTests.cs" />
+    <Compile Include="tests\TR3PCScriptIOTests.cs" />
+    <Compile Include="tests\TR3PSXScriptIOTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

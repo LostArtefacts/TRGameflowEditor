@@ -376,6 +376,17 @@ namespace TRGE.Core
                 WriteStringData(bw, _puzzleNames3);
                 WriteStringData(bw, _puzzleNames4);
 
+                if (Edition == TREdition.TR2PSXBETA)
+                {
+                     WriteStringData(bw, _secretNames1);
+                     WriteStringData(bw, _secretNames2);
+                     WriteStringData(bw, _secretNames3);
+                     WriteStringData(bw, _secretNames4);
+
+                     WriteStringData(bw, _specialNames1);
+                     WriteStringData(bw, _specialNames2);
+                }
+
                 WriteStringData(bw, _pickupNames1);
                 WriteStringData(bw, _pickupNames2);
 

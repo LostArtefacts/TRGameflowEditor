@@ -10,8 +10,15 @@ namespace TRGE.Core.Test
         {
             RunTest(new TR2PCScriptIOTests());
             RunTest(new TR2GPCScriptIOTests());
+
             RunTest(new TR2PSXScriptIOTests());
             RunTest(new TR2PSXBetaScriptIOTests());
+
+            RunTest(new TR3PCScriptIOTests());
+            RunTest(new TR3GPCScriptIOTests());
+
+            RunTest(new TR3PSXScriptIOTests());
+
             Console.Read();
         }
 
