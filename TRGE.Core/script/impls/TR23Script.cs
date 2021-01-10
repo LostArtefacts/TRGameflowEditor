@@ -32,6 +32,11 @@ namespace TRGE.Core
         internal uint DeathDemoMode { get; private set; }
         internal uint DeathInGame { get; private set; }
         internal uint DemoTime { get; private set; }
+        internal uint DemoTimeSeconds
+        {
+            get => DemoTime / 30;
+            set => DemoTime = value * 30;
+        }
         internal uint DemoInterrupt { get; private set; }
         internal uint DemoEnd { get; private set; }       
         internal ushort NumLevels { get; private set; }
@@ -102,6 +107,146 @@ namespace TRGE.Core
         private byte[] _padding4;
         #endregion
 
+        #region Flags
+        internal enum Flag
+        {
+            DemoVersion = 0,
+            TitleDisabled = 1,
+            CheatsIgnored = 2,
+            NoInputIgnored = 3,
+            SaveLoadDisabled = 4,
+            ScreensizingDisabled = 5,
+            OptionRingDisabled = 6,
+            DozyEnabled = 7, //only works on TR2 PSX final release
+            UseScriptCypher = 8,
+            GymEnabled = 9,
+            LevelSelect = 10,
+            EnableCheatCode = 11 //has no effect, see 2 instead
+        }
+
+        internal bool IsFlagSet(Flag flag)
+        {
+            int f = 1 << (int)flag;
+            return (Flags & f) == f;
+        }
+
+        private void SetFlag(Flag flag, bool on)
+        {
+            if (on)
+            {
+                Flags |= Convert.ToUInt16(1 << (int)flag);
+            }
+            else
+            {
+                Flags = Convert.ToUInt16(Flags & ~(1 << (int)flag));
+            }
+        }
+
+        internal bool CheatsIgnored
+        {
+            get => IsFlagSet(Flag.CheatsIgnored);
+            set => SetFlag(Flag.CheatsIgnored, value);
+        }
+
+        internal bool DemosDisabled
+        {
+            get => IsFlagSet(Flag.NoInputIgnored);
+            set => SetFlag(Flag.NoInputIgnored, value);
+        }
+
+        internal bool DemoVersion
+        {
+            get => IsFlagSet(Flag.DemoVersion);
+            set => SetFlag(Flag.DemoVersion, value);
+        }
+
+        internal bool DozyEnabled
+        {
+            get => DozyViable && IsFlagSet(Flag.DozyEnabled);
+            set => SetFlag(Flag.DozyEnabled, DozyViable && value);
+        }
+
+        internal bool DozyViable => Edition == TREdition.TR2PSX;
+
+        internal bool GymEnabled
+        {
+            get => IsFlagSet(Flag.GymEnabled);
+            set => SetFlag(Flag.GymEnabled, value);
+        }
+
+        internal bool LevelSelectEnabled
+        {
+            get => IsFlagSet(Flag.LevelSelect);
+            set => SetFlag(Flag.LevelSelect, value);
+        }
+
+        internal bool OptionRingDisabled
+        {
+            get => IsFlagSet(Flag.OptionRingDisabled);
+            set => SetFlag(Flag.OptionRingDisabled, value);
+        }
+
+        internal bool SaveLoadDisabled
+        {
+            get => IsFlagSet(Flag.SaveLoadDisabled);
+            set
+            {
+                SetFlag(Flag.SaveLoadDisabled, value);
+                FirstOption = value ? 1u : 1280u;
+            }
+        }
+
+        internal bool ScreensizingDisabled
+        {
+            get => IsFlagSet(Flag.ScreensizingDisabled);
+            set => SetFlag(Flag.ScreensizingDisabled, value);
+        }
+
+        internal bool TitleDisabled
+        {
+            get => IsFlagSet(Flag.TitleDisabled);
+            set
+            {
+                SetFlag(Flag.TitleDisabled, value);
+                AdjustExitToTitleText();
+            }
+        }
+
+        internal bool UseScriptCypher
+        {
+            get => IsFlagSet(Flag.UseScriptCypher);
+            set => SetFlag(Flag.UseScriptCypher, value);
+        }
+
+        #endregion
+
+        /**
+         * If the title screen has been disabled, selecting "Exit to Title" from the passport during gameplay
+         * will result in a new game starting. We store the "Exit to Title" text at the second to last position
+         * in gamestrings2 (occupied as "spare" in all tr2/3 games) and replace "Exit to Title" with the existing 
+         * value for "New Game". When re-enabling the title, Exit to Title is moved back to its original position,
+         * and the final value in the array is reset.
+         */
+        private void AdjustExitToTitleText()
+        {
+            if (!TitleDisabled)
+            {
+                TitleReplace = -1;
+                if (_gameStrings1[_gameStrings2.Count - 2].StartsWith("TRGE:"))
+                {
+                    _gameStrings1[8] = _gameStrings2[_gameStrings2.Count - 2].Substring(5); //exit to title
+                    _gameStrings2[_gameStrings2.Count - 2] = _gameStrings2[_gameStrings2.Count - 3]; //spare
+                }
+            }
+            else
+            {
+                TitleReplace = 1;
+                _gameStrings2[_gameStrings2.Count - 2] = "TRGE:" + _gameStrings1[8]; //exit to title
+                _gameStrings1[8] = _gameStrings1[6]; //new game
+            }
+        }
+
+        #region IO
         protected override void CalculateEdition()
         {
             if (_levelFileNames == null)
@@ -138,7 +283,7 @@ namespace TRGE.Core
                 }
             }
         }
-        
+
         internal override void Read(BinaryReader br)
         {
             if (br.ReadUInt32() != Version)
@@ -188,16 +333,16 @@ namespace TRGE.Core
             _levelFileNames = ReadStringData(br, NumLevels);
             _cutSceneFileNames = ReadStringData(br, NumCutScenes);
 
+            //we know the level file names at this point, so a decent estimate
+            //can be made for the actual edition
+            CalculateEdition();
+
             _scriptData = ReadScriptData(br);
             _demoData = ReadDemoData(br);
             _psxFMVData = ReadPSXFMVData(br);
 
             NumGameStrings1 = br.ReadUInt16();
-            _gameStrings1 = ReadStringData(br, NumGameStrings1);
-
-            //we know the level file names at this point, so a decent estimate
-            //can be made for the actual edition
-            CalculateEdition();
+            _gameStrings1 = ReadStringData(br, NumGameStrings1);            
 
             if (Edition == TREdition.TR2PSXBETA)
             {
@@ -253,8 +398,10 @@ namespace TRGE.Core
                     offsets[i] = br.ReadUInt16();
                 }
 
+
                 for (int i = 0; i < size; i++)
                 {
+
                     int target = offsets[i + 1] - offsets[i] - 1;
                     StringBuilder sb = new StringBuilder();
                     for (int k = 0; k < target; k++)
@@ -480,5 +627,6 @@ namespace TRGE.Core
                 }
             }
         }
+        #endregion
     }
 }

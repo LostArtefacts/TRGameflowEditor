@@ -5,12 +5,14 @@
         internal static readonly TREdition GENERICPC = new TREdition
         {
             Title = "Unknown (PC)",
+            Version = TRVersion.Unknown,
             Hardware = Hardware.PC
         };
 
         internal static readonly TREdition GENERICPSX = new TREdition
         {
             Title = "Unknown (PSX)",
+            Version = TRVersion.Unknown,
             Hardware = Hardware.PSX
         };
 
@@ -58,7 +60,7 @@
 
         internal static readonly TREdition TR3G = new TREdition
         {
-            Title = "Tomb Raider III (Gold)",
+            Title = "Tomb Raider III Gold",
             Version = TRVersion.TR3G,
             Hardware = Hardware.PC
         };

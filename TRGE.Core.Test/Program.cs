@@ -19,6 +19,9 @@ namespace TRGE.Core.Test
 
             RunTest(new TR3PSXScriptIOTests());
 
+            RunTest(new TR23FlagTests());
+            RunTest(new TR23MiscTests());
+
             Console.Read();
         }
 

@@ -41,11 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="level\ITRLevel.cs" />
+    <Compile Include="level\ITRLevelManager.cs" />
+    <Compile Include="level\impls\TR23Level.cs" />
+    <Compile Include="level\impls\TR23LevelManager.cs" />
+    <Compile Include="level\TRLevelFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="script\AbstractTRScript.cs" />
-    <Compile Include="script\Hardware.cs" />
+    <Compile Include="script\AbstractTRScriptManager.cs" />
+    <Compile Include="version\Hardware.cs" />
     <Compile Include="script\ScriptFactory.cs" />
-    <Compile Include="script\TR23Script.cs" />
+    <Compile Include="script\impls\TR23Script.cs" />
     <Compile Include="script\UnsupportedScriptException.cs" />
     <Compile Include="version\TREdition.cs" />
     <Compile Include="version\TRVersion.cs" />

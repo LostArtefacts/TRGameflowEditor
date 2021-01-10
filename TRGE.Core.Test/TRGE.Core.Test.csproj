@@ -52,13 +52,16 @@
     <Compile Include="AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tests\TR2GPCScriptIOTests.cs" />
-    <Compile Include="tests\TR2PCScriptIOTests.cs" />
-    <Compile Include="tests\TR2PSXBetaScriptIOTests.cs" />
-    <Compile Include="tests\TR2PSXScriptIOTests.cs" />
-    <Compile Include="tests\TR3GPCScriptIOTests.cs" />
-    <Compile Include="tests\TR3PCScriptIOTests.cs" />
-    <Compile Include="tests\TR3PSXScriptIOTests.cs" />
+    <Compile Include="tests\BaseTestCollection.cs" />
+    <Compile Include="tests\basic_io\TR2GPCScriptIOTests.cs" />
+    <Compile Include="tests\basic_io\TR2PCScriptIOTests.cs" />
+    <Compile Include="tests\basic_io\TR2PSXBetaScriptIOTests.cs" />
+    <Compile Include="tests\basic_io\TR2PSXScriptIOTests.cs" />
+    <Compile Include="tests\basic_io\TR3GPCScriptIOTests.cs" />
+    <Compile Include="tests\basic_io\TR3PCScriptIOTests.cs" />
+    <Compile Include="tests\basic_io\TR3PSXScriptIOTests.cs" />
+    <Compile Include="tests\flags\TR23FlagTests.cs" />
+    <Compile Include="tests\misc\TR23MiscTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

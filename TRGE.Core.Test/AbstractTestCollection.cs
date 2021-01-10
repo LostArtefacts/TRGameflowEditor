@@ -1,21 +1,29 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TRGE.Core.Test
 {
     public abstract class AbstractTestCollection
     {
+        protected string[] _validScripts = new string[]
+        {
+            @"scripts\TOMBPC_TR2.dat", @"scripts\TOMBPC_TR2G.dat", @"scripts\TOMBPC_TR3.dat", @"scripts\TOMBPSX_BETA_TR2.dat",
+            @"scripts\TOMBPSX_TR2.dat", @"scripts\TOMBPSX_TR3.dat", @"scripts\TRTLA_TR3G.dat"
+        };
+
         public Dictionary<string, Exception> Run()
         {
             Setup();
 
+            List<MethodInfo> methods = new List<MethodInfo>(GetType().GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance));
+            methods.Sort(delegate (MethodInfo m1, MethodInfo m2)
+            {
+                return m1.Name.CompareTo(m2.Name);
+            });
+
             Dictionary<string, Exception> result = new Dictionary<string, Exception>();
-            MethodInfo[] methods = GetType().GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (MethodInfo mi in methods)
             {
                 if (mi.GetCustomAttribute(typeof(TestMethodAttribute)) != null)
