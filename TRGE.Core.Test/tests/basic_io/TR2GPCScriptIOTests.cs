@@ -21,6 +21,7 @@ namespace TRGE.Core.Test
         protected override void TearDown() { }
 
         [TestMethod]
+        [TestSequence(0)]
         protected void TestOpenInvalidScript()
         {
             try
@@ -35,6 +36,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(0)]
         protected void TestOpenValidScript()
         {
             try

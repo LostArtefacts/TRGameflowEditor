@@ -20,6 +20,16 @@ namespace TRGE.Core.Test
             List<MethodInfo> methods = new List<MethodInfo>(GetType().GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance));
             methods.Sort(delegate (MethodInfo m1, MethodInfo m2)
             {
+                TestSequenceAttribute tseq1 = (TestSequenceAttribute)m1.GetCustomAttribute(typeof(TestSequenceAttribute));
+                TestSequenceAttribute tseq2 = (TestSequenceAttribute)m2.GetCustomAttribute(typeof(TestSequenceAttribute));
+
+                int seq1 = tseq1 == null ? int.MaxValue : tseq1.Sequence;
+                int seq2 = tseq2 == null ? int.MaxValue : tseq2.Sequence;
+
+                if (seq1 != seq2)
+                {
+                    return seq1.CompareTo(seq2);
+                }
                 return m1.Name.CompareTo(m2.Name);
             });
 

@@ -49,9 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractTestCollection.cs" />
+    <Compile Include="tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tests\TestSequenceAttribute.cs" />
     <Compile Include="tests\BaseTestCollection.cs" />
     <Compile Include="tests\basic_io\TR2GPCScriptIOTests.cs" />
     <Compile Include="tests\basic_io\TR2PCScriptIOTests.cs" />

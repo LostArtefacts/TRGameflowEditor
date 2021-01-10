@@ -6,8 +6,11 @@ namespace TRGE.Core.Test
 {
     class Program
     {
+        private static int _pass, _fail;
+
         static void Main()
         {
+            _pass = _fail = 0;
             RunTest(new TR2PCScriptIOTests());
             RunTest(new TR2GPCScriptIOTests());
 
@@ -22,22 +25,32 @@ namespace TRGE.Core.Test
             RunTest(new TR23FlagTests());
             RunTest(new TR23MiscTests());
 
+            WriteHeader("Test Results");
+            Console.WriteLine("PASS: {0}", _pass);
+            Console.WriteLine("FAIL: {0}", _fail);
             Console.Read();
         }
 
-        static void RunTest(AbstractTestCollection testCollection)
+        private static void RunTest(AbstractTestCollection testCollection)
         {
             WriteHeader(testCollection.GetType().ToString());
             Dictionary<string, Exception> results = testCollection.Run();
             foreach (string methodName in results.Keys)
             {
                 Exception e = results[methodName];
-                Console.ForegroundColor = e == null ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.WriteLine(methodName + ": " + (e == null ? "PASS" : "FAIL"));
-                if (e != null)
+                if (e == null)
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("{0}: PASS", methodName);
+                    _pass++;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("{0}: FAIL", methodName);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine(e);
+                    _fail++;
                 }
             }
 
@@ -45,7 +58,7 @@ namespace TRGE.Core.Test
             Console.WriteLine();
         }
 
-        static void WriteHeader(string header)
+        private static void WriteHeader(string header)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < header.Length + 4; i++)
