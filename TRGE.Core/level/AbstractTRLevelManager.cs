@@ -69,5 +69,41 @@ namespace TRGE.Core
 
             Levels = newLevels;
         }
+
+        internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRLevel> originalLevels, TROperation operation)
+        {
+            List<AbstractTRLevel> levelSet = originalLevels.RandomSelection(rng.Create(), levelCount);
+            foreach (AbstractTRLevel level in Levels)
+            {
+                if (levelSet.Contains(level))
+                {
+                    level.EnsureOperation(operation);
+                }
+                else
+                {
+                    level.RemoveOperation(operation.Definition);
+                }
+            }
+        }
+
+        internal List<AbstractTRLevel> GetLevelsWithOperation(TROpDef opDef, bool activeOnly)
+        {
+            List<AbstractTRLevel> levels = new List<AbstractTRLevel>();
+            foreach (AbstractTRLevel level in Levels)
+            {
+                if (activeOnly)
+                {
+                    if (level.HasActiveOperation(opDef))
+                    {
+                        levels.Add(level);
+                    }
+                }
+                else if (level.HasOperation(opDef))
+                {
+                    levels.Add(level);
+                }
+            }
+            return levels;
+        }
     }
 }

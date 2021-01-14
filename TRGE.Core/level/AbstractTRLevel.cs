@@ -124,7 +124,7 @@ namespace TRGE.Core
         {
             foreach (TROperation op in _operations)
             {
-                if (op.TROpDef == opDef && op.IsActive == activeStatus)
+                if (op.Definition == opDef && op.IsActive == activeStatus)
                 {
                     return true;
                 }
@@ -136,7 +136,7 @@ namespace TRGE.Core
         {
             foreach (TROperation op in _operations)
             {
-                if (op.TROpDef == opDef)
+                if (op.Definition == opDef)
                 {
                     return op;
                 }
@@ -148,7 +148,7 @@ namespace TRGE.Core
         {
             for (int i = 0; i < _operations.Count; i++)
             {
-                if (_operations[i].TROpDef == opDef)
+                if (_operations[i].Definition == opDef)
                 {
                     return i;
                 }
@@ -160,7 +160,7 @@ namespace TRGE.Core
         {
             for (int i = _operations.Count - 1; i >= 0; i--)
             {
-                if (_operations[i].TROpDef == opDef)
+                if (_operations[i].Definition == opDef)
                 {
                     return i;
                 }
@@ -171,12 +171,23 @@ namespace TRGE.Core
         internal void InsertOperation(TROpDef opDef, ushort operand, TROpDef beforeOpDef, bool isActive = true)
         {
             int pos = 0;
-            TROperation op = GetOperation(beforeOpDef);
-            if (op != null)
+            if (beforeOpDef != null)
             {
-                pos = _operations.IndexOf(op);
+                TROperation op = GetOperation(beforeOpDef);
+                if (op != null)
+                {
+                    pos = _operations.IndexOf(op);
+                }
             }
             _operations.Insert(pos, new TROperation(opDef, operand, isActive));
+        }
+
+        internal void EnsureOperation(TROperation operation)
+        {
+            if (!HasOperation(operation.Definition))
+            {
+                InsertOperation(operation.Definition, operation.Operand, operation.Definition.Next, operation.IsActive);
+            }
         }
 
         internal void RemoveOperation(TROpDef opDef)
@@ -204,7 +215,7 @@ namespace TRGE.Core
             bool found = false;
             foreach (TROperation op in _operations)
             {
-                if (op.TROpDef == opDef)
+                if (op.Definition == opDef)
                 {
                     op.IsActive = isActive;
                     found = true;

@@ -41,7 +41,17 @@
         internal override bool RemovesWeapons
         {
             get => HasActiveOperation(TR23OpDefs.RemoveWeapons);
-            set => SetOperationActive(TR23OpDefs.RemoveWeapons, value);
+            set
+            {
+                if (value)
+                {
+                    EnsureOperation(new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true));
+                }
+                else
+                {
+                    SetOperationActive(TR23OpDefs.RemoveWeapons, value);
+                }
+            }
         }
 
         internal override bool RemovesAmmo
@@ -65,14 +75,14 @@
             {
                 if (value)
                 {
-                    GetOperation(TR23OpDefs.Complete).TROpDef = TR23OpDefs.GameComplete;
+                    GetOperation(TR23OpDefs.Complete).Definition = TR23OpDefs.GameComplete;
                 }
                 else
                 {
                     TROperation op = GetOperation(TR23OpDefs.GameComplete);
                     if (op != null)
                     {
-                        op.TROpDef = TR23OpDefs.Complete;
+                        op.Definition = TR23OpDefs.Complete;
                     }
                 }
             }

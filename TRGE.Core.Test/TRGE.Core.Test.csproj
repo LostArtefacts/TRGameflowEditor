@@ -72,6 +72,8 @@
     <Compile Include="tests\basic_io\TR3PSXScriptIOTests.cs" />
     <Compile Include="tests\flags\TR23FlagTests.cs" />
     <Compile Include="tests\misc\TR23MiscTests.cs" />
+    <Compile Include="tests\unarmed\AbstractTR23UnarmedTestCollection.cs" />
+    <Compile Include="tests\unarmed\TR2PCUnarmedTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

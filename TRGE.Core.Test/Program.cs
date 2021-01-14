@@ -37,6 +37,8 @@ namespace TRGE.Core.Test
             RunTest(new TR3GPCLevelTests());
             RunTest(new TR3PSXLevelTests());
 
+            RunTest(new TR2PCUnarmedTests());
+
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);
             Console.WriteLine("FAIL: {0}", _fail);

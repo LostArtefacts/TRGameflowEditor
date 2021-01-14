@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TRGE.Core
 {
     internal static class Extensions
     {
-        internal static void Randomise<T>(this IList<T> list, Random rand)
+        internal static void Randomise<T>(this List<T> list, Random rand)
         {
             SortedDictionary<int, T> map = new SortedDictionary<int, T>();
             foreach (T item in list)
@@ -23,10 +21,28 @@ namespace TRGE.Core
             }
 
             list.Clear();
-            foreach (T item in map.Values)
+            list.AddRange(map.Values);
+        }
+
+        internal static List<T> RandomSelection<T>(this List<T> list, Random rand, uint count)
+        {
+            if (count > list.Count)
             {
-                list.Add(item);
+                throw new ArgumentException("Given count is larer than provided list");
             }
+
+            if (count == list.Count)
+            {
+                return list;
+            }
+
+            HashSet<T> resultSet = new HashSet<T>();
+            while (resultSet.Count < count)
+            {
+                resultSet.Add(list[rand.Next(0, list.Count)]);
+            }
+
+            return resultSet.ToList();
         }
     }
 }

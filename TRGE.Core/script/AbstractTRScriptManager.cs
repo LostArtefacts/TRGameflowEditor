@@ -76,6 +76,8 @@ namespace TRGE.Core
             Initialise(OriginalFilePath, Script);
         }
 
+        internal abstract AbstractTRScript LoadBackupScript();
+
         protected abstract void PrepareSave();
         protected abstract void LoadConfig(Dictionary<string, object> config);
         protected abstract Dictionary<string, object> CreateConfig();
@@ -88,9 +90,7 @@ namespace TRGE.Core
 
         internal void RandomiseLevels()
         {
-            TR23Script backupScript = new TR23Script();
-            backupScript.Read(BackupFilePath);
-            LevelManager.RandomiseLevels(LevelRNG, backupScript.Levels);
+            LevelManager.RandomiseLevels(LevelRNG, LoadBackupScript().Levels);
         }
     }
 }
