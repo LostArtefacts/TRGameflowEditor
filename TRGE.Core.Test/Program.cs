@@ -25,6 +25,18 @@ namespace TRGE.Core.Test
             RunTest(new TR23FlagTests());
             RunTest(new TR23MiscTests());
 
+            RunTest(new TR23ScriptManagementTests());
+
+            RunTest(new TR2PCLevelTests());
+            RunTest(new TR2GPCLevelTests());
+
+            RunTest(new TR2PSXLevelTests());
+            RunTest(new TR2PSXBetaLevelTests());
+
+            RunTest(new TR3PCLevelTests());
+            RunTest(new TR3GPCLevelTests());
+            RunTest(new TR3PSXLevelTests());
+
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);
             Console.WriteLine("FAIL: {0}", _fail);

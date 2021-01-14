@@ -10,7 +10,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestDemoTime(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestDemoTime(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 

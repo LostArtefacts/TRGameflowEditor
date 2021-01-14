@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,16 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="level\ITRLevel.cs" />
-    <Compile Include="level\ITRLevelManager.cs" />
+    <Compile Include="helpers\Extensions.cs" />
+    <Compile Include="helpers\Hashing.cs" />
+    <Compile Include="helpers\MutableTuple.cs" />
+    <Compile Include="helpers\Organisation.cs" />
+    <Compile Include="helpers\RandomGenerator.cs" />
+    <Compile Include="level\AbstractTRLevel.cs" />
+    <Compile Include="level\AbstractTRLevelManager.cs" />
     <Compile Include="level\impls\TR23Level.cs" />
     <Compile Include="level\impls\TR23LevelManager.cs" />
     <Compile Include="level\TRLevelFactory.cs" />
+    <Compile Include="operation\TR23OpDefs.cs" />
+    <Compile Include="operation\TROpDef.cs" />
+    <Compile Include="operation\TROperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="script\AbstractTRScript.cs" />
     <Compile Include="script\AbstractTRScriptManager.cs" />
+    <Compile Include="script\impls\TR23ScriptManager.cs" />
+    <Compile Include="TRFileEventArgs.cs" />
+    <Compile Include="TRGameflowEditor.cs" />
     <Compile Include="version\Hardware.cs" />
-    <Compile Include="script\ScriptFactory.cs" />
+    <Compile Include="script\TRScriptFactory.cs" />
     <Compile Include="script\impls\TR23Script.cs" />
     <Compile Include="script\UnsupportedScriptException.cs" />
     <Compile Include="version\TREdition.cs" />

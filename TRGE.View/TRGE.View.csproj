@@ -7,7 +7,7 @@
     <ProjectGuid>{04E976FA-F2A1-4EA6-BB0D-388B9A307817}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>TRGE.View</RootNamespace>
-    <AssemblyName>TRGE.View</AssemblyName>
+    <AssemblyName>TRGE</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -31,6 +31,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>shuffle.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -75,6 +78,9 @@
       <Project>{d35a4948-923b-4ef7-87de-81c27d156d93}</Project>
       <Name>TRGE.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="shuffle.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

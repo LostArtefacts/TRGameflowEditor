@@ -52,6 +52,15 @@
     <Compile Include="tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tests\levels\AbstractTR23LevelTestCollection.cs" />
+    <Compile Include="tests\levels\TR2GPCLevelTests.cs" />
+    <Compile Include="tests\levels\TR2PSXBetaLevelTests.cs" />
+    <Compile Include="tests\levels\TR2PSXLevelTests.cs" />
+    <Compile Include="tests\levels\TR3GPCLevelTests.cs" />
+    <Compile Include="tests\levels\TR3PCLevelTests.cs" />
+    <Compile Include="tests\levels\TR3PSXLevelTests.cs" />
+    <Compile Include="tests\scriptmanagment\TR23ScriptManagementTests.cs" />
+    <Compile Include="tests\levels\TR2PCLevelTests.cs" />
     <Compile Include="tests\TestSequenceAttribute.cs" />
     <Compile Include="tests\BaseTestCollection.cs" />
     <Compile Include="tests\basic_io\TR2GPCScriptIOTests.cs" />

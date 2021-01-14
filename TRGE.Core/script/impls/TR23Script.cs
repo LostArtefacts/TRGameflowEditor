@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 
-[assembly: InternalsVisibleTo("TRGE.Core.Test")]
 namespace TRGE.Core
 {
     internal class TR23Script : AbstractTRScript
@@ -166,7 +164,7 @@ namespace TRGE.Core
             set => SetFlag(Flag.DozyEnabled, DozyViable && value);
         }
 
-        internal bool DozyViable => Edition == TREdition.TR2PSX;
+        internal bool DozyViable => Edition == TREdition.TR2PSXBETA;
 
         internal bool GymEnabled
         {
@@ -245,6 +243,71 @@ namespace TRGE.Core
                 _gameStrings1[8] = _gameStrings1[6]; //new game
             }
         }
+
+        #region TRLevel Interop
+        internal override List<AbstractTRLevel> Levels
+        {
+            get
+            {
+                int count = NumLevels - NumDemoLevels;
+                List<AbstractTRLevel> levels = new List<AbstractTRLevel>(count);
+                for (ushort i = 1; i < count; i++) //skip assault and however many demos there are
+                {
+                    TR23Level level = new TR23Level
+                    {
+                        Name = _levelNames[i],
+                        LevelFile = _levelFileNames[i]
+                    };
+                    levels.Add(level);
+
+                    level.AddPuzzle(_puzzleNames1[i]);
+                    level.AddPuzzle(_puzzleNames2[i]);
+                    level.AddPuzzle(_puzzleNames3[i]);
+                    level.AddPuzzle(_puzzleNames4[i]);
+
+                    level.AddKey(_keyNames1[i]);
+                    level.AddKey(_keyNames2[i]);
+                    level.AddKey(_keyNames3[i]);
+                    level.AddKey(_keyNames4[i]);
+
+                    level.AddPickup(_pickupNames1[i]);
+                    level.AddPickup(_pickupNames2[i]);
+
+                    level.BuildOperations(_scriptData[i + 1]);
+                }
+
+                return levels;
+            }
+            set
+            {
+                if (value.Count != NumLevels - NumDemoLevels - 1)
+                {
+                    throw new ArgumentException("Invalid number of levels.");
+                }
+
+                for (int i = 0, j = 1; i < value.Count; i++, j++)
+                {
+                    _levelNames[j] = value[i].Name;
+                    _levelFileNames[j] = value[i].LevelFile;
+
+                    _puzzleNames1[j] = value[i].Puzzles[0];
+                    _puzzleNames2[j] = value[i].Puzzles[1];
+                    _puzzleNames3[j] = value[i].Puzzles[2];
+                    _puzzleNames4[j] = value[i].Puzzles[3];
+
+                    _keyNames1[j] = value[i].Keys[0];
+                    _keyNames2[j] = value[i].Keys[1];
+                    _keyNames3[j] = value[i].Keys[2];
+                    _keyNames4[j] = value[i].Keys[3];
+
+                    _pickupNames1[j] = value[i].Pickups[0];
+                    _pickupNames2[j] = value[i].Pickups[1];
+
+                    _scriptData[j + 1] = value[i].TranslateOperations();
+                }
+            }
+        }
+        #endregion
 
         #region IO
         protected override void CalculateEdition()

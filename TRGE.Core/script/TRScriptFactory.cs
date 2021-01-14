@@ -7,8 +7,19 @@ using System.Threading.Tasks;
 
 namespace TRGE.Core
 {
-    internal static class ScriptFactory
+    internal static class TRScriptFactory
     {
+        internal static AbstractTRScriptManager GetScriptManager(string filePath)
+        {
+            switch (GetDatFileVersion(filePath))
+            {
+                case TR23Script.Version:
+                    return new TR23ScriptManager(filePath);
+                default:
+                    throw new UnsupportedScriptException();
+            }
+        }
+
         internal static AbstractTRScript OpenScript(string filePath)
         {
             AbstractTRScript script;

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Collections.Generic;
 
 namespace TRGE.Core
 {
@@ -29,5 +30,6 @@ namespace TRGE.Core
         internal abstract void Read(BinaryReader br);
         internal abstract byte[] Serialise();
         protected abstract void CalculateEdition();
+        internal abstract List<AbstractTRLevel> Levels { get; set; }
     }
 }

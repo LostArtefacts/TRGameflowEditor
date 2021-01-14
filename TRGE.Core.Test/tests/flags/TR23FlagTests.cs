@@ -11,7 +11,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestCheatFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestCheatFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -28,7 +28,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestDemosFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestDemosFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -45,7 +45,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestDemoModeFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestDemoModeFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -62,7 +62,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestDozyFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestDozyFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -87,7 +87,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestGymFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestGymFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -104,7 +104,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestLevelSelectionFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestLevelSelectionFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -121,7 +121,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestOptionRingFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestOptionRingFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -138,7 +138,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestSaveLoadFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestSaveLoadFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -155,7 +155,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestScreensizingFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestScreensizingFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 
@@ -172,7 +172,7 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestTitleScreenFlag(ScriptFactory.OpenScript(scriptFile) as TR23Script);
+                TestTitleScreenFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
             }
         }
 

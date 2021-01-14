@@ -22,7 +22,7 @@ namespace TRGE.Core.Test
         internal TR23Script SaveAndReload(TR23Script script)
         {
             File.WriteAllBytes(_testOutputPath, script.Serialise());
-            return ScriptFactory.OpenScript(_testOutputPath) as TR23Script;
+            return TRScriptFactory.OpenScript(_testOutputPath) as TR23Script;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace TRGE.Core.Test
         {
             try
             {
-                ScriptFactory.OpenScript(_invalidFilePath);
+                TRScriptFactory.OpenScript(_invalidFilePath);
                 Assert.Fail();
             }
             catch (UnsupportedScriptException)
@@ -36,12 +36,12 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
-        [TestSequence(0)]
+        [TestSequence(1)]
         protected void TestOpenValidScript()
         {
             try
             {
-                AbstractTRScript script = ScriptFactory.OpenScript(_validFilePath);
+                AbstractTRScript script = TRScriptFactory.OpenScript(_validFilePath);
                 Assert.IsTrue(script is TR23Script);
                 Assert.IsTrue(script.Edition == TREdition.TR2G);
                 

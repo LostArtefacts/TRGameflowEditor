@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TRGE.View")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Tomb Raider Gameflow Editor")]
+[assembly: AssemblyDescription("Provides a GUI to allow editing of Tomb Raider script files to modify game flow.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TRGE.View")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCompany("TompCommunity")]
+[assembly: AssemblyProduct("TRGE")]
+[assembly: AssemblyCopyright("Copyright © TompCommunity 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
