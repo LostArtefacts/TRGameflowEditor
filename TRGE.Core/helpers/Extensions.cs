@@ -24,11 +24,11 @@ namespace TRGE.Core
             list.AddRange(map.Values);
         }
 
-        internal static List<T> RandomSelection<T>(this List<T> list, Random rand, uint count)
+        internal static List<T> RandomSelection<T>(this List<T> list, Random rand, uint count, bool allowDuplicates = false, ISet<T> exclusions = null)
         {
             if (count > list.Count)
             {
-                throw new ArgumentException("Given count is larer than provided list");
+                throw new ArgumentException("Given count is larger than provided list");
             }
 
             if (count == list.Count)
@@ -36,13 +36,31 @@ namespace TRGE.Core
                 return list;
             }
 
-            HashSet<T> resultSet = new HashSet<T>();
-            while (resultSet.Count < count)
+            List<T> iterList = new List<T>(list);
+            if (exclusions != null && exclusions.Count > 0)
             {
-                resultSet.Add(list[rand.Next(0, list.Count)]);
+                foreach (T excludeItem in exclusions)
+                {
+                    iterList.Remove(excludeItem);
+                }
             }
 
-            return resultSet.ToList();
+            List<T> resultSet = new List<T>();
+            if (iterList.Count > 0)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    T item;
+                    do
+                    {
+                        item = iterList[rand.Next(0, iterList.Count)];
+                    }
+                    while (!allowDuplicates && resultSet.Contains(item));
+                    resultSet.Add(item);
+                }
+            }            
+
+            return resultSet;
         }
     }
 }

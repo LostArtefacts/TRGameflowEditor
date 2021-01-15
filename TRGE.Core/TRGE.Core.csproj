@@ -49,6 +49,13 @@
     <Compile Include="helpers\MutableTuple.cs" />
     <Compile Include="helpers\Organisation.cs" />
     <Compile Include="helpers\RandomGenerator.cs" />
+    <Compile Include="item\AbstractTRItemProvider.cs" />
+    <Compile Include="item\impls\AbstractTR23ItemProvider.cs" />
+    <Compile Include="item\impls\TR2ItemProvider.cs" />
+    <Compile Include="item\impls\TR3ItemProvider.cs" />
+    <Compile Include="item\TRItem.cs" />
+    <Compile Include="item\TRItemCategory.cs" />
+    <Compile Include="item\TRItemFactory.cs" />
     <Compile Include="level\AbstractTRLevel.cs" />
     <Compile Include="level\AbstractTRLevelManager.cs" />
     <Compile Include="level\impls\TR23Level.cs" />

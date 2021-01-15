@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TRGE.Core
 {
@@ -18,9 +16,6 @@ namespace TRGE.Core
         public TREdition Edition => Script.Edition;
         public string OriginalFilePath { get; internal set; }
         public string BackupFilePath { get; internal set; }
-
-        public Organisation LevelOrganisation { get; set; }
-        public RandomGenerator LevelRNG { get; internal set; }
 
         internal AbstractTRScriptManager(string originalFilePath, AbstractTRScript script)
         {
@@ -82,6 +77,18 @@ namespace TRGE.Core
         protected abstract void LoadConfig(Dictionary<string, object> config);
         protected abstract Dictionary<string, object> CreateConfig();
 
+        public Organisation LevelOrganisation
+        {
+            get => LevelManager.LevelOrganisation;
+            set => LevelManager.LevelOrganisation = value;
+        }
+
+        public RandomGenerator LevelRNG
+        {
+            get => LevelManager.LevelRNG;
+            set => LevelManager.LevelRNG = value;
+        }
+
         public List<Tuple<string, string>> LevelSequencing
         {
             get => LevelManager.GetLevelSequencing();
@@ -90,7 +97,31 @@ namespace TRGE.Core
 
         internal void RandomiseLevels()
         {
-            LevelManager.RandomiseLevels(LevelRNG, LoadBackupScript().Levels);
+            LevelManager.RandomiseLevels(LoadBackupScript().Levels);
+        }
+
+        internal bool CanRandomiseBonues => LevelManager.CanRandomiseBonuses;
+        public Organisation BonusOrganisation
+        {
+            get => LevelManager.BonusOrganisation;
+            set => LevelManager.BonusOrganisation = value;
+        }
+
+        public RandomGenerator BonusRNG
+        {
+            get => LevelManager.BonusRNG;
+            set => LevelManager.BonusRNG = value;
+        }
+
+        public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> LevelBonusData
+        {
+            get => LevelManager.GetLevelBonusData();
+            set => LevelManager.SetLevelBonusData(value);
+        }
+
+        internal void RandomiseBonuses()
+        {
+            LevelManager.RandomiseBonuses();
         }
     }
 }

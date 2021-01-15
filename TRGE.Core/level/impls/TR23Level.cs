@@ -1,4 +1,6 @@
-﻿namespace TRGE.Core
+﻿using System.Collections.Generic;
+
+namespace TRGE.Core
 {
     internal class TR23Level : AbstractTRLevel
     {
@@ -91,6 +93,93 @@
         protected override TROpDef GetOpDefFor(ushort scriptData)
         {
             return TR23OpDefs.Get(scriptData);
+        }
+
+        private void RemoveBonuses()
+        {
+            for (int i = _operations.Count - 1; i >= 0; i--)
+            {
+                if (_operations[i].Definition == TR23OpDefs.StartInvBonus && _operations[i].Operand < 1000)
+                {
+                    _operations.RemoveAt(i);
+                }
+            }
+        }
+
+        internal void SetBonuses(List<TRItem> items)
+        {
+            RemoveBonuses();
+            foreach (TRItem item in items)
+            {
+                AddBonusItem(item.ID);
+            }
+        }
+
+        private void AddBonusItem(ushort itemID)
+        {
+            int pos = GetLastOperationIndex(TR23OpDefs.StartInvBonus);
+            if (pos == -1)
+            {
+                pos = GetOperationIndex(TR23OpDefs.StartInvBonus.Next);
+            }
+            _operations.Insert(pos, new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
+        }
+
+        internal List<MutableTuple<ushort, TRItemCategory, string, int>> GetBonusItemData(AbstractTRItemProvider provider)
+        {
+            List<MutableTuple<ushort, TRItemCategory, string, int>> items = new List<MutableTuple<ushort, TRItemCategory, string, int>>();
+            foreach (TRItem item in provider.BonusItems)
+            {
+                items.Add(new MutableTuple<ushort, TRItemCategory, string, int>(item.ID, item.Category, item.Name, GetBonusItemCount(item, provider)));
+            }
+            return items;
+        }
+
+        internal int GetBonusItemCount(TRItem item, AbstractTRItemProvider itemProvider)
+        {
+            int i = 0;
+            foreach (TRItem bonusItem in GetBonusItems(itemProvider))
+            {
+                if (bonusItem == item)
+                {
+                    i++;
+                }
+            }
+            return i == 0 ? -1 : i;
+        }
+
+        internal List<TRItem> GetBonusItems(AbstractTRItemProvider itemProvider, bool startInv = false)
+        {
+            List<TRItem> ret = new List<TRItem>();
+            foreach (TROperation opcmd in _operations)
+            {
+                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+                {
+                    ushort itemID = opcmd.Operand;
+                    if (startInv && itemID > 999)
+                    {
+                        itemID -= 1000;
+                        ret.Add(itemProvider.GetItem(itemID));
+                    }
+                    else if (!startInv && itemID < 1000)
+                    {
+                        ret.Add(itemProvider.GetItem(itemID));
+                    }
+                }
+            }
+            return ret;
+        }
+
+        internal void SetBonusItemData(List<MutableTuple<ushort, TRItemCategory, string, int>> items)
+        {
+            RemoveBonuses();
+            foreach (MutableTuple<ushort, TRItemCategory, string, int> item in items)
+            {
+                for (int i = 0; i < item.Item4; i++)
+                {
+                    AddBonusItem(item.Item1);
+                }
+            }
         }
     }
 }

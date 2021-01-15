@@ -52,6 +52,11 @@
     <Compile Include="tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tests\items\AbstractTR2ItemTestCollection.cs" />
+    <Compile Include="tests\items\TR2PCGItemTests.cs" />
+    <Compile Include="tests\items\TR2PCItemTests.cs" />
+    <Compile Include="tests\items\TR2PSXBetaItemTests.cs" />
+    <Compile Include="tests\items\TR2PSXItemTests.cs" />
     <Compile Include="tests\levels\AbstractTR23LevelTestCollection.cs" />
     <Compile Include="tests\levels\TR2GPCLevelTests.cs" />
     <Compile Include="tests\levels\TR2PSXBetaLevelTests.cs" />
@@ -73,7 +78,13 @@
     <Compile Include="tests\flags\TR23FlagTests.cs" />
     <Compile Include="tests\misc\TR23MiscTests.cs" />
     <Compile Include="tests\unarmed\AbstractTR23UnarmedTestCollection.cs" />
+    <Compile Include="tests\unarmed\TR2GPCUnarmedTests.cs" />
     <Compile Include="tests\unarmed\TR2PCUnarmedTests.cs" />
+    <Compile Include="tests\unarmed\TR2PSXBetaUnarmedTests.cs" />
+    <Compile Include="tests\unarmed\TR2PSXUnarmedTests.cs" />
+    <Compile Include="tests\unarmed\TR3GPCUnarmedTests.cs" />
+    <Compile Include="tests\unarmed\TR3PCUnarmedTests.cs" />
+    <Compile Include="tests\unarmed\TR3PSXUnarmedTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

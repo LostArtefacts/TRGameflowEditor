@@ -38,6 +38,20 @@ namespace TRGE.Core.Test
             RunTest(new TR3PSXLevelTests());
 
             RunTest(new TR2PCUnarmedTests());
+            RunTest(new TR2GPCUnarmedTests());
+
+            RunTest(new TR2PSXUnarmedTests());
+            RunTest(new TR2PSXBetaUnarmedTests());
+
+            RunTest(new TR3PCUnarmedTests());
+            RunTest(new TR3GPCUnarmedTests());
+            RunTest(new TR3PSXUnarmedTests());
+
+            RunTest(new TR2PCItemTests());
+            RunTest(new TR2PCGItemTests());
+
+            RunTest(new TR2PSXItemTests());
+            RunTest(new TR2PSXBetaItemTests());
 
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);

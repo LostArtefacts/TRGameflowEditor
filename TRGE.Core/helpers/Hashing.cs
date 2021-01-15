@@ -5,8 +5,13 @@ namespace TRGE.Core
 {
     internal static class Hashing
     {
-        internal static string CreateMD5(string str, Encoding encoding)
+        internal static string CreateMD5(string str, Encoding encoding = null)
         {
+            if (encoding == null)
+            {
+                encoding = Encoding.Default;
+            }
+
             using (MD5 md5 = MD5.Create())
             {
                 byte[] hash = md5.ComputeHash(encoding.GetBytes(str));

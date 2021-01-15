@@ -5,10 +5,6 @@ namespace TRGE.Core
 {
     public class TR23ScriptManager : AbstractTRScriptManager
     {
-        public Organisation UnarmedLevelOrganisation { get; set; }
-        public RandomGenerator UnarmedLevelRNG { get; internal set; }
-        public uint RandomUnarmedLevelCount { get; set; }
-
         internal TR23ScriptManager(string originalFilePath)
             : base(originalFilePath, new TR23Script()) { }
 
@@ -43,9 +39,27 @@ namespace TRGE.Core
             set => (LevelManager as TR23LevelManager).SetUnarmedLevelData(value);
         }
 
+        public Organisation UnarmedLevelOrganisation
+        {
+            get => (LevelManager as TR23LevelManager).UnarmedLevelOrganisation;
+            set => (LevelManager as TR23LevelManager).UnarmedLevelOrganisation = value;
+        }
+
+        public RandomGenerator UnarmedLevelRNG
+        {
+            get => (LevelManager as TR23LevelManager).UnarmedLevelRNG;
+            set => (LevelManager as TR23LevelManager).UnarmedLevelRNG = value;
+        }
+
+        public uint RandomUnarmedLevelCount
+        {
+            get => (LevelManager as TR23LevelManager).RandomUnarmedLevelCount;
+            set => (LevelManager as TR23LevelManager).RandomUnarmedLevelCount = value;
+        }
+
         internal void RandomiseUnarmedLevels()
         {
-            (LevelManager as TR23LevelManager).RandomiseUnarmedLevels(UnarmedLevelRNG, RandomUnarmedLevelCount, LoadBackupScript().Levels);
+            (LevelManager as TR23LevelManager).RandomiseUnarmedLevels(LoadBackupScript().Levels);
         }
 
         internal List<TR23Level> GetUnarmedLevels()

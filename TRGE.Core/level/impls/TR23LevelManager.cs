@@ -8,12 +8,12 @@ namespace TRGE.Core
     {
         private readonly TR23Script _script;
         private List<TR23Level> _levels;
-        internal TR23LevelManager(TR23Script script)
-        {
-            _script = script;
-            Levels = _script.Levels;
-        }
+        private readonly AbstractTR23ItemProvider _itemProvider;
+        private readonly bool _canRandomiseBonuses;
 
+        internal override int LevelCount => _levels.Count;
+        internal override AbstractTRItemProvider ItemProvider => _itemProvider;
+        internal override bool CanRandomiseBonuses => _canRandomiseBonuses;
         internal override List<AbstractTRLevel> Levels
         {
             get => _levels.Cast<AbstractTRLevel>().ToList();
@@ -23,14 +23,24 @@ namespace TRGE.Core
             }
         }
 
-        internal override int LevelCount => _levels.Count;
+        internal Organisation UnarmedLevelOrganisation { get; set; }
+        internal RandomGenerator UnarmedLevelRNG { get; set; }
+        internal uint RandomUnarmedLevelCount { get; set; }
 
-        internal void RandomiseUnarmedLevels(RandomGenerator rng, uint levelCount, List<AbstractTRLevel> originalLevels)
+        internal TR23LevelManager(TR23Script script)
+        {
+            _script = script;
+            Levels = _script.Levels;
+            _itemProvider = TRItemFactory.GetProvider(script.Edition.Version, script.GameStrings1) as AbstractTR23ItemProvider;
+            _canRandomiseBonuses = script.Edition.Version == TRVersion.TR2 || script.Edition.Version == TRVersion.TR2G;
+        }                
+
+        internal void RandomiseUnarmedLevels(List<AbstractTRLevel> originalLevels)
         {
             RandomiseLevelsWithOperation
             (
-                rng, 
-                levelCount, 
+                UnarmedLevelRNG,
+                RandomUnarmedLevelCount, 
                 originalLevels, 
                 new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true)
             );
@@ -61,6 +71,83 @@ namespace TRGE.Core
                     level.RemovesWeapons = item.Item3;
                 }
             }
+        }
+
+        internal override void RandomiseBonuses()
+        {
+            if (!CanRandomiseBonuses)
+            {
+                base.RandomiseBonuses();
+                return;
+            }
+
+            Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>
+            {
+                { TRItemCategory.Weapon, new HashSet<TRItem>() }
+            };
+            Random rand = BonusRNG.Create();
+            foreach (TR23Level level in _levels)
+            {
+                if (level.HasSecrets)
+                {
+                    List<TRItem> bonuses = ItemProvider.GetRandomBonusItems(rand, exclusions);
+                    foreach (TRItem bonus in bonuses)
+                    {
+                        if (bonus.Category == TRItemCategory.Weapon)
+                        {
+                            exclusions[TRItemCategory.Weapon].Add(bonus);
+                        }
+                    }
+                    level.SetBonuses(bonuses);
+                }
+            }
+        }
+
+        internal override List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData()
+        {
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
+            foreach (TR23Level level in _levels)
+            {
+                if (level.HasSecrets)
+                {
+                    data.Add(new MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>
+                    (
+                        level.ID,
+                        level.Name,
+                        level.GetBonusItemData(ItemProvider)
+                    ));
+                }
+            }
+            return data;
+        }
+
+        internal override void SetLevelBonusData(List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data)
+        {
+            foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData in data)
+            {
+                TR23Level level = (TR23Level)GetLevel(levelData.Item1);
+                if (level != null)
+                {
+                    level.SetBonusItemData(levelData.Item3);
+                }
+            }
+        }
+
+        internal Dictionary<string, List<TRItem>> GetLevelBonusItems()
+        {
+            Dictionary<string, List<TRItem>> ret = new Dictionary<string, List<TRItem>>();
+            foreach (TR23Level level in _levels)
+            {
+                if (level.HasSecrets)
+                {
+                    List<TRItem> items = level.GetBonusItems(ItemProvider);
+                    if (items.Count > 0)
+                    {
+                        ret.Add(level.ID, items);
+                    }
+                }
+            }
+            return ret;
         }
 
         internal override void Save()
