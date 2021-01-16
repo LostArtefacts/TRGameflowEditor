@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TRGE.Core
 {
@@ -28,7 +27,7 @@ namespace TRGE.Core
         {
             if (count > list.Count)
             {
-                throw new ArgumentException("Given count is larger than provided list");
+                throw new ArgumentException(string.Format("The given count ({0}) is larger than that of the provided list {1}.", count, list.Count));
             }
 
             if (count == list.Count)
@@ -48,7 +47,8 @@ namespace TRGE.Core
             List<T> resultSet = new List<T>();
             if (iterList.Count > 0)
             {
-                for (int i = 0; i < count; i++)
+                int maxIter = Math.Min(Convert.ToInt32(count), iterList.Count);
+                for (int i = 0; i < maxIter; i++)
                 {
                     T item;
                     do

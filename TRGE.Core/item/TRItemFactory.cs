@@ -4,16 +4,16 @@ namespace TRGE.Core
 {
     internal static class TRItemFactory
     {
-        internal static AbstractTRItemProvider GetProvider(TRVersion version, IReadOnlyList<string> gameStrings)
+        internal static AbstractTRItemProvider GetProvider(TREdition edition, IReadOnlyList<string> gameStrings)
         {
-            switch (version)
+            switch (edition.Version)
             {
                 case TRVersion.TR2:
                 case TRVersion.TR2G:
-                    return new TR2ItemProvider(gameStrings);
+                    return new TR2ItemProvider(edition, gameStrings);
                 case TRVersion.TR3:
                 case TRVersion.TR3G:
-                    return new TR3ItemProvider(gameStrings);
+                    return new TR3ItemProvider(edition, gameStrings);
                 default:
                     return null;
             }

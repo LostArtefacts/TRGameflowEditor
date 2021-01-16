@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TRGE.Core
 {
@@ -32,14 +29,40 @@ namespace TRGE.Core
         public TRItem Key3 { get; protected set; }
         public TRItem Key4 { get; protected set; }
 
-        internal AbstractTR23ItemProvider(IReadOnlyList<string> gameStrings)
+        protected TREdition _edition;
+        protected IReadOnlyList<string> _gameStrings;
+        protected int[] _itemNameIndices;
+
+        internal AbstractTR23ItemProvider(TREdition edition, IReadOnlyList<string> gameStrings)
             :base()
         {
-            _allItems.Add(Pistols = new TRItem(0, TRItemCategory.Weapon, gameStrings[36]));
+            _edition = edition;
+            _gameStrings = gameStrings;
+            _itemNameIndices = GetGameStringIndices();
+
+            _allItems.Add(Pistols = CreateItem(0, TRItemCategory.Weapon));
+
+            _weapons.Add(Shotgun = CreateItem(1, TRItemCategory.Weapon));
+            _weapons.Add(Uzis    = CreateItem(3, TRItemCategory.Weapon));
+            _weapons.Add(Harpoon = CreateItem(4, TRItemCategory.Weapon));
+
+            /*_allItems.Add(Pistols = new TRItem(0, TRItemCategory.Weapon, gameStrings[36]));
 
             _weapons.Add(Shotgun = new TRItem(1, TRItemCategory.Weapon, gameStrings[37]));
             _weapons.Add(Uzis = new TRItem(3, TRItemCategory.Weapon, gameStrings[39]));
-            _weapons.Add(Harpoon = new TRItem(4, TRItemCategory.Weapon, gameStrings[40]));
+            _weapons.Add(Harpoon = new TRItem(4, TRItemCategory.Weapon, gameStrings[40]));*/
+        }
+
+        protected abstract int[] GetGameStringIndices();
+
+        protected TRItem CreateItem(ushort id, TRItemCategory category, string append = null)
+        {
+            string name = _gameStrings[_itemNameIndices[id]];
+            if (append != null)
+            {
+                name += append;
+            }
+            return new TRItem(id, category, name);
         }
 
         protected override List<TRItem> GetBonusItems()
@@ -53,38 +76,29 @@ namespace TRGE.Core
 
         internal override List<TRItem> GetRandomBonusItems(Random rand, Dictionary<TRItemCategory, ISet<TRItem>> exclusions = null)
         {
-            exclusions = VerifyBonusExclusions(exclusions);
-            int weaponGenerosity = rand.Next(0, 2);
-
-            Dictionary<TRItemCategory, int[]>[] generosity = new Dictionary<TRItemCategory, int[]>[]
+            TRItemBrokerDealer<BaseTRItemBroker> dealer = GetBrokerDealer(rand);
+            if (dealer == null)
             {
-                new Dictionary<TRItemCategory, int[]>
-                {
-                    { TRItemCategory.Ammo, new int[] { rand.Next(1, 9), rand.Next(2, 5) } },
-                    { TRItemCategory.Misc, new int[] { rand.Next(0, 3), rand.Next(2, 9) } }
-                },
-                new Dictionary<TRItemCategory, int[]>
-                {
-                    { TRItemCategory.Ammo, new int[] { rand.Next(0, 2), rand.Next(2, 4) } },
-                    { TRItemCategory.Misc, new int[] { rand.Next(1, 4), rand.Next(2, 4) } }
-                },
-                new Dictionary<TRItemCategory, int[]>
-                {
-                    { TRItemCategory.Ammo, new int[] { rand.Next(1, 5), rand.Next(2, 5) } },
-                    { TRItemCategory.Misc, new int[] { rand.Next(1, 4), rand.Next(3, 9) } }
-                }
-            };
-                        
-            Dictionary<TRItemCategory, int[]> generosityMap = generosity[rand.Next(0, generosity.Length)];
+                return null;
+            }
+
+            exclusions = VerifyBonusExclusions(exclusions);
+            BaseTRItemBroker broker = dealer.Get(rand);
 
             List<TRItem> bonuses = new List<TRItem>();
-            bonuses.AddRange(_weapons.RandomSelection(rand, Convert.ToUInt32(weaponGenerosity), false, exclusions[TRItemCategory.Weapon]));
-            bonuses.AddRange(GetRandomItems(rand, generosityMap[TRItemCategory.Ammo], _ammo));
-            bonuses.AddRange(GetRandomItems(rand, generosityMap[TRItemCategory.Misc], _miscItems));
+            bonuses.AddRange(_weapons.RandomSelection(rand, Convert.ToUInt32(broker.WeaponCount), false, exclusions[TRItemCategory.Weapon]));
+            bonuses.AddRange(GetRandomItems(rand, broker.AmmoTypeCount, broker.MaxAmmoCount, _ammo, exclusions[TRItemCategory.Ammo]));
+            bonuses.AddRange(GetRandomItems(rand, broker.MiscTypeCount, broker.MaxMiscCount, _miscItems, exclusions[TRItemCategory.Misc]));
+
             return bonuses;
         }
 
-        private Dictionary<TRItemCategory, ISet<TRItem>> VerifyBonusExclusions(Dictionary<TRItemCategory, ISet<TRItem>> exclusions)
+        protected virtual TRItemBrokerDealer<BaseTRItemBroker> GetBrokerDealer(Random rand)
+        {
+            return null;
+        }
+
+        protected Dictionary<TRItemCategory, ISet<TRItem>> VerifyBonusExclusions(Dictionary<TRItemCategory, ISet<TRItem>> exclusions)
         {
             if (exclusions == null)
             {
@@ -101,18 +115,22 @@ namespace TRGE.Core
             return exclusions;
         }
 
-        private List<TRItem> GetRandomItems(Random rand, int[] qtyDeterminer, List<TRItem> itemList)
+        protected List<TRItem> GetRandomItems(Random rand, int numItems, int maxItems, List<TRItem> itemList, ISet<TRItem> exclusions)
         {
-            int numItems = qtyDeterminer[0];
-            int maxItems = qtyDeterminer[1];
-
             List<TRItem> items = new List<TRItem>();
-            for (int i = 0; i < numItems; i++)
+            if (maxItems > 0)
             {
-                int qty = rand.Next(1, maxItems);
-                for (int j = 0; j < qty; j++)
+                for (int i = 0; i < numItems; i++)
                 {
-                    items.Add(itemList[rand.Next(0, itemList.Count)]);
+                    int qty = rand.Next(1, maxItems);
+                    for (int j = 0; j < qty; j++)
+                    {
+                        TRItem item = itemList[rand.Next(0, itemList.Count)];
+                        if (!exclusions.Contains(item))
+                        {
+                            items.Add(item);
+                        }
+                    }
                 }
             }
             return items;

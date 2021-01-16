@@ -2,14 +2,14 @@
 {
     public class TREdition
     {
-        internal static readonly TREdition GENERICPC = new TREdition
+        internal static readonly TREdition GenericPC = new TREdition
         {
             Title = "Unknown (PC)",
             Version = TRVersion.Unknown,
             Hardware = Hardware.PC
         };
 
-        internal static readonly TREdition GENERICPSX = new TREdition
+        internal static readonly TREdition GenericPSX = new TREdition
         {
             Title = "Unknown (PSX)",
             Version = TRVersion.Unknown,
@@ -30,7 +30,7 @@
             Hardware = Hardware.PSX
         };
 
-        internal static readonly TREdition TR2PSXBETA = new TREdition
+        internal static readonly TREdition TR2PSXBeta = new TREdition
         {
             Title = "Tomb Raider II (PSX BETA)",
             Version = TRVersion.TR2,
@@ -70,5 +70,20 @@
         public Hardware Hardware { get; private set; }
 
         private TREdition() { }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TREdition edition &&
+                   Version == edition.Version &&
+                   Hardware == edition.Hardware;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1948033000;
+            hashCode = hashCode * -1521134295 + Version.GetHashCode();
+            hashCode = hashCode * -1521134295 + Hardware.GetHashCode();
+            return hashCode;
+        }
     }
 }

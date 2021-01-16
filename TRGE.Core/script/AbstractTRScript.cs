@@ -11,7 +11,7 @@ namespace TRGE.Core
         {
             //All we can go on to begin with is the file name to determine a generic edition.
             //Subclasses should implement CalculateEdition and call it as appropriate while reading the data.
-            Edition = filePath.ToLower().Contains("tombpsx") ? TREdition.GENERICPSX : TREdition.GENERICPC;
+            Edition = filePath.ToLower().Contains("tombpsx") ? TREdition.GenericPSX : TREdition.GenericPC;
 
             using (BinaryReader br = new BinaryReader(new FileStream(filePath, FileMode.Open)))
             {

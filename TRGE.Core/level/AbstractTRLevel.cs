@@ -67,9 +67,11 @@ namespace TRGE.Core
             _pickups.Add(pickup);
         }
 
-        internal virtual void AddOperation(TROpDef opDef, ushort operand = ushort.MaxValue, bool isActive = true)
+        internal virtual TROperation AddOperation(TROpDef opDef, ushort operand = ushort.MaxValue, bool isActive = true)
         {
-            _operations.Add(new TROperation(opDef, operand, isActive));
+            TROperation op = new TROperation(opDef, operand, isActive);
+            _operations.Add(op);
+            return op;
         }
 
         internal void BuildOperations(ushort[] levelScriptData)

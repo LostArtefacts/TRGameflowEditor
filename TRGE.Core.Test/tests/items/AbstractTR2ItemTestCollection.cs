@@ -3,21 +3,52 @@ using System.Collections.Generic;
 
 namespace TRGE.Core.Test
 {
-    public abstract class AbstractTR2ItemTestCollection : BaseTestCollection
+    public abstract class AbstractTR2ItemTestCollection : AbstractTR23ItemTestCollection
     {
-        protected abstract int ScriptFileIndex { get; }
         internal abstract Dictionary<string, List<TRItem>> ManualBonusData { get; }
+
+        internal override List<TRItem> ExpectedItems => new List<TRItem>
+        {
+            new TRItem(0,  TRItemCategory.Weapon, "Pistols"),
+            new TRItem(1,  TRItemCategory.Weapon, "Shotgun"),
+            new TRItem(2,  TRItemCategory.Weapon, "Automatic Pistols"),
+            new TRItem(3,  TRItemCategory.Weapon, "Uzis"),
+            new TRItem(4,  TRItemCategory.Weapon, "Harpoon Gun"),
+            new TRItem(5,  TRItemCategory.Weapon, "M16"),
+            new TRItem(6,  TRItemCategory.Weapon, "Grenade Launcher"),
+            new TRItem(7,  TRItemCategory.Ammo,   "Pistol Clips"),
+            new TRItem(8,  TRItemCategory.Ammo,   "Shotgun Shells"),
+            new TRItem(9,  TRItemCategory.Ammo,   "Automatic Pistol Clips"),
+            new TRItem(10, TRItemCategory.Ammo,   "Uzi Clips"),
+            new TRItem(11, TRItemCategory.Ammo,   "Harpoons"),
+            new TRItem(12, TRItemCategory.Ammo,   "M16 Clips"),
+            new TRItem(13, TRItemCategory.Ammo,   "Grenades"),
+            new TRItem(14, TRItemCategory.Misc,   "Flare"),
+            new TRItem(15, TRItemCategory.Health, "Small Medi Pack"),
+            new TRItem(16, TRItemCategory.Health, "Large Medi Pack"),
+            new TRItem(17, TRItemCategory.Pickup, "Pickup 1"),
+            new TRItem(18, TRItemCategory.Pickup, "Pickup 2"),
+            new TRItem(19, TRItemCategory.Pickup, "Puzzle 1"),
+            new TRItem(20, TRItemCategory.Pickup, "Puzzle 2"),
+            new TRItem(21, TRItemCategory.Pickup, "Puzzle 3"),
+            new TRItem(22, TRItemCategory.Pickup, "Puzzle 4"),
+            new TRItem(23, TRItemCategory.Pickup, "Key 1"),
+            new TRItem(24, TRItemCategory.Pickup, "Key 2"),
+            new TRItem(25, TRItemCategory.Pickup, "Key 3"),
+            new TRItem(26, TRItemCategory.Pickup, "Key 4")
+        };
 
         [TestMethod]
         [TestSequence(0)]
-        protected virtual void TestLoadLevels()
+        protected override void TestLoadItems()
         {
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             Assert.IsTrue(sm.LevelManager.ItemProvider is TR2ItemProvider);
+            base.TestLoadItems();
         }
 
         [TestMethod]
-        protected void TestRandomiseLevels()
+        protected void TestRandomiseItems()
         {
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
@@ -26,6 +57,7 @@ namespace TRGE.Core.Test
 
                 sm.BonusOrganisation = Organisation.Random;
                 sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                //sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
                 sm.RandomiseBonuses();
 
                 List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> bonusData = sm.LevelBonusData;
@@ -52,7 +84,7 @@ namespace TRGE.Core.Test
                                 }
                             }
 
-                            //Console.WriteLine(levelBonusData.Item2 + ": " + bonusItem.Item3 + " x " + bonusItem.Item4);
+                            //System.Console.WriteLine(levelBonusData.Item2 + "," + bonusItem.Item3 + "," + bonusItem.Item4);
                         }
                     }
                 }
@@ -64,7 +96,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
-        protected void TestReorganiseLevels()
+        protected void TestReorganiseItems()
         {
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try

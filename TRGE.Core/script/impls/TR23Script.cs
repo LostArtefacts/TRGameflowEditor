@@ -164,7 +164,7 @@ namespace TRGE.Core
             set => SetFlag(Flag.DozyEnabled, DozyViable && value);
         }
 
-        internal bool DozyViable => Edition == TREdition.TR2PSXBETA;
+        internal bool DozyViable => Edition == TREdition.TR2PSXBeta;
 
         internal bool GymEnabled
         {
@@ -326,7 +326,7 @@ namespace TRGE.Core
                 }
                 else if (llf.EndsWith("wall.psx"))
                 {
-                    Edition = Xor == 0 ? TREdition.TR2PSXBETA : TREdition.TR2PSX;
+                    Edition = Xor == 0 ? TREdition.TR2PSXBeta : TREdition.TR2PSX;
                 }
                 else if (llf.EndsWith("level1.tr2"))
                 {
@@ -407,7 +407,7 @@ namespace TRGE.Core
             NumGameStrings1 = br.ReadUInt16();
             _gameStrings1 = ReadStringData(br, NumGameStrings1);            
 
-            if (Edition == TREdition.TR2PSXBETA)
+            if (Edition == TREdition.TR2PSXBeta)
             {
                 NumGameStrings2 = 79;
             }
@@ -426,7 +426,7 @@ namespace TRGE.Core
             _puzzleNames3 = ReadStringData(br, NumLevels);
             _puzzleNames4 = ReadStringData(br, NumLevels);
 
-            if (Edition == TREdition.TR2PSXBETA)
+            if (Edition == TREdition.TR2PSXBeta)
             {
                 _secretNames1 = ReadStringData(br, NumLevels);
                 _secretNames2 = ReadStringData(br, NumLevels);
@@ -586,7 +586,7 @@ namespace TRGE.Core
                 WriteStringData(bw, _puzzleNames3);
                 WriteStringData(bw, _puzzleNames4);
 
-                if (Edition == TREdition.TR2PSXBETA)
+                if (Edition == TREdition.TR2PSXBeta)
                 {
                      WriteStringData(bw, _secretNames1);
                      WriteStringData(bw, _secretNames2);

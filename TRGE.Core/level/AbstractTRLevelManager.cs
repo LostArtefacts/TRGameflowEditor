@@ -40,6 +40,7 @@ namespace TRGE.Core
         internal virtual void SetLevelSequencing(List<Tuple<string, string>> data)
         {
             List<AbstractTRLevel> newLevels = new List<AbstractTRLevel>();
+            ushort newSeq = 1;
             foreach (Tuple<string, string> item in data)
             {
                 AbstractTRLevel level = GetLevel(item.Item1);
@@ -47,6 +48,8 @@ namespace TRGE.Core
                 {
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
                 }
+                level.Sequence = newSeq++;
+                level.IsFinalLevel = newSeq == LevelCount + 1;
                 newLevels.Add(level);
             }
 

@@ -54,18 +54,7 @@ namespace TRGE.Core.Test
                 sm.RandomiseLevels();
                 List<AbstractTRLevel> levels = sm.LevelManager.Levels;
                 CollectionAssert.AreEqual(levels, _expectedLevels);
-
-                for (int i = 0; i < levels.Count; i++)
-                {
-                    if (i == levels.Count - 1)
-                    {
-                        Assert.IsTrue(levels[i].IsFinalLevel, "Level at final index is not marked as the final level");
-                    }
-                    else
-                    {
-                        Assert.IsFalse(levels[i].IsFinalLevel, string.Format("Level at index {0} is marked as the final level", i));
-                    }
-                }
+                TestForFinalLevel(levels);
             }
             finally
             {
@@ -84,11 +73,28 @@ namespace TRGE.Core.Test
                 List<Tuple<string, string>> levelSequencingData = sm.LevelSequencing;
                 levelSequencingData.Reverse();
                 sm.LevelSequencing = levelSequencingData;
-                CollectionAssert.AreEqual(sm.LevelManager.Levels, _expectedLevels);
+                List<AbstractTRLevel> levels = sm.LevelManager.Levels;
+                CollectionAssert.AreEqual(levels, _expectedLevels);
+                TestForFinalLevel(levels);
             }
             finally
             {
                 TRGameflowEditor.Instance.CloseScriptManager(sm);
+            }
+        }
+
+        private void TestForFinalLevel(List<AbstractTRLevel> levels)
+        {
+            for (int i = 0; i < levels.Count; i++)
+            {
+                if (i == levels.Count - 1)
+                {
+                    Assert.IsTrue(levels[i].IsFinalLevel, "Level at final index is not marked as the final level");
+                }
+                else
+                {
+                    Assert.IsFalse(levels[i].IsFinalLevel, string.Format("Level at index {0} is marked as the final level", i));
+                }
             }
         }
     }

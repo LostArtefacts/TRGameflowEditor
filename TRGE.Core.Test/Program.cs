@@ -11,6 +11,8 @@ namespace TRGE.Core.Test
         static void Main()
         {
             _pass = _fail = 0;
+
+            #region BasicIO
             RunTest(new TR2PCScriptIOTests());
             RunTest(new TR2GPCScriptIOTests());
 
@@ -21,12 +23,18 @@ namespace TRGE.Core.Test
             RunTest(new TR3GPCScriptIOTests());
 
             RunTest(new TR3PSXScriptIOTests());
+            #endregion
 
+            #region Flags
             RunTest(new TR23FlagTests());
             RunTest(new TR23MiscTests());
+            #endregion
 
+            #region ScriptManagement
             RunTest(new TR23ScriptManagementTests());
+            #endregion
 
+            #region Levels
             RunTest(new TR2PCLevelTests());
             RunTest(new TR2GPCLevelTests());
 
@@ -36,7 +44,9 @@ namespace TRGE.Core.Test
             RunTest(new TR3PCLevelTests());
             RunTest(new TR3GPCLevelTests());
             RunTest(new TR3PSXLevelTests());
+            #endregion
 
+            #region Unarmed
             RunTest(new TR2PCUnarmedTests());
             RunTest(new TR2GPCUnarmedTests());
 
@@ -46,12 +56,19 @@ namespace TRGE.Core.Test
             RunTest(new TR3PCUnarmedTests());
             RunTest(new TR3GPCUnarmedTests());
             RunTest(new TR3PSXUnarmedTests());
+            #endregion
 
+            #region Items
             RunTest(new TR2PCItemTests());
             RunTest(new TR2PCGItemTests());
 
             RunTest(new TR2PSXItemTests());
             RunTest(new TR2PSXBetaItemTests());
+
+            RunTest(new TR3PCItemTests());
+            RunTest(new TR3GPCItemTests());
+            RunTest(new TR3PSXItemTests());
+            #endregion
 
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);

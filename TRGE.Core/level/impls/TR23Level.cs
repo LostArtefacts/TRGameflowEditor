@@ -77,7 +77,17 @@ namespace TRGE.Core
             {
                 if (value)
                 {
-                    GetOperation(TR23OpDefs.Complete).Definition = TR23OpDefs.GameComplete;
+                    TROperation gcOp = GetOperation(TR23OpDefs.GameComplete);
+                    if (gcOp == null)
+                    {
+                        gcOp = GetOperation(TR23OpDefs.Complete);
+                        if (gcOp == null)
+                        {
+                            gcOp = AddOperation(TR23OpDefs.GameComplete);
+                        }
+                    }
+                    //GetOperation(TR23OpDefs.Complete).Definition = TR23OpDefs.GameComplete;
+                    gcOp.Definition = TR23OpDefs.GameComplete;
                 }
                 else
                 {

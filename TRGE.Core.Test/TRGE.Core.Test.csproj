@@ -52,11 +52,16 @@
     <Compile Include="tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tests\items\AbstractTR23ItemTestCollection.cs" />
     <Compile Include="tests\items\AbstractTR2ItemTestCollection.cs" />
     <Compile Include="tests\items\TR2PCGItemTests.cs" />
     <Compile Include="tests\items\TR2PCItemTests.cs" />
     <Compile Include="tests\items\TR2PSXBetaItemTests.cs" />
     <Compile Include="tests\items\TR2PSXItemTests.cs" />
+    <Compile Include="tests\items\AbstractTR3ItemTestCollection.cs" />
+    <Compile Include="tests\items\TR3GPCItemTests.cs" />
+    <Compile Include="tests\items\TR3PCItemTests.cs" />
+    <Compile Include="tests\items\TR3PSXItemTests.cs" />
     <Compile Include="tests\levels\AbstractTR23LevelTestCollection.cs" />
     <Compile Include="tests\levels\TR2GPCLevelTests.cs" />
     <Compile Include="tests\levels\TR2PSXBetaLevelTests.cs" />

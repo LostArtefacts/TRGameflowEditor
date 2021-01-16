@@ -9,17 +9,16 @@ namespace TRGE.Core.Test
         protected override int ScriptFileIndex => 3;
         internal override Dictionary<string, List<TRItem>> ManualBonusData => new Dictionary<string, List<TRItem>>
         {
-            { Hashing.CreateMD5(@"data\venice.PSX"), new List<TRItem>
+            {
+                Hashing.CreateMD5(@"data\venice.PSX"), new List<TRItem>
                 {
-                    new TRItem(2, TRItemCategory.Weapon, "Automatic Pistols"),
-                    new TRItem(15, TRItemCategory.Health, "Small Medi Kit")
+                    ExpectedItems[2], ExpectedItems[15]
                 }
             },
-            { Hashing.CreateMD5(@"data\floating.PSX"), new List<TRItem>
+            {
+                Hashing.CreateMD5(@"data\floating.PSX"), new List<TRItem>
                 {
-                    new TRItem(6, TRItemCategory.Weapon, "Grenade Launcher"),
-                    new TRItem(13, TRItemCategory.Ammo, "Grenades"),
-                    new TRItem(14, TRItemCategory.Misc, "Flares")
+                    ExpectedItems[6], ExpectedItems[13], ExpectedItems[14]
                 }
             }
         };

@@ -31,7 +31,7 @@ namespace TRGE.Core
         {
             _script = script;
             Levels = _script.Levels;
-            _itemProvider = TRItemFactory.GetProvider(script.Edition.Version, script.GameStrings1) as AbstractTR23ItemProvider;
+            _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
             _canRandomiseBonuses = script.Edition.Version == TRVersion.TR2 || script.Edition.Version == TRVersion.TR2G;
         }                
 
