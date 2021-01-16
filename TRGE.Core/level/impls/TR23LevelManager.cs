@@ -27,13 +27,55 @@ namespace TRGE.Core
         internal RandomGenerator UnarmedLevelRNG { get; set; }
         internal uint RandomUnarmedLevelCount { get; set; }
 
+        internal Organisation AmmolessLevelOrganisation { get; set; }
+        internal RandomGenerator AmmolessLevelRNG { get; set; }
+        internal uint RandomAmmolessLevelCount { get; set; }
+
         internal TR23LevelManager(TR23Script script)
         {
             _script = script;
             Levels = _script.Levels;
             _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
             _canRandomiseBonuses = script.Edition.Version == TRVersion.TR2 || script.Edition.Version == TRVersion.TR2G;
-        }                
+        }
+
+        internal List<TR23Level> GetAmmolessLevels()
+        {
+            return GetLevelsWithOperation(TR23OpDefs.RemoveAmmo, true).Cast<TR23Level>().ToList();
+        }
+
+        internal virtual List<MutableTuple<string, string, bool>> GetAmmolessLevelData()
+        {
+            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            foreach (TR23Level level in _levels)
+            {
+                data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesAmmo));
+            }
+            return data;
+        }
+
+        internal virtual void SetAmmolessLevelData(List<MutableTuple<string, string, bool>> data)
+        {
+            foreach (MutableTuple<string, string, bool> item in data)
+            {
+                TR23Level level = (TR23Level)GetLevel(item.Item1);
+                if (level != null)
+                {
+                    level.RemovesAmmo = item.Item3;
+                }
+            }
+        }
+
+        internal void RandomiseAmmolessLevels(List<AbstractTRLevel> originalLevels)
+        {
+            RandomiseLevelsWithOperation
+            (
+                AmmolessLevelRNG,
+                RandomAmmolessLevelCount,
+                originalLevels,
+                new TROperation(TR23OpDefs.RemoveAmmo, ushort.MaxValue, true)
+            );
+        }
 
         internal void RandomiseUnarmedLevels(List<AbstractTRLevel> originalLevels)
         {
@@ -150,11 +192,69 @@ namespace TRGE.Core
             return ret;
         }
 
+        internal bool GetLevelsHaveStartAnimation()
+        {
+            foreach (TR23Level level in _levels)
+            {
+                if (level.HasStartAnimation)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal void SetLevelsHaveStartAnimation(bool haveStartAnimations)
+        {
+            foreach (TR23Level level in _levels)
+            {
+                level.HasStartAnimation = haveStartAnimations;
+            }
+        }
+
+        internal bool GetLevelsHaveCutScenes()
+        {
+            foreach (TR23Level level in _levels)
+            {
+                if (level.HasCutScene)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal void SetLevelsHaveCutScenes(bool haveCutScenes)
+        {
+            foreach (TR23Level level in _levels)
+            {
+                level.HasCutScene = haveCutScenes;
+            }
+        }
+
+        internal bool GetLevelsHaveFMV()
+        {
+            foreach (TR23Level level in _levels)
+            {
+                if (level.HasFMV)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal void SetLevelsHaveFMV(bool haveFMVs)
+        {
+            foreach (TR23Level level in _levels)
+            {
+                level.HasFMV = haveFMVs;
+            }
+        }
+
         internal override void Save()
         {
             throw new NotImplementedException();
         }
-
-        
     }
 }

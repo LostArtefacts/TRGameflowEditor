@@ -245,6 +245,21 @@ namespace TRGE.Core
         }
 
         #region TRLevel Interop
+
+        internal override AbstractTRFrontEnd FrontEnd
+        {
+            get
+            {
+                TR23FrontEnd frontEnd = new TR23FrontEnd();
+                frontEnd.BuildOperations(_scriptData[0]);
+                return frontEnd;
+            }
+            set
+            {
+                _scriptData[0] = value.TranslateOperations();
+            }
+        }
+
         internal override List<AbstractTRLevel> Levels
         {
             get

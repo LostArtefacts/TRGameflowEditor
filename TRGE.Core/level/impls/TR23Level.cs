@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TRGE.Core
 {
@@ -22,10 +23,43 @@ namespace TRGE.Core
             set => SetOperationActive(TR23OpDefs.StartAnimation, value);
         }
 
+        internal override short StartAnimationID
+        {
+            get
+            {
+                if (HasStartAnimation)
+                {
+                    return Convert.ToInt16(GetOperation(TR23OpDefs.StartAnimation).Operand);
+                }
+                return -1;
+            }
+            set
+            {
+                if (value == -1)
+                {
+                    HasStartAnimation = false;
+                }
+                else if (HasStartAnimation)
+                {
+                    GetOperation(TR23OpDefs.StartAnimation).Operand = Convert.ToUInt16(value);
+                }
+                else
+                {
+                    InsertOperation(TR23OpDefs.StartAnimation, Convert.ToUInt16(value), TR23OpDefs.StartAnimation.Next);
+                }
+            }
+        }
+
         internal override bool HasCutScene
         {
             get => HasActiveOperation(TR23OpDefs.Cinematic);
-            set => SetOperationActive(TR23OpDefs.Cinematic, value);
+            set
+            {
+                SetOperationActive(TR23OpDefs.Cinematic, value);
+                SetOperationActive(TR23OpDefs.CutAngle, value);
+                SetOperationActive(TR23OpDefs.ListStart, value);
+                SetOperationActive(TR23OpDefs.ListEnd, value);
+            }
         }
 
         internal override bool HasSunset
@@ -59,7 +93,17 @@ namespace TRGE.Core
         internal override bool RemovesAmmo
         {
             get => HasActiveOperation(TR23OpDefs.RemoveAmmo);
-            set => SetOperationActive(TR23OpDefs.RemoveAmmo, value);
+            set
+            {
+                if (value)
+                {
+                    EnsureOperation(new TROperation(TR23OpDefs.RemoveAmmo, ushort.MaxValue, true));
+                }
+                else
+                {
+                    SetOperationActive(TR23OpDefs.RemoveAmmo, value);
+                }
+            }
         }
 
         internal override bool HasSecrets

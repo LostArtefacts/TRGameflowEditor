@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,12 +12,14 @@ namespace TRGE.Core
         protected const string _backupExt = ".bak";
         protected const string _configFile = "trge.json";
 
-        internal AbstractTRLevelManager LevelManager { get; private set; }
-        internal AbstractTRScript Script { get; private set; }
         public TREdition Edition => Script.Edition;
         public string OriginalFilePath { get; internal set; }
         public string BackupFilePath { get; internal set; }
 
+        internal AbstractTRLevelManager LevelManager { get; private set; }
+        internal AbstractTRFrontEnd FrontEnd { get; private set; }
+        internal AbstractTRScript Script { get; private set; }
+        
         internal AbstractTRScriptManager(string originalFilePath, AbstractTRScript script)
         {
             Initialise(originalFilePath, script);
@@ -27,11 +30,17 @@ namespace TRGE.Core
             OriginalFilePath = originalFilePath;
             CreateBackup();
 
-            (Script = script).Read(OriginalFilePath);
+            //(Script = script).Read(OriginalFilePath); //actually read from the backup path instead?
+            (Script = script).Read(BackupFilePath); //actually read from the backup path instead?
+            FrontEnd = script.FrontEnd;
 
             LevelManager = TRLevelFactory.GetLevelManager(script);
 
             ReadConfig();
+
+            //TODO: if this is not the first time opening the file, run through
+            //the config from the last time so the script is in the same
+            //state, but we still have any inactive operations still in place
         }
 
         protected void CreateBackup()
@@ -57,7 +66,30 @@ namespace TRGE.Core
 
         protected void ReadConfig()
         {
-            
+            string configFile = Path.Combine(GetEditFolder(), _configFile);
+            Dictionary<string, object> config = File.Exists(configFile) ? JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(configFile)) : null;
+            if (config != null)
+            {
+                Dictionary<string, object> levelSeq = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["LevelSeq"].ToString());
+                LevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), levelSeq["Org"]);
+                LevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(levelSeq["RNG"].ToString()));
+                if (LevelOrganisation == Organisation.Manual)
+                {
+                    LevelSequencing = JsonConvert.DeserializeObject<List<Tuple<string, string>>>(levelSeq["Manual"].ToString());
+                }
+
+                Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["Bonuses"].ToString());
+                BonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Org"]);
+                BonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
+                if (BonusOrganisation == Organisation.Manual)
+                {
+                    LevelBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(levelSeq["Manual"].ToString());
+                }
+
+                FrontEndHasFMV = bool.Parse(config["FrontEndFMVOn"].ToString());
+            }
+
+            LoadConfig(config);
         }
 
         public void Save(string filePath)
@@ -72,7 +104,6 @@ namespace TRGE.Core
         }
 
         internal abstract AbstractTRScript LoadBackupScript();
-
         protected abstract void PrepareSave();
         protected abstract void LoadConfig(Dictionary<string, object> config);
         protected abstract Dictionary<string, object> CreateConfig();
@@ -122,6 +153,12 @@ namespace TRGE.Core
         internal void RandomiseBonuses()
         {
             LevelManager.RandomiseBonuses();
+        }
+
+        public bool FrontEndHasFMV
+        {
+            get => FrontEnd.HasFMV;
+            set => FrontEnd.HasFMV = value;
         }
     }
 }

@@ -52,6 +52,8 @@
     <Compile Include="tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tests\interruptions\AbstractTR23InterruptionTestCollection.cs" />
+    <Compile Include="tests\interruptions\TR2PCInterruptionTests.cs" />
     <Compile Include="tests\items\AbstractTR23ItemTestCollection.cs" />
     <Compile Include="tests\items\AbstractTR2ItemTestCollection.cs" />
     <Compile Include="tests\items\TR2PCGItemTests.cs" />

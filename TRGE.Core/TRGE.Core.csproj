@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frontend\impls\TR23FrontEnd.cs" />
     <Compile Include="helpers\Extensions.cs" />
     <Compile Include="helpers\Hashing.cs" />
     <Compile Include="helpers\MutableTuple.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="item\TRItemBrokerDealer.cs" />
     <Compile Include="item\TRItemCategory.cs" />
     <Compile Include="item\TRItemFactory.cs" />
+    <Compile Include="frontend\AbstractTRFrontEnd.cs" />
     <Compile Include="level\AbstractTRLevel.cs" />
     <Compile Include="level\AbstractTRLevelManager.cs" />
     <Compile Include="level\impls\TR23Level.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="operation\TR23OpDefs.cs" />
     <Compile Include="operation\TROpDef.cs" />
     <Compile Include="operation\TROperation.cs" />
+    <Compile Include="operation\AbstractTROperationContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="script\AbstractTRScript.cs" />
     <Compile Include="script\AbstractTRScriptManager.cs" />

@@ -70,6 +70,10 @@ namespace TRGE.Core.Test
             RunTest(new TR3PSXItemTests());
             #endregion
 
+            #region Interruptions
+            RunTest(new TR2PCInterruptionTests());
+            #endregion
+
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);
             Console.WriteLine("FAIL: {0}", _fail);
