@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="audio\AbstractTRAudioProvider.cs" />
+    <Compile Include="audio\impls\TR3AudioProvider.cs" />
     <Compile Include="frontend\impls\TR23FrontEnd.cs" />
     <Compile Include="helpers\Extensions.cs" />
     <Compile Include="helpers\Hashing.cs" />

@@ -52,6 +52,7 @@
     <Compile Include="tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tests\audio\AudioTests.cs" />
     <Compile Include="tests\interruptions\AbstractTR23InterruptionTestCollection.cs" />
     <Compile Include="tests\interruptions\TR2GPCInterruptionTests.cs" />
     <Compile Include="tests\interruptions\TR2PCInterruptionTests.cs" />
@@ -109,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="audio\cdaudio.wad">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="scripts\INVALID.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

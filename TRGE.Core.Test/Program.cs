@@ -94,6 +94,8 @@ namespace TRGE.Core.Test
             RunTest(new TR3PSXInterruptionTests());
             #endregion
 
+            RunTest(new AudioTests());
+
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);
             Console.WriteLine("FAIL: {0}", _fail);
