@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace TRGE.Core
@@ -59,42 +60,71 @@ namespace TRGE.Core
 
         public string GetEditFolder()
         {
-            string folder = Path.Combine(TRGameflowEditor.Instance.GetAppDataPath(), _editsFolder, Hashing.CreateMD5(OriginalFilePath, Encoding.UTF8));
+            string folder = Path.Combine(TRGameflowEditor.Instance.GetConfigDirectory(), _editsFolder, Hashing.CreateMD5(OriginalFilePath, Encoding.UTF8));
             Directory.CreateDirectory(folder);
             return folder;
         }
 
+        internal string GetConfigFile()
+        {
+            return Path.Combine(GetEditFolder(), _configFile);
+        }
+
         protected void ReadConfig()
         {
-            string configFile = Path.Combine(GetEditFolder(), _configFile);
+            string configFile = GetConfigFile();
             Dictionary<string, object> config = File.Exists(configFile) ? JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(configFile)) : null;
             if (config != null)
             {
-                Dictionary<string, object> levelSeq = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["LevelSeq"].ToString());
-                LevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), levelSeq["Org"]);
+                Dictionary<string, object> levelSeq = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["LevelSequencing"].ToString());
+                LevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), levelSeq["Organisation"]);
                 LevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(levelSeq["RNG"].ToString()));
-                if (LevelOrganisation == Organisation.Manual)
-                {
-                    LevelSequencing = JsonConvert.DeserializeObject<List<Tuple<string, string>>>(levelSeq["Manual"].ToString());
-                }
-
-                Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["Bonuses"].ToString());
-                BonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Org"]);
-                BonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
-                if (BonusOrganisation == Organisation.Manual)
-                {
-                    LevelBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(levelSeq["Manual"].ToString());
-                }
+                LevelSequencing = JsonConvert.DeserializeObject<List<Tuple<string, string>>>(levelSeq["Data"].ToString());
 
                 FrontEndHasFMV = bool.Parse(config["FrontEndFMVOn"].ToString());
+            }
+            else
+            {
+                LevelOrganisation = Organisation.Default;
+                LevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
             }
 
             LoadConfig(config);
         }
 
-        public void Save(string filePath)
+        internal void Save(string filePath)
         {
+            Dictionary<string, object> config = new Dictionary<string, object>
+            {
+                ["Version"] = Assembly.GetExecutingAssembly().GetName().Version,
+                ["Original"] = OriginalFilePath,
+                ["FrontEndFMVOn"] = FrontEndHasFMV,
+                ["LevelSequencing"] = new Dictionary<string, object>
+                {
+                    ["Organisation"] = (int)LevelOrganisation,
+                    ["RNG"] = LevelRNG.ToJson(),
+                    ["Data"] = LevelSequencing
+                }
+            };
 
+            AbstractTRScript backupScript = LoadBackupScript();
+            if (LevelOrganisation == Organisation.Random)
+            {
+                LevelManager.RandomiseLevelSequencing(backupScript.Levels);
+            }
+            else if (LevelOrganisation == Organisation.Default)
+            {
+                LevelManager.RestoreLevelSequencing(backupScript.Levels);
+            }
+
+            SaveImpl(config);
+            LevelManager.Save();
+
+            File.WriteAllText(GetConfigFile(), JsonConvert.SerializeObject(config, Formatting.Indented));
+
+            string localCopyPath = Path.Combine(GetEditFolder(), new FileInfo(filePath).Name);
+            Script.Write(localCopyPath);
+            File.Copy(localCopyPath, filePath, true);
         }
 
         public void Restore()
@@ -104,9 +134,8 @@ namespace TRGE.Core
         }
 
         internal abstract AbstractTRScript LoadBackupScript();
-        protected abstract void PrepareSave();
+        protected abstract void SaveImpl(Dictionary<string, object> config);
         protected abstract void LoadConfig(Dictionary<string, object> config);
-        protected abstract Dictionary<string, object> CreateConfig();
 
         public Organisation LevelOrganisation
         {
@@ -128,31 +157,7 @@ namespace TRGE.Core
 
         internal void RandomiseLevels()
         {
-            LevelManager.RandomiseLevels(LoadBackupScript().Levels);
-        }
-
-        internal bool CanRandomiseBonues => LevelManager.CanRandomiseBonuses;
-        public Organisation BonusOrganisation
-        {
-            get => LevelManager.BonusOrganisation;
-            set => LevelManager.BonusOrganisation = value;
-        }
-
-        public RandomGenerator BonusRNG
-        {
-            get => LevelManager.BonusRNG;
-            set => LevelManager.BonusRNG = value;
-        }
-
-        public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> LevelBonusData
-        {
-            get => LevelManager.GetLevelBonusData();
-            set => LevelManager.SetLevelBonusData(value);
-        }
-
-        internal void RandomiseBonuses()
-        {
-            LevelManager.RandomiseBonuses();
+            LevelManager.RandomiseLevelSequencing(LoadBackupScript().Levels);
         }
 
         public bool FrontEndHasFMV

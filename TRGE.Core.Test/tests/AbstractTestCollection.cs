@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 namespace TRGE.Core.Test
@@ -15,7 +16,7 @@ namespace TRGE.Core.Test
 
         public Dictionary<string, Exception> Run()
         {
-            Setup();
+            RootSetup();
 
             List<MethodInfo> methods = new List<MethodInfo>(GetType().GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance));
             methods.Sort(delegate (MethodInfo m1, MethodInfo m2)
@@ -50,7 +51,7 @@ namespace TRGE.Core.Test
                 }
             }
 
-            TearDown();
+            RootTearDown();
 
             return result;
         }
@@ -125,6 +126,18 @@ namespace TRGE.Core.Test
         protected void CompareStrings(List<string> list, IReadOnlyList<string> compareWith, string message)
         {
             CollectionAssert.AreEqual(list, new List<string>(compareWith), message);
+        }
+
+        private void RootSetup()
+        {
+            TRGameflowEditor.Instance.SetConfigDirectory(Directory.GetCurrentDirectory());
+            Setup();
+        }
+
+        private void RootTearDown()
+        {
+            Directory.Delete(TRGameflowEditor.Instance.GetConfigDirectory(), true);
+            TearDown();
         }
 
         [ClassInitialize]

@@ -6,7 +6,6 @@ namespace TRGE.Core
     internal abstract class AbstractTRLevelManager
     {
         internal abstract AbstractTRItemProvider ItemProvider { get; }
-        internal abstract bool CanRandomiseBonuses { get; }
 
         internal virtual AbstractTRLevel GetLevel(string id)
         {
@@ -29,8 +28,13 @@ namespace TRGE.Core
 
         internal virtual List<Tuple<string, string>> GetLevelSequencing()
         {
+            return GetLevelSequencing(Levels);
+        }
+
+        private List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRLevel> levels)
+        {
             List<Tuple<string, string>> data = new List<Tuple<string, string>>();
-            foreach (AbstractTRLevel level in Levels)
+            foreach (AbstractTRLevel level in levels)
             {
                 data.Add(new Tuple<string, string>(level.ID, level.Name));
             }
@@ -56,7 +60,7 @@ namespace TRGE.Core
             Levels = newLevels;
         }
 
-        internal virtual void RandomiseLevels(List<AbstractTRLevel> originalLevels)
+        internal virtual void RandomiseLevelSequencing(List<AbstractTRLevel> originalLevels)
         {
             List<AbstractTRLevel> shuffledLevels = new List<AbstractTRLevel>(originalLevels);
             shuffledLevels.Randomise(LevelRNG.Create());
@@ -77,6 +81,11 @@ namespace TRGE.Core
             }
 
             Levels = newLevels;
+        }
+
+        internal void RestoreLevelSequencing(List<AbstractTRLevel> originalLevels)
+        {
+            SetLevelSequencing(GetLevelSequencing(originalLevels));
         }
 
         internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRLevel> originalLevels, TROperation operation)
@@ -114,17 +123,5 @@ namespace TRGE.Core
             }
             return levels;
         }
-
-        internal Organisation BonusOrganisation { get; set; }
-        internal RandomGenerator BonusRNG { get; set; }
-
-        internal virtual List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData()
-        {
-            return null;
-        }
-
-        internal virtual void SetLevelBonusData(List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data) { }
-
-        internal virtual void RandomiseBonuses() { }
     }
 }

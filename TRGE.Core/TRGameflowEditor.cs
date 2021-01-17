@@ -27,8 +27,11 @@ namespace TRGE.Core
         }
 
         private const string ConfigFile = "config.json";
+        private string _configDirectory;
+
         private readonly List<AbstractTRScriptManager> _activeScriptManagers;
         private readonly List<FileInfo> _fileHistory;
+
         public IReadOnlyList<FileInfo> FileHistory => _fileHistory;
 
         public event EventHandler<TRFileEventArgs> FileHistoryAdded;
@@ -40,6 +43,7 @@ namespace TRGE.Core
 
             _fileHistory = new List<FileInfo>();
 
+            _configDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
             string configPath = GetConfigPath();
             if (File.Exists(configPath))
             {
@@ -77,6 +81,12 @@ namespace TRGE.Core
             return scriptMan;
         }
 
+        public void Save(AbstractTRScriptManager scriptMan, string filePath)
+        {
+            scriptMan.Save(filePath);
+            //TODO:what if file path has changed...history update?
+        }
+
         public void CloseScriptManager(AbstractTRScriptManager manager)
         {
             _activeScriptManagers.Remove(manager);
@@ -87,11 +97,16 @@ namespace TRGE.Core
             _activeScriptManagers.Clear();
         }
 
-        internal string GetAppDataPath()
+        internal string GetConfigDirectory()
         {
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TRGE");
+            string path = Path.Combine(_configDirectory, "TRGE"); //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TRGE");
             Directory.CreateDirectory(path);
             return path;
+        }
+
+        internal void SetConfigDirectory(string newDirectory)
+        {
+            _configDirectory = newDirectory;
         }
 
         public void ClearFileHistory()
@@ -161,7 +176,7 @@ namespace TRGE.Core
 
         private string GetConfigPath()
         {
-            return Path.Combine(GetAppDataPath(), ConfigFile);
+            return Path.Combine(GetConfigDirectory(), ConfigFile);
         }
     }
 }

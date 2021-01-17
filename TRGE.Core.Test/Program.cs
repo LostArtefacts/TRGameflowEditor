@@ -25,6 +25,18 @@ namespace TRGE.Core.Test
             RunTest(new TR3PSXScriptIOTests());
             #endregion
 
+            #region ManagedIO
+            RunTest(new TR2PCManagedIOTests());
+            RunTest(new TR2GPCManagedIOTests());
+
+            RunTest(new TR2PSXManagedIOTests());
+            RunTest(new TR2PSXBetaManagedIOTests());
+
+            RunTest(new TR3PCManagedIOTests());
+            RunTest(new TR3GPCManagedIOTests());
+            RunTest(new TR3PSXManagedIOTests());
+            #endregion
+
             #region Flags
             RunTest(new TR23FlagTests());
             RunTest(new TR23MiscTests());
@@ -72,6 +84,14 @@ namespace TRGE.Core.Test
 
             #region Interruptions
             RunTest(new TR2PCInterruptionTests());
+            RunTest(new TR2GPCInterruptionTests());
+
+            RunTest(new TR2PSXInterruptionTests());
+            RunTest(new TR2PSXBetaInterruptionTests());
+
+            RunTest(new TR3PCInterruptionTests());
+            RunTest(new TR3GPCInterruptionTests());
+            RunTest(new TR3PSXInterruptionTests());
             #endregion
 
             WriteHeader("Test Results");

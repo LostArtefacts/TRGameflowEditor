@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -8,7 +9,7 @@ namespace TRGE.Core
     {
         public T1 Item1 { get; set; }
         public T2 Item2 { get; set; }
-
+        [JsonIgnore]
         public int Length => 2;
 
         public object this[int index]
@@ -68,7 +69,7 @@ namespace TRGE.Core
         public T1 Item1 { get; set; }
         public T2 Item2 { get; set; }
         public T3 Item3 { get; set; }
-
+        [JsonIgnore]
         public int Length => 3;
 
         public object this[int index]
@@ -137,7 +138,7 @@ namespace TRGE.Core
         public T2 Item2 { get; set; }
         public T3 Item3 { get; set; }
         public T4 Item4 { get; set; }
-
+        [JsonIgnore]
         public int Length => 4;
 
         public object this[int index]

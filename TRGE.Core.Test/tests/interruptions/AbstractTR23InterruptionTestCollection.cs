@@ -19,7 +19,7 @@ namespace TRGE.Core.Test
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
             {
-                Assert.AreEqual(sm.LevelsHaveCutScenes, ExpectedCutScenes);
+                Assert.AreEqual(sm.LevelsSupportCutScenes, ExpectedCutScenes);
             }
             finally
             {
@@ -34,8 +34,11 @@ namespace TRGE.Core.Test
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
             {
-                sm.LevelsHaveCutScenes = !ExpectedCutScenes;
-                Assert.AreNotEqual(sm.LevelsHaveCutScenes, ExpectedCutScenes);
+                if (sm.LevelsSupportCutScenes)
+                {
+                    sm.LevelsHaveCutScenes = !ExpectedCutScenes;
+                    Assert.AreNotEqual(sm.LevelsHaveCutScenes, ExpectedCutScenes);
+                }
             }
             finally
             {
@@ -81,7 +84,7 @@ namespace TRGE.Core.Test
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
             {
-                Assert.AreEqual(sm.LevelsHaveFMV, ExpectedLevelsFMV);
+                Assert.AreEqual(sm.LevelsSupportFMVs, ExpectedLevelsFMV);
             }
             finally
             {
@@ -96,8 +99,11 @@ namespace TRGE.Core.Test
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
             {
-                sm.LevelsHaveFMV = !ExpectedLevelsFMV;
-                Assert.AreNotEqual(sm.LevelsHaveFMV, ExpectedLevelsFMV);
+                if (sm.LevelsSupportFMVs)
+                {
+                    sm.LevelsHaveFMV = !ExpectedLevelsFMV;
+                    Assert.AreNotEqual(sm.LevelsHaveFMV, ExpectedLevelsFMV);
+                }
             }
             finally
             {
@@ -112,7 +118,7 @@ namespace TRGE.Core.Test
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
             {
-                Assert.AreEqual(sm.LevelsHaveStartAnimation, ExpectedLevelsStartAnimation);
+                Assert.AreEqual(sm.LevelsSupportStartAnimations, ExpectedLevelsStartAnimation);
             }
             finally
             {
@@ -127,8 +133,11 @@ namespace TRGE.Core.Test
             TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
             {
-                sm.LevelsHaveStartAnimation = !ExpectedLevelsStartAnimation;
-                Assert.AreNotEqual(sm.LevelsHaveStartAnimation, ExpectedLevelsStartAnimation);
+                if (sm.LevelsSupportStartAnimations)
+                {
+                    sm.LevelsHaveStartAnimation = !ExpectedLevelsStartAnimation;
+                    Assert.AreNotEqual(sm.LevelsHaveStartAnimation, ExpectedLevelsStartAnimation);
+                }
             }
             finally
             {

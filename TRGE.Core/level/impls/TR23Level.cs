@@ -14,14 +14,23 @@ namespace TRGE.Core
         internal override bool HasFMV
         {
             get => HasActiveOperation(TR23OpDefs.FMV);
-            set => SetOperationActive(TR23OpDefs.FMV, value);
+            set
+            {
+                SetOperationActive(TR23OpDefs.FMV, value);
+                SetOperationActive(TR23OpDefs.ListStart, value);
+                SetOperationActive(TR23OpDefs.ListEnd, value);
+            }
         }
+
+        internal override bool SupportsFMVs => HasOperation(TR23OpDefs.FMV);
 
         internal override bool HasStartAnimation
         {
             get => HasActiveOperation(TR23OpDefs.StartAnimation);
             set => SetOperationActive(TR23OpDefs.StartAnimation, value);
         }
+
+        internal override bool SupportsStartAnimations => HasOperation(TR23OpDefs.StartAnimation);
 
         internal override short StartAnimationID
         {
@@ -57,10 +66,10 @@ namespace TRGE.Core
             {
                 SetOperationActive(TR23OpDefs.Cinematic, value);
                 SetOperationActive(TR23OpDefs.CutAngle, value);
-                SetOperationActive(TR23OpDefs.ListStart, value);
-                SetOperationActive(TR23OpDefs.ListEnd, value);
             }
         }
+
+        internal override bool SupportsCutScenes => HasOperation(TR23OpDefs.Cinematic);
 
         internal override bool HasSunset
         {
@@ -130,7 +139,6 @@ namespace TRGE.Core
                             gcOp = AddOperation(TR23OpDefs.GameComplete);
                         }
                     }
-                    //GetOperation(TR23OpDefs.Complete).Definition = TR23OpDefs.GameComplete;
                     gcOp.Definition = TR23OpDefs.GameComplete;
                 }
                 else
@@ -171,22 +179,7 @@ namespace TRGE.Core
 
         private void AddBonusItem(ushort itemID)
         {
-            int pos = GetLastOperationIndex(TR23OpDefs.StartInvBonus);
-            if (pos == -1)
-            {
-                pos = GetOperationIndex(TR23OpDefs.StartInvBonus.Next);
-            }
-            _operations.Insert(pos, new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
-        }
-
-        internal List<MutableTuple<ushort, TRItemCategory, string, int>> GetBonusItemData(AbstractTRItemProvider provider)
-        {
-            List<MutableTuple<ushort, TRItemCategory, string, int>> items = new List<MutableTuple<ushort, TRItemCategory, string, int>>();
-            foreach (TRItem item in provider.BonusItems)
-            {
-                items.Add(new MutableTuple<ushort, TRItemCategory, string, int>(item.ID, item.Category, item.Name, GetBonusItemCount(item, provider)));
-            }
-            return items;
+            _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
         }
 
         internal int GetBonusItemCount(TRItem item, AbstractTRItemProvider itemProvider)
@@ -199,7 +192,7 @@ namespace TRGE.Core
                     i++;
                 }
             }
-            return i == 0 ? -1 : i;
+            return i;
         }
 
         internal List<TRItem> GetBonusItems(AbstractTRItemProvider itemProvider, bool startInv = false)
@@ -222,18 +215,6 @@ namespace TRGE.Core
                 }
             }
             return ret;
-        }
-
-        internal void SetBonusItemData(List<MutableTuple<ushort, TRItemCategory, string, int>> items)
-        {
-            RemoveBonuses();
-            foreach (MutableTuple<ushort, TRItemCategory, string, int> item in items)
-            {
-                for (int i = 0; i < item.Item4; i++)
-                {
-                    AddBonusItem(item.Item1);
-                }
-            }
         }
     }
 }

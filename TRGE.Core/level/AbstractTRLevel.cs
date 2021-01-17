@@ -25,9 +25,12 @@ namespace TRGE.Core
 
         internal abstract ushort Sequence { get; set; }
         internal abstract bool HasFMV { get; set; }
+        internal abstract bool SupportsFMVs { get; }
         internal abstract bool HasStartAnimation { get; set; }
+        internal abstract bool SupportsStartAnimations { get; }
         internal abstract short StartAnimationID { get; set; }
         internal abstract bool HasCutScene { get; set; }
+        internal abstract bool SupportsCutScenes { get; }
         internal abstract bool HasSunset { get; set; }
         internal abstract bool HasDeadlyWater { get; set; }
         internal abstract bool RemovesWeapons { get; set; }

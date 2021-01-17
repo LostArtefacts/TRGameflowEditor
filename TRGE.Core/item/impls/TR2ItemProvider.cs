@@ -160,5 +160,22 @@ namespace TRGE.Core
                 }
             };
         }
+
+        internal override void SortBonusItems(List<TRItem> items)
+        {
+            //this is very specific for Catacombs of the Talion,
+            //where to ensure the output script matches the original
+            //grenades are listed in the script before M16, whereas
+            //in all other cases, the item ID determines the sequence
+            items.Sort(delegate(TRItem item1, TRItem item2)
+            {
+                if (item2 == M16Ammo && item1 == Grenades)
+                {
+                    return item2.CompareTo(item1);
+                }
+
+                return item1.CompareTo(item2);
+            });
+        }
     }
 }

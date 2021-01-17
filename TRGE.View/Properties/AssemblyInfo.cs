@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Tomb Raider Gameflow Editor")]
 [assembly: AssemblyDescription("Provides a GUI to allow editing of Tomb Raider script files to modify game flow.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TompCommunity")]
+[assembly: AssemblyCompany("Tomp Community")]
 [assembly: AssemblyProduct("TRGE")]
-[assembly: AssemblyCopyright("Copyright © TompCommunity 2021")]
+[assembly: AssemblyCopyright("Copyright © Tomp Community 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -115,18 +115,27 @@ namespace TRGE.Core
             return -1;
         }
 
-        internal void InsertOperation(TROpDef opDef, ushort operand, TROpDef beforeOpDef, bool isActive = true)
+        internal void InsertOperation(TROpDef opDef, ushort operand, TROpDef afterOpDef, bool isActive = true)
         {
             int pos = 0;
-            if (beforeOpDef != null)
+            if (afterOpDef != null)
             {
-                TROperation op = GetOperation(beforeOpDef);
+                TROperation op = GetOperation(afterOpDef);
                 if (op != null)
                 {
-                    pos = _operations.IndexOf(op);
+                    pos = _operations.IndexOf(op) + 1;
                 }
             }
-            _operations.Insert(pos, new TROperation(opDef, operand, isActive));
+
+            TROperation operation = new TROperation(opDef, operand, isActive);
+            if (pos >= _operations.Count)
+            {
+                _operations.Add(operation);
+            }
+            else
+            {
+                _operations.Insert(pos, operation);
+            }
         }
 
         internal void EnsureOperation(TROperation operation)

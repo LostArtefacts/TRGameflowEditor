@@ -45,12 +45,6 @@ namespace TRGE.Core
             _weapons.Add(Shotgun = CreateItem(1, TRItemCategory.Weapon));
             _weapons.Add(Uzis    = CreateItem(3, TRItemCategory.Weapon));
             _weapons.Add(Harpoon = CreateItem(4, TRItemCategory.Weapon));
-
-            /*_allItems.Add(Pistols = new TRItem(0, TRItemCategory.Weapon, gameStrings[36]));
-
-            _weapons.Add(Shotgun = new TRItem(1, TRItemCategory.Weapon, gameStrings[37]));
-            _weapons.Add(Uzis = new TRItem(3, TRItemCategory.Weapon, gameStrings[39]));
-            _weapons.Add(Harpoon = new TRItem(4, TRItemCategory.Weapon, gameStrings[40]));*/
         }
 
         protected abstract int[] GetGameStringIndices();
@@ -135,5 +129,7 @@ namespace TRGE.Core
             }
             return items;
         }
+
+        internal virtual void SortBonusItems(List<TRItem> items) { }
     }
 }

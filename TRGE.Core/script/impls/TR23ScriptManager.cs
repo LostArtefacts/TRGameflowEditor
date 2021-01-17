@@ -12,34 +12,42 @@ namespace TRGE.Core
         internal TR23ScriptManager(string originalFilePath, TR23Script script)
             : base(originalFilePath, script) { }
 
-        protected override Dictionary<string, object> CreateConfig()
-        {
-            throw new NotImplementedException();
-        }
-
         protected override void LoadConfig(Dictionary<string, object> config)
         {
             if (config == null)
             {
+                UnarmedLevelOrganisation = Organisation.Default;
+                UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                RandomUnarmedLevelCount = Math.Max(1, (LevelManager as TR23LevelManager).GetUnarmedLevelCount());
+
+                AmmolessLevelOrganisation = Organisation.Default;
+                AmmolessLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                RandomAmmolessLevelCount = Math.Max(1, (LevelManager as TR23LevelManager).GetAmmolessLevelCount());
+
+                BonusOrganisation = Organisation.Default;
+                BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+
                 return;
             }
 
-            Dictionary<string, object> unarmedLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["Unarmed"].ToString());
-            UnarmedLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), unarmedLevels["Org"]);
+            Dictionary<string, object> unarmedLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["UnarmedLevels"].ToString());
+            UnarmedLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), unarmedLevels["Organisation"]);
             UnarmedLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(unarmedLevels["RNG"].ToString()));
             RandomUnarmedLevelCount = uint.Parse(unarmedLevels["RandomCount"].ToString());
-            if (UnarmedLevelOrganisation == Organisation.Manual)
-            {
-                UnarmedLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(unarmedLevels["Manual"].ToString());
-            }                
+            UnarmedLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(unarmedLevels["Data"].ToString());                
 
-            Dictionary<string, object> ammolessLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["Ammoless"].ToString());
-            AmmolessLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), ammolessLevels["Org"]);
+            Dictionary<string, object> ammolessLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["AmmolessLevels"].ToString());
+            AmmolessLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), ammolessLevels["Organisation"]);
             AmmolessLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(ammolessLevels["RNG"].ToString()));
             RandomAmmolessLevelCount = uint.Parse(ammolessLevels["RandomCount"].ToString());
-            if (AmmolessLevelOrganisation == Organisation.Manual)
+            AmmolessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(ammolessLevels["Data"].ToString());
+
+            if (CanOrganiseBonuses)
             {
-                AmmolessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(ammolessLevels["Manual"].ToString());
+                Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["BonusSetup"].ToString());
+                BonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Organisation"]);
+                BonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
+                LevelBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses["Data"].ToString());
             }
 
             LevelsHaveCutScenes = bool.Parse(config["LevelCutScenesOn"].ToString());
@@ -58,9 +66,82 @@ namespace TRGE.Core
             TitleScreenEnabled = bool.Parse(config["TitlesOn"].ToString());
         }
 
-        protected override void PrepareSave()
+        protected override void SaveImpl(Dictionary<string, object> config)
         {
-            throw new NotImplementedException();
+            //for unarmed, ammoless and bonus data, save the config before
+            //running any randomisation, otherwise when the script is
+            //reloaded the random order will be available
+            config["UnarmedLevels"] = new Dictionary<string, object>
+            {
+                ["Organisation"] = (int)UnarmedLevelOrganisation,
+                ["RNG"] = UnarmedLevelRNG.ToJson(),
+                ["RandomCount"] = RandomUnarmedLevelCount,
+                ["Data"] = UnarmedLevelData
+            };
+
+            config["AmmolessLevels"] = new Dictionary<string, object>
+            {
+                ["Organisation"] = (int)AmmolessLevelOrganisation,
+                ["RNG"] = AmmolessLevelRNG.ToJson(),
+                ["RandomCount"] = RandomAmmolessLevelCount,
+                ["Data"] = AmmolessLevelData
+            };
+
+            if (CanOrganiseBonuses)
+            {
+                config["BonusSetup"] = new Dictionary<string, object>
+                {
+                    ["Organisation"] = (int)BonusOrganisation,
+                    ["RNG"] = BonusRNG.ToJson(),
+                    ["Data"] = LevelBonusData
+                };
+            }
+
+            config["LevelCutScenesOn"] = LevelsHaveCutScenes;
+            config["LevelFMVsOn"] = LevelsHaveFMV;
+            config["LevelStartAnimsOn"] = LevelsHaveStartAnimation;
+            config["CheatsOn"] = CheatsEnabled;
+            config["DemosOn"] = DemosEnabled;
+            config["DemoTime"] = DemoTime;
+            config["DemoVersion"] = IsDemoVersion;
+            config["DozyOn"] = DozyEnabled;
+            config["GymOn"] = GymEnabled;
+            config["LevelSelectOn"] = LevelSelectEnabled;
+            config["OptionRingOn"] = OptionRingEnabled;
+            config["SaveLoadOn"] = SaveLoadEnabled;
+            config["ScreensizeOn"] = ScreensizingEnabled;
+            config["TitlesOn"] = TitleScreenEnabled;
+
+            AbstractTRScript backupScript = LoadBackupScript();
+            List<AbstractTRLevel> backupLevels = backupScript.Levels;
+
+            TR23LevelManager levelMan = LevelManager as TR23LevelManager;
+            if (BonusOrganisation == Organisation.Random)
+            {
+                levelMan.RandomiseBonuses();
+            }
+            else if (BonusOrganisation == Organisation.Default)
+            {
+                levelMan.RestoreBonuses(backupLevels);
+            }
+
+            if (AmmolessLevelOrganisation == Organisation.Random)
+            {
+                levelMan.RandomiseAmmolessLevels(backupLevels);
+            }
+            else if (AmmolessLevelOrganisation == Organisation.Default)
+            {
+                levelMan.RestoreAmmolessLevels(backupLevels);
+            }
+
+            if (UnarmedLevelOrganisation == Organisation.Random)
+            {
+                levelMan.RandomiseUnarmedLevels(backupLevels);
+            }
+            else if (UnarmedLevelOrganisation == Organisation.Default)
+            {
+                levelMan.RestoreUnarmedLevels(backupLevels);
+            }
         }
 
         internal override AbstractTRScript LoadBackupScript()
@@ -150,11 +231,50 @@ namespace TRGE.Core
             return (LevelManager as TR23LevelManager).GetAmmolessLevels();
         }
 
+        public bool CanOrganiseBonuses => (LevelManager as TR23LevelManager).CanOrganiseBonuses;
+        public Organisation BonusOrganisation
+        {
+            get => (LevelManager as TR23LevelManager).BonusOrganisation;
+            set => (LevelManager as TR23LevelManager).BonusOrganisation = value;
+        }
+
+        public RandomGenerator BonusRNG
+        {
+            get => (LevelManager as TR23LevelManager).BonusRNG;
+            set => (LevelManager as TR23LevelManager).BonusRNG = value;
+        }
+
+        public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> LevelBonusData
+        {
+            get
+            {
+                if (CanOrganiseBonuses)
+                {
+                    return (LevelManager as TR23LevelManager).GetLevelBonusData();
+                }
+                return null;
+            }
+            set
+            {
+                if (CanOrganiseBonuses)
+                {
+                    (LevelManager as TR23LevelManager).SetLevelBonusData(value);
+                }
+            }
+        }
+
+        internal void RandomiseBonuses()
+        {
+            (LevelManager as TR23LevelManager).RandomiseBonuses();
+        }
+
         public bool LevelsHaveCutScenes
         {
             get => (LevelManager as TR23LevelManager).GetLevelsHaveCutScenes();
             set => (LevelManager as TR23LevelManager).SetLevelsHaveCutScenes(value);
         }
+
+        public bool LevelsSupportCutScenes => (LevelManager as TR23LevelManager).GetLevelsSupportCutScenes();
 
         public bool LevelsHaveFMV
         {
@@ -162,11 +282,15 @@ namespace TRGE.Core
             set => (LevelManager as TR23LevelManager).SetLevelsHaveFMV(value);
         }
 
+        public bool LevelsSupportFMVs => (LevelManager as TR23LevelManager).GetLevelsSupportFMVs();
+
         public bool LevelsHaveStartAnimation
         {
             get => (LevelManager as TR23LevelManager).GetLevelsHaveStartAnimation();
             set => (LevelManager as TR23LevelManager).SetLevelsHaveStartAnimation(value);
         }
+
+        public bool LevelsSupportStartAnimations => (LevelManager as TR23LevelManager).GetLevelsSupportStartAnimations();
 
         public bool CheatsEnabled
         {
@@ -197,6 +321,8 @@ namespace TRGE.Core
             get => (Script as TR23Script).DozyEnabled;
             set => (Script as TR23Script).DozyEnabled = value;
         }
+
+        public bool DozySupported => (Script as TR23Script).DozyViable;
 
         public bool GymEnabled
         {

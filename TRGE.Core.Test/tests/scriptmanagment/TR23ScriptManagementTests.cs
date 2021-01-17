@@ -1,29 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TRGE.Core.Test
 {
     [TestClass]
     public class TR23ScriptManagementTests : BaseTestCollection
     {
-        protected override void TearDown()
-        {
-            base.TearDown();
-            foreach (string scriptFile in _validScripts)
-            {
-                FileInfo fi = new FileInfo(TRGameflowEditor.Instance.GetScriptManager(scriptFile).BackupFilePath);
-                if (fi.Exists)
-                {
-                    fi.Directory.Delete(true);
-                }
-            }
-        }
-
         [TestMethod]
         [TestSequence(0)]
         protected void TestCreateScriptManager()
