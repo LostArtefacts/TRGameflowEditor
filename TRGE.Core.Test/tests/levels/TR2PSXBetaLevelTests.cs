@@ -6,7 +6,7 @@ namespace TRGE.Core.Test
     public class TR2PSXBetaLevelTests : AbstractTR23LevelTestCollection
     {
         protected override int ScriptFileIndex => 3;
-
+        protected override TREdition Edition => TREdition.TR2PSXBeta;
         protected override string[] LevelNames => new string[]
         {
             "The Great Wall W", "Venice B", "Bartoli's Hideout V", "Opera House O", "Offshore Rig R",

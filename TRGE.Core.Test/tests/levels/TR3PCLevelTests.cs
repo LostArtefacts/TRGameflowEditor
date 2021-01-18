@@ -6,6 +6,7 @@ namespace TRGE.Core.Test
     public class TR3PCLevelTests : AbstractTR23LevelTestCollection
     {
         protected override int ScriptFileIndex => 2;
+        protected override TREdition Edition => TREdition.TR3PC;
 
         protected override string[] LevelNames => new string[]
         {

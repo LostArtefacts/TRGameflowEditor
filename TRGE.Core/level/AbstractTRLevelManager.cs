@@ -5,7 +5,21 @@ namespace TRGE.Core
 {
     internal abstract class AbstractTRLevelManager
     {
+        internal abstract AbstractTRAudioProvider AudioProvider { get; }
         internal abstract AbstractTRItemProvider ItemProvider { get; }
+        internal abstract int LevelCount { get; }
+        internal abstract List<AbstractTRLevel> Levels { get; set; }
+        
+        internal Organisation LevelOrganisation { get; set; }
+        internal RandomGenerator LevelRNG { get; set; }
+        internal TREdition Edition { get; private set; }
+
+        internal AbstractTRLevelManager(TREdition edition)
+        {
+            Edition = edition;
+        }
+
+        internal abstract void Save();
 
         internal virtual AbstractTRLevel GetLevel(string id)
         {
@@ -18,13 +32,6 @@ namespace TRGE.Core
             }
             return null;
         }
-
-        internal abstract int LevelCount { get; }
-        internal abstract List<AbstractTRLevel> Levels { get; set; }
-        internal abstract void Save();
-
-        internal Organisation LevelOrganisation { get; set; }
-        internal RandomGenerator LevelRNG { get; set; }
 
         internal virtual List<Tuple<string, string>> GetLevelSequencing()
         {
@@ -44,7 +51,7 @@ namespace TRGE.Core
         internal virtual void SetLevelSequencing(List<Tuple<string, string>> data)
         {
             List<AbstractTRLevel> newLevels = new List<AbstractTRLevel>();
-            ushort newSeq = 1;
+            //ushort newSeq = 1;
             foreach (Tuple<string, string> item in data)
             {
                 AbstractTRLevel level = GetLevel(item.Item1);
@@ -52,12 +59,13 @@ namespace TRGE.Core
                 {
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
                 }
-                level.Sequence = newSeq++;
-                level.IsFinalLevel = newSeq == LevelCount + 1;
+                //level.Sequence = newSeq++;
+                //level.IsFinalLevel = newSeq == LevelCount + 1;
                 newLevels.Add(level);
             }
 
             Levels = newLevels;
+            SetLevelSequencing();
         }
 
         internal virtual void RandomiseLevelSequencing(List<AbstractTRLevel> originalLevels)
@@ -66,7 +74,7 @@ namespace TRGE.Core
             shuffledLevels.Randomise(LevelRNG.Create());
 
             List<AbstractTRLevel> newLevels = new List<AbstractTRLevel>();
-            ushort newSeq = 1;
+            //ushort newSeq = 1;
             foreach (AbstractTRLevel shfLevel in shuffledLevels)
             {
                 AbstractTRLevel level = GetLevel(shfLevel.ID);
@@ -75,12 +83,23 @@ namespace TRGE.Core
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
                 }
 
-                level.Sequence = newSeq++;
-                level.IsFinalLevel = newSeq == LevelCount + 1;
+                //level.Sequence = newSeq++;
+                //level.IsFinalLevel = newSeq == (LevelCount - Edition.LevelCompleteOffset) + 1;
                 newLevels.Add(level);
             }
 
             Levels = newLevels;
+            SetLevelSequencing();
+        }
+
+        internal void SetLevelSequencing()
+        {
+            ushort newSeq = 1;
+            foreach (AbstractTRLevel level in Levels)
+            {
+                level.Sequence = newSeq++;
+                level.IsFinalLevel = newSeq == (LevelCount - Edition.LevelCompleteOffset) + 1;
+            }
         }
 
         internal void RestoreLevelSequencing(List<AbstractTRLevel> originalLevels)

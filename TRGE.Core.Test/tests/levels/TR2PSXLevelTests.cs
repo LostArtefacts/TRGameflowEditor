@@ -6,6 +6,7 @@ namespace TRGE.Core.Test
     public class TR2PSXLevelTests : AbstractTR23LevelTestCollection
     {
         protected override int ScriptFileIndex => 4;
+        protected override TREdition Edition => TREdition.TR2PSX;
 
         protected override string[] LevelNames => new string[]
         {

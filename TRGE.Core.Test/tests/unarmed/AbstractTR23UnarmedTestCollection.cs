@@ -6,6 +6,7 @@ namespace TRGE.Core.Test
     public abstract class AbstractTR23UnarmedTestCollection : BaseTestCollection
     {
         protected abstract int ScriptFileIndex { get; }
+        protected abstract TREdition Edition { get; }
         List<AbstractTRLevel> _expectedLevels;
         protected abstract string[] LevelNames { get; }
         protected abstract string[] LevelFileNames { get; }

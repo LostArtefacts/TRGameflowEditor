@@ -10,6 +10,7 @@ namespace TRGE.Core.Test
         List<AbstractTRLevel> _expectedLevels;
         protected abstract string[] LevelNames { get; }
         protected abstract string[] LevelFileNames { get; }
+        protected abstract TREdition Edition { get; }
 
         protected void InitialiseLevels()
         {
@@ -54,7 +55,7 @@ namespace TRGE.Core.Test
                 sm.RandomiseLevels();
                 List<AbstractTRLevel> levels = sm.LevelManager.Levels;
                 CollectionAssert.AreEqual(levels, _expectedLevels);
-                TestForFinalLevel(levels);
+                TestForFinalLevel(levels, sm.Edition);
             }
             finally
             {
@@ -75,7 +76,7 @@ namespace TRGE.Core.Test
                 sm.LevelSequencing = levelSequencingData;
                 List<AbstractTRLevel> levels = sm.LevelManager.Levels;
                 CollectionAssert.AreEqual(levels, _expectedLevels);
-                TestForFinalLevel(levels);
+                TestForFinalLevel(levels, sm.Edition);
             }
             finally
             {
@@ -83,13 +84,14 @@ namespace TRGE.Core.Test
             }
         }
 
-        private void TestForFinalLevel(List<AbstractTRLevel> levels)
+        private void TestForFinalLevel(List<AbstractTRLevel> levels, TREdition edition)
         {
+            int expectedIndex = levels.Count - edition.LevelCompleteOffset - 1;
             for (int i = 0; i < levels.Count; i++)
             {
-                if (i == levels.Count - 1)
+                if (i == expectedIndex)
                 {
-                    Assert.IsTrue(levels[i].IsFinalLevel, "Level at final index is not marked as the final level");
+                    Assert.IsTrue(levels[i].IsFinalLevel, string.Format("Level at index {0} is not marked as the final level", i));
                 }
                 else
                 {

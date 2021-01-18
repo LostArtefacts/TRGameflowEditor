@@ -6,6 +6,7 @@ namespace TRGE.Core.Test
     public class TR3GPCUnarmedTests : AbstractTR23UnarmedTestCollection
     {
         protected override int ScriptFileIndex => 6;
+        protected override TREdition Edition => TREdition.TR3G;
 
         protected override string[] LevelNames => new string[]
         {

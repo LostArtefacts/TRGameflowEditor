@@ -359,5 +359,7 @@ namespace TRGE.Core
             get => !(Script as TR23Script).TitleDisabled;
             set => (Script as TR23Script).TitleDisabled = !value;
         }
+
+        internal TRAudioTrack TitleTrack => LevelManager.AudioProvider.GetTrack((Script as TR23Script).TitleSound);
     }
 }

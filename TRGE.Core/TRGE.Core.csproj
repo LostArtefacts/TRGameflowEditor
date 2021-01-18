@@ -45,7 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="audio\AbstractTRAudioProvider.cs" />
+    <Compile Include="audio\impls\AbstractTR23AudioProvider.cs" />
+    <Compile Include="audio\impls\TR2AudioProvider.cs" />
     <Compile Include="audio\impls\TR3AudioProvider.cs" />
+    <Compile Include="audio\TRAudioFactory.cs" />
+    <Compile Include="audio\TRAudioTrack.cs" />
+    <Compile Include="audio\TRAudioType.cs" />
     <Compile Include="frontend\impls\TR23FrontEnd.cs" />
     <Compile Include="helpers\Extensions.cs" />
     <Compile Include="helpers\Hashing.cs" />
@@ -75,8 +80,14 @@
     <Compile Include="script\AbstractTRScript.cs" />
     <Compile Include="script\AbstractTRScriptManager.cs" />
     <Compile Include="script\impls\TR23ScriptManager.cs" />
+    <Compile Include="TRDownloadEventArgs.cs" />
     <Compile Include="TRFileEventArgs.cs" />
     <Compile Include="TRGameflowEditor.cs" />
+    <Compile Include="TRGE.Core.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TRGE.Core.resx</DependentUpon>
+    </Compile>
     <Compile Include="version\Hardware.cs" />
     <Compile Include="script\TRScriptFactory.cs" />
     <Compile Include="script\impls\TR23Script.cs" />
@@ -86,6 +97,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\tr2audio.dat" />
+    <None Include="Resources\tr3audio.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TRGE.Core.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TRGE.Core.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

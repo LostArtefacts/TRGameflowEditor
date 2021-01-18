@@ -6,13 +6,15 @@ namespace TRGE.Core
 {
     internal class TR23LevelManager : AbstractTRLevelManager
     {
+        private readonly AbstractTR23AudioProvider _audioProvider;
+        private readonly AbstractTR23ItemProvider _itemProvider;
         private readonly TR23Script _script;
         private List<TR23Level> _levels;
-        private readonly AbstractTR23ItemProvider _itemProvider;
 
         internal override int LevelCount => _levels.Count;
+        internal override AbstractTRAudioProvider AudioProvider => _audioProvider;
         internal override AbstractTRItemProvider ItemProvider => _itemProvider;
-        internal bool CanOrganiseBonuses { get; private set; }
+        internal bool CanOrganiseBonuses => Edition.SecretBonusesSupproted;
         internal override List<AbstractTRLevel> Levels
         {
             get => _levels.Cast<AbstractTRLevel>().ToList();
@@ -34,11 +36,11 @@ namespace TRGE.Core
         internal uint RandomAmmolessLevelCount { get; set; }
 
         internal TR23LevelManager(TR23Script script)
+            : base(script.Edition)
         {
-            _script = script;
-            Levels = _script.Levels;
+            Levels = (_script = script).Levels;
+            _audioProvider = TRAudioFactory.GetAudioProvider(script.Edition) as AbstractTR23AudioProvider;
             _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
-            CanOrganiseBonuses = script.Edition.Version == TRVersion.TR2 || script.Edition.Version == TRVersion.TR2G;
         }
 
         internal List<TR23Level> GetAmmolessLevels()

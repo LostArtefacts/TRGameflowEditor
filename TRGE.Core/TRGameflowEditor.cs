@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("TRGE.Core.Test")]
 namespace TRGE.Core
@@ -26,7 +24,9 @@ namespace TRGE.Core
             }
         }
 
-        private const string ConfigFile = "config.json";
+        private const string _resourceURLBase = "https://github.com/lahm86/TRGameflowEditor/raw/main/Resources/";
+
+        private const string _configFile = "config.json";
         private string _configDirectory;
 
         private readonly List<AbstractTRScriptManager> _activeScriptManagers;
@@ -36,6 +36,8 @@ namespace TRGE.Core
 
         public event EventHandler<TRFileEventArgs> FileHistoryAdded;
         public event EventHandler FileHistoryChanged;
+
+        public event EventHandler<TRDownloadEventArgs> ResourceDownloading;
 
         private TRGameflowEditor()
         {
@@ -99,7 +101,7 @@ namespace TRGE.Core
 
         internal string GetConfigDirectory()
         {
-            string path = Path.Combine(_configDirectory, "TRGE"); //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TRGE");
+            string path = Path.Combine(_configDirectory, "TRGE");
             Directory.CreateDirectory(path);
             return path;
         }
@@ -176,7 +178,55 @@ namespace TRGE.Core
 
         private string GetConfigPath()
         {
-            return Path.Combine(GetConfigDirectory(), ConfigFile);
+            return Path.Combine(GetConfigDirectory(), _configFile);
+        }
+
+        //TODO: this remains untested
+        internal bool DownloadResourceFile(string urlPath, string targetFile)
+        {
+            string url = _resourceURLBase + urlPath;
+
+            TRDownloadEventArgs args = new TRDownloadEventArgs
+            {
+                URL = url,
+                TargetFile = targetFile
+            };
+
+            ResourceDownloading?.Invoke(this, args);
+
+            try
+            {
+                HttpWebRequest req = WebRequest.CreateHttp(url);
+                using (WebResponse response = req.GetResponse())
+                using (Stream receiveStream = response.GetResponseStream())
+                using (FileStream ouputStream = File.OpenWrite(targetFile))
+                {
+                    args.DownloadLength = response.ContentLength;
+                    args.Status = TRDownloadStatus.Downloading;
+                    ResourceDownloading?.Invoke(this, args);
+
+                    byte[] buffer = new byte[1024];
+                    int size;
+                    while ((size = receiveStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        ouputStream.Write(buffer, 0, size);
+                        args.DownloadProgress += size;
+                        args.DownloadDifference = size;
+                        ResourceDownloading?.Invoke(this, args);
+                    }
+
+                    args.Status = TRDownloadStatus.Completed;
+                }
+            }
+            catch (Exception e)
+            {
+                args.Exception = e;
+                args.Status = TRDownloadStatus.Failed;
+            }
+
+            ResourceDownloading?.Invoke(this, args);
+
+            return args.Status == TRDownloadStatus.Completed;
         }
     }
 }
