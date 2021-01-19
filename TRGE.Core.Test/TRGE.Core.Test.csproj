@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C73A3268-30BA-474F-BF2B-622DE77D750A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TRGE.Core.Test</RootNamespace>
+    <AssemblyName>TRGE.Core.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.2.1.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.2.1.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Tests\AbstractTestCollection.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\Unit\Audio\AbstractTR23AudioTestCollection.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2GPCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2PCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2PSXAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2PSXBetaAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR3GPCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR3PCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR3PSXAudioTests.cs" />
+    <Compile Include="Tests\Integration\Audio\AbstractTR23AudioIntegrationTestCollection.cs" />
+    <Compile Include="Tests\Unit\Interruptions\AbstractTR23InterruptionTestCollection.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2GPCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2PCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2PSXBetaInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2PSXInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR3GPCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR3PCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR3PSXInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Items\AbstractTR23ItemTestCollection.cs" />
+    <Compile Include="Tests\Unit\Items\AbstractTR2ItemTestCollection.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PCGItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PCItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PSXBetaItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PSXItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\AbstractTR3ItemTestCollection.cs" />
+    <Compile Include="Tests\Unit\Items\TR3GPCItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR3PCItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR3PSXItemTests.cs" />
+    <Compile Include="Tests\Unit\Levels\AbstractTR23LevelTestCollection.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2GPCLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2PSXBetaLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2PSXLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR3GPCLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR3PCLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR3PSXLevelTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\AbstractTR23ManagedIOTestCollection.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2GPCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2PCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2PSXBetaManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2PSXManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR3GPCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR3PCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR3PSXManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ScriptManagment\TR23ScriptManagementTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2PCLevelTests.cs" />
+    <Compile Include="Tests\TestSequenceAttribute.cs" />
+    <Compile Include="Tests\BaseTestCollection.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2GPCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2PCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2PSXBetaScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2PSXScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR3GPCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR3PCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR3PSXScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\Flags\TR23FlagTests.cs" />
+    <Compile Include="Tests\Unit\Misc\TR23MiscTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\AbstractTR23UnarmedTestCollection.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2GPCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2PCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2PSXBetaUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2PSXUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR3GPCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR3PCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR3PSXUnarmedTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Audio\tr2audio.wad">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Audio\tr3audio.wad">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Scripts\INVALID.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\TOMBPC_TR3.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\TOMBPC_TR2G.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\TOMBPC_TR2.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\TOMBPSX_BETA_TR2.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\TOMBPSX_TR2.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\TOMBPSX_TR3.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Scripts\TRTLA_TR3G.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TRGE.Core\TRGE.Core.csproj">
+      <Project>{d35a4948-923b-4ef7-87de-81c27d156d93}</Project>
+      <Name>TRGE.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

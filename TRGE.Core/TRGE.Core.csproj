@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D35A4948-923B-4EF7-87DE-81C27D156D93}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TRGE.Core</RootNamespace>
+    <AssemblyName>TRGE.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\AbstractTRAudioProvider.cs" />
+    <Compile Include="Audio\Impls\AbstractTR23AudioProvider.cs" />
+    <Compile Include="Audio\Impls\TR23AudioExtractor.cs" />
+    <Compile Include="Audio\Impls\TR2AudioProvider.cs" />
+    <Compile Include="Audio\Impls\TR3AudioProvider.cs" />
+    <Compile Include="Audio\TRAudioFactory.cs" />
+    <Compile Include="Audio\TRAudioTrack.cs" />
+    <Compile Include="Audio\TRAudioType.cs" />
+    <Compile Include="FrontEnd\Impls\TR23FrontEnd.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\Hashing.cs" />
+    <Compile Include="Helpers\MutableTuple.cs" />
+    <Compile Include="Helpers\Organisation.cs" />
+    <Compile Include="Helpers\RandomGenerator.cs" />
+    <Compile Include="Item\BaseTRItemBroker.cs" />
+    <Compile Include="Item\AbstractTRItemProvider.cs" />
+    <Compile Include="Item\Impls\AbstractTR23ItemProvider.cs" />
+    <Compile Include="Item\Impls\TR2ItemProvider.cs" />
+    <Compile Include="Item\Impls\TR3ItemProvider.cs" />
+    <Compile Include="Item\TRItem.cs" />
+    <Compile Include="Item\TRItemBrokerDealer.cs" />
+    <Compile Include="Item\TRItemCategory.cs" />
+    <Compile Include="Item\TRItemFactory.cs" />
+    <Compile Include="FrontEnd\AbstractTRFrontEnd.cs" />
+    <Compile Include="Level\AbstractTRLevel.cs" />
+    <Compile Include="Level\AbstractTRLevelManager.cs" />
+    <Compile Include="Level\Impls\TR23Level.cs" />
+    <Compile Include="Level\Impls\TR23LevelManager.cs" />
+    <Compile Include="Level\TRLevelFactory.cs" />
+    <Compile Include="Operation\TR23OpDefs.cs" />
+    <Compile Include="Operation\TROpDef.cs" />
+    <Compile Include="Operation\TROperation.cs" />
+    <Compile Include="Operation\AbstractTROperationContainer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Script\AbstractTRScript.cs" />
+    <Compile Include="Script\AbstractTRScriptManager.cs" />
+    <Compile Include="Script\Impls\TR23ScriptManager.cs" />
+    <Compile Include="TRDownloadEventArgs.cs" />
+    <Compile Include="TRFileEventArgs.cs" />
+    <Compile Include="TRGameflowEditor.cs" />
+    <Compile Include="TRGE.Core.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TRGE.Core.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Version\Hardware.cs" />
+    <Compile Include="Script\TRScriptFactory.cs" />
+    <Compile Include="Script\Impls\TR23Script.cs" />
+    <Compile Include="Script\UnsupportedScriptException.cs" />
+    <Compile Include="Version\TREdition.cs" />
+    <Compile Include="Version\TRVersion.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\tr2audio.dat" />
+    <None Include="Resources\tr3audio.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TRGE.Core.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TRGE.Core.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
