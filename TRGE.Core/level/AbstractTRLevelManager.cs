@@ -6,10 +6,12 @@ namespace TRGE.Core
     internal abstract class AbstractTRLevelManager
     {
         internal abstract AbstractTRAudioProvider AudioProvider { get; }
+        protected abstract ushort TitleSoundID { get; set; }
+        protected abstract ushort SecretSoundID { get; set; }
         internal abstract AbstractTRItemProvider ItemProvider { get; }
-        internal abstract int LevelCount { get; }
         internal abstract List<AbstractTRLevel> Levels { get; set; }
-        
+        internal abstract int LevelCount { get; }
+
         internal Organisation LevelOrganisation { get; set; }
         internal RandomGenerator LevelRNG { get; set; }
         internal TREdition Edition { get; private set; }
@@ -141,6 +143,58 @@ namespace TRGE.Core
                 }
             }
             return levels;
+        }
+
+        internal List<MutableTuple<string, string, ushort>> GetLevelTrackData()
+        {
+            List<MutableTuple<string, string, ushort>> ret = new List<MutableTuple<string, string, ushort>>();
+
+            TRAudioTrack track = AudioProvider.GetTrack(TitleSoundID);
+            if (track != null)
+            {
+                ret.Add(new MutableTuple<string, string, ushort>("TITLE", "Title Screen", TitleSoundID));
+            }
+            track = AudioProvider.GetTrack(SecretSoundID);
+            if (track != null)
+            {
+                ret.Add(new MutableTuple<string, string, ushort>("SECRET", "Secret Found", SecretSoundID));
+            }
+
+            foreach (AbstractTRLevel level in Levels)
+            {
+                track = AudioProvider.GetTrack(level.TrackID);
+                if (track == null)
+                {
+                    track = AudioProvider.GetBlankTrack();
+                }
+                ret.Add(new MutableTuple<string, string, ushort>(level.ID, level.Name, track.ID));
+            }
+            return ret;
+        }
+
+        internal void SetLevelTrackData(List<MutableTuple<string, string, ushort>> data)
+        {
+            foreach (MutableTuple<string, string, ushort> item in data)
+            {
+                if (item.Item1.Equals("TITLE"))
+                {
+                    TitleSoundID = item.Item3;
+                }
+                else if (item.Item1.Equals("SECRET"))
+                {
+                    SecretSoundID = item.Item3;
+                }
+                else
+                {
+                    AbstractTRLevel level = GetLevel(item.Item1);
+                    if (level == null)
+                    {
+                        throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
+                    }
+
+                    level.TrackID = item.Item3;
+                }
+            }
         }
     }
 }

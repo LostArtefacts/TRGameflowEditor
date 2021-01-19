@@ -8,7 +8,7 @@
             Version = TRVersion.Unknown,
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
-            SecretBonusesSupproted = false
+            SecretBonusesSupported = false
         };
 
         internal static readonly TREdition GenericPSX = new TREdition
@@ -17,7 +17,7 @@
             Version = TRVersion.Unknown,
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
-            SecretBonusesSupproted = false
+            SecretBonusesSupported = false
         };
 
         internal static readonly TREdition TR2PC = new TREdition
@@ -26,7 +26,7 @@
             Version = TRVersion.TR2,
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
-            SecretBonusesSupproted = true
+            SecretBonusesSupported = true
         };
 
         internal static readonly TREdition TR2PSX = new TREdition
@@ -35,7 +35,7 @@
             Version = TRVersion.TR2,
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
-            SecretBonusesSupproted = true
+            SecretBonusesSupported = true
         };
 
         internal static readonly TREdition TR2PSXBeta = new TREdition
@@ -44,7 +44,7 @@
             Version = TRVersion.TR2,
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
-            SecretBonusesSupproted = true
+            SecretBonusesSupported = true
         };
 
         internal static readonly TREdition TR2G = new TREdition
@@ -53,7 +53,7 @@
             Version = TRVersion.TR2G,
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
-            SecretBonusesSupproted = true
+            SecretBonusesSupported = true
         };
 
         internal static readonly TREdition TR3PC = new TREdition
@@ -62,7 +62,7 @@
             Version = TRVersion.TR3,
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
-            SecretBonusesSupproted = false
+            SecretBonusesSupported = false
         };
 
         internal static readonly TREdition TR3PSX = new TREdition
@@ -71,7 +71,7 @@
             Version = TRVersion.TR3,
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 1,
-            SecretBonusesSupproted = false
+            SecretBonusesSupported = false
         };
 
         internal static readonly TREdition TR3G = new TREdition
@@ -80,7 +80,7 @@
             Version = TRVersion.TR3G,
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
-            SecretBonusesSupproted = false
+            SecretBonusesSupported = false
         };
 
         public string Title { get; private set; }
@@ -94,7 +94,7 @@
         /// <summary>
         /// Whether or not secret bonus selection/organisation is supported
         /// </summary>
-        public bool SecretBonusesSupproted { get; private set; }
+        public bool SecretBonusesSupported { get; private set; }
 
         private TREdition() { }
 

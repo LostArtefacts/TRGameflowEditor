@@ -30,7 +30,9 @@ namespace TRGE.Core
         internal abstract void Read(BinaryReader br);
         internal abstract byte[] Serialise();
         protected abstract void CalculateEdition();
-        internal abstract AbstractTRFrontEnd FrontEnd { get; set; }
+        internal abstract AbstractTRFrontEnd FrontEnd { get; }
         internal abstract List<AbstractTRLevel> Levels { get; set; }
+        internal abstract ushort TitleSoundID { get; set; }
+        internal abstract ushort SecretSoundID { get; set; }
     }
 }

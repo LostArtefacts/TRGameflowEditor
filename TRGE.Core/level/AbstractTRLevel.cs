@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace TRGE.Core
@@ -14,9 +15,11 @@ namespace TRGE.Core
             get => _levelFile;
             set
             {
-                ID = Hashing.CreateMD5(_levelFile = value, Encoding.Default);
+                ID = CreateID(_levelFile = value);
             }
         }
+
+        internal string LevelFileBaseName => Path.GetFileName(LevelFile);
 
         protected List<string> _puzzles, _keys, _pickups;
         internal IReadOnlyList<string> Puzzles => _puzzles;
@@ -24,6 +27,7 @@ namespace TRGE.Core
         internal IReadOnlyList<string> Pickups => _pickups;
 
         internal abstract ushort Sequence { get; set; }
+        internal abstract ushort TrackID { get; set; }
         internal abstract bool HasFMV { get; set; }
         internal abstract bool SupportsFMVs { get; }
         internal abstract bool HasStartAnimation { get; set; }
@@ -74,6 +78,11 @@ namespace TRGE.Core
                     _operations.Insert(i, other.GetOperation(opDef));
                 }
             }
+        }
+
+        internal static string CreateID(string identifier)
+        {
+            return Hashing.CreateMD5(Path.GetFileNameWithoutExtension(identifier).ToUpper(), Encoding.Default);
         }
 
         public override bool Equals(object obj)

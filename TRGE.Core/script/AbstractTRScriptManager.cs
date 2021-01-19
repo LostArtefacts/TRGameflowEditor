@@ -18,7 +18,7 @@ namespace TRGE.Core
         public string BackupFilePath { get; internal set; }
 
         internal AbstractTRLevelManager LevelManager { get; private set; }
-        internal AbstractTRFrontEnd FrontEnd { get; private set; }
+        internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
         internal AbstractTRScript Script { get; private set; }
         
         internal AbstractTRScriptManager(string originalFilePath, AbstractTRScript script)
@@ -31,17 +31,11 @@ namespace TRGE.Core
             OriginalFilePath = originalFilePath;
             CreateBackup();
 
-            //(Script = script).Read(OriginalFilePath); //actually read from the backup path instead?
-            (Script = script).Read(BackupFilePath); //actually read from the backup path instead?
-            FrontEnd = script.FrontEnd;
+            (Script = script).Read(BackupFilePath);
 
             LevelManager = TRLevelFactory.GetLevelManager(script);
 
             ReadConfig();
-
-            //TODO: if this is not the first time opening the file, run through
-            //the config from the last time so the script is in the same
-            //state, but we still have any inactive operations still in place
         }
 
         protected void CreateBackup()
@@ -164,6 +158,20 @@ namespace TRGE.Core
         {
             get => FrontEnd.HasFMV;
             set => FrontEnd.HasFMV = value;
+        }
+
+        public virtual List<MutableTuple<string, string, ushort>> GameTrackData
+        {
+            get => LevelManager.GetLevelTrackData();
+            set => LevelManager.SetLevelTrackData(value);
+        }
+
+        internal TRAudioTrack TitleTrack => LevelManager.AudioProvider.GetTrack(Script.TitleSoundID);
+        internal TRAudioTrack SecretTrack => LevelManager.AudioProvider.GetTrack(Script.SecretSoundID);
+
+        public byte[] GetTrackData(ushort trackID)
+        {
+            return LevelManager.AudioProvider.GetTrackData(trackID);
         }
     }
 }

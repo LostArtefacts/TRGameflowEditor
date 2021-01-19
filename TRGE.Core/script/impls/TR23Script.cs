@@ -44,13 +44,18 @@ namespace TRGE.Core
         internal ushort NumRPLs { get; private set; }
         internal ushort NumCutScenes { get; private set; }
         internal ushort NumDemoLevels { get; private set; }
-        internal ushort TitleSound { get; private set; }
+        internal override ushort TitleSoundID { get; set; }
         internal ushort SingleLevel { get; private set; }        
         internal ushort Flags { get; private set; }        
         internal byte Xor { get; private set; }
         internal byte Language { get; private set; }
         internal byte SecretSound { get; private set; }
-        
+        internal override ushort SecretSoundID
+        {
+            get => Convert.ToUInt16(SecretSound);
+            set => SecretSound = Convert.ToByte(value);
+        }
+
         private List<string> _levelNames, _pictureNames, _titleFileNames, _rplFileNames, _levelFileNames, _cutSceneFileNames;
         internal IReadOnlyList<string> LevelNames => _levelNames;
         internal IReadOnlyList<string> PictureNames => _pictureNames;
@@ -246,18 +251,21 @@ namespace TRGE.Core
 
         #region TRLevel Interop
 
+        private AbstractTRFrontEnd _frontEnd;
         internal override AbstractTRFrontEnd FrontEnd
         {
             get
             {
-                TR23FrontEnd frontEnd = new TR23FrontEnd();
-                frontEnd.BuildOperations(_scriptData[0]);
-                return frontEnd;
+                if (_frontEnd == null)
+                {
+                    (_frontEnd = new TR23FrontEnd()).BuildOperations(_scriptData[0]);
+                }
+                return _frontEnd;
             }
-            set
+            /*set
             {
                 _scriptData[0] = value.TranslateOperations();
-            }
+            }*/
         }
 
         internal override List<AbstractTRLevel> Levels
@@ -392,7 +400,7 @@ namespace TRGE.Core
             NumRPLs = br.ReadUInt16();
             NumCutScenes = br.ReadUInt16();
             NumDemoLevels = br.ReadUInt16();
-            TitleSound = br.ReadUInt16();
+            TitleSoundID = br.ReadUInt16();
             SingleLevel = br.ReadUInt16();
             _padding2 = br.ReadBytes(32);
 
@@ -569,7 +577,7 @@ namespace TRGE.Core
                 bw.Write(NumRPLs);
                 bw.Write(NumCutScenes);
                 bw.Write(NumDemoLevels);
-                bw.Write(TitleSound);
+                bw.Write(TitleSoundID);
                 bw.Write(SingleLevel);
                 bw.Write(_padding2);
 
@@ -658,6 +666,8 @@ namespace TRGE.Core
             {
                 return;
             }
+
+            _scriptData[0] = FrontEnd.TranslateOperations();
 
             ushort runningOffset = 0;
             bw.Write(runningOffset);

@@ -14,7 +14,8 @@ namespace TRGE.Core
         internal override int LevelCount => _levels.Count;
         internal override AbstractTRAudioProvider AudioProvider => _audioProvider;
         internal override AbstractTRItemProvider ItemProvider => _itemProvider;
-        internal bool CanOrganiseBonuses => Edition.SecretBonusesSupproted;
+        internal bool CanOrganiseBonuses => Edition.SecretBonusesSupported;
+
         internal override List<AbstractTRLevel> Levels
         {
             get => _levels.Cast<AbstractTRLevel>().ToList();
@@ -22,6 +23,18 @@ namespace TRGE.Core
             {
                 _levels = value.Cast<TR23Level>().ToList();
             }
+        }
+
+        protected override ushort TitleSoundID
+        {
+            get => _script.TitleSoundID;
+            set => _script.TitleSoundID = value;
+        }
+
+        protected override ushort SecretSoundID
+        {
+            get => _script.SecretSoundID;
+            set => _script.SecretSoundID = value;
         }
 
         internal Organisation BonusOrganisation { get; set; }

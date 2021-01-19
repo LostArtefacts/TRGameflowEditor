@@ -5,7 +5,7 @@ using System.IO;
 namespace TRGE.Core.Test
 {
     [TestClass]
-    public class TR2PSXScriptIOTests : AbstractTestCollection
+    public class TR2PCScriptIOTests : AbstractTestCollection
     {
         private string _validFilePath, _invalidFilePath;
         private TR23Script _script;
@@ -14,7 +14,7 @@ namespace TRGE.Core.Test
         protected override void Setup()
         {
             _invalidFilePath = @"scripts\INVALID.dat";
-            _validFilePath = @"scripts\TOMBPSX_TR2.dat";
+            _validFilePath = @"scripts\TOMBPC_TR2.dat";
         }
 
         [ClassCleanup]
@@ -43,7 +43,7 @@ namespace TRGE.Core.Test
             {
                 AbstractTRScript script = TRScriptFactory.OpenScript(_validFilePath);
                 Assert.IsTrue(script is TR23Script);
-                Assert.IsTrue(script.Edition == TREdition.TR2PSX);
+                Assert.IsTrue(script.Edition == TREdition.TR2PC);
                 _script = script as TR23Script;
             }
             catch (UnsupportedScriptException)
@@ -57,7 +57,7 @@ namespace TRGE.Core.Test
         {
             List<string> expectedCutScenes = new List<string>
             {
-                @"data\cut1.PSX", @"data\cut2.PSX", @"data\cut3.PSX", @"data\cut4.PSX"
+                @"data\cut1.TR2", @"data\cut2.TR2", @"data\cut3.TR2", @"data\cut4.TR2"
             };
 
             Assert.IsTrue(_script.NumCutScenes == expectedCutScenes.Count);
@@ -81,24 +81,6 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
-        protected void TestFMVData()
-        {
-            List<uint[]> excpectedFMVData = new List<uint[]>
-            {
-                new uint[] { 1, 864 },
-                new uint[] { 1, 4355 },
-                new uint[] { 1, 300 },
-                new uint[] { 1, 350 },
-                new uint[] { 1, 975 },
-                new uint[] { 1, 1515 },
-                new uint[] { 1, 1841 },
-                new uint[] { 1, 603 }
-            };
-
-            CompareUIntArrays(excpectedFMVData, _script.PSXFMVData);
-        }
-
-        [TestMethod]
         protected void TestGameStringData()
         {
             List<string> expectedStrings1 = new List<string>
@@ -116,16 +98,10 @@ namespace TRGE.Core.Test
 
             List<string> expectedStrings2 = new List<string>
             {
-                "Screen Adjust","DEMO MODE","Sound","Controls","Gamma","Set Volumes","Control Method","The file could not be saved!",
-                "Try Again?","YES","NO","Save Complete!","No save games!","None valid","Save Game?","- EMPTY SLOT -",
-                "Press any button to quit","Use directional buttons","to adjust screen position","> Select","; Go Back","> Continue",
-                "Paused","Controller Removed","Save game to","Overwrite game on","Load game from","the Memory card in","Memory card slot 1",
-                "Are you sure ?","Yes","No","is full","There are no","Tomb Raider II games on","There is a problem with","There is no Memory card in",
-                "is unformatted","Would you like to","format it ?","Saving game to","Loading game from","Formatting","Overwrite game","Save game",
-                "Load game","Format Memory card","Exit","Continue","You will not be able","to save any games unless","you insert a formatted",
-                "Memory card with at least","one free block","The Memory card in","Exit without saving","Exit without loading","Start game",
-                "UNFORMATTED MEMORY CARD","Insert a formatted","or press > to continue","without saving.","bu00:BESLES-00718TOMB2","bu00:BASLUS-00437TOMB2",
-                "Load O.K.","Load failed","Saved O.K.","Save failed","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare"
+                "Detail Levels","Demo Mode","Sound","Controls","Gamma","Set Volumes","User Keys","The file could not be saved!","Try Again?","YES",
+                "NO","Save Complete!","No save games!","None valid","Save Game?","- EMPTY SLOT -","OFF","ON","Setup Sound Card","Default Keys",
+                "DOZY","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare",
+                "spare","spare","spare","spare","spare"
             };
 
             Assert.IsTrue(_script.NumGameStrings1 == expectedStrings1.Count);
@@ -183,12 +159,12 @@ namespace TRGE.Core.Test
 
             List<string> expectedLevelFileNames = new List<string>
             {
-                @"data\assault.PSX",
-                @"data\wall.PSX", @"data\boat.PSX", @"data\venice.PSX", @"data\opera.PSX", @"data\rig.PSX",
-                @"data\platform.PSX", @"data\unwater.PSX", @"data\keel.PSX", @"data\living.PSX",
-                @"data\deck.PSX", @"data\skidoo.PSX", @"data\monastry.PSX", @"data\catacomb.PSX",
-                @"data\icecave.PSX", @"data\emprtomb.PSX", @"data\floating.PSX", @"data\xian.PSX", @"data\house.PSX",
-                @"data\boat.psx", @"data\keel.psx", @"data\skidoo.psx" //demos
+                @"data\assault.TR2",
+                @"data\wall.TR2", @"data\boat.TR2", @"data\venice.TR2", @"data\opera.TR2", @"data\rig.TR2",
+                @"data\platform.TR2", @"data\unwater.TR2", @"data\keel.TR2", @"data\living.TR2",
+                @"data\deck.TR2", @"data\skidoo.TR2", @"data\monastry.TR2", @"data\catacomb.TR2",
+                @"data\icecave.TR2", @"data\emprtomb.TR2", @"data\floating.TR2", @"data\xian.TR2", @"data\house.TR2",
+                @"data\boat.tr2", @"data\keel.tr2", @"data\skidoo.tr2" //demos
             };
 
             Assert.IsTrue(_script.NumLevels == expectedLevelNames.Count);
@@ -210,7 +186,7 @@ namespace TRGE.Core.Test
             Assert.IsTrue(_script.SecretSound == 47);
             Assert.IsTrue(_script.SingleLevel == 65535);
             Assert.IsTrue(_script.TitleReplace == -1);
-            Assert.IsTrue(_script.TitleSound == 64);
+            Assert.IsTrue(_script.TitleSoundID == 64);
             Assert.IsTrue(_script.Xor == 166);
         }
 
@@ -236,15 +212,8 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPictureData()
         {
-            List<string> expectedPictures = new List<string>
-            {
-                @"pix\mansion.raw",@"pix\china.raw",@"pix\venice.raw",@"pix\venice.raw",@"pix\venice.raw",@"pix\rig.raw",
-                @"pix\rig.raw",@"pix\titan.raw",@"pix\titan.raw",@"pix\titan.raw",@"pix\titan.raw",@"pix\tibet.raw",
-                @"pix\tibet.raw",@"pix\tibet.raw",@"pix\tibet.raw",@"pix\china.raw",@"pix\china.raw",@"pix\china.raw",
-                @"pix\mansion.raw",@"pix\venice.raw",@"pix\titan.raw",@"pix\tibet.raw"
-            };
-
-            Assert.IsTrue(_script.NumPictures == expectedPictures.Count);
+            List<string> expectedPictures = new List<string>();
+            Assert.IsTrue(_script.NumPictures == 0);
             CompareStrings(expectedPictures, _script.PictureNames);
         }
 
@@ -286,8 +255,8 @@ namespace TRGE.Core.Test
         {
             List<string> expectedRPLs = new List<string>
             {
-                @"\FMV\LOGO.FMV", @"\FMV\ANCIENT.FMV", @"\FMV\MODERN.FMV", @"\FMV\LANDING.FMV",
-                @"\FMV\MS.FMV", @"\FMV\CRASH.FMV", @"\FMV\JEEP.FMV", @"\FMV\END.FMV"
+                @"FMV\LOGO.RPL", @"FMV\ANCIENT.RPL", @"FMV\MODERN.RPL", @"FMV\LANDING.RPL",
+                @"FMV\MS.RPL", @"FMV\CRASH.RPL", @"FMV\JEEP.RPL", @"FMV\END.RPL"
             };
 
             Assert.IsTrue(_script.NumRPLs == expectedRPLs.Count);
@@ -300,28 +269,28 @@ namespace TRGE.Core.Test
             List<ushort[]> expectedScriptData = new List<ushort[]>
             {
                 new ushort[] { 3, 0, 3, 1, 9 },
-                new ushort[] { 20, 0, 12, 0, 10, 0, 4, 0, 9 },
-                new ushort[] { 3, 2, 10, 33, 12, 1, 18, 6, 18, 13, 18, 13, 18, 15, 4, 1, 10, 3, 16, 0, 5, 0, 6, 9 },
-                new ushort[] { 10, 0, 12, 2, 18, 9, 18, 9, 18, 9, 18, 9, 4, 2, 6, 9 },
-                new ushort[] { 10, 0, 11, 12, 3, 18, 8, 18, 8, 18, 8, 18, 8, 4, 3, 6, 9 },
-                new ushort[] { 10, 31, 12, 4, 18, 3, 18, 10, 18, 10, 18, 10, 18, 10, 4, 4, 10, 4, 5, 1, 6, 9 },
-                new ushort[] { 3, 3, 10, 58, 19, 8, 14, 12, 5, 18, 3, 18, 10, 18, 10, 4, 5, 6, 9 },
-                new ushort[] { 10, 58, 12, 6, 18, 10, 18, 10, 18, 10, 18, 10, 4, 6, 10, 5, 5, 2, 6, 9 },
-                new ushort[] { 3, 4, 10, 34, 12, 7, 18, 11, 18, 11, 18, 11, 18, 11, 4, 7, 6, 9 },
-                new ushort[] { 10, 31, 12, 8, 18, 6, 18, 13, 18, 13, 4, 8, 6, 9 },
-                new ushort[] { 10, 34, 12, 9, 18, 12, 18, 12, 18, 12, 18, 12, 4, 9, 6, 9 },
-                new ushort[] { 10, 31, 12, 10, 18, 13, 18, 13, 18, 13, 18, 13, 4, 10, 6, 9 },
-                new ushort[] { 3, 5, 10, 33, 18, 1022, 12, 11, 18, 10, 18, 10, 18, 10, 18, 10, 4, 11, 6, 9 },
-                new ushort[] { 10, 0, 18, 1022, 12, 12, 18, 12, 18, 12, 18, 12, 18, 12, 4, 12, 6, 9 },
-                new ushort[] { 10, 31, 12, 13, 18, 13, 18, 13, 18, 12, 18, 12, 4, 13, 6, 9 },
-                new ushort[] { 10, 31, 13, 12, 14, 18, 13, 18, 13, 18, 13, 18, 13, 4, 14, 6, 9 },
-                new ushort[] { 3, 6, 10, 59, 12, 15, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 4, 15, 10, 30, 16, 0, 5, 3, 6, 9 },
-                new ushort[] { 10, 59, 17, 9728, 12, 16, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 4, 16, 6, 9 },
-                new ushort[] { 20, 0, 10, 59, 12, 17, 4, 17, 6, 3, 7, 9 },
-                new ushort[] { 20, 0, 18, 1023, 19, 9, 21, 10, 0, 12, 18, 14, 22, 4, 18, 10, 52, 15, 9 },
-                new ushort[] { 10, 0, 12, 19, 7, 19, 9 },
-                new ushort[] { 10, 32, 12, 20, 7, 20, 9 },
-                new ushort[] { 10, 33, 12, 21, 18, 1022, 7, 21, 9 }
+                new ushort[] { 20, 0, 10, 0, 4, 0, 9 },
+                new ushort[] { 3, 2, 10, 33, 18, 6, 18, 13, 18, 13, 18, 15, 4, 1, 10, 3, 16, 0, 5, 0, 6, 9 },
+                new ushort[] { 10, 0, 18, 9, 18, 9, 18, 9, 18, 9, 4, 2, 6, 9 },
+                new ushort[] { 10, 0, 11, 18, 8, 18, 8, 18, 8, 18, 8, 4, 3, 6, 9 },
+                new ushort[] { 10, 31, 18, 3, 18, 10, 18, 10, 18, 10, 18, 10, 4, 4, 10, 4, 5, 1, 6, 9 },
+                new ushort[] { 3, 3, 10, 58, 19, 8, 14, 18, 3, 18, 10, 18, 10, 4, 5, 6, 9 },
+                new ushort[] { 10, 58, 18, 10, 18, 10, 18, 10, 18, 10, 4, 6, 10, 5, 5, 2, 6, 9 },
+                new ushort[] { 3, 4, 10, 34, 18, 11, 18, 11, 18, 11, 18, 11, 4, 7, 6, 9 },
+                new ushort[] { 10, 31, 18, 6, 18, 13, 18, 13, 4, 8, 6, 9 },
+                new ushort[] { 10, 34, 18, 12, 18, 12, 18, 12, 18, 12, 4, 9, 6, 9 },
+                new ushort[] { 10, 31, 18, 13, 18, 13, 18, 13, 18, 13, 4, 10, 6, 9 },
+                new ushort[] { 3, 5, 10, 33, 18, 1022, 18, 10, 18, 10, 18, 10, 18, 10, 4, 11, 6, 9 },
+                new ushort[] { 10, 0, 18, 1022, 18, 12, 18, 12, 18, 12, 18, 12, 4, 12, 6, 9 },
+                new ushort[] { 10, 31, 18, 13, 18, 13, 18, 12, 18, 12, 4, 13, 6, 9 },
+                new ushort[] { 10, 31, 13, 18, 13, 18, 13, 18, 13, 18, 13, 4, 14, 6, 9 },
+                new ushort[] { 3, 6, 10, 59, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 18, 10, 4, 15, 10, 30, 16, 0, 5, 3, 6, 9 },
+                new ushort[] { 10, 59, 17, 9728, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 18, 13, 4, 16, 6, 9 },
+                new ushort[] { 20, 0, 10, 59, 4, 17, 6, 3, 7, 9 },
+                new ushort[] { 20, 0, 18, 1023, 19, 9, 21, 10, 0, 14, 22, 4, 18, 10, 52, 15, 9 },
+                new ushort[] { 10, 0, 7, 19, 9 },
+                new ushort[] { 10, 32, 7, 20, 9 },
+                new ushort[] { 10, 33, 18, 1022, 7, 21, 9 }
             };
 
             CompareUShortArrays(expectedScriptData, _script.ScriptData);
@@ -332,8 +301,8 @@ namespace TRGE.Core.Test
         {
             List<string> expectedTitles = new List<string>
             {
-                @"data\title.PSX", @"pixUK\title.raw", @"pixUK\legal.raw", @"pixUS\titleUS.raw",
-                @"pixUS\legalUS.raw", @"pixJAP\titleJAP.raw", @"pixJAP\legalJAP.raw"
+                @"data\title.TR2", @"data\title.pcx", @"data\legal.pcx", @"data\titleUS.pcx",
+                @"data\legalUS.pcx", @"data\titleJAP.pcx", @"data\legalJAP.pcx"
             };
 
             Assert.IsTrue(_script.NumTitles == expectedTitles.Count);

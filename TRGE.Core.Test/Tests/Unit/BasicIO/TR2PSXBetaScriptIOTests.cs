@@ -198,7 +198,7 @@ namespace TRGE.Core.Test
             Assert.IsTrue(_script.SecretSound == 47);
             Assert.IsTrue(_script.SingleLevel == 65535);
             Assert.IsTrue(_script.TitleReplace == -1);
-            Assert.IsTrue(_script.TitleSound == 2);
+            Assert.IsTrue(_script.TitleSoundID == 2);
             Assert.IsTrue(_script.Xor == 0);
         }
 

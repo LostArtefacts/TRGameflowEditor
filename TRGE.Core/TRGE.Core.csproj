@@ -44,42 +44,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="audio\AbstractTRAudioProvider.cs" />
-    <Compile Include="audio\impls\AbstractTR23AudioProvider.cs" />
-    <Compile Include="audio\impls\TR2AudioProvider.cs" />
-    <Compile Include="audio\impls\TR3AudioProvider.cs" />
-    <Compile Include="audio\TRAudioFactory.cs" />
-    <Compile Include="audio\TRAudioTrack.cs" />
-    <Compile Include="audio\TRAudioType.cs" />
-    <Compile Include="frontend\impls\TR23FrontEnd.cs" />
-    <Compile Include="helpers\Extensions.cs" />
-    <Compile Include="helpers\Hashing.cs" />
-    <Compile Include="helpers\MutableTuple.cs" />
-    <Compile Include="helpers\Organisation.cs" />
-    <Compile Include="helpers\RandomGenerator.cs" />
-    <Compile Include="item\BaseTRItemBroker.cs" />
-    <Compile Include="item\AbstractTRItemProvider.cs" />
-    <Compile Include="item\impls\AbstractTR23ItemProvider.cs" />
-    <Compile Include="item\impls\TR2ItemProvider.cs" />
-    <Compile Include="item\impls\TR3ItemProvider.cs" />
-    <Compile Include="item\TRItem.cs" />
-    <Compile Include="item\TRItemBrokerDealer.cs" />
-    <Compile Include="item\TRItemCategory.cs" />
-    <Compile Include="item\TRItemFactory.cs" />
-    <Compile Include="frontend\AbstractTRFrontEnd.cs" />
-    <Compile Include="level\AbstractTRLevel.cs" />
-    <Compile Include="level\AbstractTRLevelManager.cs" />
-    <Compile Include="level\impls\TR23Level.cs" />
-    <Compile Include="level\impls\TR23LevelManager.cs" />
-    <Compile Include="level\TRLevelFactory.cs" />
-    <Compile Include="operation\TR23OpDefs.cs" />
-    <Compile Include="operation\TROpDef.cs" />
-    <Compile Include="operation\TROperation.cs" />
-    <Compile Include="operation\AbstractTROperationContainer.cs" />
+    <Compile Include="Audio\AbstractTRAudioProvider.cs" />
+    <Compile Include="Audio\Impls\AbstractTR23AudioProvider.cs" />
+    <Compile Include="Audio\Impls\TR23AudioExtractor.cs" />
+    <Compile Include="Audio\Impls\TR2AudioProvider.cs" />
+    <Compile Include="Audio\Impls\TR3AudioProvider.cs" />
+    <Compile Include="Audio\TRAudioFactory.cs" />
+    <Compile Include="Audio\TRAudioTrack.cs" />
+    <Compile Include="Audio\TRAudioType.cs" />
+    <Compile Include="FrontEnd\Impls\TR23FrontEnd.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\Hashing.cs" />
+    <Compile Include="Helpers\MutableTuple.cs" />
+    <Compile Include="Helpers\Organisation.cs" />
+    <Compile Include="Helpers\RandomGenerator.cs" />
+    <Compile Include="Item\BaseTRItemBroker.cs" />
+    <Compile Include="Item\AbstractTRItemProvider.cs" />
+    <Compile Include="Item\Impls\AbstractTR23ItemProvider.cs" />
+    <Compile Include="Item\Impls\TR2ItemProvider.cs" />
+    <Compile Include="Item\Impls\TR3ItemProvider.cs" />
+    <Compile Include="Item\TRItem.cs" />
+    <Compile Include="Item\TRItemBrokerDealer.cs" />
+    <Compile Include="Item\TRItemCategory.cs" />
+    <Compile Include="Item\TRItemFactory.cs" />
+    <Compile Include="FrontEnd\AbstractTRFrontEnd.cs" />
+    <Compile Include="Level\AbstractTRLevel.cs" />
+    <Compile Include="Level\AbstractTRLevelManager.cs" />
+    <Compile Include="Level\Impls\TR23Level.cs" />
+    <Compile Include="Level\Impls\TR23LevelManager.cs" />
+    <Compile Include="Level\TRLevelFactory.cs" />
+    <Compile Include="Operation\TR23OpDefs.cs" />
+    <Compile Include="Operation\TROpDef.cs" />
+    <Compile Include="Operation\TROperation.cs" />
+    <Compile Include="Operation\AbstractTROperationContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="script\AbstractTRScript.cs" />
-    <Compile Include="script\AbstractTRScriptManager.cs" />
-    <Compile Include="script\impls\TR23ScriptManager.cs" />
+    <Compile Include="Script\AbstractTRScript.cs" />
+    <Compile Include="Script\AbstractTRScriptManager.cs" />
+    <Compile Include="Script\Impls\TR23ScriptManager.cs" />
     <Compile Include="TRDownloadEventArgs.cs" />
     <Compile Include="TRFileEventArgs.cs" />
     <Compile Include="TRGameflowEditor.cs" />
@@ -88,12 +89,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TRGE.Core.resx</DependentUpon>
     </Compile>
-    <Compile Include="version\Hardware.cs" />
-    <Compile Include="script\TRScriptFactory.cs" />
-    <Compile Include="script\impls\TR23Script.cs" />
-    <Compile Include="script\UnsupportedScriptException.cs" />
-    <Compile Include="version\TREdition.cs" />
-    <Compile Include="version\TRVersion.cs" />
+    <Compile Include="Version\Hardware.cs" />
+    <Compile Include="Script\TRScriptFactory.cs" />
+    <Compile Include="Script\Impls\TR23Script.cs" />
+    <Compile Include="Script\UnsupportedScriptException.cs" />
+    <Compile Include="Version\TREdition.cs" />
+    <Compile Include="Version\TRVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

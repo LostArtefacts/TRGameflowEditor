@@ -11,6 +11,12 @@ namespace TRGE.Core
             set => GetOperation(TR23OpDefs.Level).Operand = value;
         }
 
+        internal override ushort TrackID
+        {
+            get => GetOperation(TR23OpDefs.Track).Operand;
+            set => GetOperation(TR23OpDefs.Track).Operand = value;
+        }
+
         internal override bool HasFMV
         {
             get => HasActiveOperation(TR23OpDefs.FMV);

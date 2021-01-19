@@ -186,5 +186,34 @@ namespace TRGE.Core.Test
                 TRGameflowEditor.Instance.CloseScriptManager(sm);
             }
         }
+
+        [TestMethod]
+        protected void TestAudioChange()
+        {
+            List<MutableTuple<string, string, ushort>> trackData;
+            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            try
+            {
+                trackData = sm.GameTrackData;
+                trackData[0].Item3 = 47;
+                sm.GameTrackData = trackData;
+
+                TRGameflowEditor.Instance.Save(sm, _testOutputPath);
+            }
+            finally
+            {
+                TRGameflowEditor.Instance.CloseScriptManager(sm);
+            }
+
+            sm = TRGameflowEditor.Instance.GetScriptManager(_testOutputPath) as TR23ScriptManager;
+            try
+            {
+                CollectionAssert.AreEqual(trackData, sm.GameTrackData);
+            }
+            finally
+            {
+                TRGameflowEditor.Instance.CloseScriptManager(sm);
+            }
+        }
     }
 }

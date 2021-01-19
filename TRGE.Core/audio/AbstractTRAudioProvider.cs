@@ -24,6 +24,7 @@ namespace TRGE.Core
             {
                 return GetTrackData(track);
             }
+
             return null;
         }
 
@@ -35,6 +36,12 @@ namespace TRGE.Core
                 {
                     return track;
                 }
+            }
+
+            TRAudioTrack blankTrack = GetBlankTrack();
+            if (id == blankTrack.ID)
+            {
+                return blankTrack;
             }
             return null;
         }

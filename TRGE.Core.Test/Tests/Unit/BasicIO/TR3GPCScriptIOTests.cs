@@ -5,7 +5,7 @@ using System.IO;
 namespace TRGE.Core.Test
 {
     [TestClass]
-    public class TR2GPCScriptIOTests : AbstractTestCollection
+    public class TR3GPCScriptIOTests : AbstractTestCollection
     {
         private string _validFilePath, _invalidFilePath;
         private TR23Script _script;
@@ -14,7 +14,7 @@ namespace TRGE.Core.Test
         protected override void Setup()
         {
             _invalidFilePath = @"scripts\INVALID.dat";
-            _validFilePath = @"scripts\TOMBPC_TR2G.dat";
+            _validFilePath = @"scripts\TRTLA_TR3G.dat";
         }
 
         [ClassCleanup]
@@ -43,8 +43,7 @@ namespace TRGE.Core.Test
             {
                 AbstractTRScript script = TRScriptFactory.OpenScript(_validFilePath);
                 Assert.IsTrue(script is TR23Script);
-                Assert.IsTrue(script.Edition == TREdition.TR2G);
-                
+                Assert.IsTrue(script.Edition == TREdition.TR3G);
                 _script = script as TR23Script;
             }
             catch (UnsupportedScriptException)
@@ -65,7 +64,7 @@ namespace TRGE.Core.Test
             Assert.IsTrue(_script.DeathDemoMode == 1280);
             Assert.IsTrue(_script.DemoEnd == 1280);
             Assert.IsTrue(_script.DemoInterrupt == 1280);
-            Assert.IsTrue(_script.DemoTime == 900);
+            Assert.IsTrue(_script.DemoTime == 9000);
             Assert.IsTrue(_script.NumDemoLevels == 0);
         }
 
@@ -76,20 +75,20 @@ namespace TRGE.Core.Test
             {
                 "INVENTORY","OPTION","ITEMS","GAME OVER","Load Game","Save Game","New Game","Restart Level","Exit to Title","Exit Demo",
                 "Exit Game","Select Level","Save Position","Select Detail","High","Medium","Low","Walk","Roll","Run",
-                "Left","Right","Back","Step Left","?","Step Right","?","Look","Jump","Action",
-                "Draw Weapon","?","Inventory","Flare","Step","Statistics","Pistols","Shotgun","Automatic Pistols","Uzis",
-                "Harpoon Gun","M16","Grenade Launcher","Flare","Pistol Clips","Shotgun Shells","Automatic Pistol Clips","Uzi Clips","Harpoons","M16 Clips",
-                "Grenades","Small Medi Pack","Large Medi Pack","Pickup","Puzzle","Key","Game","Lara's Home","LOADING","Time Taken",
-                "Secrets Found","Location","Kills","Ammo Used","Hits","Saves Performed","Distance Travelled","Health Packs Used","Release Version 1.1","None",
-                "Finish","BEST TIMES","No Times Set","N/A","Current Position","Final Statistics","of","Story so far...","spare","spare",
-                "spare","spare","spare","spare","spare","spare","spare","spare","spare"
+                "Left","Right","Back","Duck","?","Dash","?","Look","Jump","Action",
+                "Arm","?","Inventory","Flare","Duck, Dash","Statistics","Pistols","Shotgun","Desert Eagle","Uzis",
+                "Harpoon Gun","MP5","Rocket Launcher","Grenade Launcher","Flare","Pistol Clips","Shotgun Shells","Desert Eagle Clips","Uzi Clips","Harpoons","MP5 Clips",
+                "Rockets","Grenades","Small Medi Pack","Large Medi Pack","Pickup","Puzzle","Key","Game","Lara's Home","LOADING","Time Taken",
+                "Secrets Found","Location","Kills","Ammo Used","Hits","Saves Performed","Distance Travelled","Health Packs Used","Release Version 1.0","None",
+                "Finish","BEST TIMES","No Times Set","N/A","Current Position","Final Statistics","of","Story so far...","Hand of Rathmore","Hand of Rathmore",
+                "Hand of Rathmore","Hand of Rathmore","Savegame Crystal","London","Nevada","South Pacific Islands","Antarctica","Peru","Adventure", "s"
             };
 
             List<string> expectedStrings2 = new List<string>
             {
                 "Detail Levels","Demo Mode","Sound","Controls","Gamma","Set Volumes","User Keys","The file could not be saved!","Try Again?","YES",
-                "NO","Save Complete!","No save games!","None valid","Save Game?","- EMPTY SLOT -","OFF","ON","Setup Sound Card","Default Keys",
-                "DOZY","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare",
+                "NO","Save Complete!","No save games!","None valid","Save Game?","- Empty Slot -","OFF","ON","Setup Sound Card","Default Keys",
+                "DOZY","Detail Options","Resolution","ZBuffer","Filter","Dither","True Alpha","Gamma","NA","spare","spare","spare","spare","spare","spare","spare",
                 "spare","spare","spare","spare","spare"
             };
 
@@ -105,22 +104,22 @@ namespace TRGE.Core.Test
         {
             List<string> expectedKeys1 = new List<string>
             {
-                "K1","Guardroom Key","CardKey 1","K1","K1","Hotel Key"
+                "Racetrack Key","K1","Cairn Key","Drill Activator Card","K1","Zoo Key","K1"
             };
 
             List<string> expectedKeys2 = new List<string>
             {
-                "K2","Shaft 'B' Key","K2","K2","K2","K2"
+                "K2","K2","K2","K2","K2","K2","K2"
             };
 
             List<string> expectedKeys3 = new List<string>
             {
-                "K3","K3","K3","K3","K3","K3"
+                "K3","K3","K3","K3","K3","K3","K3"
             };
 
             List<string> expectedKeys4 = new List<string>
             {
-                "K4","K4","CardKey 2","K4","K4","K4"
+                "K4","K4","K4","K4","K4","Aviary Key","K4"
             };
 
             CompareStrings(expectedKeys1, _script.KeyNames1);
@@ -134,14 +133,16 @@ namespace TRGE.Core.Test
         {
             List<string> expectedLevelNames = new List<string>
             {
-                "Lara's Home",
-                "The Cold War", "Fool's Gold", "Furnace of the Gods", "Kingdom", "Nightmare In Vegas"
+                "Lara's House",
+                "Highland Fling", "Willard's Lair", "Shakespeare Cliff", "Sleeping with the Fishes",
+                "It's a Madhouse!", "Reunion"
             };
 
             List<string> expectedLevelFileNames = new List<string>
             {
-                @"data\assault.TR2",
-                @"data\level1.TR2", @"data\level2.TR2", @"data\level3.TR2", @"data\level4.TR2", @"data\level5.TR2"
+                @"data\house.TR2",
+                @"data\scotland.TR2", @"data\willsden.TR2", @"data\chunnel.TR2", @"data\undersea.TR2",
+                @"data\zoo.TR2", @"data\slinc.TR2"
             };
 
             Assert.IsTrue(_script.NumLevels == expectedLevelNames.Count);
@@ -155,15 +156,15 @@ namespace TRGE.Core.Test
         protected void TestMiscDefaultData()
         {
             Assert.IsTrue(_script.DeathInGame == 0);
-            Assert.IsTrue(_script.Description.Equals("Tomb Raider II Script. Final Release Version 1.1 (c) Core Design Ltd 1997"));
+            Assert.IsTrue(_script.Description.Equals("Tomb Raider III Script. Final Release (c) Core Design Ltd 1998"));
             Assert.IsTrue(_script.FirstOption == 1280);
             Assert.IsTrue(_script.Flags == 768);
             Assert.IsTrue(_script.GameflowSize == 128);
             Assert.IsTrue(_script.Language == 0);
-            Assert.IsTrue(_script.SecretSound == 47);
+            Assert.IsTrue(_script.SecretSound == 2);
             Assert.IsTrue(_script.SingleLevel == 65535);
             Assert.IsTrue(_script.TitleReplace == -1);
-            Assert.IsTrue(_script.TitleSound == 64);
+            Assert.IsTrue(_script.TitleSoundID == 5);
             Assert.IsTrue(_script.Xor == 166);
         }
 
@@ -172,12 +173,12 @@ namespace TRGE.Core.Test
         {
             List<string> expectedPickups1 = new List<string>
             {
-                "P1","P1","P1","P1","P1","P1"
+                "P1","P1","P1","P1","The Hand Of Rathmore","P1","P1"
             };
 
             List<string> expectedPickups2 = new List<string>
             {
-                "P2","P2","P2","P2","P2","P2"
+                "P2","P2","P2","P2","P2","P2","P2"
             };
 
             CompareStrings(expectedPickups1, _script.PickupNames1);
@@ -187,8 +188,14 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPictureData()
         {
-            List<string> expectedPictures = new List<string>();
-            Assert.IsTrue(_script.NumPictures == 0);
+            List<string> expectedPictures = new List<string>
+            {
+                @"pix\house.bmp",
+                @"pix\highland.bmp",@"pix\willard.bmp",@"pix\chunnel.bmp",@"pix\undersea.bmp",
+                @"pix\zoo.bmp",@"pix\slinc.bmp"
+            };
+
+            Assert.IsTrue(_script.NumPictures == expectedPictures.Count);
             CompareStrings(expectedPictures, _script.PictureNames);
         }
 
@@ -197,22 +204,22 @@ namespace TRGE.Core.Test
         {
             List<string> expectedPuzzles1 = new List<string>
             {
-                "P1","P1","Circuit Board","Mask Of Tornarsuk","Mask Of Tornarsuk","Elevator Junction"
+                "P1","Crowbar","Crowbar","Pump Access Disk","Circuit Bulb","The Hand Of Rathmore","The Hand Of Rathmore"
             };
 
             List<string> expectedPuzzles2 = new List<string>
             {
-                "P2","P2","P2","Gold Nugget","P2","Door Circuit"
+                "P2","Thistle Stone","P2","P2","Mutant Sample","P2","P2"
             };
 
             List<string> expectedPuzzles3 = new List<string>
             {
-                "P3","P3","P3","P3","P3","P3"
+                "P3","P3","P3","P3","Mutant Sample","P3","P3"
             };
 
             List<string> expectedPuzzles4 = new List<string>
             {
-                "P4","P4","P4","P4","P4","P4"
+                "P4","P4","P4","P4","Circuit Bulb","P4","P4"
             };
 
             CompareStrings(expectedPuzzles1, _script.PuzzleNames1);
@@ -239,12 +246,13 @@ namespace TRGE.Core.Test
             List<ushort[]> expectedScriptData = new List<ushort[]>
             {
                 new ushort[] { 3, 0, 9 },
-                new ushort[] { 20, 0, 10, 0, 4, 0, 9 },
-                new ushort[] { 10, 33, 4, 1, 6, 9 },
-                new ushort[] { 10, 58, 4, 2, 6, 9 },
-                new ushort[] { 10, 59, 4, 3, 6, 9 },
-                new ushort[] { 10, 31, 18, 1019, 4, 4, 15, 9 },
-                new ushort[] { 10, 34, 4, 5, 6, 9 }
+                new ushort[] { 12, 0, 10, 2, 4, 0, 9 },
+                new ushort[] { 10, 36, 12, 1, 4, 1, 6, 9 },
+                new ushort[] { 10, 30, 12, 2, 4, 2, 6, 9 },
+                new ushort[] { 10, 74, 12, 3, 4, 3, 6, 9 },
+                new ushort[] { 10, 27, 12, 4, 4, 4, 6, 9 },
+                new ushort[] { 10, 34, 12, 5, 4, 5, 6, 9 },
+                new ushort[] { 10, 26, 12, 6, 4, 6, 15, 9 }
             };
 
             CompareUShortArrays(expectedScriptData, _script.ScriptData);
@@ -255,7 +263,7 @@ namespace TRGE.Core.Test
         {
             List<string> expectedTitles = new List<string>
             {
-                @"data\title.TR2", @"data\title.pcx", @"data\legal.pcx", @"data\titleUS.pcx",
+                @"data\title.TR2", @"pix\titleuk.bmp", @"pix\copyrus.bmp", @"data\titleUS.pcx",
                 @"data\legalUS.pcx", @"data\titleJAP.pcx", @"data\legalJAP.pcx"
             };
 

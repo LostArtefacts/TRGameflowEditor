@@ -12,13 +12,13 @@ namespace TRGE.Core.Test
         internal override Dictionary<string, List<TRItem>> ManualBonusData => new Dictionary<string, List<TRItem>>
         {
             { 
-                Hashing.CreateMD5(@"data\wall.TR2"), new List<TRItem>
+                AbstractTRLevel.CreateID(@"data\wall.TR2"), new List<TRItem>
                 {
                     ExpectedItems[2], ExpectedItems[15]
                 }
             },
             {
-                Hashing.CreateMD5(@"data\boat.TR2"), new List<TRItem>
+                AbstractTRLevel.CreateID(@"data\boat.TR2"), new List<TRItem>
                 {
                     ExpectedItems[6], ExpectedItems[13], ExpectedItems[14]
                 }

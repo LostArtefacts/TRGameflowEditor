@@ -49,96 +49,104 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="tests\AbstractTestCollection.cs" />
+    <Compile Include="Tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="tests\audio\AudioTests.cs" />
-    <Compile Include="tests\interruptions\AbstractTR23InterruptionTestCollection.cs" />
-    <Compile Include="tests\interruptions\TR2GPCInterruptionTests.cs" />
-    <Compile Include="tests\interruptions\TR2PCInterruptionTests.cs" />
-    <Compile Include="tests\interruptions\TR2PSXBetaInterruptionTests.cs" />
-    <Compile Include="tests\interruptions\TR2PSXInterruptionTests.cs" />
-    <Compile Include="tests\interruptions\TR3GPCInterruptionTests.cs" />
-    <Compile Include="tests\interruptions\TR3PCInterruptionTests.cs" />
-    <Compile Include="tests\interruptions\TR3PSXInterruptionTests.cs" />
-    <Compile Include="tests\items\AbstractTR23ItemTestCollection.cs" />
-    <Compile Include="tests\items\AbstractTR2ItemTestCollection.cs" />
-    <Compile Include="tests\items\TR2PCGItemTests.cs" />
-    <Compile Include="tests\items\TR2PCItemTests.cs" />
-    <Compile Include="tests\items\TR2PSXBetaItemTests.cs" />
-    <Compile Include="tests\items\TR2PSXItemTests.cs" />
-    <Compile Include="tests\items\AbstractTR3ItemTestCollection.cs" />
-    <Compile Include="tests\items\TR3GPCItemTests.cs" />
-    <Compile Include="tests\items\TR3PCItemTests.cs" />
-    <Compile Include="tests\items\TR3PSXItemTests.cs" />
-    <Compile Include="tests\levels\AbstractTR23LevelTestCollection.cs" />
-    <Compile Include="tests\levels\TR2GPCLevelTests.cs" />
-    <Compile Include="tests\levels\TR2PSXBetaLevelTests.cs" />
-    <Compile Include="tests\levels\TR2PSXLevelTests.cs" />
-    <Compile Include="tests\levels\TR3GPCLevelTests.cs" />
-    <Compile Include="tests\levels\TR3PCLevelTests.cs" />
-    <Compile Include="tests\levels\TR3PSXLevelTests.cs" />
-    <Compile Include="tests\managedio\AbstractTR23ManagedIOTestCollection.cs" />
-    <Compile Include="tests\managedio\TR2GPCManagedIOTests.cs" />
-    <Compile Include="tests\managedio\TR2PCManagedIOTests.cs" />
-    <Compile Include="tests\managedio\TR2PSXBetaManagedIOTests.cs" />
-    <Compile Include="tests\managedio\TR2PSXManagedIOTests.cs" />
-    <Compile Include="tests\managedio\TR3GPCManagedIOTests.cs" />
-    <Compile Include="tests\managedio\TR3PCManagedIOTests.cs" />
-    <Compile Include="tests\managedio\TR3PSXManagedIOTests.cs" />
-    <Compile Include="tests\scriptmanagment\TR23ScriptManagementTests.cs" />
-    <Compile Include="tests\levels\TR2PCLevelTests.cs" />
-    <Compile Include="tests\TestSequenceAttribute.cs" />
-    <Compile Include="tests\BaseTestCollection.cs" />
-    <Compile Include="tests\basic_io\TR2GPCScriptIOTests.cs" />
-    <Compile Include="tests\basic_io\TR2PCScriptIOTests.cs" />
-    <Compile Include="tests\basic_io\TR2PSXBetaScriptIOTests.cs" />
-    <Compile Include="tests\basic_io\TR2PSXScriptIOTests.cs" />
-    <Compile Include="tests\basic_io\TR3GPCScriptIOTests.cs" />
-    <Compile Include="tests\basic_io\TR3PCScriptIOTests.cs" />
-    <Compile Include="tests\basic_io\TR3PSXScriptIOTests.cs" />
-    <Compile Include="tests\flags\TR23FlagTests.cs" />
-    <Compile Include="tests\misc\TR23MiscTests.cs" />
-    <Compile Include="tests\unarmed\AbstractTR23UnarmedTestCollection.cs" />
-    <Compile Include="tests\unarmed\TR2GPCUnarmedTests.cs" />
-    <Compile Include="tests\unarmed\TR2PCUnarmedTests.cs" />
-    <Compile Include="tests\unarmed\TR2PSXBetaUnarmedTests.cs" />
-    <Compile Include="tests\unarmed\TR2PSXUnarmedTests.cs" />
-    <Compile Include="tests\unarmed\TR3GPCUnarmedTests.cs" />
-    <Compile Include="tests\unarmed\TR3PCUnarmedTests.cs" />
-    <Compile Include="tests\unarmed\TR3PSXUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Audio\AbstractTR23AudioTestCollection.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2GPCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2PCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2PSXAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR2PSXBetaAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR3GPCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR3PCAudioTests.cs" />
+    <Compile Include="Tests\Unit\Audio\TR3PSXAudioTests.cs" />
+    <Compile Include="Tests\Integration\Audio\AbstractTR23AudioIntegrationTestCollection.cs" />
+    <Compile Include="Tests\Unit\Interruptions\AbstractTR23InterruptionTestCollection.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2GPCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2PCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2PSXBetaInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR2PSXInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR3GPCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR3PCInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Interruptions\TR3PSXInterruptionTests.cs" />
+    <Compile Include="Tests\Unit\Items\AbstractTR23ItemTestCollection.cs" />
+    <Compile Include="Tests\Unit\Items\AbstractTR2ItemTestCollection.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PCGItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PCItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PSXBetaItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR2PSXItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\AbstractTR3ItemTestCollection.cs" />
+    <Compile Include="Tests\Unit\Items\TR3GPCItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR3PCItemTests.cs" />
+    <Compile Include="Tests\Unit\Items\TR3PSXItemTests.cs" />
+    <Compile Include="Tests\Unit\Levels\AbstractTR23LevelTestCollection.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2GPCLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2PSXBetaLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2PSXLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR3GPCLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR3PCLevelTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR3PSXLevelTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\AbstractTR23ManagedIOTestCollection.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2GPCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2PCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2PSXBetaManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2PSXManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR3GPCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR3PCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR3PSXManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ScriptManagment\TR23ScriptManagementTests.cs" />
+    <Compile Include="Tests\Unit\Levels\TR2PCLevelTests.cs" />
+    <Compile Include="Tests\TestSequenceAttribute.cs" />
+    <Compile Include="Tests\BaseTestCollection.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2GPCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2PCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2PSXBetaScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR2PSXScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR3GPCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR3PCScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\BasicIO\TR3PSXScriptIOTests.cs" />
+    <Compile Include="Tests\Unit\Flags\TR23FlagTests.cs" />
+    <Compile Include="Tests\Unit\Misc\TR23MiscTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\AbstractTR23UnarmedTestCollection.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2GPCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2PCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2PSXBetaUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR2PSXUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR3GPCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR3PCUnarmedTests.cs" />
+    <Compile Include="Tests\Unit\Unarmed\TR3PSXUnarmedTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="audio\tr2audio.wad">
+    <None Include="Audio\tr2audio.wad">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="audio\tr3audio.wad">
+    <None Include="Audio\tr3audio.wad">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="scripts\INVALID.dat">
+    <None Include="Scripts\INVALID.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\TOMBPC_TR3.dat">
+    <None Include="Scripts\TOMBPC_TR3.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\TOMBPC_TR2G.dat">
+    <None Include="Scripts\TOMBPC_TR2G.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\TOMBPC_TR2.dat">
+    <None Include="Scripts\TOMBPC_TR2.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\TOMBPSX_BETA_TR2.dat">
+    <None Include="Scripts\TOMBPSX_BETA_TR2.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\TOMBPSX_TR2.dat">
+    <None Include="Scripts\TOMBPSX_TR2.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\TOMBPSX_TR3.dat">
+    <None Include="Scripts\TOMBPSX_TR3.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="scripts\TRTLA_TR3G.dat">
+    <None Include="Scripts\TRTLA_TR3G.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

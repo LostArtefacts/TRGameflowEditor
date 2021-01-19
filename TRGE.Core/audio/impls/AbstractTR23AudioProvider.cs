@@ -23,7 +23,7 @@ namespace TRGE.Core
         private void LoadTracks(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
-            using (BinaryReader br = new BinaryReader(ms))// new FileStream(_wadFilePath, FileMode.Open)))
+            using (BinaryReader br = new BinaryReader(ms))
             {
                 ushort trackCount = br.ReadUInt16();
                 ushort fileNameLength = br.ReadUInt16();
@@ -32,7 +32,8 @@ namespace TRGE.Core
                 for (ushort i = 0; i < trackCount; i++)
                 {
                     ushort id = br.ReadUInt16();
-                    byte[] name = br.ReadBytes(258);
+                    ushort trackNameLength = br.ReadUInt16();
+                    byte[] name = br.ReadBytes(trackNameLength);
                     uint length = br.ReadUInt32();
                     uint offset = br.ReadUInt32();
                     if (length > 0)
@@ -40,7 +41,7 @@ namespace TRGE.Core
                         _tracks.Add(new TRAudioTrack
                         {
                             ID = id,
-                            Name = Encoding.ASCII.GetString(name).TrimEnd((char)0),
+                            Name = Encoding.ASCII.GetString(name),
                             Length = length,
                             Offset = offset
                         });

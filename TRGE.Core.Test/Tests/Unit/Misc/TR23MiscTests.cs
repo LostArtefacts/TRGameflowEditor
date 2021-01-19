@@ -21,5 +21,18 @@ namespace TRGE.Core.Test
             Assert.IsTrue(script.DemoTimeSeconds == newDemoTime);
             Assert.IsTrue(SaveAndReload(script).DemoTimeSeconds == newDemoTime);
         }
+
+        [TestMethod]
+        protected void TestLevelIDs()
+        {
+            string id = AbstractTRLevel.CreateID("wall.TR2");
+            Assert.AreEqual(id, AbstractTRLevel.CreateID("wall.PSX"));
+            Assert.AreEqual(id, AbstractTRLevel.CreateID("WALL.psx"));
+            Assert.AreEqual(id, AbstractTRLevel.CreateID(@"data\wall.TR2"));
+            Assert.AreEqual(id, AbstractTRLevel.CreateID(@"C:\Program Files (x86)\etc\data\wall.TR2"));
+            Assert.AreEqual(id, AbstractTRLevel.CreateID(@"..\data\wall.TR2"));
+            Assert.AreEqual(id, AbstractTRLevel.CreateID("data/wall.TR2"));
+            Assert.AreNotEqual(id, AbstractTRLevel.CreateID("boat.TR2"));
+        }
     }
 }
