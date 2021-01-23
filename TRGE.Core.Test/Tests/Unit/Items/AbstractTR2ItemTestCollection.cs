@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using TRGE.Coord;
 
 namespace TRGE.Core.Test
 {
@@ -42,7 +43,7 @@ namespace TRGE.Core.Test
         [TestSequence(0)]
         protected override void TestLoadItems()
         {
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             Assert.IsTrue(sm.LevelManager.ItemProvider is TR2ItemProvider);
             base.TestLoadItems();
         }
@@ -50,10 +51,8 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestRandomiseItems()
         {
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
-            {
-                List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> originalBonusData = sm.LevelBonusData;
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> originalBonusData = sm.LevelBonusData;
 
                 sm.BonusOrganisation = Organisation.Random;
                 sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
@@ -64,61 +63,49 @@ namespace TRGE.Core.Test
                 CollectionAssert.AreNotEqual(originalBonusData, bonusData);
 
                 HashSet<ushort> weapons = new HashSet<ushort>();
-                foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelBonusData in bonusData)
+            foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelBonusData in bonusData)
+            {
+                foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusItem in levelBonusData.Item3)
                 {
-                    foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusItem in levelBonusData.Item3)
+                    if (bonusItem.Item4 > 0)
                     {
-                        if (bonusItem.Item4 > 0)
+                        int levelWeaponCount = 0;
+                        if (bonusItem.Item2 == TRItemCategory.Weapon)
                         {
-                            int levelWeaponCount = 0;
-                            if (bonusItem.Item2 == TRItemCategory.Weapon)
+                            levelWeaponCount++;
+                            if (!weapons.Add(bonusItem.Item1))
                             {
-                                levelWeaponCount++;
-                                if (!weapons.Add(bonusItem.Item1))
-                                {
-                                    Assert.Fail(string.Format("{0} already seen", bonusItem.Item3));
-                                }
-                                if (levelWeaponCount > 1)
-                                {
-                                    Assert.Fail(string.Format("More than one weapon in {0}", levelBonusData.Item2));
-                                }
+                                Assert.Fail(string.Format("{0} already seen", bonusItem.Item3));
                             }
-
-                            //System.Console.WriteLine(levelBonusData.Item2 + "," + bonusItem.Item3 + "," + bonusItem.Item4);
+                            if (levelWeaponCount > 1)
+                            {
+                                Assert.Fail(string.Format("More than one weapon in {0}", levelBonusData.Item2));
+                            }
                         }
+
+                        //System.Console.WriteLine(levelBonusData.Item2 + "," + bonusItem.Item3 + "," + bonusItem.Item4);
                     }
                 }
-            }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
             }
         }
 
         [TestMethod]
         protected void TestReorganiseItems()
         {
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
-            {
-                sm.BonusOrganisation = Organisation.Manual;
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm.BonusOrganisation = Organisation.Manual;
                 
-                Dictionary<string, List<TRItem>> originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
-                CollectionAssert.AreNotEqual(originalBonusData, ManualBonusData);
+            Dictionary<string, List<TRItem>> originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
+            CollectionAssert.AreNotEqual(originalBonusData, ManualBonusData);
 
-                List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = ConvertManualBonusData(sm);
-                sm.LevelBonusData = newBonusData;
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = ConvertManualBonusData(sm);
+            sm.LevelBonusData = newBonusData;
 
-                originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
-                foreach (string levelFile in ManualBonusData.Keys)
-                {
-                    Assert.IsTrue(originalBonusData.ContainsKey(levelFile));
-                    CollectionAssert.AreEquivalent(ManualBonusData[levelFile], originalBonusData[levelFile]);
-                }
-            }
-            finally
+            originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
+            foreach (string levelFile in ManualBonusData.Keys)
             {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
+                Assert.IsTrue(originalBonusData.ContainsKey(levelFile));
+                CollectionAssert.AreEquivalent(ManualBonusData[levelFile], originalBonusData[levelFile]);
             }
         }
 

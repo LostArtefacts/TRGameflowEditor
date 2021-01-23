@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using TRGE.Coord;
 
 namespace TRGE.Core.Test
 {
@@ -130,14 +131,24 @@ namespace TRGE.Core.Test
 
         private void RootSetup()
         {
-            TRGameflowEditor.Instance.SetConfigDirectory(Directory.GetCurrentDirectory());
+            TRCoord.Instance.RootConfigDirectory = Directory.GetCurrentDirectory();
+            RestoreScripts();
             Setup();
         }
 
         private void RootTearDown()
         {
-            Directory.Delete(TRGameflowEditor.Instance.GetConfigDirectory(), true);
+            Directory.Delete(TRCoord.Instance.ConfigDirectory, true);
+            RestoreScripts();
             TearDown();
+        }
+
+        private void RestoreScripts()
+        {
+            foreach (string script in _validScripts)
+            {
+                File.Copy(@"..\..\" + script, script, true);
+            }
         }
 
         [ClassInitialize]

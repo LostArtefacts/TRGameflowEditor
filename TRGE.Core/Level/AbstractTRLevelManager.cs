@@ -9,12 +9,16 @@ namespace TRGE.Core
         protected abstract ushort TitleSoundID { get; set; }
         protected abstract ushort SecretSoundID { get; set; }
         internal abstract AbstractTRItemProvider ItemProvider { get; }
-        internal abstract List<AbstractTRLevel> Levels { get; set; }
+        internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
         internal abstract int LevelCount { get; }
 
         internal Organisation LevelOrganisation { get; set; }
         internal RandomGenerator LevelRNG { get; set; }
+        internal Organisation GameTrackOrganisation { get; set; }
+        internal RandomGenerator GameTrackRNG { get; set; }
         internal TREdition Edition { get; private set; }
+
+        internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
 
         internal AbstractTRLevelManager(TREdition edition)
         {
@@ -23,9 +27,9 @@ namespace TRGE.Core
 
         internal abstract void Save();
 
-        internal virtual AbstractTRLevel GetLevel(string id)
+        internal virtual AbstractTRScriptedLevel GetLevel(string id)
         {
-            foreach (AbstractTRLevel level in Levels)
+            foreach (AbstractTRScriptedLevel level in Levels)
             {
                 if (level.ID.Equals(id))
                 {
@@ -40,10 +44,10 @@ namespace TRGE.Core
             return GetLevelSequencing(Levels);
         }
 
-        private List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRLevel> levels)
+        private List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRScriptedLevel> levels)
         {
             List<Tuple<string, string>> data = new List<Tuple<string, string>>();
-            foreach (AbstractTRLevel level in levels)
+            foreach (AbstractTRScriptedLevel level in levels)
             {
                 data.Add(new Tuple<string, string>(level.ID, level.Name));
             }
@@ -52,11 +56,11 @@ namespace TRGE.Core
 
         internal virtual void SetLevelSequencing(List<Tuple<string, string>> data)
         {
-            List<AbstractTRLevel> newLevels = new List<AbstractTRLevel>();
+            List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
             //ushort newSeq = 1;
             foreach (Tuple<string, string> item in data)
             {
-                AbstractTRLevel level = GetLevel(item.Item1);
+                AbstractTRScriptedLevel level = GetLevel(item.Item1);
                 if (level == null)
                 {
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
@@ -70,16 +74,16 @@ namespace TRGE.Core
             SetLevelSequencing();
         }
 
-        internal virtual void RandomiseLevelSequencing(List<AbstractTRLevel> originalLevels)
+        internal virtual void RandomiseLevelSequencing(List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<AbstractTRLevel> shuffledLevels = new List<AbstractTRLevel>(originalLevels);
+            List<AbstractTRScriptedLevel> shuffledLevels = new List<AbstractTRScriptedLevel>(originalLevels);
             shuffledLevels.Randomise(LevelRNG.Create());
 
-            List<AbstractTRLevel> newLevels = new List<AbstractTRLevel>();
+            List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
             //ushort newSeq = 1;
-            foreach (AbstractTRLevel shfLevel in shuffledLevels)
+            foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
             {
-                AbstractTRLevel level = GetLevel(shfLevel.ID);
+                AbstractTRScriptedLevel level = GetLevel(shfLevel.ID);
                 if (level == null)
                 {
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
@@ -97,38 +101,66 @@ namespace TRGE.Core
         internal void SetLevelSequencing()
         {
             ushort newSeq = 1;
-            foreach (AbstractTRLevel level in Levels)
+            foreach (AbstractTRScriptedLevel level in Levels)
             {
-                level.Sequence = newSeq++;
-                level.IsFinalLevel = newSeq == (LevelCount - Edition.LevelCompleteOffset) + 1;
+                bool modified = false;
+                if (level.Sequence != newSeq)
+                {
+                    level.Sequence = newSeq;
+                    modified = true;
+                }
+                newSeq++;
+
+                bool isFinalLevel = newSeq == (LevelCount - Edition.LevelCompleteOffset) + 1;
+                if (isFinalLevel != level.IsFinalLevel)
+                {
+                    level.IsFinalLevel = isFinalLevel;
+                    modified = true;
+                }
+
+                if (modified)
+                {
+                    FireLevelModificationEvent(level);
+                }
             }
         }
 
-        internal void RestoreLevelSequencing(List<AbstractTRLevel> originalLevels)
+        internal void RestoreLevelSequencing(List<AbstractTRScriptedLevel> originalLevels)
         {
             SetLevelSequencing(GetLevelSequencing(originalLevels));
         }
 
-        internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRLevel> originalLevels, TROperation operation)
+        protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level)
         {
-            List<AbstractTRLevel> levelSet = originalLevels.RandomSelection(rng.Create(), levelCount);
-            foreach (AbstractTRLevel level in Levels)
+            LevelModified?.Invoke(this, TRScriptedLevelEventArgs.Create(level));
+        }
+
+        internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRScriptedLevel> originalLevels, TROperation operation)
+        {
+            List<AbstractTRScriptedLevel> levelSet = originalLevels.RandomSelection(rng.Create(), levelCount);
+            foreach (AbstractTRScriptedLevel level in Levels)
             {
+                bool modified;
                 if (levelSet.Contains(level))
                 {
-                    level.EnsureOperation(operation);
+                    modified = level.EnsureOperation(operation);
                 }
                 else
                 {
-                    level.RemoveOperation(operation.Definition);
+                    modified = level.RemoveOperation(operation.Definition);
+                }
+
+                if (modified)
+                {
+                    FireLevelModificationEvent(level);
                 }
             }
         }
 
-        internal List<AbstractTRLevel> GetLevelsWithOperation(TROpDef opDef, bool activeOnly)
+        internal List<AbstractTRScriptedLevel> GetLevelsWithOperation(TROpDef opDef, bool activeOnly)
         {
-            List<AbstractTRLevel> levels = new List<AbstractTRLevel>();
-            foreach (AbstractTRLevel level in Levels)
+            List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>();
+            foreach (AbstractTRScriptedLevel level in Levels)
             {
                 if (activeOnly)
                 {
@@ -160,7 +192,7 @@ namespace TRGE.Core
                 ret.Add(new MutableTuple<string, string, ushort>("SECRET", "Secret Found", SecretSoundID));
             }
 
-            foreach (AbstractTRLevel level in Levels)
+            foreach (AbstractTRScriptedLevel level in Levels)
             {
                 track = AudioProvider.GetTrack(level.TrackID);
                 if (track == null)
@@ -186,7 +218,7 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    AbstractTRLevel level = GetLevel(item.Item1);
+                    AbstractTRScriptedLevel level = GetLevel(item.Item1);
                     if (level == null)
                     {
                         throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));

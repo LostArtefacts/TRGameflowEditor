@@ -57,8 +57,8 @@ namespace TRGE.Core
                 return null;
             }
 
-            string wadFile = Path.Combine(TRGameflowEditor.Instance.GetConfigDirectory(), _wadFileName);
-            if (!File.Exists(wadFile) && !TRGameflowEditor.Instance.DownloadResourceFile(_wadFileName, wadFile))
+            string wadFile = Path.Combine(TRInterop.ConfigDirectory, _wadFileName);
+            if (!File.Exists(wadFile) && !TRDownloader.Download(_wadFileName, wadFile))
             {
                 return null;
             }

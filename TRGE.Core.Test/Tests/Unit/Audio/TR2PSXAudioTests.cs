@@ -11,24 +11,24 @@ namespace TRGE.Core.Test
         {
             ["TITLE"] = 64,
             ["SECRET"] = 47,
-            [AbstractTRLevel.CreateID(@"data\wall.PSX")] = 33,
-            [AbstractTRLevel.CreateID(@"data\boat.PSX")] = 0,
-            [AbstractTRLevel.CreateID(@"data\venice.PSX")] = 0,
-            [AbstractTRLevel.CreateID(@"data\opera.PSX")] = 31,
-            [AbstractTRLevel.CreateID(@"data\rig.PSX")] = 58,
-            [AbstractTRLevel.CreateID(@"data\platform.PSX")] = 58,
-            [AbstractTRLevel.CreateID(@"data\unwater.PSX")] = 34,
-            [AbstractTRLevel.CreateID(@"data\keel.PSX")] = 31,
-            [AbstractTRLevel.CreateID(@"data\living.PSX")] = 34,
-            [AbstractTRLevel.CreateID(@"data\deck.PSX")] = 31,
-            [AbstractTRLevel.CreateID(@"data\skidoo.PSX")] = 33,
-            [AbstractTRLevel.CreateID(@"data\monastry.PSX")] = 0,
-            [AbstractTRLevel.CreateID(@"data\catacomb.PSX")] = 31,
-            [AbstractTRLevel.CreateID(@"data\icecave.PSX")] = 31,
-            [AbstractTRLevel.CreateID(@"data\emprtomb.PSX")] = 59,
-            [AbstractTRLevel.CreateID(@"data\floating.PSX")] = 59,
-            [AbstractTRLevel.CreateID(@"data\xian.PSX")] = 59,
-            [AbstractTRLevel.CreateID(@"data\house.PSX")] = 0
+            [AbstractTRScriptedLevel.CreateID(@"data\wall.PSX")] = 33,
+            [AbstractTRScriptedLevel.CreateID(@"data\boat.PSX")] = 0,
+            [AbstractTRScriptedLevel.CreateID(@"data\venice.PSX")] = 0,
+            [AbstractTRScriptedLevel.CreateID(@"data\opera.PSX")] = 31,
+            [AbstractTRScriptedLevel.CreateID(@"data\rig.PSX")] = 58,
+            [AbstractTRScriptedLevel.CreateID(@"data\platform.PSX")] = 58,
+            [AbstractTRScriptedLevel.CreateID(@"data\unwater.PSX")] = 34,
+            [AbstractTRScriptedLevel.CreateID(@"data\keel.PSX")] = 31,
+            [AbstractTRScriptedLevel.CreateID(@"data\living.PSX")] = 34,
+            [AbstractTRScriptedLevel.CreateID(@"data\deck.PSX")] = 31,
+            [AbstractTRScriptedLevel.CreateID(@"data\skidoo.PSX")] = 33,
+            [AbstractTRScriptedLevel.CreateID(@"data\monastry.PSX")] = 0,
+            [AbstractTRScriptedLevel.CreateID(@"data\catacomb.PSX")] = 31,
+            [AbstractTRScriptedLevel.CreateID(@"data\icecave.PSX")] = 31,
+            [AbstractTRScriptedLevel.CreateID(@"data\emprtomb.PSX")] = 59,
+            [AbstractTRScriptedLevel.CreateID(@"data\floating.PSX")] = 59,
+            [AbstractTRScriptedLevel.CreateID(@"data\xian.PSX")] = 59,
+            [AbstractTRScriptedLevel.CreateID(@"data\house.PSX")] = 0
         };
 
         internal override Dictionary<string, ushort> NewLevelTracks => _newTracks;
@@ -36,8 +36,8 @@ namespace TRGE.Core.Test
         protected Dictionary<string, ushort> _newTracks = new Dictionary<string, ushort>
         {
             ["SECRET"] = 50,
-            [AbstractTRLevel.CreateID(@"data\keel.PSX")] = 35,
-            [AbstractTRLevel.CreateID(@"data\icecave.PSX")] = 28
+            [AbstractTRScriptedLevel.CreateID(@"data\keel.PSX")] = 35,
+            [AbstractTRScriptedLevel.CreateID(@"data\icecave.PSX")] = 28
         };
     }
 }

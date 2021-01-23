@@ -1,23 +1,24 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using TRGE.Coord;
 
 namespace TRGE.Core.Test
 {
     public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
     {
         protected abstract int ScriptFileIndex { get; }
-        List<AbstractTRLevel> _expectedLevels;
+        List<AbstractTRScriptedLevel> _expectedLevels;
         protected abstract string[] LevelNames { get; }
         protected abstract string[] LevelFileNames { get; }
         protected abstract TREdition Edition { get; }
 
         protected void InitialiseLevels()
         {
-            _expectedLevels = new List<AbstractTRLevel>();
+            _expectedLevels = new List<AbstractTRScriptedLevel>();
             for (int i = 0; i < LevelNames.Length; i++)
             {
-                _expectedLevels.Add(new TR23Level
+                _expectedLevels.Add(new TR23ScriptedLevel
                 {
                     Name = LevelNames[i],
                     LevelFile = LevelFileNames[i]
@@ -29,15 +30,8 @@ namespace TRGE.Core.Test
         protected virtual void TestLoadLevels()
         {
             InitialiseLevels();
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
-            {
-                CollectionAssert.AreEqual(sm.LevelManager.Levels, _expectedLevels);
-            }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
-            }
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            CollectionAssert.AreEqual(sm.LevelManager.Levels, _expectedLevels);
         }
 
         [TestMethod]
@@ -47,20 +41,21 @@ namespace TRGE.Core.Test
             RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
             _expectedLevels.Randomise(rng.Create());
 
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            string[] newLevelNames = new string[LevelNames.Length];
+            sm.LevelManager.LevelModified += delegate (object sender, TRScriptedLevelEventArgs e)
             {
-                sm.LevelOrganisation = Organisation.Random;
-                sm.LevelRNG = rng;
-                sm.RandomiseLevels();
-                List<AbstractTRLevel> levels = sm.LevelManager.Levels;
-                CollectionAssert.AreEqual(levels, _expectedLevels);
-                TestForFinalLevel(levels, sm.Edition);
-            }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
-            }
+                newLevelNames[e.LevelSequence - 1] = e.LevelName;
+            };
+            sm.LevelOrganisation = Organisation.Random;
+            sm.LevelRNG = rng;
+            sm.RandomiseLevels();
+            
+            List<AbstractTRScriptedLevel> levels = sm.LevelManager.Levels;
+            CollectionAssert.AreEqual(levels, _expectedLevels);
+            TestForFinalLevel(levels, sm.Edition);
+
+            CollectionAssert.AreNotEqual(newLevelNames, LevelNames);
         }
 
         [TestMethod]
@@ -68,23 +63,16 @@ namespace TRGE.Core.Test
         {
             InitialiseLevels();
             _expectedLevels.Reverse();
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
-            {
-                List<Tuple<string, string>> levelSequencingData = sm.LevelSequencing;
-                levelSequencingData.Reverse();
-                sm.LevelSequencing = levelSequencingData;
-                List<AbstractTRLevel> levels = sm.LevelManager.Levels;
-                CollectionAssert.AreEqual(levels, _expectedLevels);
-                TestForFinalLevel(levels, sm.Edition);
-            }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
-            }
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            List<Tuple<string, string>> levelSequencingData = sm.LevelSequencing;
+            levelSequencingData.Reverse();
+            sm.LevelSequencing = levelSequencingData;
+            List<AbstractTRScriptedLevel> levels = sm.LevelManager.Levels;
+            CollectionAssert.AreEqual(levels, _expectedLevels);
+            TestForFinalLevel(levels, sm.Edition);
         }
 
-        private void TestForFinalLevel(List<AbstractTRLevel> levels, TREdition edition)
+        private void TestForFinalLevel(List<AbstractTRScriptedLevel> levels, TREdition edition)
         {
             int expectedIndex = levels.Count - edition.LevelCompleteOffset - 1;
             for (int i = 0; i < levels.Count; i++)

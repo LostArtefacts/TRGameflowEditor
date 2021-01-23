@@ -268,15 +268,15 @@ namespace TRGE.Core
             }*/
         }
 
-        internal override List<AbstractTRLevel> Levels
+        internal override List<AbstractTRScriptedLevel> Levels
         {
             get
             {
                 int count = NumLevels - NumDemoLevels;
-                List<AbstractTRLevel> levels = new List<AbstractTRLevel>(count);
+                List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(count);
                 for (ushort i = 1; i < count; i++) //skip assault and however many demos there are
                 {
-                    TR23Level level = new TR23Level
+                    TR23ScriptedLevel level = new TR23ScriptedLevel
                     {
                         Name = _levelNames[i],
                         LevelFile = _levelFileNames[i]

@@ -1,23 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace TRGE.Core
 {
-    internal static class TRScriptFactory
+    public static class TRScriptFactory
     {
-        internal static AbstractTRScriptManager GetScriptManager(string filePath)
+        public static AbstractTRScriptManager GetScriptManager(FileInfo originalScriptFile, FileInfo backupScriptFile, FileInfo configFile, TRScriptOpenOption openOption)
         {
-            switch (GetDatFileVersion(filePath))
+            uint scriptVersion = GetDatFileVersion(originalScriptFile.FullName);
+            switch (scriptVersion)
             {
                 case TR23Script.Version:
-                    return new TR23ScriptManager(filePath);
+                    return new TR23ScriptManager(originalScriptFile, backupScriptFile, configFile, openOption);
                 default:
-                    throw new UnsupportedScriptException();
+                    throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, originalScriptFile.Name));
             }
+        }
+
+        public static FileInfo FindScriptFile(DirectoryInfo directory)
+        {
+            foreach (FileInfo fi in directory.GetFiles())
+            {
+                string fileName = fi.Name.ToLower();
+                foreach (TREdition edition in TREdition.All)
+                {
+                    if (fileName.Equals(edition.ScriptName.ToLower()))
+                    {
+                        return fi;
+                    }
+                }
+            }
+            return null;
+        }
+
+        internal static AbstractTRScript OpenScript(FileInfo file)
+        {
+            return OpenScript(file.FullName);
         }
 
         internal static AbstractTRScript OpenScript(string filePath)

@@ -62,5 +62,22 @@ namespace TRGE.Core
 
             return resultSet;
         }
+
+        internal static void Sort<T1, T2>(this Dictionary<T1, T2> dict, Comparison<T1> comp)
+        {
+            List<T1> keys = new List<T1>(dict.Keys);
+            keys.Sort(comp);
+            Dictionary<T1, T2> result = new Dictionary<T1, T2>();
+            foreach (T1 key in keys)
+            {
+                result.Add(key, dict[key]);
+            }
+
+            dict.Clear();
+            foreach (T1 key in result.Keys)
+            {
+                dict.Add(key, result[key]);
+            }
+        }
     }
 }

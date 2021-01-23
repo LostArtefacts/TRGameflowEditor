@@ -25,14 +25,14 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestLevelIDs()
         {
-            string id = AbstractTRLevel.CreateID("wall.TR2");
-            Assert.AreEqual(id, AbstractTRLevel.CreateID("wall.PSX"));
-            Assert.AreEqual(id, AbstractTRLevel.CreateID("WALL.psx"));
-            Assert.AreEqual(id, AbstractTRLevel.CreateID(@"data\wall.TR2"));
-            Assert.AreEqual(id, AbstractTRLevel.CreateID(@"C:\Program Files (x86)\etc\data\wall.TR2"));
-            Assert.AreEqual(id, AbstractTRLevel.CreateID(@"..\data\wall.TR2"));
-            Assert.AreEqual(id, AbstractTRLevel.CreateID("data/wall.TR2"));
-            Assert.AreNotEqual(id, AbstractTRLevel.CreateID("boat.TR2"));
+            string id = AbstractTRScriptedLevel.CreateID("wall.TR2");
+            Assert.AreEqual(id, AbstractTRScriptedLevel.CreateID("wall.PSX"));
+            Assert.AreEqual(id, AbstractTRScriptedLevel.CreateID("WALL.psx"));
+            Assert.AreEqual(id, AbstractTRScriptedLevel.CreateID(@"data\wall.TR2"));
+            Assert.AreEqual(id, AbstractTRScriptedLevel.CreateID(@"C:\Program Files (x86)\etc\data\wall.TR2"));
+            Assert.AreEqual(id, AbstractTRScriptedLevel.CreateID(@"..\data\wall.TR2"));
+            Assert.AreEqual(id, AbstractTRScriptedLevel.CreateID("data/wall.TR2"));
+            Assert.AreNotEqual(id, AbstractTRScriptedLevel.CreateID("boat.TR2"));
         }
     }
 }

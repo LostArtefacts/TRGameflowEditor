@@ -138,21 +138,28 @@ namespace TRGE.Core
             }
         }
 
-        internal void EnsureOperation(TROperation operation)
+        /// <summary>
+        /// Returns true if the operation was inserts, false if it was already in place.
+        /// </summary>
+        internal bool EnsureOperation(TROperation operation)
         {
             if (!HasOperation(operation.Definition))
             {
                 InsertOperation(operation.Definition, operation.Operand, operation.Definition.Next, operation.IsActive);
+                return true;
             }
+            return false;
         }
 
-        internal void RemoveOperation(TROpDef opDef)
+        internal bool RemoveOperation(TROpDef opDef)
         {
+            bool result = false;
             TROperation op;
             while ((op = GetOperation(opDef)) != null)
             {
-                _operations.Remove(op);
+                result = _operations.Remove(op);
             }
+            return result;
         }
 
         internal bool SetOperationActive(TROpDef opDef, bool isActive)

@@ -11,11 +11,11 @@ namespace TRGE.Core.Test
         {
             ["TITLE"] = 64,
             ["SECRET"] = 47,
-            [AbstractTRLevel.CreateID(@"data\level1.TR2")] = 33,
-            [AbstractTRLevel.CreateID(@"data\level2.TR2")] = 58,
-            [AbstractTRLevel.CreateID(@"data\level3.TR2")] = 59,
-            [AbstractTRLevel.CreateID(@"data\level4.TR2")] = 31,
-            [AbstractTRLevel.CreateID(@"data\level5.TR2")] = 34
+            [AbstractTRScriptedLevel.CreateID(@"data\level1.TR2")] = 33,
+            [AbstractTRScriptedLevel.CreateID(@"data\level2.TR2")] = 58,
+            [AbstractTRScriptedLevel.CreateID(@"data\level3.TR2")] = 59,
+            [AbstractTRScriptedLevel.CreateID(@"data\level4.TR2")] = 31,
+            [AbstractTRScriptedLevel.CreateID(@"data\level5.TR2")] = 34
         };
 
         internal override Dictionary<string, ushort> NewLevelTracks => _newTracks;
@@ -23,8 +23,8 @@ namespace TRGE.Core.Test
         protected Dictionary<string, ushort> _newTracks = new Dictionary<string, ushort>
         {
             ["SECRET"] = 50,
-            [AbstractTRLevel.CreateID(@"data\level1.TR2")] = 35,
-            [AbstractTRLevel.CreateID(@"data\level4.TR2")] = 28
+            [AbstractTRScriptedLevel.CreateID(@"data\level1.TR2")] = 35,
+            [AbstractTRScriptedLevel.CreateID(@"data\level4.TR2")] = 28
         };
     }
 }

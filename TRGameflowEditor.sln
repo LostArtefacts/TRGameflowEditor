@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.Core", "TRGE.Core\TRGE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.Core.Test", "TRGE.Core.Test\TRGE.Core.Test.csproj", "{C73A3268-30BA-474F-BF2B-622DE77D750A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.Coord", "TRGE.Coord\TRGE.Coord.csproj", "{1D29769F-96DB-4829-9E9A-9D0E314C7743}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C73A3268-30BA-474F-BF2B-622DE77D750A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C73A3268-30BA-474F-BF2B-622DE77D750A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C73A3268-30BA-474F-BF2B-622DE77D750A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D29769F-96DB-4829-9E9A-9D0E314C7743}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D29769F-96DB-4829-9E9A-9D0E314C7743}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D29769F-96DB-4829-9E9A-9D0E314C7743}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D29769F-96DB-4829-9E9A-9D0E314C7743}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

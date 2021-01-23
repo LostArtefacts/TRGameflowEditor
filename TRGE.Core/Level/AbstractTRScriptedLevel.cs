@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TRGE.Core
 {
-    internal abstract class AbstractTRLevel : AbstractTROperationContainer
+    internal abstract class AbstractTRScriptedLevel : AbstractTROperationContainer
     {
         internal string ID { get; private set; }
         internal string Name;
@@ -46,7 +46,7 @@ namespace TRGE.Core
         internal bool OptionallyRemovesWeapons => RemovesWeapons && !RemovesAmmo;
         internal bool ForciblyRemovesWeapons => RemovesWeapons && RemovesAmmo;
 
-        internal AbstractTRLevel()
+        internal AbstractTRScriptedLevel()
         {
             _puzzles = new List<string>();
             _keys = new List<string>();
@@ -68,7 +68,7 @@ namespace TRGE.Core
             _pickups.Add(pickup);
         }
 
-        internal void CopyOperation(TROpDef opDef, AbstractTRLevel other)
+        internal void CopyOperation(TROpDef opDef, AbstractTRScriptedLevel other)
         {
             if (!HasOperation(opDef))
             {
@@ -87,7 +87,7 @@ namespace TRGE.Core
 
         public override bool Equals(object obj)
         {
-            return obj is AbstractTRLevel && (obj as AbstractTRLevel).ID == ID;
+            return obj is AbstractTRScriptedLevel && (obj as AbstractTRScriptedLevel).ID == ID;
         }
 
         public override int GetHashCode()

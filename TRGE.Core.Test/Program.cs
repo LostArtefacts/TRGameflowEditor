@@ -11,7 +11,7 @@ namespace TRGE.Core.Test
         static void Main()
         {
             _pass = _fail = 0;
-
+            
             #region BasicIO
             RunTest(new TR2PCScriptIOTests());
             RunTest(new TR2GPCScriptIOTests());
@@ -24,7 +24,7 @@ namespace TRGE.Core.Test
 
             RunTest(new TR3PSXScriptIOTests());
             #endregion
-
+            
             #region ManagedIO
             RunTest(new TR2PCManagedIOTests());
             RunTest(new TR2GPCManagedIOTests());
@@ -36,7 +36,7 @@ namespace TRGE.Core.Test
             RunTest(new TR3GPCManagedIOTests());
             RunTest(new TR3PSXManagedIOTests());
             #endregion
-
+            
             #region Flags
             RunTest(new TR23FlagTests());
             RunTest(new TR23MiscTests());
@@ -105,7 +105,7 @@ namespace TRGE.Core.Test
             RunTest(new TR3GPCAudioTests());
             RunTest(new TR3PSXAudioTests());
             #endregion
-
+            
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);
             Console.WriteLine("FAIL: {0}", _fail);

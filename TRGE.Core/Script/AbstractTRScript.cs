@@ -7,6 +7,11 @@ namespace TRGE.Core
     {
         public TREdition Edition { get; protected set; }
 
+        internal void Read(FileInfo file)
+        {
+            Read(file.FullName);
+        }
+
         internal void Read(string filePath)
         {
             //All we can go on to begin with is the file name to determine a generic edition.
@@ -31,7 +36,7 @@ namespace TRGE.Core
         internal abstract byte[] Serialise();
         protected abstract void CalculateEdition();
         internal abstract AbstractTRFrontEnd FrontEnd { get; }
-        internal abstract List<AbstractTRLevel> Levels { get; set; }
+        internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
         internal abstract ushort TitleSoundID { get; set; }
         internal abstract ushort SecretSoundID { get; set; }
     }

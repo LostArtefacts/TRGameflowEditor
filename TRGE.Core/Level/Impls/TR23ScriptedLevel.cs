@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    internal class TR23Level : AbstractTRLevel
+    internal class TR23ScriptedLevel : AbstractTRScriptedLevel
     {
         internal override ushort Sequence
         {

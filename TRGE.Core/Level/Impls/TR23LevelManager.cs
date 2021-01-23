@@ -9,19 +9,19 @@ namespace TRGE.Core
         private readonly AbstractTR23AudioProvider _audioProvider;
         private readonly AbstractTR23ItemProvider _itemProvider;
         private readonly TR23Script _script;
-        private List<TR23Level> _levels;
+        private List<TR23ScriptedLevel> _levels;
 
         internal override int LevelCount => _levels.Count;
         internal override AbstractTRAudioProvider AudioProvider => _audioProvider;
         internal override AbstractTRItemProvider ItemProvider => _itemProvider;
         internal bool CanOrganiseBonuses => Edition.SecretBonusesSupported;
 
-        internal override List<AbstractTRLevel> Levels
+        internal override List<AbstractTRScriptedLevel> Levels
         {
-            get => _levels.Cast<AbstractTRLevel>().ToList();
+            get => _levels.Cast<AbstractTRScriptedLevel>().ToList();
             set
             {
-                _levels = value.Cast<TR23Level>().ToList();
+                _levels = value.Cast<TR23ScriptedLevel>().ToList();
             }
         }
 
@@ -56,9 +56,9 @@ namespace TRGE.Core
             _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
         }
 
-        internal List<TR23Level> GetAmmolessLevels()
+        internal List<TR23ScriptedLevel> GetAmmolessLevels()
         {
-            return GetLevelsWithOperation(TR23OpDefs.RemoveAmmo, true).Cast<TR23Level>().ToList();
+            return GetLevelsWithOperation(TR23OpDefs.RemoveAmmo, true).Cast<TR23ScriptedLevel>().ToList();
         }
 
         internal uint GetAmmolessLevelCount()
@@ -71,10 +71,10 @@ namespace TRGE.Core
             return GetAmmolessLevelData(Levels);
         }
 
-        private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRLevel> levels)
+        private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> levels)
         {
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
-            foreach (TR23Level level in levels)
+            foreach (TR23ScriptedLevel level in levels)
             {
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesAmmo));
             }
@@ -85,15 +85,16 @@ namespace TRGE.Core
         {
             foreach (MutableTuple<string, string, bool> item in data)
             {
-                TR23Level level = (TR23Level)GetLevel(item.Item1);
-                if (level != null)
+                TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(item.Item1);
+                if (level != null && level.RemovesAmmo != item.Item3)
                 {
                     level.RemovesAmmo = item.Item3;
+                    FireLevelModificationEvent(level);
                 }
             }
         }
 
-        internal void RandomiseAmmolessLevels(List<AbstractTRLevel> originalLevels)
+        internal void RandomiseAmmolessLevels(List<AbstractTRScriptedLevel> originalLevels)
         {
             RandomiseLevelsWithOperation
             (
@@ -104,12 +105,12 @@ namespace TRGE.Core
             );
         }
 
-        internal void RestoreAmmolessLevels(List<AbstractTRLevel> originalLevels)
+        internal void RestoreAmmolessLevels(List<AbstractTRScriptedLevel> originalLevels)
         {
             SetAmmolessLevelData(GetAmmolessLevelData(originalLevels));
         }
 
-        internal void RandomiseUnarmedLevels(List<AbstractTRLevel> originalLevels)
+        internal void RandomiseUnarmedLevels(List<AbstractTRScriptedLevel> originalLevels)
         {
             RandomiseLevelsWithOperation
             (
@@ -120,9 +121,9 @@ namespace TRGE.Core
             );
         }
 
-        internal List<TR23Level> GetUnarmedLevels()
+        internal List<TR23ScriptedLevel> GetUnarmedLevels()
         {
-            return GetLevelsWithOperation(TR23OpDefs.RemoveWeapons, true).Cast<TR23Level>().ToList();
+            return GetLevelsWithOperation(TR23OpDefs.RemoveWeapons, true).Cast<TR23ScriptedLevel>().ToList();
         }
 
         internal uint GetUnarmedLevelCount()
@@ -135,10 +136,10 @@ namespace TRGE.Core
             return GetUnarmedLevelData(Levels);
         }
 
-        private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRLevel> levels)
+        private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> levels)
         {
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
-            foreach (TR23Level level in levels)
+            foreach (TR23ScriptedLevel level in levels)
             {
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesWeapons));
             }
@@ -149,7 +150,7 @@ namespace TRGE.Core
         {
             foreach (MutableTuple<string, string, bool> item in data)
             {
-                TR23Level level = (TR23Level)GetLevel(item.Item1);
+                TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(item.Item1);
                 if (level != null)
                 {
                     level.RemovesWeapons = item.Item3;
@@ -157,7 +158,7 @@ namespace TRGE.Core
             }
         }
 
-        internal void RestoreUnarmedLevels(List<AbstractTRLevel> originalLevels)
+        internal void RestoreUnarmedLevels(List<AbstractTRScriptedLevel> originalLevels)
         {
             SetUnarmedLevelData(GetUnarmedLevelData(originalLevels));
         }
@@ -171,7 +172,7 @@ namespace TRGE.Core
                 { TRItemCategory.Weapon, new HashSet<TRItem> { shotgun } }
             };
             Random rand = BonusRNG.Create();
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.HasSecrets)
                 {
@@ -200,10 +201,10 @@ namespace TRGE.Core
             return GetLevelBonusData(Levels);
         }
 
-        private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRLevel> levels)
+        private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> levels)
         {
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
-            foreach (TR23Level level in levels)
+            foreach (TR23ScriptedLevel level in levels)
             {
                 if (level.HasSecrets)
                 {
@@ -229,7 +230,7 @@ namespace TRGE.Core
         {
             foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData in data)
             {
-                TR23Level level = (TR23Level)GetLevel(levelData.Item1);
+                TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(levelData.Item1);
                 if (level != null)
                 {
                     List<TRItem> bonuses = new List<TRItem>();
@@ -250,7 +251,7 @@ namespace TRGE.Core
         internal Dictionary<string, List<TRItem>> GetLevelBonusItems()
         {
             Dictionary<string, List<TRItem>> ret = new Dictionary<string, List<TRItem>>();
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.HasSecrets)
                 {
@@ -264,14 +265,14 @@ namespace TRGE.Core
             return ret;
         }
 
-        internal void RestoreBonuses(List<AbstractTRLevel> orignalLevels)
+        internal void RestoreBonuses(List<AbstractTRScriptedLevel> orignalLevels)
         {
             SetLevelBonusData(GetLevelBonusData(orignalLevels));
         }
 
         internal bool GetLevelsHaveStartAnimation()
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.HasStartAnimation)
                 {
@@ -283,7 +284,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsSupportStartAnimations()
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.SupportsStartAnimations)
                 {
@@ -295,7 +296,7 @@ namespace TRGE.Core
 
         internal void SetLevelsHaveStartAnimation(bool haveStartAnimations)
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 level.HasStartAnimation = haveStartAnimations;
             }
@@ -303,7 +304,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsHaveCutScenes()
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.HasCutScene)
                 {
@@ -315,7 +316,7 @@ namespace TRGE.Core
 
         internal void SetLevelsHaveCutScenes(bool haveCutScenes)
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 level.HasCutScene = haveCutScenes;
             }
@@ -323,7 +324,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsSupportCutScenes()
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.SupportsCutScenes)
                 {
@@ -335,7 +336,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsHaveFMV()
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.HasFMV)
                 {
@@ -347,7 +348,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsSupportFMVs()
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 if (level.SupportsFMVs)
                 {
@@ -359,7 +360,7 @@ namespace TRGE.Core
 
         internal void SetLevelsHaveFMV(bool haveFMVs)
         {
-            foreach (TR23Level level in _levels)
+            foreach (TR23ScriptedLevel level in _levels)
             {
                 level.HasFMV = haveFMVs;
             }

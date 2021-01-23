@@ -1,6 +1,6 @@
 ﻿namespace TRGE.Core
 {
-    internal static class TRLevelFactory
+    internal static class TRScriptedLevelFactory
     {
         internal static AbstractTRLevelManager GetLevelManager(AbstractTRScript script)
         {

@@ -1,4 +1,6 @@
-﻿namespace TRGE.Core
+﻿using System.Collections.Generic;
+
+namespace TRGE.Core
 {
     public class TREdition
     {
@@ -24,6 +26,7 @@
         {
             Title = "Tomb Raider II (PC)",
             Version = TRVersion.TR2,
+            ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = true
@@ -33,6 +36,7 @@
         {
             Title = "Tomb Raider II (PSX)",
             Version = TRVersion.TR2,
+            ScriptName = "TOMBPSX.dat",
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = true
@@ -42,6 +46,7 @@
         {
             Title = "Tomb Raider II (PSX BETA)",
             Version = TRVersion.TR2,
+            ScriptName = "TOMBPSX.dat",
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = true
@@ -51,6 +56,7 @@
         {
             Title = "Tomb Raider II Gold",
             Version = TRVersion.TR2G,
+            ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
             SecretBonusesSupported = true
@@ -60,6 +66,7 @@
         {
             Title = "Tomb Raider III (PC)",
             Version = TRVersion.TR3,
+            ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
             SecretBonusesSupported = false
@@ -69,6 +76,7 @@
         {
             Title = "Tomb Raider III (PSX)",
             Version = TRVersion.TR3,
+            ScriptName = "TOMBPSX.dat",
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 1,
             SecretBonusesSupported = false
@@ -78,13 +86,20 @@
         {
             Title = "Tomb Raider III Gold",
             Version = TRVersion.TR3G,
+            ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = false
         };
 
+        internal static readonly IReadOnlyList<TREdition> All = new List<TREdition>
+        {
+            TR2PC, TR2G, TR2PSXBeta, TR2PSX, TR3PC, TR3G, TR3PSX
+        };
+
         public string Title { get; private set; }
         public TRVersion Version { get; private set; }
+        public string ScriptName { get; private set; }
         public Hardware Hardware { get; private set; }
         /// <summary>
         /// Indicates which level in the game is the final level. The offset

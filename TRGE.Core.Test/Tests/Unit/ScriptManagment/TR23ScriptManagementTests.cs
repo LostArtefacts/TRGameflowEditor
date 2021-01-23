@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
+using TRGE.Coord;
 
 namespace TRGE.Core.Test
 {
@@ -13,27 +14,27 @@ namespace TRGE.Core.Test
         {
             foreach (string scriptFile in _validScripts)
             {
-                TestCreateScriptManager(new FileInfo(scriptFile).FullName);
+                TestCreateScriptManager(new FileInfo(scriptFile));
             }
         }
 
-        private void TestCreateScriptManager(string filePath)
+        private void TestCreateScriptManager(FileInfo file)
         {
-            AbstractTRScriptManager scriptMan = TRGameflowEditor.Instance.GetScriptManager(filePath);
+            AbstractTRScriptManager scriptMan = TRCoord.Instance.OpenScript(file);
             Assert.IsFalse(scriptMan == null);
             Assert.IsTrue(scriptMan is TR23ScriptManager);
-            Assert.IsTrue(scriptMan.OriginalFilePath.Equals(filePath));
+            Assert.IsTrue(scriptMan.OriginalFile.FullName.Equals(file.FullName));
         }
 
         [TestMethod]
         protected void TestBackup()
         {
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[0]) as TR23ScriptManager;
-            Assert.IsFalse(sm.BackupFilePath == null);
-            Assert.IsTrue(File.Exists(sm.BackupFilePath));
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[0]) as TR23ScriptManager;
+            Assert.IsFalse(sm.BackupFile == null);
+            Assert.IsTrue(sm.BackupFile.Exists);
             try
             {
-                AbstractTRScript script = TRScriptFactory.OpenScript(sm.BackupFilePath);
+                AbstractTRScript script = TRScriptFactory.OpenScript(sm.BackupFile);
                 Assert.IsTrue(script is TR23Script);
                 Assert.IsTrue(script.Edition == sm.Script.Edition);
             }
@@ -46,24 +47,23 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestHistory()
         {
-            TRGameflowEditor.Instance.CloseAllScriptManagers();
-            TRGameflowEditor.Instance.ClearFileHistory();
+            TRCoord.Instance.ClearHistory();
 
-            List<string> openedScripts = new List<string>();
-            TRGameflowEditor.Instance.FileHistoryAdded += delegate (object sender, TRFileEventArgs e)
+            List<FileInfo> openedScripts = new List<FileInfo>();
+            TRCoord.Instance.FileHistoryAdded += delegate (object sender, TRFileHistoryEventArgs e)
             {
-                openedScripts.Add(e.FilePath);
+                openedScripts.Add(e.File);
             };
 
             foreach (string scriptFile in _validScripts)
             {
-                TRGameflowEditor.Instance.GetScriptManager(scriptFile);
+                TRCoord.Instance.OpenScript(scriptFile);
             }
 
             Assert.IsTrue(openedScripts.Count == _validScripts.Length);
             for (int i = 0; i < _validScripts.Length; i++)
             {
-                Assert.IsTrue(new FileInfo(_validScripts[i]).FullName.Equals(openedScripts[i]));
+                Assert.IsTrue(new FileInfo(_validScripts[i]).FullName.Equals(openedScripts[i].FullName));
             }
         }
 
@@ -71,11 +71,11 @@ namespace TRGE.Core.Test
         protected void TestRestore()
         {
             byte[] originalData = File.ReadAllBytes(_validScripts[0]);
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[0]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[0]) as TR23ScriptManager;
             File.Move(_validScripts[0], _validScripts[0] + ".bak");
             try
             {
-                sm.Restore();
+                TRCoord.Instance.RestoreScript(sm);
                 Assert.IsTrue(File.Exists(_validScripts[0]));
                 CollectionAssert.AreEqual(originalData, File.ReadAllBytes(_validScripts[0]));
             }

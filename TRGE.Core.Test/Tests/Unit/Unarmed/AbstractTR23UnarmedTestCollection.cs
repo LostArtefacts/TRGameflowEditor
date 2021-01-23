@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using TRGE.Coord;
 
 namespace TRGE.Core.Test
 {
@@ -7,16 +8,16 @@ namespace TRGE.Core.Test
     {
         protected abstract int ScriptFileIndex { get; }
         protected abstract TREdition Edition { get; }
-        List<AbstractTRLevel> _expectedLevels;
+        List<AbstractTRScriptedLevel> _expectedLevels;
         protected abstract string[] LevelNames { get; }
         protected abstract string[] LevelFileNames { get; }
 
         protected void InitialiseLevels()
         {
-            _expectedLevels = new List<AbstractTRLevel>();
+            _expectedLevels = new List<AbstractTRScriptedLevel>();
             for (int i = 0; i < LevelNames.Length; i++)
             {
-                _expectedLevels.Add(new TR23Level
+                _expectedLevels.Add(new TR23ScriptedLevel
                 {
                     Name = LevelNames[i],
                     LevelFile = LevelFileNames[i]
@@ -29,22 +30,15 @@ namespace TRGE.Core.Test
         {
             InitialiseLevels();
             RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
-            List<AbstractTRLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
+            List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
-            {
-                sm.AmmolessLevelOrganisation = Organisation.Random;
-                sm.AmmolessLevelRNG = rng;
-                sm.RandomAmmolessLevelCount = 2;
-                sm.RandomiseAmmolessLevels();
-                List<TR23Level> levels = sm.GetAmmolessLevels();
-                CollectionAssert.AreEquivalent(levels, expectedLevels);
-            }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
-            }
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm.AmmolessLevelOrganisation = Organisation.Random;
+            sm.AmmolessLevelRNG = rng;
+            sm.RandomAmmolessLevelCount = 2;
+            sm.RandomiseAmmolessLevels();
+            List<TR23ScriptedLevel> levels = sm.GetAmmolessLevels();
+            CollectionAssert.AreEquivalent(levels, expectedLevels);
         }
 
         [TestMethod]
@@ -52,78 +46,57 @@ namespace TRGE.Core.Test
         {
             InitialiseLevels();
             RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
-            List<AbstractTRLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
+            List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
-            {
-                sm.UnarmedLevelOrganisation = Organisation.Random;
-                sm.UnarmedLevelRNG = rng;
-                sm.RandomUnarmedLevelCount = 2;
-                sm.RandomiseUnarmedLevels();
-                List<TR23Level> levels = sm.GetUnarmedLevels();
-                CollectionAssert.AreEquivalent(levels, expectedLevels);
-            }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
-            }
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm.UnarmedLevelOrganisation = Organisation.Random;
+            sm.UnarmedLevelRNG = rng;
+            sm.RandomUnarmedLevelCount = 2;
+            sm.RandomiseUnarmedLevels();
+            List<TR23ScriptedLevel> levels = sm.GetUnarmedLevels();
+            CollectionAssert.AreEquivalent(levels, expectedLevels);
         }
 
         [TestMethod]
         protected void TestReorganiseAmmolessLevels()
         {
             InitialiseLevels();
-            List<AbstractTRLevel> expectedLevels = new List<AbstractTRLevel>
+            List<AbstractTRScriptedLevel> expectedLevels = new List<AbstractTRScriptedLevel>
             {
                 _expectedLevels[0],
                 _expectedLevels[1]
             };
 
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            List<MutableTuple<string, string, bool>> ammolessLevelData = sm.AmmolessLevelData;
+            for (int i = 0; i < ammolessLevelData.Count; i++)
             {
-                List<MutableTuple<string, string, bool>> ammolessLevelData = sm.AmmolessLevelData;
-                for (int i = 0; i < ammolessLevelData.Count; i++)
-                {
-                    ammolessLevelData[i].Item3 = i < 2;
-                }
-
-                sm.AmmolessLevelData = ammolessLevelData;
-                CollectionAssert.AreEquivalent(sm.GetAmmolessLevels(), expectedLevels);
+                ammolessLevelData[i].Item3 = i < 2;
             }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
-            }
+            
+            sm.AmmolessLevelData = ammolessLevelData;
+            CollectionAssert.AreEquivalent(sm.GetAmmolessLevels(), expectedLevels);
         }
 
         [TestMethod]
         protected void TestReorganiseUnarmedLevels()
         {
             InitialiseLevels();
-            List<AbstractTRLevel> expectedLevels = new List<AbstractTRLevel>
+            List<AbstractTRScriptedLevel> expectedLevels = new List<AbstractTRScriptedLevel>
             {
                 _expectedLevels[0],
                 _expectedLevels[1]
             };
 
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
-            try
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            List<MutableTuple<string, string, bool>> unarmedLevelData = sm.UnarmedLevelData;
+            for (int i = 0; i < unarmedLevelData.Count; i++)
             {
-                List<MutableTuple<string, string, bool>> unarmedLevelData = sm.UnarmedLevelData;
-                for (int i = 0; i < unarmedLevelData.Count; i++)
-                {
-                    unarmedLevelData[i].Item3 = i < 2;
-                }
+                unarmedLevelData[i].Item3 = i < 2;
+            }
 
-                sm.UnarmedLevelData = unarmedLevelData;
-                CollectionAssert.AreEquivalent(sm.GetUnarmedLevels(), expectedLevels);
-            }
-            finally
-            {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
-            }
+            sm.UnarmedLevelData = unarmedLevelData;
+            CollectionAssert.AreEquivalent(sm.GetUnarmedLevels(), expectedLevels);
         }
     }
 }

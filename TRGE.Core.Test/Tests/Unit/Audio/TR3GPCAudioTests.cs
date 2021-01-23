@@ -11,12 +11,12 @@ namespace TRGE.Core.Test
         {
             ["TITLE"] = 5,
             ["SECRET"] = 2,
-            [AbstractTRLevel.CreateID(@"data\scotland.TR2")] = 36,
-            [AbstractTRLevel.CreateID(@"data\willsden.TR2")] = 30,
-            [AbstractTRLevel.CreateID(@"data\chunnel.TR2")] = 74,
-            [AbstractTRLevel.CreateID(@"data\undersea.TR2")] = 27,
-            [AbstractTRLevel.CreateID(@"data\zoo.TR2")] = 34,
-            [AbstractTRLevel.CreateID(@"data\slinc.TR2")] = 26
+            [AbstractTRScriptedLevel.CreateID(@"data\scotland.TR2")] = 36,
+            [AbstractTRScriptedLevel.CreateID(@"data\willsden.TR2")] = 30,
+            [AbstractTRScriptedLevel.CreateID(@"data\chunnel.TR2")] = 74,
+            [AbstractTRScriptedLevel.CreateID(@"data\undersea.TR2")] = 27,
+            [AbstractTRScriptedLevel.CreateID(@"data\zoo.TR2")] = 34,
+            [AbstractTRScriptedLevel.CreateID(@"data\slinc.TR2")] = 26
         };
 
         internal override Dictionary<string, ushort> NewLevelTracks => _newTracks;
@@ -24,8 +24,8 @@ namespace TRGE.Core.Test
         protected Dictionary<string, ushort> _newTracks = new Dictionary<string, ushort>
         {
             ["SECRET"] = 50,
-            [AbstractTRLevel.CreateID(@"data\willsden.TR2")] = 35,
-            [AbstractTRLevel.CreateID(@"data\undersea.TR2")] = 28
+            [AbstractTRScriptedLevel.CreateID(@"data\willsden.TR2")] = 35,
+            [AbstractTRScriptedLevel.CreateID(@"data\undersea.TR2")] = 28
         };
     }
 }

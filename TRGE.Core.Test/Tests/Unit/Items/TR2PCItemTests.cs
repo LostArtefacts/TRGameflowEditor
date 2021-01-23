@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
+using TRGE.Coord;
 
 namespace TRGE.Core.Test
 {
@@ -12,13 +13,13 @@ namespace TRGE.Core.Test
         internal override Dictionary<string, List<TRItem>> ManualBonusData => new Dictionary<string, List<TRItem>>
         {
             { 
-                AbstractTRLevel.CreateID(@"data\wall.TR2"), new List<TRItem>
+                AbstractTRScriptedLevel.CreateID(@"data\wall.TR2"), new List<TRItem>
                 {
                     ExpectedItems[2], ExpectedItems[15]
                 }
             },
             {
-                AbstractTRLevel.CreateID(@"data\boat.TR2"), new List<TRItem>
+                AbstractTRScriptedLevel.CreateID(@"data\boat.TR2"), new List<TRItem>
                 {
                     ExpectedItems[6], ExpectedItems[13], ExpectedItems[14]
                 }
@@ -28,7 +29,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestRandomiseItemsOutput()
         {
-            TR23ScriptManager sm = TRGameflowEditor.Instance.GetScriptManager(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
             try
             {
                 sm.BonusOrganisation = Organisation.Random;
@@ -67,7 +68,7 @@ namespace TRGE.Core.Test
             }
             finally
             {
-                TRGameflowEditor.Instance.CloseScriptManager(sm);
+                
             }
         }
     }
