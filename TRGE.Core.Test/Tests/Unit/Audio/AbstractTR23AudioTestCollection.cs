@@ -16,8 +16,8 @@ namespace TRGE.Core.Test
         protected override void Setup()
         {
             base.Setup();
-            File.Copy(@"audio\tr2audio.wad", Path.Combine(TRCoord.Instance.ConfigDirectory, "tr2audio.wad"));
-            File.Copy(@"audio\tr3audio.wad", Path.Combine(TRCoord.Instance.ConfigDirectory, "tr3audio.wad"));
+            //File.Copy(@"audio\tr2audio.wad", Path.Combine(TRCoord.Instance.ConfigDirectory, "tr2audio.wad"));
+            //File.Copy(@"audio\tr3audio.wad", Path.Combine(TRCoord.Instance.ConfigDirectory, "tr3audio.wad"));
         }
 
         [TestMethod]

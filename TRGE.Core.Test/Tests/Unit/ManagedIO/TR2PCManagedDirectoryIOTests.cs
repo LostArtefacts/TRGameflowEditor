@@ -18,6 +18,11 @@ namespace TRGE.Core.Test
             }
             TREditor editor = TRCoord.Instance.Open(_dataDirectory);
             Assert.IsTrue(editor.ScriptManager.BackupFile.Exists);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
+            sm.LevelSelectEnabled = true;
+            sm.UnarmedLevelOrganisation = Organisation.Random;
+            sm.UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            editor.Save();
         }
     }
 }

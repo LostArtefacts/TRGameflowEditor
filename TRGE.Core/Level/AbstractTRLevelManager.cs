@@ -113,7 +113,7 @@ namespace TRGE.Core
 
                 if (modified)
                 {
-                    FireLevelModificationEvent(level);
+                    FireLevelModificationEvent(level, TRScriptedLevelModification.SequenceChanged);
                 }
             }
         }
@@ -123,10 +123,17 @@ namespace TRGE.Core
             SetLevelSequencing(GetLevelSequencing(originalLevels));
         }
 
-        protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level)
+        protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TROpDef opDef)
         {
-            LevelModified?.Invoke(this, TRScriptedLevelEventArgs.Create(level));
+            FireLevelModificationEvent(level, OpDefToModification(opDef));
         }
+
+        protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TRScriptedLevelModification modification)
+        {
+            LevelModified?.Invoke(this, TRScriptedLevelEventArgs.Create(level, modification));
+        }
+
+        protected abstract TRScriptedLevelModification OpDefToModification(TROpDef opDef);
 
         internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRScriptedLevel> originalLevels, TROperation operation)
         {
@@ -145,7 +152,7 @@ namespace TRGE.Core
 
                 if (modified)
                 {
-                    FireLevelModificationEvent(level);
+                    FireLevelModificationEvent(level, operation.Definition);
                 }
             }
         }

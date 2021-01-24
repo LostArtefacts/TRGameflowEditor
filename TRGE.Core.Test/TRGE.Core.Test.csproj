@@ -121,12 +121,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Audio\tr2audio.wad">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Audio\tr3audio.wad">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Audio\tr2audio.wad" />
+    <None Include="Audio\tr3audio.wad" />
     <None Include="packages.config" />
     <None Include="Scripts\INVALID.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

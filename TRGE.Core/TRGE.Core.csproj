@@ -56,6 +56,7 @@
     <Compile Include="Helpers\Extensions\IOExtensions.cs" />
     <Compile Include="ITRConfigProvider.cs" />
     <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
+    <Compile Include="Level\Events\TRScriptedLevelModification.cs" />
     <Compile Include="Script\Exceptions\ChecksumMismatchException.cs" />
     <Compile Include="Script\TRScriptOpenOption.cs" />
     <Compile Include="TRInterop.cs" />

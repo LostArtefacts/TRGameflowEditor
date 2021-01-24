@@ -15,9 +15,14 @@ namespace TRGE.Coord
             }
         }
 
+        internal TRLevelEditor LevelEditor;
+
         private void ScriptManagerLevelModified(object sender, TRScriptedLevelEventArgs e)
         {
-            
+            if (LevelEditor != null)
+            {
+                LevelEditor.LevelModified(e);
+            }
         }
 
         public void Save()

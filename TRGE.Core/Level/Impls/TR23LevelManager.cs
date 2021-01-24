@@ -56,6 +56,19 @@ namespace TRGE.Core
             _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
         }
 
+        protected override TRScriptedLevelModification OpDefToModification(TROpDef opDef)
+        {
+            if (opDef == TR23OpDefs.RemoveAmmo)
+            {
+                return TRScriptedLevelModification.AmmolessStateChanged;
+            }
+            if (opDef == TR23OpDefs.RemoveWeapons)
+            {
+                return TRScriptedLevelModification.WeaponlessStateChanged;
+            }
+            return TRScriptedLevelModification.Generic;
+        }
+
         internal List<TR23ScriptedLevel> GetAmmolessLevels()
         {
             return GetLevelsWithOperation(TR23OpDefs.RemoveAmmo, true).Cast<TR23ScriptedLevel>().ToList();
@@ -89,7 +102,7 @@ namespace TRGE.Core
                 if (level != null && level.RemovesAmmo != item.Item3)
                 {
                     level.RemovesAmmo = item.Item3;
-                    FireLevelModificationEvent(level);
+                    FireLevelModificationEvent(level, TRScriptedLevelModification.AmmolessStateChanged);
                 }
             }
         }

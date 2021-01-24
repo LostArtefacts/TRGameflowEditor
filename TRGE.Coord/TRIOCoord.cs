@@ -59,6 +59,15 @@ namespace TRGE.Coord
             return scriptMan;
         }
 
+        internal TRLevelEditor GetLevelEditor()
+        {
+            if (_mode == OperationMode.File)
+            {
+                return null;
+            }
+            return new TRLevelEditor(_originalDirectory, GetBackupDirectory());
+        }
+
         private string FindScriptFile(string path)
         {
             FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path));
