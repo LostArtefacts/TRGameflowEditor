@@ -14,11 +14,12 @@ namespace TRGE.Core.Test
         [TestSequence(0)]
         protected void TestManagedIO()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             sm.TitleScreenEnabled = false;
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();;
 
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             Assert.IsFalse(sm.TitleScreenEnabled);
         }
 
@@ -41,22 +42,23 @@ namespace TRGE.Core.Test
             File.Copy(_validScripts[ScriptFileIndex], _testOutputPath, true);
             try
             {
-                TR23ScriptManager sm = TRCoord.Instance.OpenScript(_testOutputPath) as TR23ScriptManager;
+                TREditor editor = TRCoord.Instance.Open(_testOutputPath);
+                TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
                 sm.FrontEndHasFMV = !sm.FrontEndHasFMV;
-                TRCoord.Instance.SaveScript(sm);
+                editor.Save();
 
                 File.WriteAllBytes(_testOutputPath, File.ReadAllBytes(_validScripts[ScriptFileIndex]));
 
                 try
                 {
-                    sm = TRCoord.Instance.OpenScript(_testOutputPath) as TR23ScriptManager;
+                    sm = TRCoord.Instance.Open(_testOutputPath).ScriptManager as TR23ScriptManager;
                     Assert.Fail();
                 }
                 catch (ChecksumMismatchException)
                 {
                     try
                     {
-                        sm = TRCoord.Instance.OpenScript(_testOutputPath, option) as TR23ScriptManager;
+                        sm = TRCoord.Instance.Open(_testOutputPath, option).ScriptManager as TR23ScriptManager;
                     }
                     catch (ChecksumMismatchException)
                     {
@@ -74,15 +76,16 @@ namespace TRGE.Core.Test
         protected void TestManualLevelSequencing()
         {
             List<Tuple<string, string>> levelSequencingData;
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             levelSequencingData = sm.LevelSequencing;
             levelSequencingData.Reverse();
             sm.LevelOrganisation = Organisation.Manual;
             sm.LevelSequencing = levelSequencingData;
 
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();
             
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             CollectionAssert.AreEqual(levelSequencingData, sm.LevelSequencing);
         }
 
@@ -90,15 +93,16 @@ namespace TRGE.Core.Test
         protected void TestManualUnarmedLevels()
         {
             List<MutableTuple<string, string, bool>> unarmedData;
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             unarmedData = sm.UnarmedLevelData;
             unarmedData[0].Item3 = !unarmedData[0].Item3;
             sm.UnarmedLevelOrganisation = Organisation.Manual;
             sm.UnarmedLevelData = unarmedData;
 
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();
             
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             CollectionAssert.AreEqual(unarmedData, sm.UnarmedLevelData);
         }
 
@@ -106,15 +110,16 @@ namespace TRGE.Core.Test
         protected void TestManualAmmolessLevels()
         {
             List<MutableTuple<string, string, bool>> ammolessData;
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             ammolessData = sm.AmmolessLevelData;
             ammolessData[0].Item3 = !ammolessData[0].Item3;
             sm.AmmolessLevelOrganisation = Organisation.Manual;
             sm.AmmolessLevelData = ammolessData;
 
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();
 
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             CollectionAssert.AreEqual(ammolessData, sm.AmmolessLevelData);
         }
 
@@ -122,16 +127,17 @@ namespace TRGE.Core.Test
         protected void TestAmmolessRandomisation()
         {
             List<MutableTuple<string, string, bool>> ammolessData;
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             ammolessData = sm.AmmolessLevelData;
 
             sm.AmmolessLevelOrganisation = Organisation.Random;
             sm.AmmolessLevelRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
             sm.RandomAmmolessLevelCount = 5;
 
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();
 
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             CollectionAssert.AreEqual(ammolessData, sm.AmmolessLevelData);
         }
 
@@ -139,16 +145,17 @@ namespace TRGE.Core.Test
         protected void TestUnarmedRandomisation()
         {
             List<MutableTuple<string, string, bool>> unarmedData;
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             unarmedData = sm.UnarmedLevelData;
 
             sm.UnarmedLevelOrganisation = Organisation.Random;
             sm.UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
             sm.RandomUnarmedLevelCount = 3;
 
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();
 
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             CollectionAssert.AreEqual(unarmedData, sm.UnarmedLevelData);
         }
 
@@ -156,14 +163,15 @@ namespace TRGE.Core.Test
         protected void TestAudioChange()
         {
             List<MutableTuple<string, string, ushort>> trackData;
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             trackData = sm.GameTrackData;
             trackData[0].Item3 = 47;
             sm.GameTrackData = trackData;
 
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();
 
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             CollectionAssert.AreEqual(trackData, sm.GameTrackData);
         }
     }

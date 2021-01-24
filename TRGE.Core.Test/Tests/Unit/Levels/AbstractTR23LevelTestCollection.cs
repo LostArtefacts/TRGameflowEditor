@@ -30,7 +30,7 @@ namespace TRGE.Core.Test
         protected virtual void TestLoadLevels()
         {
             InitialiseLevels();
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             CollectionAssert.AreEqual(sm.LevelManager.Levels, _expectedLevels);
         }
 
@@ -41,7 +41,7 @@ namespace TRGE.Core.Test
             RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
             _expectedLevels.Randomise(rng.Create());
 
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             string[] newLevelNames = new string[LevelNames.Length];
             sm.LevelManager.LevelModified += delegate (object sender, TRScriptedLevelEventArgs e)
             {
@@ -63,7 +63,7 @@ namespace TRGE.Core.Test
         {
             InitialiseLevels();
             _expectedLevels.Reverse();
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             List<Tuple<string, string>> levelSequencingData = sm.LevelSequencing;
             levelSequencingData.Reverse();
             sm.LevelSequencing = levelSequencingData;

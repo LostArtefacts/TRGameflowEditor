@@ -20,7 +20,7 @@ namespace TRGE.Core.Test
 
         private void TestCreateScriptManager(FileInfo file)
         {
-            AbstractTRScriptManager scriptMan = TRCoord.Instance.OpenScript(file);
+            AbstractTRScriptManager scriptMan = TRCoord.Instance.Open(file).ScriptManager;
             Assert.IsFalse(scriptMan == null);
             Assert.IsTrue(scriptMan is TR23ScriptManager);
             Assert.IsTrue(scriptMan.OriginalFile.FullName.Equals(file.FullName));
@@ -29,7 +29,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestBackup()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[0]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[0]).ScriptManager as TR23ScriptManager;
             Assert.IsFalse(sm.BackupFile == null);
             Assert.IsTrue(sm.BackupFile.Exists);
             try
@@ -50,14 +50,14 @@ namespace TRGE.Core.Test
             TRCoord.Instance.ClearHistory();
 
             List<FileInfo> openedScripts = new List<FileInfo>();
-            TRCoord.Instance.FileHistoryAdded += delegate (object sender, TRFileHistoryEventArgs e)
+            TRCoord.Instance.FileHistoryAdded += delegate (object sender, TRHistoryEventArgs e)
             {
-                openedScripts.Add(e.File);
+                openedScripts.Add(new FileInfo(e.Path));
             };
 
             foreach (string scriptFile in _validScripts)
             {
-                TRCoord.Instance.OpenScript(scriptFile);
+                TRCoord.Instance.Open(scriptFile);
             }
 
             Assert.IsTrue(openedScripts.Count == _validScripts.Length);
@@ -71,11 +71,12 @@ namespace TRGE.Core.Test
         protected void TestRestore()
         {
             byte[] originalData = File.ReadAllBytes(_validScripts[0]);
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[0]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[0]);
+            //TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             File.Move(_validScripts[0], _validScripts[0] + ".bak");
             try
             {
-                TRCoord.Instance.RestoreScript(sm);
+                editor.Restore();
                 Assert.IsTrue(File.Exists(_validScripts[0]));
                 CollectionAssert.AreEqual(originalData, File.ReadAllBytes(_validScripts[0]));
             }

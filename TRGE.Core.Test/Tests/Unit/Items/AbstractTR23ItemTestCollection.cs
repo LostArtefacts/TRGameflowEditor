@@ -13,7 +13,7 @@ namespace TRGE.Core.Test
         [TestSequence(0)]
         protected virtual void TestLoadItems()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             foreach (TRItem item in ExpectedItems)
             {
                 TRItem checkItem = sm.LevelManager.ItemProvider.GetItem(item.ID);

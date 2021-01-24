@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TRGE.Core
 {
@@ -44,6 +45,25 @@ namespace TRGE.Core
                 return blankTrack;
             }
             return null;
+        }
+
+        internal IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> GetCategorisedTracks()
+        {
+            Dictionary<TRAudioCategory, List<TRAudioTrack>> data = new Dictionary<TRAudioCategory, List<TRAudioTrack>>();
+            foreach (TRAudioCategory category in (TRAudioCategory[])Enum.GetValues(typeof(TRAudioCategory)))
+            {
+                data.Add(category, new List<TRAudioTrack>());
+            }
+
+            foreach (TRAudioTrack track in Tracks)
+            {
+                foreach (TRAudioCategory category in track.Categories)
+                {
+                    data[category].Add(track);
+                }
+            }
+
+            return data;
         }
     }
 }

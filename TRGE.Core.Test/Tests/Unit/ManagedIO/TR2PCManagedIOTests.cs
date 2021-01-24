@@ -13,15 +13,16 @@ namespace TRGE.Core.Test
         protected void TestBonusRandomisation()
         {
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> bonusData;
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
             bonusData = sm.LevelBonusData;
 
             sm.BonusOrganisation = Organisation.Random;
             sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
 
-            TRCoord.Instance.SaveScript(sm);
+            editor.Save();
             
-            sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             
             //CollectionAssert.AreEqual is failing here for some reason, hence the more manual approach
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = sm.LevelBonusData;

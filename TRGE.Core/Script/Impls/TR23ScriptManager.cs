@@ -118,7 +118,7 @@ namespace TRGE.Core
             TR23LevelManager levelMan = LevelManager as TR23LevelManager;
             if (BonusOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseBonuses();
+                levelMan.RandomiseBonuses(backupLevels);
             }
             else if (BonusOrganisation == Organisation.Default)
             {
@@ -263,7 +263,7 @@ namespace TRGE.Core
 
         internal void RandomiseBonuses()
         {
-            (LevelManager as TR23LevelManager).RandomiseBonuses();
+            (LevelManager as TR23LevelManager).RandomiseBonuses(LoadBackupScript().Levels);
         }
 
         public bool LevelsHaveCutScenes

@@ -163,7 +163,7 @@ namespace TRGE.Core
             SetUnarmedLevelData(GetUnarmedLevelData(originalLevels));
         }
 
-        internal void RandomiseBonuses()
+        internal void RandomiseBonuses(List<AbstractTRScriptedLevel> originalLevels)
         {
             TRItem shotgun = (ItemProvider as TR2ItemProvider).Shotgun;
             bool unarmedLevelSeen = false;
@@ -172,8 +172,11 @@ namespace TRGE.Core
                 { TRItemCategory.Weapon, new HashSet<TRItem> { shotgun } }
             };
             Random rand = BonusRNG.Create();
-            foreach (TR23ScriptedLevel level in _levels)
+
+            foreach (TR23ScriptedLevel originalLevel in originalLevels) //always randomise based on the original level sequence
             {
+                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
+
                 if (level.HasSecrets)
                 {
                     if (!unarmedLevelSeen && level.RemovesWeapons)

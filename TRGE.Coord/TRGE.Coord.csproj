@@ -45,9 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TREditor.cs" />
+    <Compile Include="TRIOCoord.cs" />
     <Compile Include="TRCoord.cs" />
-    <Compile Include="TRFileCoord.cs" />
-    <Compile Include="Events\TRFileHistoryEventArgs.cs" />
+    <Compile Include="Events\TRHistoryEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TRGE.Core\TRGE.Core.csproj">

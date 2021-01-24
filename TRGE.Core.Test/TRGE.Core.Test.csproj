@@ -52,6 +52,8 @@
     <Compile Include="Tests\AbstractTestCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\Integration\Audio\TR2AudioIntegrationTests.cs" />
+    <Compile Include="Tests\Integration\Audio\TR3AudioIntegrationTests.cs" />
     <Compile Include="Tests\Unit\Audio\AbstractTR23AudioTestCollection.cs" />
     <Compile Include="Tests\Unit\Audio\TR2GPCAudioTests.cs" />
     <Compile Include="Tests\Unit\Audio\TR2PCAudioTests.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Tests\Unit\Levels\TR3PSXLevelTests.cs" />
     <Compile Include="Tests\Unit\ManagedIO\AbstractTR23ManagedIOTestCollection.cs" />
     <Compile Include="Tests\Unit\ManagedIO\TR2GPCManagedIOTests.cs" />
+    <Compile Include="Tests\Unit\ManagedIO\TR2PCManagedDirectoryIOTests.cs" />
     <Compile Include="Tests\Unit\ManagedIO\TR2PCManagedIOTests.cs" />
     <Compile Include="Tests\Unit\ManagedIO\TR2PSXBetaManagedIOTests.cs" />
     <Compile Include="Tests\Unit\ManagedIO\TR2PSXManagedIOTests.cs" />

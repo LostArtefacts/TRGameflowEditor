@@ -1,11 +1,25 @@
-﻿namespace TRGE.Core
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+
+namespace TRGE.Core
 {
     internal class TRAudioTrack
     {
+        [JsonProperty]
         internal ushort ID;
+        [JsonProperty]
         internal string Name;
-        internal uint Length;
+        [JsonProperty]
         internal uint Offset;
+        [JsonProperty]
+        internal uint Length;
+        [JsonProperty]
+        internal List<TRAudioCategory> Categories;
+
+        internal TRAudioTrack()
+        {
+            Categories = new List<TRAudioCategory>();
+        }
 
         public override string ToString()
         {

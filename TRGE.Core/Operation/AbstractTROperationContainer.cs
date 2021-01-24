@@ -139,7 +139,7 @@ namespace TRGE.Core
         }
 
         /// <summary>
-        /// Returns true if the operation was inserts, false if it was already in place.
+        /// Returns true if the operation was inserted, false if it was already in place.
         /// </summary>
         internal bool EnsureOperation(TROperation operation)
         {

@@ -32,7 +32,7 @@ namespace TRGE.Core.Test
             RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
             List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             sm.AmmolessLevelOrganisation = Organisation.Random;
             sm.AmmolessLevelRNG = rng;
             sm.RandomAmmolessLevelCount = 2;
@@ -48,7 +48,7 @@ namespace TRGE.Core.Test
             RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
             List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             sm.UnarmedLevelOrganisation = Organisation.Random;
             sm.UnarmedLevelRNG = rng;
             sm.RandomUnarmedLevelCount = 2;
@@ -67,7 +67,7 @@ namespace TRGE.Core.Test
                 _expectedLevels[1]
             };
 
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             List<MutableTuple<string, string, bool>> ammolessLevelData = sm.AmmolessLevelData;
             for (int i = 0; i < ammolessLevelData.Count; i++)
             {
@@ -88,7 +88,7 @@ namespace TRGE.Core.Test
                 _expectedLevels[1]
             };
 
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             List<MutableTuple<string, string, bool>> unarmedLevelData = sm.UnarmedLevelData;
             for (int i = 0; i < unarmedLevelData.Count; i++)
             {

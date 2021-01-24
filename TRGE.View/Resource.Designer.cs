@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TRGE.Core {
+namespace TRGE.View {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace TRGE.Core {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class TRGE_Core {
+    internal class Resource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal TRGE_Core() {
+        internal Resource() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace TRGE.Core {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TRGE.Core.TRGE.Core", typeof(TRGE_Core).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TRGE.View.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,22 +61,12 @@ namespace TRGE.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static byte[] tr2audio {
+        internal static System.Drawing.Icon ShuffleIcon {
             get {
-                object obj = ResourceManager.GetObject("tr2audio", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] tr3audio {
-            get {
-                object obj = ResourceManager.GetObject("tr3audio", resourceCulture);
-                return ((byte[])(obj));
+                object obj = ResourceManager.GetObject("ShuffleIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }

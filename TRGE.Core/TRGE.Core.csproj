@@ -49,17 +49,19 @@
     <Compile Include="Audio\Impls\TR23AudioExtractor.cs" />
     <Compile Include="Audio\Impls\TR2AudioProvider.cs" />
     <Compile Include="Audio\Impls\TR3AudioProvider.cs" />
+    <Compile Include="Audio\TRAudioCategory.cs" />
     <Compile Include="Audio\TRAudioFactory.cs" />
     <Compile Include="Audio\TRAudioTrack.cs" />
     <Compile Include="Audio\TRAudioType.cs" />
+    <Compile Include="Helpers\Extensions\IOExtensions.cs" />
     <Compile Include="ITRConfigProvider.cs" />
     <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
     <Compile Include="Script\Exceptions\ChecksumMismatchException.cs" />
     <Compile Include="Script\TRScriptOpenOption.cs" />
     <Compile Include="TRInterop.cs" />
     <Compile Include="FrontEnd\Impls\TR23FrontEnd.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Helpers\Hashing.cs" />
+    <Compile Include="Helpers\Extensions\CollectionExtensions.cs" />
+    <Compile Include="Helpers\Extensions\HashingExtensions.cs" />
     <Compile Include="Helpers\MutableTuple.cs" />
     <Compile Include="Helpers\Organisation.cs" />
     <Compile Include="Helpers\RandomGenerator.cs" />
@@ -89,11 +91,6 @@
     <Compile Include="Script\AbstractTRScriptManager.cs" />
     <Compile Include="Script\Impls\TR23ScriptManager.cs" />
     <Compile Include="Script\Exceptions\MissingScriptException.cs" />
-    <Compile Include="TRGE.Core.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TRGE.Core.resx</DependentUpon>
-    </Compile>
     <Compile Include="Version\Hardware.cs" />
     <Compile Include="Script\TRScriptFactory.cs" />
     <Compile Include="Script\Impls\TR23Script.cs" />
@@ -103,14 +100,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\tr2audio.dat" />
-    <None Include="Resources\tr3audio.dat" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TRGE.Core.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TRGE.Core.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Include="Resources\tr2audio.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\tr3audio.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

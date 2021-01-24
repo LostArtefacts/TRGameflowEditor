@@ -82,7 +82,8 @@ namespace TRGE.Core
 
         internal static string CreateID(string identifier)
         {
-            return Hashing.CreateMD5(Path.GetFileNameWithoutExtension(identifier).ToUpper(), Encoding.Default);
+            return Path.GetFileNameWithoutExtension(identifier).ToUpper().CreateMD5();
+            //return HashingExtensions.CreateMD5(Path.GetFileNameWithoutExtension(identifier).ToUpper(), Encoding.Default);
         }
 
         public override bool Equals(object obj)

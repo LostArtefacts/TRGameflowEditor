@@ -53,7 +53,8 @@ namespace TRGE.Core
         {
             _config = ConfigFile.Exists ? JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(ConfigFile.FullName)) : null;
             //issue #36
-            if (_config != null && !Hashing.Checksum(OriginalFile.FullName).Equals(_config["CheckSumOnSave"]))
+            //if (_config != null && !HashingExtensions.Checksum(OriginalFile.FullName).Equals(_config["CheckSumOnSave"]))
+            if (_config != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
             {
                 switch (_openOption)
                 {
@@ -140,11 +141,11 @@ namespace TRGE.Core
 
             if (GameTrackOrganisation == Organisation.Random)
             {
-                //TODO: randomise
+                LevelManager.RandomiseGameTracks(backupScript.Levels);
             }
             else if (GameTrackOrganisation == Organisation.Default)
             {
-                //TODO: restore
+                LevelManager.RestoreGameTracks(backupScript);
             }
 
             SaveImpl();
@@ -154,7 +155,7 @@ namespace TRGE.Core
             Script.Write(localCopyPath);
             File.Copy(localCopyPath, OriginalFile.FullName, true);
 
-            _config["CheckSumOnSave"] = Hashing.Checksum(OriginalFile.FullName);
+            _config["CheckSumOnSave"] = OriginalFile.Checksum();
 
             _config.Sort(delegate(string s1, string s2)
             {
@@ -174,11 +175,15 @@ namespace TRGE.Core
             });
 
             File.WriteAllText(ConfigFile.FullName, JsonConvert.SerializeObject(_config, Formatting.Indented));
+
+            //reload at this point to reset the randomised information, to prevent this being available without playing the game
+            Initialise(CreateScript(), OriginalFile, BackupFile);
         }
 
         public void Restore()
         {
             BackupFile.CopyTo(OriginalFile.FullName, true);
+            ConfigFile.Delete(); //issue #39
             Initialise(Script, OriginalFile, BackupFile);
         }
 
@@ -247,6 +252,11 @@ namespace TRGE.Core
         public byte[] GetTrackData(ushort trackID)
         {
             return LevelManager.AudioProvider.GetTrackData(trackID);
+        }
+
+        internal void RandomiseGameTracks()
+        {
+            LevelManager.RandomiseGameTracks(LoadBackupScript().Levels);
         }
     }
 }

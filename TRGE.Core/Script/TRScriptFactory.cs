@@ -4,6 +4,11 @@ namespace TRGE.Core
 {
     public static class TRScriptFactory
     {
+        public static AbstractTRScriptManager GetScriptManager(string originalScriptFile, string backupScriptFile, string configFile, TRScriptOpenOption openOption)
+        {
+            return GetScriptManager(new FileInfo(originalScriptFile), new FileInfo(backupScriptFile), new FileInfo(configFile), openOption);
+        }
+
         public static AbstractTRScriptManager GetScriptManager(FileInfo originalScriptFile, FileInfo backupScriptFile, FileInfo configFile, TRScriptOpenOption openOption)
         {
             uint scriptVersion = GetDatFileVersion(originalScriptFile.FullName);

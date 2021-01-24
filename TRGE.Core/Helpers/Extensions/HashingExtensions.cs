@@ -4,9 +4,9 @@ using System.Text;
 
 namespace TRGE.Core
 {
-    public static class Hashing
+    public static class HashingExtensions
     {
-        public static string CreateMD5(string str, Encoding encoding = null)
+        public static string CreateMD5(this string str, Encoding encoding = null)
         {
             if (encoding == null)
             {
@@ -25,10 +25,10 @@ namespace TRGE.Core
             }
         }
 
-        public static string Checksum(string filePath)
+        public static string Checksum(this FileInfo file)
         {
             using (MD5 md5 = MD5.Create())
-            using (FileStream stream = File.OpenRead(filePath))
+            using (FileStream stream = File.OpenRead(file.FullName))
             {
                 byte[] hash = md5.ComputeHash(stream);
                 StringBuilder sb = new StringBuilder();

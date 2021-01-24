@@ -16,7 +16,7 @@ namespace TRGE.Core.Test
         [TestSequence(0)]
         protected void TestLoadCutScenes()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             Assert.AreEqual(sm.LevelsSupportCutScenes, ExpectedCutScenes);
         }
 
@@ -24,7 +24,7 @@ namespace TRGE.Core.Test
         [TestSequence(1)]
         protected void TestSetCutScenes()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             if (sm.LevelsSupportCutScenes)
             {
                 sm.LevelsHaveCutScenes = !ExpectedCutScenes;
@@ -36,7 +36,7 @@ namespace TRGE.Core.Test
         [TestSequence(2)]
         protected void TestLoadFrontEndFMV()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             Assert.AreEqual(sm.FrontEndHasFMV, ExpectedFrontEndFMV);
         }
 
@@ -44,7 +44,7 @@ namespace TRGE.Core.Test
         [TestSequence(3)]
         protected void TestSetFrontEndFMV()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             sm.FrontEndHasFMV = !ExpectedFrontEndFMV;
             Assert.AreNotEqual(sm.FrontEndHasFMV, ExpectedFrontEndFMV);
         }
@@ -53,7 +53,7 @@ namespace TRGE.Core.Test
         [TestSequence(4)]
         protected void TestLoadLevelsFMV()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             Assert.AreEqual(sm.LevelsSupportFMVs, ExpectedLevelsFMV);
         }
 
@@ -61,7 +61,7 @@ namespace TRGE.Core.Test
         [TestSequence(5)]
         protected void TestSetLevelsFMV()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             if (sm.LevelsSupportFMVs)
             {
                 sm.LevelsHaveFMV = !ExpectedLevelsFMV;
@@ -73,7 +73,7 @@ namespace TRGE.Core.Test
         [TestSequence(6)]
         protected void TestLoadLevelsStartAnimation()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             Assert.AreEqual(sm.LevelsSupportStartAnimations, ExpectedLevelsStartAnimation);
         }
 
@@ -81,7 +81,7 @@ namespace TRGE.Core.Test
         [TestSequence(7)]
         protected void TestSetLevelsStartAnimation()
         {
-            TR23ScriptManager sm = TRCoord.Instance.OpenScript(_validScripts[ScriptFileIndex]) as TR23ScriptManager;
+            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
             if (sm.LevelsSupportStartAnimations)
             {
                 sm.LevelsHaveStartAnimation = !ExpectedLevelsStartAnimation;

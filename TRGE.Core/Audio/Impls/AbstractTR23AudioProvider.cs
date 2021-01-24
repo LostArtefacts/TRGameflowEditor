@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace TRGE.Core
 {
@@ -15,39 +16,11 @@ namespace TRGE.Core
         protected string _wadFileName;
         internal override TRAudioType AudioType => TRAudioType.WAV;
 
-        internal AbstractTR23AudioProvider(byte[] data)
+        internal AbstractTR23AudioProvider(string jsonFilePath)
         {
-            LoadTracks(data);
-        }
-
-        private void LoadTracks(byte[] data)
-        {
-            using (MemoryStream ms = new MemoryStream(data))
-            using (BinaryReader br = new BinaryReader(ms))
-            {
-                ushort trackCount = br.ReadUInt16();
-                ushort fileNameLength = br.ReadUInt16();
-                _wadFileName = Encoding.ASCII.GetString(br.ReadBytes(fileNameLength));
-
-                for (ushort i = 0; i < trackCount; i++)
-                {
-                    ushort id = br.ReadUInt16();
-                    ushort trackNameLength = br.ReadUInt16();
-                    byte[] name = br.ReadBytes(trackNameLength);
-                    uint length = br.ReadUInt32();
-                    uint offset = br.ReadUInt32();
-                    if (length > 0)
-                    {
-                        _tracks.Add(new TRAudioTrack
-                        {
-                            ID = id,
-                            Name = Encoding.ASCII.GetString(name),
-                            Length = length,
-                            Offset = offset
-                        });
-                    }
-                }
-            }
+            Dictionary<string, object> data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(jsonFilePath));
+            _wadFileName = data["WAD"].ToString();
+            _tracks.AddRange(JsonConvert.DeserializeObject<TRAudioTrack[]>(data["Tracks"].ToString()));
         }
 
         internal override byte[] GetTrackData(TRAudioTrack track)

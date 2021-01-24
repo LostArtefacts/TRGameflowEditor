@@ -25,20 +25,18 @@ namespace TRGE.Coord
         private const string _globalConfigFileName = "config.json";
 
         private string _rootConfigDirectory;
-        private readonly TRFileCoord _fileCoord;
-
-        private AbstractTRScriptManager _scriptManager;
+        private readonly TRIOCoord _trioCoord;
 
         private TRCoord()
         {
             RootConfigDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
             Dictionary<string, object> config = LoadConfig();
-            _fileCoord = new TRFileCoord();
-            _fileCoord.SetConfig(config == null ? null : (config.ContainsKey("History") ? config["History"] : null));
+            _trioCoord = new TRIOCoord();
+            _trioCoord.SetConfig(config == null ? null : (config.ContainsKey("History") ? config["History"] : null));
 
-            _fileCoord.FileHistoryAdded += TRFileHistoryAdded;
-            _fileCoord.FileHistoryChanged += TRFileHistoryChanged;
+            _trioCoord.HistoryAdded += TRHistoryAdded;
+            _trioCoord.HistoryChanged += TRHistoryChanged;
             TRDownloader.ResourceDownloading += TRResourceDownloading;
         }
 
@@ -81,7 +79,7 @@ namespace TRGE.Coord
         {
             Dictionary<string, object> config = new Dictionary<string, object>
             {
-                ["History"] = _fileCoord.GetConfig()
+                ["History"] = _trioCoord.GetConfig()
             };
 
             File.WriteAllText(ConfigFilePath, JsonConvert.SerializeObject(config, Formatting.Indented));
@@ -89,16 +87,16 @@ namespace TRGE.Coord
         #endregion
 
         #region Event Bubbles
-        public event EventHandler<TRFileHistoryEventArgs> FileHistoryAdded;
+        public event EventHandler<TRHistoryEventArgs> FileHistoryAdded;
         public event EventHandler FileHistoryChanged;
 
-        private void TRFileHistoryAdded(object sender, TRFileHistoryEventArgs e)
+        private void TRHistoryAdded(object sender, TRHistoryEventArgs e)
         {
             FileHistoryAdded?.Invoke(this, e);
             StoreConfig();
         }
 
-        private void TRFileHistoryChanged(object sender, EventArgs e)
+        private void TRHistoryChanged(object sender, EventArgs e)
         {
             FileHistoryChanged?.Invoke(this, e);
             StoreConfig();
@@ -112,37 +110,28 @@ namespace TRGE.Coord
         }
         #endregion
 
-        public AbstractTRScriptManager OpenScript(string scriptFile, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
+        public TREditor Open(FileInfo editFilePath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
-            return OpenScript(new FileInfo(scriptFile), openOption);
+            return Open(editFilePath.FullName, openOption);
         }
 
-        public AbstractTRScriptManager OpenScript(FileInfo scriptFile, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
+        public TREditor Open(DirectoryInfo editFolderPath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
-            _scriptManager = _fileCoord.GetScriptManager(scriptFile, openOption);
-            _scriptManager.LevelModified += ScriptManagerLevelModified;
-
-            return _scriptManager;
+            return Open(editFolderPath.FullName, openOption);
         }
 
-        private void ScriptManagerLevelModified(object sender, TRScriptedLevelEventArgs e)
+        public TREditor Open(string path, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
-            
-        }
-
-        public void SaveScript(AbstractTRScriptManager scriptMan)
-        {
-            scriptMan.Save();
-        }
-
-        public void RestoreScript(AbstractTRScriptManager scriptMan)
-        {
-            scriptMan.Restore();
+            _trioCoord.Initialise(path);
+            return new TREditor
+            { 
+                ScriptManager = _trioCoord.GetScriptManager(openOption)
+            };
         }
 
         public void ClearHistory()
         {
-            _fileCoord.ClearHistory();
+            _trioCoord.ClearHistory();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    internal static class Extensions
+    internal static class CollectionExtensions
     {
         internal static void Randomise<T>(this List<T> list, Random rand)
         {
@@ -25,7 +25,7 @@ namespace TRGE.Core
 
         internal static List<T> RandomSelection<T>(this List<T> list, Random rand, uint count, bool allowDuplicates = false, ISet<T> exclusions = null)
         {
-            if (count > list.Count)
+            if (count > list.Count && !allowDuplicates)
             {
                 throw new ArgumentException(string.Format("The given count ({0}) is larger than that of the provided list {1}.", count, list.Count));
             }
@@ -47,7 +47,8 @@ namespace TRGE.Core
             List<T> resultSet = new List<T>();
             if (iterList.Count > 0)
             {
-                int maxIter = Math.Min(Convert.ToInt32(count), iterList.Count);
+                int icount = Convert.ToInt32(count);
+                int maxIter = allowDuplicates ? icount : Math.Min(icount, iterList.Count);
                 for (int i = 0; i < maxIter; i++)
                 {
                     T item;

@@ -57,7 +57,6 @@ namespace TRGE.Core
         internal virtual void SetLevelSequencing(List<Tuple<string, string>> data)
         {
             List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
-            //ushort newSeq = 1;
             foreach (Tuple<string, string> item in data)
             {
                 AbstractTRScriptedLevel level = GetLevel(item.Item1);
@@ -65,8 +64,6 @@ namespace TRGE.Core
                 {
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
                 }
-                //level.Sequence = newSeq++;
-                //level.IsFinalLevel = newSeq == LevelCount + 1;
                 newLevels.Add(level);
             }
 
@@ -80,7 +77,6 @@ namespace TRGE.Core
             shuffledLevels.Randomise(LevelRNG.Create());
 
             List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
-            //ushort newSeq = 1;
             foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
             {
                 AbstractTRScriptedLevel level = GetLevel(shfLevel.ID);
@@ -88,9 +84,6 @@ namespace TRGE.Core
                 {
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
                 }
-
-                //level.Sequence = newSeq++;
-                //level.IsFinalLevel = newSeq == (LevelCount - Edition.LevelCompleteOffset) + 1;
                 newLevels.Add(level);
             }
 
@@ -226,6 +219,51 @@ namespace TRGE.Core
 
                     level.TrackID = item.Item3;
                 }
+            }
+        }
+
+        internal void RandomiseGameTracks(List<AbstractTRScriptedLevel> originalLevels)
+        {
+            IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
+            Random rand = GameTrackRNG.Create();
+
+            if (tracks[TRAudioCategory.Title].Count > 0)
+            {
+                TitleSoundID = tracks[TRAudioCategory.Title].RandomSelection(rand, 1)[0].ID;
+            }
+            if (tracks[TRAudioCategory.Secret].Count > 0)
+            {
+                SecretSoundID = tracks[TRAudioCategory.Secret].RandomSelection(rand, 1)[0].ID;
+            }
+            if (tracks[TRAudioCategory.Ambient].Count > 0)
+            {
+                List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, Convert.ToUInt32(Levels.Count), true);
+                for (int i = 0; i < originalLevels.Count; i++)
+                {
+                    AbstractTRScriptedLevel level = GetLevel(originalLevels[i].ID);
+                    if (level == null)
+                    {
+                        throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevels[i].ID));
+                    }
+
+                    level.TrackID = levelTracks[i].ID;
+                }
+            }
+        }
+
+        internal void RestoreGameTracks(AbstractTRScript originalScript)
+        {
+            TitleSoundID = originalScript.TitleSoundID;
+            SecretSoundID = originalScript.SecretSoundID;
+
+            foreach (AbstractTRScriptedLevel originalLevel in originalScript.Levels)
+            {
+                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+                if (level == null)
+                {
+                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+                }
+                level.TrackID = originalLevel.TrackID;
             }
         }
     }
