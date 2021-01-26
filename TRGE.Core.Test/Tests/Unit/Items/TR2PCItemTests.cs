@@ -29,7 +29,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestRandomiseItemsOutput()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             try
             {
                 sm.BonusOrganisation = Organisation.Random;

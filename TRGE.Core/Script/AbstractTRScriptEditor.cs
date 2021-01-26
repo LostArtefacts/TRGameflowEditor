@@ -6,11 +6,34 @@ using System.Reflection;
 
 namespace TRGE.Core
 {
-    public abstract class AbstractTRScriptManager
+    public abstract class AbstractTRScriptEditor
     {
-        public FileInfo OriginalFile { get; internal set; }
-        public FileInfo BackupFile { get; internal set; }
-        public FileInfo ConfigFile { get; internal set; }
+        protected TRScriptIOArgs _io;
+
+        public FileInfo OriginalFile
+        {
+            get => _io.OriginalFile;
+            set => _io.OriginalFile = value;
+        }
+
+        public FileInfo BackupFile
+        {
+            get => _io.BackupFile;
+            set => _io.BackupFile = value;
+        }
+
+        public FileInfo ConfigFile
+        {
+            get => _io.ConfigFile;
+            set => _io.ConfigFile = value;
+        }
+
+        public DirectoryInfo OutputDirectory
+        {
+            get => _io.OutputDirectory;
+            set => _io.OutputDirectory = value;
+        }
+
         public TREdition Edition => Script.Edition;
 
         internal AbstractTRLevelManager LevelManager { get; private set; }
@@ -22,18 +45,15 @@ namespace TRGE.Core
 
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
 
-        internal AbstractTRScriptManager(FileInfo originalFile, FileInfo backupFile, FileInfo configFile, TRScriptOpenOption openOption)
+        internal AbstractTRScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
         {
-            ConfigFile = configFile;
+            _io = ioArgs;
             _openOption = openOption;
-            Initialise(CreateScript(), originalFile, backupFile);
+            Initialise(CreateScript());
         }
 
-        private void Initialise(AbstractTRScript script, FileInfo originalFile, FileInfo backupFile)
+        private void Initialise(AbstractTRScript script)
         {
-            OriginalFile = originalFile;
-            BackupFile = backupFile;
-
             LoadConfig();
 
             (Script = script).Read(BackupFile);
@@ -53,7 +73,6 @@ namespace TRGE.Core
         {
             _config = ConfigFile.Exists ? JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(ConfigFile.FullName)) : null;
             //issue #36
-            //if (_config != null && !HashingExtensions.Checksum(OriginalFile.FullName).Equals(_config["CheckSumOnSave"]))
             if (_config != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
             {
                 switch (_openOption)
@@ -151,7 +170,7 @@ namespace TRGE.Core
             SaveImpl();
             LevelManager.Save();
 
-            string localCopyPath = Path.Combine(BackupFile.DirectoryName, OriginalFile.Name);
+            string localCopyPath = Path.Combine(OutputDirectory.FullName, OriginalFile.Name);
             Script.Write(localCopyPath);
             File.Copy(localCopyPath, OriginalFile.FullName, true);
 
@@ -177,14 +196,14 @@ namespace TRGE.Core
             File.WriteAllText(ConfigFile.FullName, JsonConvert.SerializeObject(_config, Formatting.Indented));
 
             //reload at this point to reset the randomised information, to prevent this being available without playing the game
-            Initialise(CreateScript(), OriginalFile, BackupFile);
+            Initialise(CreateScript());
         }
 
         public void Restore()
         {
             BackupFile.CopyTo(OriginalFile.FullName, true);
             ConfigFile.Delete(); //issue #39
-            Initialise(Script, OriginalFile, BackupFile);
+            Initialise(Script);
         }
 
         internal AbstractTRScript LoadBackupScript()

@@ -4,20 +4,20 @@ namespace TRGE.Coord
 {
     public class TREditor
     {
-        private AbstractTRScriptManager _scriptManager;
-        public AbstractTRScriptManager ScriptManager
+        private AbstractTRScriptEditor _scriptEditor;
+        public AbstractTRScriptEditor ScriptEditor
         {
-            get => _scriptManager;
+            get => _scriptEditor;
             internal set
             {
-                _scriptManager = value;
-                _scriptManager.LevelModified += ScriptManagerLevelModified;
+                _scriptEditor = value;
+                _scriptEditor.LevelModified += ScriptEditorLevelModified;
             }
         }
 
         internal TRLevelEditor LevelEditor;
 
-        private void ScriptManagerLevelModified(object sender, TRScriptedLevelEventArgs e)
+        private void ScriptEditorLevelModified(object sender, TRScriptedLevelEventArgs e)
         {
             if (LevelEditor != null)
             {
@@ -27,12 +27,12 @@ namespace TRGE.Coord
 
         public void Save()
         {
-            _scriptManager.Save();
+            _scriptEditor.Save();
         }
 
         public void Restore()
         {
-            _scriptManager.Restore();
+            _scriptEditor.Restore();
         }
     }
 }

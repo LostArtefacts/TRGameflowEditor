@@ -43,7 +43,7 @@ namespace TRGE.Core.Test
         [TestSequence(0)]
         protected override void TestLoadItems()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             Assert.IsTrue(sm.LevelManager.ItemProvider is TR2ItemProvider);
             base.TestLoadItems();
         }
@@ -51,7 +51,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestRandomiseItems()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> originalBonusData = sm.LevelBonusData;
 
             sm.BonusOrganisation = Organisation.Random;
@@ -91,7 +91,7 @@ namespace TRGE.Core.Test
         protected void TestRandomiseItemsReload()
         {
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
 
             sm.BonusOrganisation = Organisation.Random;
             sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
@@ -145,7 +145,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestReorganiseItems()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             sm.BonusOrganisation = Organisation.Manual;
                 
             Dictionary<string, List<TRItem>> originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
@@ -162,7 +162,7 @@ namespace TRGE.Core.Test
             }
         }
 
-        private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ConvertManualBonusData(TR23ScriptManager sm)
+        private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ConvertManualBonusData(TR23ScriptEditor sm)
         {
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ret = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
             foreach (string levelFile in ManualBonusData.Keys)

@@ -125,7 +125,7 @@ namespace TRGE.Coord
             _trioCoord.Initialise(path);
             return new TREditor
             { 
-                ScriptManager = _trioCoord.GetScriptManager(openOption),
+                ScriptEditor = _trioCoord.GetScriptManager(openOption),
                 LevelEditor = _trioCoord.GetLevelEditor()
             };
         }

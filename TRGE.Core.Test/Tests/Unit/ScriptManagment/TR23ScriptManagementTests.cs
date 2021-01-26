@@ -20,16 +20,16 @@ namespace TRGE.Core.Test
 
         private void TestCreateScriptManager(FileInfo file)
         {
-            AbstractTRScriptManager scriptMan = TRCoord.Instance.Open(file).ScriptManager;
+            AbstractTRScriptEditor scriptMan = TRCoord.Instance.Open(file).ScriptEditor;
             Assert.IsFalse(scriptMan == null);
-            Assert.IsTrue(scriptMan is TR23ScriptManager);
+            Assert.IsTrue(scriptMan is TR23ScriptEditor);
             Assert.IsTrue(scriptMan.OriginalFile.FullName.Equals(file.FullName));
         }
 
         [TestMethod]
         protected void TestBackup()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[0]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[0]).ScriptEditor as TR23ScriptEditor;
             Assert.IsFalse(sm.BackupFile == null);
             Assert.IsTrue(sm.BackupFile.Exists);
             try

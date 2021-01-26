@@ -24,7 +24,7 @@ namespace TRGE.Core.Test
         [TestSequence(0)]
         protected void TestLoadTracks()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
             CompareTrackData(trackData, ExpectedLevelTracks);
         }
@@ -33,7 +33,7 @@ namespace TRGE.Core.Test
         [TestSequence(1)]
         protected void TestPlayTrack()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             using (MemoryStream ms = new MemoryStream(sm.GetTrackData(SampleTrack)))
             {
                 new SoundPlayer(ms).PlaySync();
@@ -44,7 +44,7 @@ namespace TRGE.Core.Test
         [TestSequence(2)]
         protected void TestSetTracks()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
             foreach (MutableTuple<string, string, ushort> levelData in trackData)
             {
@@ -78,7 +78,7 @@ namespace TRGE.Core.Test
         protected void TestRandomiseTracks()
         {
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
             List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
 
             sm.GameTrackOrganisation = Organisation.Random;
@@ -94,7 +94,7 @@ namespace TRGE.Core.Test
         protected void TestRandomiseTracksReload()
         {
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
 
             sm.GameTrackOrganisation = Organisation.Random;
             sm.GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);

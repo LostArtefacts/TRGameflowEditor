@@ -44,7 +44,7 @@ namespace TRGE.Core.Test
         [TestSequence(0)]
         protected override void TestLoadItems()
         {
-            TR23ScriptManager sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             Assert.IsTrue(sm.LevelManager.ItemProvider is TR3ItemProvider);
             base.TestLoadItems();
         }

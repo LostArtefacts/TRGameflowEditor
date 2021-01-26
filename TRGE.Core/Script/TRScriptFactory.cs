@@ -4,20 +4,15 @@ namespace TRGE.Core
 {
     public static class TRScriptFactory
     {
-        public static AbstractTRScriptManager GetScriptManager(string originalScriptFile, string backupScriptFile, string configFile, TRScriptOpenOption openOption)
+        public static AbstractTRScriptEditor GetScriptManager(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
         {
-            return GetScriptManager(new FileInfo(originalScriptFile), new FileInfo(backupScriptFile), new FileInfo(configFile), openOption);
-        }
-
-        public static AbstractTRScriptManager GetScriptManager(FileInfo originalScriptFile, FileInfo backupScriptFile, FileInfo configFile, TRScriptOpenOption openOption)
-        {
-            uint scriptVersion = GetDatFileVersion(originalScriptFile.FullName);
+            uint scriptVersion = GetDatFileVersion(ioArgs.OriginalFile.FullName);
             switch (scriptVersion)
             {
                 case TR23Script.Version:
-                    return new TR23ScriptManager(originalScriptFile, backupScriptFile, configFile, openOption);
+                    return new TR23ScriptEditor(ioArgs, openOption);
                 default:
-                    throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, originalScriptFile.Name));
+                    throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, ioArgs.OriginalFile.Name));
             }
         }
 

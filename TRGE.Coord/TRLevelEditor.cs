@@ -9,12 +9,11 @@ namespace TRGE.Coord
 {
     internal class TRLevelEditor
     {
-        private readonly string _originalDirectory, _backupDirectory;
+        private readonly TRDirectoryIOArgs _io;
 
-        internal TRLevelEditor(string originalDirectory, string backupDirectory)
+        internal TRLevelEditor(TRDirectoryIOArgs io)
         {
-            _originalDirectory = originalDirectory;
-            _backupDirectory = backupDirectory;
+            _io = io;
         }
 
         internal void LevelModified(TRScriptedLevelEventArgs e)
@@ -25,7 +24,7 @@ namespace TRGE.Coord
                 return;
             }
 
-            string levelFile = Path.Combine(_backupDirectory, e.LevelFileBaseName);
+            string levelFile = Path.Combine(_io.BackupDirectory.FullName, e.LevelFileBaseName);
             if (!File.Exists(levelFile))
             {
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
@@ -54,9 +53,7 @@ namespace TRGE.Coord
             level.Entities = ents.ToArray();
 
             TR2LevelWriter writer = new TR2LevelWriter();
-            //TODO:write to a temp folder, then allow rando to happen, then move files to original
-            //maybe we should have functionality to remove it after all...
-            writer.WriteLevelToFile(level, Path.Combine(_originalDirectory, e.LevelFileBaseName));
+            writer.WriteLevelToFile(level, Path.Combine(_io.OutputDirectory.FullName, e.LevelFileBaseName));
         }
 
         internal Location GetLocationForLevel(TR2Level level)

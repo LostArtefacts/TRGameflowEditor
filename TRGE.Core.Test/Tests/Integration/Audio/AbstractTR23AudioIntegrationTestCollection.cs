@@ -14,7 +14,7 @@ namespace TRGE.Core.Test
         protected void TestAudioMapping()
         {
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-            TR23ScriptManager sm = editor.ScriptManager as TR23ScriptManager;
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
             
             List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
             Console.WriteLine("Audio mapping tests - start the game after each prompt and verify the title screen matches.");

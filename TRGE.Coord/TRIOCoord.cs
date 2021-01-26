@@ -15,18 +15,14 @@ namespace TRGE.Coord
 
         protected const string _editDirectoryName = "Edits";
         protected const string _backupDirectoryName = "Backup";
-        protected const string _backupExtension = ".bak";
+        protected const string _outputDirectoryName = "Output";
         protected const string _scriptConfigFileName = "trge.json";
         protected const string _dirConfigFileName = "alt.json";
 
         protected OperationMode _mode;
 
         protected string _editDirectory;
-        internal string EditDirectory => _editDirectory;
-
         protected string _orignalScriptFile, _backupScriptFile, _scriptConfigFile;
-        internal string ScriptFile => _orignalScriptFile;
-
         protected string _originalDirectory, _directoryConfigFile;
 
         #region History Vars and Events
@@ -51,9 +47,17 @@ namespace TRGE.Coord
             CheckBackup();
         }
 
-        internal AbstractTRScriptManager GetScriptManager(TRScriptOpenOption openOption)
+        internal AbstractTRScriptEditor GetScriptManager(TRScriptOpenOption openOption)
         {
-            AbstractTRScriptManager scriptMan = TRScriptFactory.GetScriptManager(_orignalScriptFile, _backupScriptFile, _scriptConfigFile, openOption);
+            TRScriptIOArgs io = new TRScriptIOArgs
+            {
+                OriginalFile = new FileInfo(_orignalScriptFile),
+                BackupFile = new FileInfo(_backupScriptFile),
+                ConfigFile = new FileInfo(_scriptConfigFile),
+                OutputDirectory = new DirectoryInfo(GetOutputDirectory())
+            };
+            AbstractTRScriptEditor scriptMan = TRScriptFactory.GetScriptManager(io, openOption);
+
             UpdateFileHistory();
 
             return scriptMan;
@@ -65,7 +69,14 @@ namespace TRGE.Coord
             {
                 return null;
             }
-            return new TRLevelEditor(_originalDirectory, GetBackupDirectory());
+
+            return new TRLevelEditor(new TRDirectoryIOArgs
+            {
+                OriginalDirectory = new DirectoryInfo(_originalDirectory),
+                BackupDirectory = new DirectoryInfo(GetBackupDirectory()),
+                ConfigFile = new FileInfo(_directoryConfigFile),
+                OutputDirectory = new DirectoryInfo(GetOutputDirectory())
+            });
         }
 
         private string FindScriptFile(string path)
@@ -85,19 +96,17 @@ namespace TRGE.Coord
             {
                 DirectoryInfo backupDI = new DirectoryInfo(backupDirectory);
                 new DirectoryInfo(_originalDirectory).Copy(backupDI, false, new string[] { "*.dat", "*.tr2", "*.psx" });
-                backupDI.ClearExcept(ScriptFile);
-                string scriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
-                File.Move(scriptFile, _backupScriptFile = scriptFile + _backupExtension);
+                backupDI.ClearExcept(_orignalScriptFile);
+                //string scriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
+                //File.Move(scriptFile, _backupScriptFile = scriptFile + _backupExtension);
             }
             else
             {
-                string backupFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name + _backupExtension);
-
-                if (!File.Exists(backupFile))
+                _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
+                if (!File.Exists(_backupScriptFile))
                 {
-                    File.Copy(_orignalScriptFile, backupFile);
+                    File.Copy(_orignalScriptFile, _backupScriptFile);
                 }
-                _backupScriptFile = backupFile;
             }
 
             _scriptConfigFile = Path.Combine(_editDirectory, _scriptConfigFileName);
@@ -114,6 +123,12 @@ namespace TRGE.Coord
         {
             DirectoryInfo editDirectory = new DirectoryInfo(GetEditDirectory());
             return editDirectory.CreateSubdirectory(_backupDirectoryName).FullName;
+        }
+
+        internal string GetOutputDirectory()
+        {
+            DirectoryInfo editDirectory = new DirectoryInfo(GetEditDirectory());
+            return editDirectory.CreateSubdirectory(_outputDirectoryName).FullName;
         }
 
         #region History Methods

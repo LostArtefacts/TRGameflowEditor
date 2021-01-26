@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace TRGE.Core
 {
-    public class TR23ScriptManager : AbstractTRScriptManager
+    public class TR23ScriptEditor : AbstractTRScriptEditor
     {
-        internal TR23ScriptManager(FileInfo originalFile, FileInfo backupFile, FileInfo configFile, TRScriptOpenOption openOption)
-            : base(originalFile, backupFile, configFile, openOption) { }        
+        internal TR23ScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
+            : base(ioArgs, openOption) { }        
 
         protected override void ApplyConfig()
         {
