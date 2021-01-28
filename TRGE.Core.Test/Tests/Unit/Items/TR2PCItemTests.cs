@@ -80,15 +80,21 @@ namespace TRGE.Core.Test
             sm.RandomiseBonuses();
 
             TRItem shotgun = (sm.LevelManager.ItemProvider as TR2ItemProvider).Shotgun;
-            bool unarmedSeen = false;
-            foreach (AbstractTRScriptedLevel level in sm.LevelManager.Levels)
+            for (int i = 0; i < sm.LevelManager.Levels.Count; i++)
             {
-                
+                AbstractTRScriptedLevel level = sm.LevelManager.Levels[i];
                 if ((level as TR23ScriptedLevel).GetBonusItems(sm.LevelManager.ItemProvider as TR2ItemProvider).Contains(shotgun))
                 {
-                    if (level.RemovesWeapons)
+                    //should only appear if this level or a previous level removes weapons
+                    bool weaponsRemoved = false;
+                    for (int j = i; j >= 0; j--)
                     {
-                        unarmedSeen = true;
+                        weaponsRemoved |= sm.LevelManager.Levels[j].RemovesWeapons;
+                    }
+
+                    if (!weaponsRemoved)
+                    {
+                        Assert.Fail("The shotgun was found as a secret bonus item before a weaponless level.");
                     }
                 }
             }

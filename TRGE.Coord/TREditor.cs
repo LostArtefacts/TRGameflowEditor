@@ -21,7 +21,7 @@ namespace TRGE.Coord
         {
             if (LevelEditor != null)
             {
-                LevelEditor.LevelModified(e);
+                LevelEditor.ScriptedLevelModified(e);
             }
         }
 

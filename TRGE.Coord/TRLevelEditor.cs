@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TRGE.Core;
@@ -10,17 +12,18 @@ namespace TRGE.Coord
     internal class TRLevelEditor
     {
         private readonly TRDirectoryIOArgs _io;
+        private readonly Dictionary<string, List<Location>> _defaultWeaponLocations;
 
         internal TRLevelEditor(TRDirectoryIOArgs io)
         {
             _io = io;
+            _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(File.ReadAllText(@"Resources\ualocations.json"));
         }
 
-        internal void LevelModified(TRScriptedLevelEventArgs e)
+        internal void ScriptedLevelModified(TRScriptedLevelEventArgs e)
         {
-            if (e.Modification != TRScriptedLevelModification.WeaponlessStateChanged || !e.LevelRemovesWeapons)
+            if (e.Modification != TRScriptedLevelModification.WeaponlessStateChanged)
             {
-                //we only care about levels that have become weaponless
                 return;
             }
 
@@ -30,63 +33,93 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
             }
 
+            TR2Level level = null;
             TR2LevelReader reader = new TR2LevelReader();
-            TR2Level level = reader.ReadLevel(levelFile);
-            
-            Location pistolLocation = GetLocationForLevel(level);
-            TR2Entity pistols = new TR2Entity
+            if (e.LevelRemovesWeapons)
             {
-                TypeID = 135, //TODO: set this in TR2Entities to allow: (short)TR2Entities.Pistols_S_P,
-                Room = pistolLocation.Room,
-                X = pistolLocation.X,
-                Y = pistolLocation.Y,
-                Z = pistolLocation.Z,
-                Angle = 0,
-                Intensity1 = -1,
-                Intensity2 = -1,
-                Flags = 0
-            };
+                level = reader.ReadLevel(levelFile);
+                Location pistolLocation = GetLocationForLevel(e.LevelFileBaseName);
+                if (pistolLocation == null)
+                {
+                    throw new IOException(string.Format("There is no default pistol location defined for {0} ({1})", e.LevelName, e.LevelFileBaseName));
+                }
 
-            List<TR2Entity> ents = level.Entities.ToList();
-            ents.Add(pistols);
-            level.NumEntities++;
-            level.Entities = ents.ToArray();
+                TR2Entity pistols = new TR2Entity
+                {
+                    TypeID = 135, //TODO: set this in TR2Entities to allow: (short)TR2Entities.Pistols_S_P,
+                    Room = pistolLocation.Room,
+                    X = pistolLocation.X,
+                    Y = pistolLocation.Y,
+                    Z = pistolLocation.Z,
+                    Angle = 0,
+                    Intensity1 = -1,
+                    Intensity2 = -1,
+                    Flags = 0
+                };
+
+                List<TR2Entity> ents = level.Entities.ToList();
+                ents.Add(pistols);
+                level.NumEntities++;
+                level.Entities = ents.ToArray();
+            }
+            else if (e.LevelID == AbstractTRScriptedLevel.CreateID("HOUSE"))
+            {
+                //For the time being, we use the following base house.tr2 file, which was modified
+                //using TRViewer to include all weapon animations and sprites. Copying the data
+                //below across partially works, but it breaks the textures
+                level = reader.ReadLevel(@"Resources\house.tr2");
+                /*level.NumAnimations = armedHSHLevel.NumAnimations;
+                level.Animations = armedHSHLevel.Animations;
+                
+                level.NumFrames = armedHSHLevel.NumFrames;
+                level.Frames = armedHSHLevel.Frames;
+
+                level.NumImages = armedHSHLevel.NumImages;
+                level.Images8 = armedHSHLevel.Images8;
+                level.Images16 = armedHSHLevel.Images16;
+
+                level.NumMeshData = armedHSHLevel.NumMeshData;
+                level.RawMeshData = armedHSHLevel.RawMeshData;
+
+                level.NumMeshPointers = armedHSHLevel.NumMeshPointers;
+                level.MeshPointers = armedHSHLevel.MeshPointers;
+
+                level.NumMeshTrees = armedHSHLevel.NumMeshTrees;
+                level.MeshTrees = armedHSHLevel.MeshTrees;
+
+                level.NumModels = armedHSHLevel.NumModels;
+                level.Models = armedHSHLevel.Models;
+
+                level.NumObjectTextures = armedHSHLevel.NumObjectTextures;
+                level.ObjectTextures = armedHSHLevel.ObjectTextures;
+
+                level.NumSpriteSequences = armedHSHLevel.NumSpriteSequences;
+                level.SpriteSequences = armedHSHLevel.SpriteSequences;
+
+                level.NumSpriteTextures = armedHSHLevel.NumSpriteTextures;
+                level.SpriteTextures = armedHSHLevel.SpriteTextures;*/
+            }
 
             TR2LevelWriter writer = new TR2LevelWriter();
             writer.WriteLevelToFile(level, Path.Combine(_io.OutputDirectory.FullName, e.LevelFileBaseName));
         }
 
-        internal Location GetLocationForLevel(TR2Level level)
+        internal Location GetLocationForLevel(string levelFileName)
         {
-            foreach (TR2Entity entity in level.Entities)
+            levelFileName = levelFileName.ToUpper();
+            if (_defaultWeaponLocations.ContainsKey(levelFileName) && _defaultWeaponLocations[levelFileName].Count > 0)
             {
-                if (entity.TypeID == 151) //flares for Venice?
-                {
-                    return new Location
-                    {
-                        Room = entity.Room,
-                        X = entity.X,
-                        Y = entity.Y,
-                        Z = entity.Z
-                    };
-                }
+                return _defaultWeaponLocations[levelFileName][0];
             }
-
-            return new Location
-            {
-                Room = 0,
-                X = 0,
-                Y = 0,
-                Z = 0
-            };
+            return null;
         }
     }
 
     internal class Location
     {
-        internal short Room { get; set; }
-        internal int X { get; set; }
-        internal int Y { get; set; }
-        internal int Z { get; set; }
+        public short Room { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
     }
 }

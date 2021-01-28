@@ -166,7 +166,12 @@ namespace TRGE.Core
                 TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(item.Item1);
                 if (level != null)
                 {
+                    bool currentlyRemovesWeapons = level.RemovesWeapons;
                     level.RemovesWeapons = item.Item3;
+                    if (currentlyRemovesWeapons != level.RemovesWeapons)
+                    {
+                        FireLevelModificationEvent(level, TRScriptedLevelModification.WeaponlessStateChanged);
+                    }
                 }
             }
         }
@@ -179,7 +184,6 @@ namespace TRGE.Core
         internal void RandomiseBonuses(List<AbstractTRScriptedLevel> originalLevels)
         {
             TRItem shotgun = (ItemProvider as TR2ItemProvider).Shotgun;
-            //bool unarmedLevelSeen = false;
             Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>
             {
                 { TRItemCategory.Weapon, new HashSet<TRItem> { shotgun } }
@@ -192,11 +196,9 @@ namespace TRGE.Core
 
                 if (level.HasSecrets)
                 {
-                    if (/*!unarmedLevelSeen && */level.RemovesWeapons)
+                    if (level.RemovesWeapons)
                     {
-                        //shotgun will only be given if Lara has lost her weapons
-                        exclusions[TRItemCategory.Weapon].Remove(shotgun);
-                        //unarmedLevelSeen = true;
+                        exclusions[TRItemCategory.Weapon].Remove(shotgun); //shotgun will only be given if Lara has lost her weapons
                     }
 
                     List<TRItem> bonuses = ItemProvider.GetRandomBonusItems(rand, exclusions);

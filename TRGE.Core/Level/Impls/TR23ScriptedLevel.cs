@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TRGE.Core
 {
     internal class TR23ScriptedLevel : AbstractTRScriptedLevel
     {
+        private static readonly string[] UnsupportedUnarmedLevels = new string[]
+        {
+            CreateID("FLOATING"), CreateID("XIAN")
+        };
+
         internal override ushort Sequence
         {
             get => GetOperation(TR23OpDefs.Level).Operand;
@@ -96,12 +102,23 @@ namespace TRGE.Core
             {
                 if (value)
                 {
-                    EnsureOperation(new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true));
+                    if (SupportsRemovingWeapons)
+                    {
+                        EnsureOperation(new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true));
+                    }
                 }
                 else
                 {
                     SetOperationActive(TR23OpDefs.RemoveWeapons, value);
                 }
+            }
+        }
+
+        internal override bool SupportsRemovingWeapons
+        {
+            get
+            {
+                return !UnsupportedUnarmedLevels.Contains(ID);
             }
         }
 

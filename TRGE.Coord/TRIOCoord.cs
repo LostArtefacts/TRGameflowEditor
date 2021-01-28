@@ -97,6 +97,7 @@ namespace TRGE.Coord
                 DirectoryInfo backupDI = new DirectoryInfo(backupDirectory);
                 new DirectoryInfo(_originalDirectory).Copy(backupDI, false, new string[] { "*.dat", "*.tr2", "*.psx" });
                 backupDI.ClearExcept(_orignalScriptFile);
+                _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
             }
             else
             {
