@@ -47,7 +47,7 @@ namespace TRGE.Coord
             CheckBackup();
         }
 
-        internal AbstractTRScriptEditor GetScriptManager(TRScriptOpenOption openOption)
+        internal AbstractTRScriptEditor GetScriptEditor(TRScriptOpenOption openOption)
         {
             TRScriptIOArgs io = new TRScriptIOArgs
             {
@@ -97,8 +97,6 @@ namespace TRGE.Coord
                 DirectoryInfo backupDI = new DirectoryInfo(backupDirectory);
                 new DirectoryInfo(_originalDirectory).Copy(backupDI, false, new string[] { "*.dat", "*.tr2", "*.psx" });
                 backupDI.ClearExcept(_orignalScriptFile);
-                //string scriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
-                //File.Move(scriptFile, _backupScriptFile = scriptFile + _backupExtension);
             }
             else
             {

@@ -30,45 +30,67 @@ namespace TRGE.Core.Test
         protected void TestRandomiseItemsOutput()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-            try
+            sm.BonusOrganisation = Organisation.Random;
+            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
+            int r = sm.BonusRNG.Value;
+            sm.BonusRNG.RNGType = RandomGenerator.Type.Custom;
+            sm.BonusRNG.Value = r;
+
+            List<string> output = new List<string>
             {
-                sm.BonusOrganisation = Organisation.Random;
-                sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
-                int r = sm.BonusRNG.Value;
-                sm.BonusRNG.RNGType = RandomGenerator.Type.Custom;
-                sm.BonusRNG.Value = r;
+                "Index,Level,Item Type,Item,Quantity"
+            };
 
-                List<string> output = new List<string>
+            for (int i = 0; i < 10; i++)
+            {
+                if (i > 0)
                 {
-                    "Index,Level,Item Type,Item,Quantity"
-                };
+                    ++sm.BonusRNG.Value;
+                }
+                sm.RandomiseBonuses();
 
-                for (int i = 0; i < 10; i++)
+                foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelBonusData in sm.LevelBonusData)
                 {
-                    if (i > 0)
+                    foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusItem in levelBonusData.Item3)
                     {
-                        ++sm.BonusRNG.Value;
-                    }
-
-                    sm.RandomiseBonuses();
-
-                    foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelBonusData in sm.LevelBonusData)
-                    {
-                        foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusItem in levelBonusData.Item3)
+                        if (bonusItem.Item4 > 0)
                         {
-                            if (bonusItem.Item4 > 0)
-                            {
-                                output.Add(i + "," + levelBonusData.Item2 + "," + bonusItem.Item2 + "," + bonusItem.Item3 + "," + bonusItem.Item4);
-                            }
+                            output.Add(i + "," + levelBonusData.Item2 + "," + bonusItem.Item2 + "," + bonusItem.Item3 + "," + bonusItem.Item4);
                         }
                     }
                 }
-
-                File.WriteAllLines("TR2BonusRandomisation.csv", output.ToArray());
             }
-            finally
+
+            File.WriteAllLines("TR2BonusRandomisation.csv", output.ToArray());
+        }
+
+        [TestMethod]
+        protected void TestRandomiseItemsShotgun()
+        {
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+            sm.LevelOrganisation = Organisation.Random;
+            sm.LevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.UnarmedLevelOrganisation = Organisation.Random;
+            sm.UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.BonusOrganisation = Organisation.Random;
+            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+
+            sm.RandomiseLevels();
+            sm.RandomiseUnarmedLevels();
+            sm.RandomiseBonuses();
+
+            TRItem shotgun = (sm.LevelManager.ItemProvider as TR2ItemProvider).Shotgun;
+            bool unarmedSeen = false;
+            foreach (AbstractTRScriptedLevel level in sm.LevelManager.Levels)
             {
                 
+                if ((level as TR23ScriptedLevel).GetBonusItems(sm.LevelManager.ItemProvider as TR2ItemProvider).Contains(shotgun))
+                {
+                    if (level.RemovesWeapons)
+                    {
+                        unarmedSeen = true;
+                    }
+                }
             }
         }
     }

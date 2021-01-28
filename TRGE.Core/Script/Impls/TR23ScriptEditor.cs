@@ -115,14 +115,14 @@ namespace TRGE.Core
             List<AbstractTRScriptedLevel> backupLevels = backupScript.Levels;
 
             TR23LevelManager levelMan = LevelManager as TR23LevelManager;
-            if (BonusOrganisation == Organisation.Random)
+            /*if (BonusOrganisation == Organisation.Random)
             {
                 levelMan.RandomiseBonuses(backupLevels);
             }
             else if (BonusOrganisation == Organisation.Default)
             {
                 levelMan.RestoreBonuses(backupLevels);
-            }
+            }*/
 
             if (AmmolessLevelOrganisation == Organisation.Random)
             {
@@ -140,6 +140,16 @@ namespace TRGE.Core
             else if (UnarmedLevelOrganisation == Organisation.Default)
             {
                 levelMan.RestoreUnarmedLevels(backupLevels);
+            }
+
+            //should occur after unarmed organisation
+            if (BonusOrganisation == Organisation.Random)
+            {
+                levelMan.RandomiseBonuses(backupLevels);
+            }
+            else if (BonusOrganisation == Organisation.Default)
+            {
+                levelMan.RestoreBonuses(backupLevels);
             }
         }
 
