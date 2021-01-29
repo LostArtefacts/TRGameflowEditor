@@ -136,7 +136,7 @@ namespace TRGE.Core.Test
             sm.RandomAmmolessLevelCount = 5;
 
             editor.Save();
-
+            
             sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             CollectionAssert.AreEqual(ammolessData, sm.AmmolessLevelData);
         }

@@ -5,6 +5,9 @@ namespace TRGE.Core
 {
     internal static class IOExtensions
     {
+        /// <summary>
+        /// Copies the content of this directory to the target directory.
+        /// </summary>
         internal static void Copy(this DirectoryInfo directory, DirectoryInfo targetDirectory, bool overwrite = true, string[] extensions = null)
         {
             FileInfo[] farr;
@@ -28,7 +31,7 @@ namespace TRGE.Core
                 FileInfo targetFile = new FileInfo(Path.Combine(targetDirectory.FullName, fi.Name));
                 if (overwrite || !targetFile.Exists)
                 {
-                    File.Copy(fi.FullName, targetFile.FullName);
+                    File.Copy(fi.FullName, targetFile.FullName, true);
                 }
             }
         }
@@ -52,6 +55,18 @@ namespace TRGE.Core
         internal static void ClearExcept(this DirectoryInfo directory, string filepath)
         {
             ClearExcept(directory, new FileInfo(filepath));
+        }
+
+        internal static void Clear(this DirectoryInfo directory)
+        {
+            foreach (FileInfo file in directory.EnumerateFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in directory.EnumerateDirectories())
+            {
+                dir.Delete(true);
+            }
         }
     }
 }

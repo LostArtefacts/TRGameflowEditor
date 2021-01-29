@@ -49,6 +49,11 @@ namespace TRGE.Core
         {
             _io = ioArgs;
             _openOption = openOption;
+            Initialise();
+        }
+
+        internal void Initialise()
+        {
             Initialise(CreateScript());
         }
 
@@ -172,9 +177,9 @@ namespace TRGE.Core
 
             string localCopyPath = Path.Combine(OutputDirectory.FullName, OriginalFile.Name);
             Script.Write(localCopyPath);
-            File.Copy(localCopyPath, OriginalFile.FullName, true);
+            //File.Copy(localCopyPath, OriginalFile.FullName, true);
 
-            _config["CheckSumOnSave"] = OriginalFile.Checksum();
+            _config["CheckSumOnSave"] = new FileInfo(localCopyPath)/*OriginalFile*/.Checksum();
 
             _config.Sort(delegate(string s1, string s2)
             {
@@ -196,7 +201,7 @@ namespace TRGE.Core
             File.WriteAllText(ConfigFile.FullName, JsonConvert.SerializeObject(_config, Formatting.Indented));
 
             //reload at this point to reset the randomised information, to prevent this being available without playing the game
-            Initialise(CreateScript());
+            //Initialise(CreateScript());
         }
 
         public void Restore()
@@ -211,6 +216,11 @@ namespace TRGE.Core
             AbstractTRScript script = CreateScript();
             script.Read(BackupFile);
             return script;
+        }
+
+        internal List<AbstractTRScriptedLevel> GetOriginalLevels()
+        {
+            return LoadBackupScript().Levels;
         }
 
         internal abstract AbstractTRScript CreateScript();

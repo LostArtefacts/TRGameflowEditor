@@ -123,7 +123,7 @@ namespace TRGE.Core.Test
             sm.GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
             sm.Save();
 
-            CollectionAssert.AreEquivalent(sm.GameTrackData, randoTrackData);
+            CollectionAssert.AreNotEquivalent(sm.GameTrackData, randoTrackData);
         }
     }
 }

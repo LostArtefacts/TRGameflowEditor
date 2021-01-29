@@ -27,7 +27,7 @@ namespace TRGE.Core.Test
             //sm.UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
             List<MutableTuple<string, string, bool>> unarmedData = sm.UnarmedLevelData;
             //unarmedData[15].Item3 = true; //floating islands texture bug
-            //unarmedData[16].Item3 = true; //floating islands texture bug
+            //unarmedData[16].Item3 = true; //dragon's lair texture bug
             unarmedData[17].Item3 = false;
             sm.UnarmedLevelData = unarmedData;
 

@@ -25,6 +25,9 @@ namespace TRGE.Coord
         protected string _orignalScriptFile, _backupScriptFile, _scriptConfigFile;
         protected string _originalDirectory, _directoryConfigFile;
 
+        internal string OriginalDirectory => _originalDirectory;
+        internal string OutputDirectory => GetOutputDirectory();
+
         #region History Vars and Events
         protected readonly List<string> _history;
         internal IReadOnlyList<string> History => _history;
@@ -63,14 +66,14 @@ namespace TRGE.Coord
             return scriptMan;
         }
 
-        internal TRLevelEditor GetLevelEditor()
+        internal TR2LevelEditor GetLevelEditor()
         {
             if (_mode == OperationMode.File)
             {
                 return null;
             }
 
-            return new TRLevelEditor(new TRDirectoryIOArgs
+            return new TR2LevelEditor(new TRDirectoryIOArgs
             {
                 OriginalDirectory = new DirectoryInfo(_originalDirectory),
                 BackupDirectory = new DirectoryInfo(GetBackupDirectory()),
@@ -128,6 +131,11 @@ namespace TRGE.Coord
         {
             DirectoryInfo editDirectory = new DirectoryInfo(GetEditDirectory());
             return editDirectory.CreateSubdirectory(_outputDirectoryName).FullName;
+        }
+
+        internal string GetOriginalDirectory()
+        {
+            return _originalDirectory;
         }
 
         #region History Methods

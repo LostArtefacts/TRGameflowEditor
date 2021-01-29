@@ -123,7 +123,7 @@ namespace TRGE.Coord
         public TREditor Open(string path, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
             _trioCoord.Initialise(path);
-            return new TREditor
+            return new TREditor(_trioCoord.OutputDirectory, _trioCoord.OriginalDirectory)
             { 
                 ScriptEditor = _trioCoord.GetScriptEditor(openOption),
                 LevelEditor = _trioCoord.GetLevelEditor()

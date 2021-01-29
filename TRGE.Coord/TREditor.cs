@@ -1,4 +1,5 @@
-﻿using TRGE.Core;
+﻿using System.IO;
+using TRGE.Core;
 
 namespace TRGE.Coord
 {
@@ -15,7 +16,16 @@ namespace TRGE.Coord
             }
         }
 
-        internal TRLevelEditor LevelEditor;
+        internal AbstractTRLevelEditor LevelEditor;
+
+        private readonly string _outputDirectory;
+        private readonly string _targetDirectory;
+
+        internal TREditor(string outputDirectory, string targetDirectory)
+        {
+            _outputDirectory = outputDirectory;
+            _targetDirectory = targetDirectory;
+        }
 
         private void ScriptEditorLevelModified(object sender, TRScriptedLevelEventArgs e)
         {
@@ -27,12 +37,23 @@ namespace TRGE.Coord
 
         public void Save()
         {
-            _scriptEditor.Save();
+            DirectoryInfo outputDir = new DirectoryInfo(_outputDirectory);
+            DirectoryInfo targetDir = new DirectoryInfo(_targetDirectory);
+            outputDir.Clear();
+
+            ScriptEditor.Save();
+            if (LevelEditor != null)
+            {
+                LevelEditor.Save(ScriptEditor);
+            }
+
+            outputDir.Copy(targetDir);
+            ScriptEditor.Initialise();
         }
 
         public void Restore()
         {
-            _scriptEditor.Restore();
+            ScriptEditor.Restore();
         }
     }
 }
