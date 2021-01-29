@@ -27,8 +27,8 @@ namespace TRGE.Core.Test
             sm.UnarmedLevelOrganisation = Organisation.Manual;
             List<MutableTuple<string, string, bool>> unarmedData = sm.UnarmedLevelData;
             //unarmedData[2].Item3 = true;
-            unarmedData[15].Item3 = true; //floater
-            unarmedData[16].Item3 = true; //lair 
+            //unarmedData[15].Item3 = true; //floater
+            //unarmedData[16].Item3 = true; //lair 
             unarmedData[17].Item3 = false; //hsh
             sm.UnarmedLevelData = unarmedData;
 

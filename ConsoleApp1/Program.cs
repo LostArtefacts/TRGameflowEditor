@@ -12,24 +12,23 @@ namespace ConsoleApp1
     {
         static void Main()
         {
-            List<TRViewLocation> routeLocations = RouteToLocationsConverter.Convert(@"C:\users\lewis\Desktop\opera.tvr");
-            List<Dictionary<string, object>> lst = new List<Dictionary<string, object>>();
-            Dictionary<string, List<Dictionary<string, object>>> map = new Dictionary<string, List<Dictionary<string, object>>>
+            using (BinaryReader br = new BinaryReader(new FileStream(@"C:\Users\Lewis\Desktop\hsh\try2\Pistol.trmvb", FileMode.Open)))
             {
-                ["OPERA.TR2"] = lst
-            };
-            foreach (TRViewLocation loc in routeLocations)
-            {
-                lst.Add(new Dictionary<string, object>
-                { 
-                    ["X"] = loc.X,
-                    ["Z"] = loc.Z,
-                    ["Y"] = loc.Y,
-                    ["Room"] = loc.Room
-                });
+                byte version = br.ReadByte();
+                byte trType = br.ReadByte();
+                byte trVersion = br.ReadByte();
+                byte padding = br.ReadByte(); //0
+                uint numAnims = br.ReadUInt32();
+
+                //uint numAnims = br.ReadUInt32();
+                Console.WriteLine(version);
+                Console.WriteLine(trType);
+                Console.WriteLine(trVersion);
+                Console.WriteLine(padding);
+                Console.WriteLine(numAnims);
             }
-            File.WriteAllText(@"C:\users\lewis\Desktop\ualocations.json", JsonConvert.SerializeObject(map, Formatting.Indented));
-            Console.WriteLine();
+
+            Console.ReadLine();
         }
     }
 }
