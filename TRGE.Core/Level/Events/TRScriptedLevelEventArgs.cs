@@ -4,7 +4,8 @@ namespace TRGE.Core
 {
     public class TRScriptedLevelEventArgs : EventArgs
     {
-        public TRScriptedLevelModification Modification { get; internal set; }
+        public TRScriptedLevelModification Modification { get; private set; }
+        internal AbstractTRScriptedLevel ScriptedLevel { get; private set; }
         public string LevelID { get; internal set; }
         public string LevelName { get; internal set; }
         public string LevelFileBaseName { get; internal set; }
@@ -18,6 +19,7 @@ namespace TRGE.Core
             return new TRScriptedLevelEventArgs
             {
                 Modification = modification,
+                ScriptedLevel = level,
                 LevelID = level.ID,
                 LevelName = level.Name,
                 LevelFileBaseName = level.LevelFileBaseName,

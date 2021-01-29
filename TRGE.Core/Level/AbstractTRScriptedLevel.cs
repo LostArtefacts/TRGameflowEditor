@@ -38,7 +38,6 @@ namespace TRGE.Core
         internal abstract bool HasSunset { get; set; }
         internal abstract bool HasDeadlyWater { get; set; }
         internal abstract bool RemovesWeapons { get; set; }
-        internal abstract bool SupportsRemovingWeapons { get; }
         internal abstract bool RemovesAmmo { get; set; }
         internal abstract bool HasSecrets { get; set; }
         internal abstract bool KillToComplete { get; }

@@ -6,9 +6,9 @@ namespace TRGE.Core
 {
     internal class TR23ScriptedLevel : AbstractTRScriptedLevel
     {
-        private static readonly string[] UnsupportedUnarmedLevels = new string[]
+        private static readonly string[] PistolInjectionLevels = new string[]
         {
-            CreateID("FLOATING"), CreateID("XIAN")
+            CreateID("FLOATING"), CreateID("XIAN"), CreateID("HOUSE")
         };
 
         internal override ushort Sequence
@@ -102,10 +102,7 @@ namespace TRGE.Core
             {
                 if (value)
                 {
-                    if (SupportsRemovingWeapons)
-                    {
-                        EnsureOperation(new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true));
-                    }
+                    EnsureOperation(new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true));
                 }
                 else
                 {
@@ -114,11 +111,11 @@ namespace TRGE.Core
             }
         }
 
-        internal override bool SupportsRemovingWeapons
+        internal bool RequiresPistolTextureInjection
         {
             get
             {
-                return !UnsupportedUnarmedLevels.Contains(ID);
+                return PistolInjectionLevels.Contains(ID);
             }
         }
 

@@ -166,9 +166,9 @@ namespace TRGE.Core
                 TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(item.Item1);
                 if (level != null)
                 {
-                    bool currentlyRemovesWeapons = level.RemovesWeapons;
+                    //bool currentlyRemovesWeapons = level.RemovesWeapons;
                     level.RemovesWeapons = item.Item3;
-                    if (currentlyRemovesWeapons != level.RemovesWeapons)
+                    //if (currentlyRemovesWeapons != level.RemovesWeapons)
                     {
                         FireLevelModificationEvent(level, TRScriptedLevelModification.WeaponlessStateChanged);
                     }

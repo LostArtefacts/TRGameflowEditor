@@ -95,11 +95,17 @@ namespace TRGE.Coord
         protected void CheckBackup()
         {
             string backupDirectory = GetBackupDirectory();
+            string outputDirectory = GetOutputDirectory();
             if (_mode == OperationMode.Directory)
             {
                 DirectoryInfo backupDI = new DirectoryInfo(backupDirectory);
-                new DirectoryInfo(_originalDirectory).Copy(backupDI, false, new string[] { "*.dat", "*.tr2", "*.psx" });
+                DirectoryInfo outputDI = new DirectoryInfo(outputDirectory);
+
+                DirectoryInfo originalDI = new DirectoryInfo(_originalDirectory);
+                originalDI.Copy(backupDI, false, new string[] { "*.dat", "*.tr2", "*.psx" });
                 backupDI.ClearExcept(_orignalScriptFile);
+                backupDI.Copy(outputDI, false);
+
                 _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
             }
             else

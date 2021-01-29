@@ -19,16 +19,17 @@ namespace TRGE.Core.Test
                 Assert.Fail("Test cannot proceed - data directory not set or does not exit.");
             }
             TREditor editor = TRCoord.Instance.Open(_dataDirectory);
+            editor.LevelEditor.AllowSuccessiveEdits = true;
+
             Assert.IsTrue(editor.ScriptEditor.BackupFile.Exists);
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
             sm.LevelSelectEnabled = true;
             sm.UnarmedLevelOrganisation = Organisation.Manual;
-            //sm.UnarmedLevelOrganisation = Organisation.Random;
-            //sm.UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
             List<MutableTuple<string, string, bool>> unarmedData = sm.UnarmedLevelData;
-            //unarmedData[15].Item3 = true; //floating islands texture bug
-            //unarmedData[16].Item3 = true; //dragon's lair texture bug
-            unarmedData[17].Item3 = false;
+            //unarmedData[2].Item3 = true;
+            unarmedData[15].Item3 = true; //floater
+            unarmedData[16].Item3 = true; //lair 
+            unarmedData[17].Item3 = false; //hsh
             sm.UnarmedLevelData = unarmedData;
 
             List<MutableTuple<string, string, bool>> ammolessData = sm.AmmolessLevelData;

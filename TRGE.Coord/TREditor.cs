@@ -16,7 +16,7 @@ namespace TRGE.Coord
             }
         }
 
-        internal AbstractTRLevelEditor LevelEditor;
+        public AbstractTRLevelEditor LevelEditor { get; internal set; }
 
         private readonly string _outputDirectory;
         private readonly string _targetDirectory;
@@ -37,17 +37,16 @@ namespace TRGE.Coord
 
         public void Save()
         {
-            DirectoryInfo outputDir = new DirectoryInfo(_outputDirectory);
-            DirectoryInfo targetDir = new DirectoryInfo(_targetDirectory);
-            outputDir.Clear();
-
             ScriptEditor.Save();
             if (LevelEditor != null)
             {
                 LevelEditor.Save(ScriptEditor);
             }
 
+            DirectoryInfo outputDir = new DirectoryInfo(_outputDirectory);
+            DirectoryInfo targetDir = new DirectoryInfo(_targetDirectory);
             outputDir.Copy(targetDir);
+
             ScriptEditor.Initialise();
         }
 
