@@ -129,7 +129,7 @@ namespace TRGE.Core.Test
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("{0}: FAIL", methodName);
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine(e);

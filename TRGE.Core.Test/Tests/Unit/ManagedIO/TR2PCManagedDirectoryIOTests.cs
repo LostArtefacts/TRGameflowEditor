@@ -9,15 +9,17 @@ namespace TRGE.Core.Test
     public class TR2PCManagedDirectoryIOTests : BaseTestCollection
     {
         private readonly string _dataDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data";
+        private readonly string _bakDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy";
 
         [TestMethod]
         protected void TestManagedIO()
         {
-            File.Copy(@"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy\TOMBPC.DAT", @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data\TOMBPC.DAT", true);
+            //File.Copy(@"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy\TOMBPC.DAT", @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data\TOMBPC.DAT", true);
             if (_dataDirectory == null || !Directory.Exists(_dataDirectory))
             {
                 Assert.Fail("Test cannot proceed - data directory not set or does not exit.");
             }
+            new DirectoryInfo(_bakDirectory).Copy(_dataDirectory, true);
             TREditor editor = TRCoord.Instance.Open(_dataDirectory);
             editor.LevelEditor.AllowSuccessiveEdits = true;
 
@@ -35,6 +37,7 @@ namespace TRGE.Core.Test
             List<MutableTuple<string, string, bool>> ammolessData = sm.AmmolessLevelData;
             ammolessData[17].Item3 = false;
             sm.AmmolessLevelData = ammolessData;
+            sm.LevelsHaveFMV = false;
 
             editor.Save();
             int j = 0;
