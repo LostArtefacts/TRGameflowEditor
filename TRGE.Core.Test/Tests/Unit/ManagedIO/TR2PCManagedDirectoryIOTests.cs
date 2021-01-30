@@ -11,7 +11,7 @@ namespace TRGE.Core.Test
         private readonly string _dataDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data";
         private readonly string _bakDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy";
 
-        [TestMethod]
+        //[TestMethod]
         protected void TestManagedIO()
         {
             //File.Copy(@"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy\TOMBPC.DAT", @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data\TOMBPC.DAT", true);
@@ -38,6 +38,7 @@ namespace TRGE.Core.Test
             ammolessData[17].Item3 = false;
             sm.AmmolessLevelData = ammolessData;
             sm.LevelsHaveFMV = false;
+            sm.LevelsHaveCutScenes = false;
 
             editor.Save();
             int j = 0;

@@ -107,13 +107,13 @@ namespace TRGE.Core
             }
         }
 
-        internal void RandomiseAmmolessLevels(List<AbstractTRScriptedLevel> originalLevels)
+        internal void RandomiseAmmolessLevels(/*List<AbstractTRScriptedLevel> originalLevels*/)
         {
             RandomiseLevelsWithOperation
             (
                 AmmolessLevelRNG,
                 RandomAmmolessLevelCount,
-                originalLevels,
+                //originalLevels,
                 new TROperation(TR23OpDefs.RemoveAmmo, ushort.MaxValue, true)
             );
         }
@@ -123,13 +123,13 @@ namespace TRGE.Core
             SetAmmolessLevelData(GetAmmolessLevelData(originalLevels));
         }
 
-        internal void RandomiseUnarmedLevels(List<AbstractTRScriptedLevel> originalLevels)
+        internal void RandomiseUnarmedLevels(/*List<AbstractTRScriptedLevel> originalLevels*/)
         {
             RandomiseLevelsWithOperation
             (
                 UnarmedLevelRNG,
                 RandomUnarmedLevelCount, 
-                originalLevels, 
+                //originalLevels, 
                 new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true)
             );
         }
@@ -181,7 +181,7 @@ namespace TRGE.Core
             SetUnarmedLevelData(GetUnarmedLevelData(originalLevels));
         }
 
-        internal void RandomiseBonuses(List<AbstractTRScriptedLevel> originalLevels)
+        internal void RandomiseBonuses()//List<AbstractTRScriptedLevel> originalLevels)
         {
             TRItem shotgun = (ItemProvider as TR2ItemProvider).Shotgun;
             Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>
@@ -190,9 +190,10 @@ namespace TRGE.Core
             };
             Random rand = BonusRNG.Create();
 
-            foreach (TR23ScriptedLevel originalLevel in originalLevels) //always randomise based on the original level sequence
+            //foreach (TR23ScriptedLevel originalLevel in originalLevels) //always randomise based on the original level sequence
+            foreach (TR23ScriptedLevel level in _levels)
             {
-                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
+                //TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
 
                 if (level.HasSecrets)
                 {
@@ -200,6 +201,10 @@ namespace TRGE.Core
                     {
                         exclusions[TRItemCategory.Weapon].Remove(shotgun); //shotgun will only be given if Lara has lost her weapons
                     }
+                    /*else if (level.Sequence == 1)
+                    {
+                        exclusions[TRItemCategory.Weapon].Add(shotgun);
+                    }*/
 
                     List<TRItem> bonuses = ItemProvider.GetRandomBonusItems(rand, exclusions);
                     foreach (TRItem bonus in bonuses)

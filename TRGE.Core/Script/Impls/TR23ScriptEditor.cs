@@ -126,7 +126,7 @@ namespace TRGE.Core
 
             if (AmmolessLevelOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseAmmolessLevels(backupLevels);
+                levelMan.RandomiseAmmolessLevels(/*backupLevels*/);
             }
             else if (AmmolessLevelOrganisation == Organisation.Default)
             {
@@ -135,7 +135,7 @@ namespace TRGE.Core
 
             if (UnarmedLevelOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseUnarmedLevels(backupLevels);
+                levelMan.RandomiseUnarmedLevels(/*backupLevels*/);
             }
             else if (UnarmedLevelOrganisation == Organisation.Default)
             {
@@ -145,7 +145,7 @@ namespace TRGE.Core
             //should occur after unarmed organisation
             if (BonusOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseBonuses(backupLevels);
+                levelMan.RandomiseBonuses(/*backupLevels*/);
             }
             else if (BonusOrganisation == Organisation.Default)
             {
@@ -190,7 +190,7 @@ namespace TRGE.Core
 
         internal void RandomiseUnarmedLevels()
         {
-            (LevelManager as TR23LevelManager).RandomiseUnarmedLevels(LoadBackupScript().Levels);
+            (LevelManager as TR23LevelManager).RandomiseUnarmedLevels(/*LoadBackupScript().Levels*/);
         }
 
         internal List<TR23ScriptedLevel> GetUnarmedLevels()
@@ -230,7 +230,7 @@ namespace TRGE.Core
 
         internal void RandomiseAmmolessLevels()
         {
-            (LevelManager as TR23LevelManager).RandomiseAmmolessLevels(LoadBackupScript().Levels);
+            (LevelManager as TR23LevelManager).RandomiseAmmolessLevels(/*LoadBackupScript().Levels*/);
         }
 
         internal List<TR23ScriptedLevel> GetAmmolessLevels()
@@ -272,7 +272,7 @@ namespace TRGE.Core
 
         internal void RandomiseBonuses()
         {
-            (LevelManager as TR23LevelManager).RandomiseBonuses(LoadBackupScript().Levels);
+            (LevelManager as TR23LevelManager).RandomiseBonuses(/*LoadBackupScript().Levels*/);
         }
 
         public bool LevelsHaveCutScenes

@@ -74,11 +74,11 @@ namespace TRGE.Coord
         }
         private byte[] pistols8 = null;
         private ushort[] pistols16 = null;
-        private TRModel model;
+        /*private TRModel model;
         private TRAnimation animation;
         private List<ushort> frames;
         private List<TRMesh> meshes;
-        private TR2Level wallLevel;
+        private TR2Level wallLevel;*/
         private bool SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
         {
             Location defaultLocation = GetLocationForLevel(scriptedLevel.LevelFileBaseName);
@@ -105,7 +105,7 @@ namespace TRGE.Coord
             {
                 pistols8 = level.Images8[8].Pixels;
                 pistols16 = level.Images16[8].Pixels;
-                model = level.Models[level.Models.ToList().FindIndex(e => e.ID == 157)];
+                TRModel model = level.Models[level.Models.ToList().FindIndex(e => e.ID == 157)];
                 /*animation = level.Animations[model.Animation];
                 frames = new List<ushort>();
                 uint frameIndex = animation.FrameOffset / 2;
@@ -123,7 +123,7 @@ namespace TRGE.Coord
                     meshPointers.Add(level.MeshPointers[i]);
                 }*/
 
-                wallLevel = level;
+                //wallLevel = level;
 
                 /*ushort meshPointerIndex = model.StartingMesh;
                 meshes = new List<TRMesh>();
@@ -143,6 +143,7 @@ namespace TRGE.Coord
 
                 int breakPoint = 0;
                 #region Animations
+                TRAnimation animation = null;
                 for (int i = 0; i < wallDefault.Animations.Length; i++)
                 {
                     TRAnimation defAnim = wallDefault.Animations[i];
@@ -161,12 +162,13 @@ namespace TRGE.Coord
 
                 #region Frames
                 //180 different frames
+                List<ushort> frames = new List<ushort>();
                 for (int i = 0; i < wallDefault.Frames.Length; i++)
                 {
                     if (wallDefault.Frames[i] != wallNoPistols.Frames[i])
                     {
                         breakPoint = i;
-                        frames = new List<ushort>();
+                        
                         for (int j = i; j < i + 180; j++)
                         {
                             frames.Add(wallDefault.Frames[j]);
@@ -242,7 +244,7 @@ namespace TRGE.Coord
 
                 #region Meshes
                 ushort meshPointerIndex = model.StartingMesh;
-                meshes = new List<TRMesh>();
+                List<TRMesh> meshes = new List<TRMesh>();
                 for (int i = meshPointerIndex; i < meshPointerIndex + model.NumMeshes; i++)
                 {
                     uint pointer = level.MeshPointers[i];
@@ -490,7 +492,23 @@ namespace TRGE.Coord
                 level.Models = levelModels.ToArray();
                 level.NumModels++;
 
-                //still need to work out how IDs in Textire of Mesh.TexturedTriangles etc match these
+                //still need to work out how IDs in Texture of Mesh.TexturedTriangles etc match these
+                /*
+                 * Textured surfaces map textures from the texture atlases (textiles) to each point on the mesh surface. 
+                 * This is done using conventional UV mapping, which is specified in “Object Textures” below; each object 
+                 * texture specifies a mapping from a set of vertices to locations in an atlas, and these texture vertices 
+                 * are associated with position vertices specified here. Each atlas has a size of 256×256 pixels.
+                 * 
+                 * The 16-bit atlas array, which contains [tr_image16] structures, specifies colours using 16-bit 1-5-5-5 
+                 * ARGB encoding.
+                 * 
+                 * TR1 onlyTR2 onlyTR3 only If, for some reason, 16-bit textures are turned off, all colours and textures 
+                 * use an 8-bit palette that is stored in the level file. This palette consists of a 256-element array of 
+                 * [tr_colour] structures, each designating some colour; textures and other elements that need to reference 
+                 * a colour specify an index (0..255) into the Palette[] array. There is also a 16-bit palette, which is 
+                 * used for identifying colours of solid polygons. The 16-bit palette contains up to 256 four-byte entries; 
+                 * the first three bytes are a [tr_colour], while the last byte is ignored (set to 0).
+                 **/
                 List<TRObjectTexture> levelObjTextures = level.ObjectTextures.ToList();
                 levelObjTextures.AddRange(newObjTextures);
                 level.ObjectTextures = levelObjTextures.ToArray();
