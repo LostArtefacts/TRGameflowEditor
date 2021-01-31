@@ -8,7 +8,7 @@ namespace TRGE.Core
     {
         private static readonly string[] PistolInjectionLevels = new string[]
         {
-            CreateID("FLOATING"), CreateID("XIAN"), CreateID("HOUSE")
+            CreateID("FLOATING"), CreateID("XIAN")//, CreateID("HOUSE")
         };
 
         internal override ushort Sequence

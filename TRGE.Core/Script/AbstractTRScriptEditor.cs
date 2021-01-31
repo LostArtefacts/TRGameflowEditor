@@ -35,6 +35,7 @@ namespace TRGE.Core
         }
 
         public TREdition Edition => Script.Edition;
+        internal bool AllowSuccessiveEdits { get; set; }
 
         internal AbstractTRLevelManager LevelManager { get; private set; }
         internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
@@ -207,7 +208,11 @@ namespace TRGE.Core
         public void Restore()
         {
             BackupFile.CopyTo(OriginalFile.FullName, true);
-            ConfigFile.Delete(); //issue #39
+            while (File.Exists(ConfigFile.FullName))
+            {
+                ConfigFile.Delete(); //issue #39
+            }
+            ConfigFile = new FileInfo(ConfigFile.FullName);
             Initialise(Script);
         }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using TRGE.Coord;
 
 namespace TRGE.Core.Test
@@ -11,17 +12,22 @@ namespace TRGE.Core.Test
         private readonly string _dataDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data";
         private readonly string _bakDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy";
 
-        //[TestMethod]
-        protected void TestManagedIO()
+        private void PrepareDirectories()
         {
-            //File.Copy(@"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy\TOMBPC.DAT", @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data\TOMBPC.DAT", true);
             if (_dataDirectory == null || !Directory.Exists(_dataDirectory))
             {
                 Assert.Fail("Test cannot proceed - data directory not set or does not exit.");
             }
             new DirectoryInfo(_bakDirectory).Copy(_dataDirectory, true);
+        }
+
+        [TestMethod]
+        protected void TestManagedIO()
+        {
+            PrepareDirectories();
+
             TREditor editor = TRCoord.Instance.Open(_dataDirectory);
-            editor.LevelEditor.AllowSuccessiveEdits = true;
+            editor.AllowSuccessiveEdits = true;
 
             Assert.IsTrue(editor.ScriptEditor.BackupFile.Exists);
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
@@ -29,9 +35,9 @@ namespace TRGE.Core.Test
             sm.UnarmedLevelOrganisation = Organisation.Manual;
             List<MutableTuple<string, string, bool>> unarmedData = sm.UnarmedLevelData;
             //unarmedData[2].Item3 = true;
-            //unarmedData[15].Item3 = true; //floater
-            //unarmedData[16].Item3 = true; //lair 
-            unarmedData[17].Item3 = false; //hsh
+            unarmedData[15].Item3 = true; //floater
+            unarmedData[16].Item3 = true; //lair 
+            //unarmedData[17].Item3 = false; //hsh
             sm.UnarmedLevelData = unarmedData;
 
             List<MutableTuple<string, string, bool>> ammolessData = sm.AmmolessLevelData;
@@ -39,9 +45,43 @@ namespace TRGE.Core.Test
             sm.AmmolessLevelData = ammolessData;
             sm.LevelsHaveFMV = false;
             sm.LevelsHaveCutScenes = false;
+            sm.LevelsHaveStartAnimation = false;
 
             editor.Save();
-            int j = 0;
+        }
+
+        [TestMethod]
+        protected void TestManagedRestore()
+        {
+            PrepareDirectories();
+
+            TREditor editor = TRCoord.Instance.Open(_dataDirectory, TRScriptOpenOption.DiscardBackup);
+            editor.AllowSuccessiveEdits = true;
+
+            Dictionary<string, string> originalChecksums = GetChecksums();
+
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+            sm.LevelOrganisation = Organisation.Random;
+            sm.LevelRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
+            editor.Save();
+
+            Dictionary<string, string> modifiedChecksums = GetChecksums();
+            CollectionAssert.AreNotEqual(originalChecksums, modifiedChecksums);
+
+            editor.Restore();
+            modifiedChecksums = GetChecksums();
+            CollectionAssert.AreEqual(originalChecksums, modifiedChecksums);
+        }
+
+        private Dictionary<string, string> GetChecksums()
+        {
+            DirectoryInfo dataDir = new DirectoryInfo(_dataDirectory);
+            Dictionary<string, string> checksums = new Dictionary<string, string>();
+            foreach (FileInfo fi in dataDir.GetFiles())
+            {
+                checksums.Add(fi.Name, fi.Checksum());
+            }
+            return checksums;
         }
     }
 }
