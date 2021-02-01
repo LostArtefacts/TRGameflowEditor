@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using TRGE.Coord;
 
 namespace TRGE.Core.Test
@@ -9,8 +8,8 @@ namespace TRGE.Core.Test
     [TestClass]
     public class TR2PCManagedDirectoryIOTests : BaseTestCollection
     {
-        private readonly string _dataDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data";
-        private readonly string _bakDirectory = @"C:\Users\Lewis\Desktop\TR2_TRGE_TEST\data - Copy";
+        private readonly string _dataDirectory = @"leveldatafiles";
+        private readonly string _bakDirectory = @"leveldatafilesbak";
 
         private void PrepareDirectories()
         {
@@ -35,9 +34,9 @@ namespace TRGE.Core.Test
             sm.UnarmedLevelOrganisation = Organisation.Manual;
             List<MutableTuple<string, string, bool>> unarmedData = sm.UnarmedLevelData;
             //unarmedData[2].Item3 = true;
-            unarmedData[15].Item3 = true; //floater
+            //unarmedData[15].Item3 = true; //floater
             unarmedData[16].Item3 = true; //lair 
-            //unarmedData[17].Item3 = false; //hsh
+            unarmedData[17].Item3 = false; //hsh
             sm.UnarmedLevelData = unarmedData;
 
             List<MutableTuple<string, string, bool>> ammolessData = sm.AmmolessLevelData;
@@ -50,7 +49,7 @@ namespace TRGE.Core.Test
             editor.Save();
         }
 
-        [TestMethod]
+        //[TestMethod]
         protected void TestManagedRestore()
         {
             PrepareDirectories();

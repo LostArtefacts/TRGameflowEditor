@@ -123,7 +123,44 @@ namespace TRGE.Coord
             // natively. We rely on the pre-made level file (made in TRViewer)
             // and only use this once so to allow for successive randomisations,
             // if that mode is enabled.
-            
+            // To create this file, the following moveables/sprites were exported from 
+            // The Great Wall level in .trmvb/.trspr format and and then imported into
+            // a 'clean' HSH. The names are those found in TRViewer.
+            //
+            //   - Auto-pistol Ammo.trmvb
+            //   - Auto-pistol.trmvb
+            //   - Grenade launcher.trmvb
+            //   - Grenades.trmvb
+            //   - Gunflare (spiky).trmvb
+            //   - Harpoon gun.trmvb
+            //   - Harpoons.trmvb
+            //   - Lara auto-pistol animation.trmvb
+            //   - Lara grenade-launcher animation.trmvb
+            //   - Lara harpoon-gun animation.trmvb
+            //   - Lara M16 animation.trmvb
+            //   - Lara pistol animation.trmvb
+            //   - Lara Uzi animation.trmvb
+            //   - M16 ammo.trmvb
+            //   - M16.trmvb
+            //   - Pistol ammo.trmvb
+            //   - Pistol.trmvb
+            //   - Rod?.trmbv (this is actually a harpoon as its fired)
+            //   - Support?.trmvb (this is actually a grenade as its fired)
+            //   - Uzi ammo.trmvb
+            //   - Uzi.trmvb
+            //   - Auto pistols.trspr
+            //   - Auto-pistol clips.trspr
+            //   - Grenade blast.trspr
+            //   - Grenade launcher.trspr
+            //   - Grenades.trspr
+            //   - Harpoon gun.trspr
+            //   - Harpoons.trspr
+            //   - M16 clips.trspr
+            //   - M16.trspr
+            //   - Pistols.trspr
+            //   - Uzi clips.trspr
+            //   - Uzis.trspr
+
             string currentBackupFile = Path.Combine(_io.BackupDirectory.FullName, "house.tr2");
             string fullOriginalBackup = Path.Combine(_io.BackupDirectory.FullName, "house.tr2.bak");
             if (!File.Exists(fullOriginalBackup))
