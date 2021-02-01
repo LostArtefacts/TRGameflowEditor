@@ -15,17 +15,17 @@ namespace TRGE.Core.Test
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> bonusData;
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
-            bonusData = sm.LevelBonusData;
+            bonusData = sm.LevelSecretBonusData;
 
-            sm.BonusOrganisation = Organisation.Random;
-            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
+            sm.SecretBonusOrganisation = Organisation.Random;
+            sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
 
             editor.Save();
             
             sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             
             //CollectionAssert.AreEqual is failing here for some reason, hence the more manual approach
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = sm.LevelBonusData;
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = sm.LevelSecretBonusData;
             Assert.AreEqual(bonusData.Count, newBonusData.Count);
             for (int i = 0; i < bonusData.Count; i++)
             {

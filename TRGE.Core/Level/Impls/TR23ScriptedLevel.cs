@@ -135,10 +135,24 @@ namespace TRGE.Core
             }
         }
 
+        /// <summary>
+        /// In the script, the command is NOSECRETS to remove secrets so this needs to negate
+        /// whether or not that command is present....so the script doesn't not have secrets!
+        /// </summary>
         internal override bool HasSecrets
         {
             get => !HasActiveOperation(TR23OpDefs.Secrets);
-            set => SetOperationActive(TR23OpDefs.Secrets, !value);
+            set
+            {
+                if (value)
+                {
+                    SetOperationActive(TR23OpDefs.Secrets, false);
+                }
+                else
+                {
+                    EnsureOperation(new TROperation(TR23OpDefs.Secrets, ushort.MaxValue, true));
+                }
+            }
         }
 
         internal override bool KillToComplete => HasOperation(TR23OpDefs.KillToComplete);

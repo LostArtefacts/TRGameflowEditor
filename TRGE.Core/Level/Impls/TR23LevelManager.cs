@@ -181,7 +181,7 @@ namespace TRGE.Core
             SetUnarmedLevelData(GetUnarmedLevelData(originalLevels));
         }
 
-        internal void RandomiseBonuses()//List<AbstractTRScriptedLevel> originalLevels)
+        internal void RandomiseBonuses()
         {
             TRItem shotgun = (ItemProvider as TR2ItemProvider).Shotgun;
             Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>
@@ -190,21 +190,20 @@ namespace TRGE.Core
             };
             Random rand = BonusRNG.Create();
 
-            //foreach (TR23ScriptedLevel originalLevel in originalLevels) //always randomise based on the original level sequence
+            string hshID = AbstractTRScriptedLevel.CreateID("HOUSE");
             foreach (TR23ScriptedLevel level in _levels)
             {
-                //TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
-
                 if (level.HasSecrets)
                 {
-                    if (level.RemovesWeapons)
+                    if (level.RemovesWeapons && !level.ID.Equals(hshID))
                     {
-                        exclusions[TRItemCategory.Weapon].Remove(shotgun); //shotgun will only be given if Lara has lost her weapons
+                        //shotgun will only be given if Lara has lost her weapons and it's not Home Sweet Home
+                        exclusions[TRItemCategory.Weapon].Remove(shotgun);
                     }
-                    /*else if (level.Sequence == 1)
+                    else if (level.ID.Equals(hshID))
                     {
-                        exclusions[TRItemCategory.Weapon].Add(shotgun);
-                    }*/
+                        exclusions[TRItemCategory.Weapon].Add(shotgun); //TODO: there should perhaps be a map of sorts to exclude specific weapons for each level
+                    }
 
                     List<TRItem> bonuses = ItemProvider.GetRandomBonusItems(rand, exclusions);
                     foreach (TRItem bonus in bonuses)

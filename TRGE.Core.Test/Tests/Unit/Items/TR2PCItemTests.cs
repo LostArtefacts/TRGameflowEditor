@@ -30,11 +30,11 @@ namespace TRGE.Core.Test
         protected void TestRandomiseItemsOutput()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-            sm.BonusOrganisation = Organisation.Random;
-            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
-            int r = sm.BonusRNG.Value;
-            sm.BonusRNG.RNGType = RandomGenerator.Type.Custom;
-            sm.BonusRNG.Value = r;
+            sm.SecretBonusOrganisation = Organisation.Random;
+            sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
+            int r = sm.SecretBonusRNG.Value;
+            sm.SecretBonusRNG.RNGType = RandomGenerator.Type.Custom;
+            sm.SecretBonusRNG.Value = r;
 
             List<string> output = new List<string>
             {
@@ -45,11 +45,11 @@ namespace TRGE.Core.Test
             {
                 if (i > 0)
                 {
-                    ++sm.BonusRNG.Value;
+                    ++sm.SecretBonusRNG.Value;
                 }
                 sm.RandomiseBonuses();
 
-                foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelBonusData in sm.LevelBonusData)
+                foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelBonusData in sm.LevelSecretBonusData)
                 {
                     foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusItem in levelBonusData.Item3)
                     {
@@ -68,12 +68,12 @@ namespace TRGE.Core.Test
         protected void TestRandomiseItemsShotgun()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-            sm.LevelOrganisation = Organisation.Random;
-            sm.LevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.LevelSequencingOrganisation = Organisation.Random;
+            sm.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
             sm.UnarmedLevelOrganisation = Organisation.Random;
             sm.UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
-            sm.BonusOrganisation = Organisation.Random;
-            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.SecretBonusOrganisation = Organisation.Random;
+            sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
 
             sm.RandomiseLevels();
             sm.RandomiseUnarmedLevels();
@@ -98,6 +98,32 @@ namespace TRGE.Core.Test
                     }
                 }
             }
+        }
+
+        [TestMethod]
+        protected void TestEnablingSecrets()
+        {
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+
+            sm.LevelSecretSupportOrganisation = Organisation.Manual;
+            List<MutableTuple<string, string, bool>> secretSupport = sm.LevelSecretSupport;
+            foreach (MutableTuple<string, string, bool> levelInfo in secretSupport)
+            {
+                levelInfo.Item3 = true;
+            }
+            sm.LevelSecretSupport = secretSupport;
+
+            sm.SecretBonusOrganisation = Organisation.Random;
+            sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
+
+            sm.LevelSelectEnabled = true;
+            sm.LevelsHaveStartAnimation = false;
+            editor.Save();
+
+            editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            sm = editor.ScriptEditor as TR23ScriptEditor;
+            Assert.IsTrue(sm.LevelManager.GetLevel(AbstractTRScriptedLevel.CreateID("HOUSE")).HasSecrets);
         }
     }
 }

@@ -12,10 +12,11 @@ namespace TRGE.Core
         internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
         internal abstract int LevelCount { get; }
 
-        internal Organisation LevelOrganisation { get; set; }
-        internal RandomGenerator LevelRNG { get; set; }
+        internal Organisation SequencingOrganisation { get; set; }
+        internal RandomGenerator SequencingRNG { get; set; }
         internal Organisation GameTrackOrganisation { get; set; }
         internal RandomGenerator GameTrackRNG { get; set; }
+        internal Organisation SecretSupportOrganisation { get; set; }
         internal TREdition Edition { get; private set; }
 
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
@@ -39,7 +40,7 @@ namespace TRGE.Core
             return null;
         }
 
-        internal virtual List<Tuple<string, string>> GetLevelSequencing()
+        internal virtual List<Tuple<string, string>> GetSequencing()
         {
             return GetLevelSequencing(Levels);
         }
@@ -54,7 +55,7 @@ namespace TRGE.Core
             return data;
         }
 
-        internal virtual void SetLevelSequencing(List<Tuple<string, string>> data)
+        internal virtual void SetSequencing(List<Tuple<string, string>> data)
         {
             List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
             foreach (Tuple<string, string> item in data)
@@ -71,10 +72,10 @@ namespace TRGE.Core
             SetLevelSequencing();
         }
 
-        internal virtual void RandomiseLevelSequencing(List<AbstractTRScriptedLevel> originalLevels)
+        internal virtual void RandomiseSequencing(List<AbstractTRScriptedLevel> originalLevels)
         {
             List<AbstractTRScriptedLevel> shuffledLevels = new List<AbstractTRScriptedLevel>(originalLevels);
-            shuffledLevels.Randomise(LevelRNG.Create());
+            shuffledLevels.Randomise(SequencingRNG.Create());
 
             List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
             foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
@@ -118,9 +119,9 @@ namespace TRGE.Core
             }
         }
 
-        internal void RestoreLevelSequencing(List<AbstractTRScriptedLevel> originalLevels)
+        internal void RestoreSequencing(List<AbstractTRScriptedLevel> originalLevels)
         {
-            SetLevelSequencing(GetLevelSequencing(originalLevels));
+            SetSequencing(GetLevelSequencing(originalLevels));
         }
 
         protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TROpDef opDef)
@@ -177,7 +178,7 @@ namespace TRGE.Core
             return levels;
         }
 
-        internal List<MutableTuple<string, string, ushort>> GetLevelTrackData()
+        internal List<MutableTuple<string, string, ushort>> GetTrackData()
         {
             List<MutableTuple<string, string, ushort>> ret = new List<MutableTuple<string, string, ushort>>();
 
@@ -204,7 +205,7 @@ namespace TRGE.Core
             return ret;
         }
 
-        internal void SetLevelTrackData(List<MutableTuple<string, string, ushort>> data)
+        internal void SetTrackData(List<MutableTuple<string, string, ushort>> data)
         {
             foreach (MutableTuple<string, string, ushort> item in data)
             {
@@ -271,6 +272,43 @@ namespace TRGE.Core
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
                 }
                 level.TrackID = originalLevel.TrackID;
+            }
+        }
+
+        internal List<MutableTuple<string, string, bool>> GetSecretSupport()
+        {
+            List<MutableTuple<string, string, bool>> support = new List<MutableTuple<string, string, bool>>();
+            foreach (AbstractTRScriptedLevel level in Levels)
+            {
+                support.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSecrets));
+            }
+            return support;
+        }
+
+        internal void SetSecretSupport(List<MutableTuple<string, string, bool>> secretSupport)
+        {
+            foreach (MutableTuple<string, string, bool> item in secretSupport)
+            {
+                AbstractTRScriptedLevel level = GetLevel(item.Item1);
+                if (level == null)
+                {
+                    throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
+                }
+
+                level.HasSecrets = item.Item3;
+            }
+        }
+
+        internal void RestoreSecretSupport(List<AbstractTRScriptedLevel> originalLevels)
+        {
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            {
+                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+                if (level == null)
+                {
+                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+                }
+                level.HasSecrets = originalLevel.HasSecrets;
             }
         }
     }

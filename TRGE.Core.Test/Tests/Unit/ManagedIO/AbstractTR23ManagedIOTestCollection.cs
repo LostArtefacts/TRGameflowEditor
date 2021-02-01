@@ -80,7 +80,7 @@ namespace TRGE.Core.Test
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
             levelSequencingData = sm.LevelSequencing;
             levelSequencingData.Reverse();
-            sm.LevelOrganisation = Organisation.Manual;
+            sm.LevelSequencingOrganisation = Organisation.Manual;
             sm.LevelSequencing = levelSequencingData;
 
             editor.Save();

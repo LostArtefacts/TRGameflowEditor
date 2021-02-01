@@ -49,17 +49,18 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(1)]
         protected void TestRandomiseItems()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> originalBonusData = sm.LevelBonusData;
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> originalBonusData = sm.LevelSecretBonusData;
 
-            sm.BonusOrganisation = Organisation.Random;
-            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.SecretBonusOrganisation = Organisation.Random;
+            sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
             //sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
             sm.RandomiseBonuses();
 
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> bonusData = sm.LevelBonusData;
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> bonusData = sm.LevelSecretBonusData;
             CollectionAssert.AreNotEqual(originalBonusData, bonusData);
 
             HashSet<ushort> weapons = new HashSet<ushort>();
@@ -88,33 +89,34 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(2)]
         protected void TestRandomiseItemsReload()
         {
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
 
-            sm.BonusOrganisation = Organisation.Random;
-            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.SecretBonusOrganisation = Organisation.Random;
+            sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
             editor.Save();
 
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> randoData = sm.LevelBonusData;
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> randoData = sm.LevelSecretBonusData;
 
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = ConvertManualBonusData(sm);
-            sm.LevelBonusData = newBonusData;
-            sm.BonusOrganisation = Organisation.Manual;
+            sm.LevelSecretBonusData = newBonusData;
+            sm.SecretBonusOrganisation = Organisation.Manual;
             editor.Save();
 
-            sm.LevelOrganisation = Organisation.Random;
-            sm.LevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.LevelSequencingOrganisation = Organisation.Random;
+            sm.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
             editor.Save();
 
-            sm.BonusOrganisation = Organisation.Random;
-            sm.BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.SecretBonusOrganisation = Organisation.Random;
+            sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
             editor.Save();
 
             //CollectionAssert.AreEquivalent(sm.LevelBonusData, randoData); fails but test below seems to pass
 
-            foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData in sm.LevelBonusData)
+            foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData in sm.LevelSecretBonusData)
             {
                 foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData2 in randoData)
                 {
@@ -146,13 +148,13 @@ namespace TRGE.Core.Test
         protected void TestReorganiseItems()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-            sm.BonusOrganisation = Organisation.Manual;
+            sm.SecretBonusOrganisation = Organisation.Manual;
                 
             Dictionary<string, List<TRItem>> originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
             CollectionAssert.AreNotEqual(originalBonusData, ManualBonusData);
 
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = ConvertManualBonusData(sm);
-            sm.LevelBonusData = newBonusData;
+            sm.LevelSecretBonusData = newBonusData;
 
             originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
             foreach (string levelFile in ManualBonusData.Keys)
@@ -176,7 +178,7 @@ namespace TRGE.Core.Test
             }
 
             //copy over whatever is there by default
-            foreach (var n in sm.LevelBonusData)
+            foreach (var n in sm.LevelSecretBonusData)
             {
                 if (!ManualBonusData.ContainsKey(n.Item1))
                 {

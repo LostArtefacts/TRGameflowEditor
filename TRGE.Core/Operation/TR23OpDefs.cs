@@ -22,7 +22,7 @@
         internal static readonly TROpDef NoFloor        = new TROpDef(17, true);
         internal static readonly TROpDef StartInvBonus  = new TROpDef(18, true, Track);
         internal static readonly TROpDef StartAnimation = new TROpDef(19, true);
-        internal static readonly TROpDef Secrets        = new TROpDef(20, true);
+        internal static readonly TROpDef Secrets        = new TROpDef(20, true, Track);
         internal static readonly TROpDef KillToComplete = new TROpDef(21, false);
         internal static readonly TROpDef RemoveAmmo     = new TROpDef(22, false, Track);
 

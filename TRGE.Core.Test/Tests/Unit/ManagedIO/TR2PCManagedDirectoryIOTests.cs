@@ -8,8 +8,8 @@ namespace TRGE.Core.Test
     [TestClass]
     public class TR2PCManagedDirectoryIOTests : BaseTestCollection
     {
-        private readonly string _dataDirectory = @"leveldatafiles";
-        private readonly string _bakDirectory = @"leveldatafilesbak";
+        private readonly string _dataDirectory = @"DirectoryIOTest\WorkingDir";
+        private readonly string _bakDirectory = @"DirectoryIOTest\Original";
 
         private void PrepareDirectories()
         {
@@ -60,8 +60,8 @@ namespace TRGE.Core.Test
             Dictionary<string, string> originalChecksums = GetChecksums();
 
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
-            sm.LevelOrganisation = Organisation.Random;
-            sm.LevelRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
+            sm.LevelSequencingOrganisation = Organisation.Random;
+            sm.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
             editor.Save();
 
             Dictionary<string, string> modifiedChecksums = GetChecksums();

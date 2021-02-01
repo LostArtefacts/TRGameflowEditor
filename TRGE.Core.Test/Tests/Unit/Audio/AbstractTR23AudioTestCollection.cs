@@ -115,8 +115,8 @@ namespace TRGE.Core.Test
             sm.GameTrackData = trackData;
             editor.Save();
 
-            sm.LevelOrganisation = Organisation.Random;
-            sm.LevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.LevelSequencingOrganisation = Organisation.Random;
+            sm.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
             editor.Save();
 
             sm.GameTrackOrganisation = Organisation.Random;

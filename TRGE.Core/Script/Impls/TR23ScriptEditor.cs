@@ -21,8 +21,8 @@ namespace TRGE.Core
                 AmmolessLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 RandomAmmolessLevelCount = Math.Max(1, (LevelManager as TR23LevelManager).GetAmmolessLevelCount());
 
-                BonusOrganisation = Organisation.Default;
-                BonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                SecretBonusOrganisation = Organisation.Default;
+                SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
 
                 return;
             }
@@ -44,9 +44,9 @@ namespace TRGE.Core
             if (CanOrganiseBonuses)
             {
                 Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["BonusSetup"].ToString());
-                BonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Organisation"]);
-                BonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
-                LevelBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses["Data"].ToString());
+                SecretBonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Organisation"]);
+                SecretBonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
+                LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses["Data"].ToString());
             }
 
             LevelsHaveCutScenes = bool.Parse(_config["LevelCutScenesOn"].ToString());
@@ -90,9 +90,9 @@ namespace TRGE.Core
             {
                 _config["BonusSetup"] = new Dictionary<string, object>
                 {
-                    ["Organisation"] = (int)BonusOrganisation,
-                    ["RNG"] = BonusRNG.ToJson(),
-                    ["Data"] = LevelBonusData
+                    ["Organisation"] = (int)SecretBonusOrganisation,
+                    ["RNG"] = SecretBonusRNG.ToJson(),
+                    ["Data"] = LevelSecretBonusData
                 };
             }
 
@@ -143,11 +143,11 @@ namespace TRGE.Core
             }
 
             //should occur after unarmed organisation
-            if (BonusOrganisation == Organisation.Random)
+            if (SecretBonusOrganisation == Organisation.Random)
             {
                 levelMan.RandomiseBonuses(/*backupLevels*/);
             }
-            else if (BonusOrganisation == Organisation.Default)
+            else if (SecretBonusOrganisation == Organisation.Default)
             {
                 levelMan.RestoreBonuses(backupLevels);
             }
@@ -239,19 +239,19 @@ namespace TRGE.Core
         }
 
         public bool CanOrganiseBonuses => (LevelManager as TR23LevelManager).CanOrganiseBonuses;
-        public Organisation BonusOrganisation
+        public Organisation SecretBonusOrganisation
         {
             get => (LevelManager as TR23LevelManager).BonusOrganisation;
             set => (LevelManager as TR23LevelManager).BonusOrganisation = value;
         }
 
-        public RandomGenerator BonusRNG
+        public RandomGenerator SecretBonusRNG
         {
             get => (LevelManager as TR23LevelManager).BonusRNG;
             set => (LevelManager as TR23LevelManager).BonusRNG = value;
         }
 
-        public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> LevelBonusData
+        public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> LevelSecretBonusData
         {
             get
             {

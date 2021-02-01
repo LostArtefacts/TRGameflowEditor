@@ -47,8 +47,8 @@ namespace TRGE.Core.Test
             {
                 newLevelNames[e.LevelSequence - 1] = e.LevelName;
             };
-            sm.LevelOrganisation = Organisation.Random;
-            sm.LevelRNG = rng;
+            sm.LevelSequencingOrganisation = Organisation.Random;
+            sm.LevelSequencingRNG = rng;
             sm.RandomiseLevels();
             
             List<AbstractTRScriptedLevel> levels = sm.LevelManager.Levels;

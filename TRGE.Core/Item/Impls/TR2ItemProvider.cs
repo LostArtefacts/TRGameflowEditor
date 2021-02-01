@@ -112,7 +112,7 @@ namespace TRGE.Core
                 new BaseTRItemBroker
                 {
                     WeaponCount = 0,
-                    AmmoTypeCount = rand.Next(0, 2),
+                    AmmoTypeCount = 1,
                     MaxAmmoCount = rand.Next(1, 3),
                     MiscTypeCount = 0,
                     MaxMiscCount = 0,
@@ -122,10 +122,10 @@ namespace TRGE.Core
                 new BaseTRItemBroker
                 {
                     WeaponCount = 0,
-                    AmmoTypeCount = rand.Next(0, 2),
+                    AmmoTypeCount = rand.Next(1, 2),
                     MaxAmmoCount = rand.Next(1, 3),
-                    MiscTypeCount = rand.Next(0, 2),
-                    MaxMiscCount = 1,
+                    MiscTypeCount = 1,
+                    MaxMiscCount = rand.Next(1, 3),
                     Weight = 30
                 },
                 //default...ish?
@@ -135,7 +135,7 @@ namespace TRGE.Core
                     AmmoTypeCount = 1,
                     MaxAmmoCount = 2 * rand.Next(1, 4), //2, 4, 8
                     MiscTypeCount = rand.Next(0, 2),
-                    MaxMiscCount = rand.Next(1, 3),
+                    MaxMiscCount = rand.Next(2, 4),
                     Weight = 50
                 },
                 //generous

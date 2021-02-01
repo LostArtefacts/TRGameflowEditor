@@ -106,8 +106,8 @@ namespace TRGE.Core
             if (_config != null)
             {
                 Dictionary<string, object> levelSeq = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["LevelSequencing"].ToString());
-                LevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), levelSeq["Organisation"]);
-                LevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(levelSeq["RNG"].ToString()));
+                LevelSequencingOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), levelSeq["Organisation"]);
+                LevelSequencingRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(levelSeq["RNG"].ToString()));
                 //note that even if the levels were randomised, this would have been done after saving the config file
                 //so reloading the sequencing will either just restore defaults or set it to a manual sequence if the user
                 //picked that at one point in the previous edit
@@ -119,14 +119,19 @@ namespace TRGE.Core
                 //see note above
                 GameTrackData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, ushort>>>(trackInfo["Data"].ToString());
 
+                Dictionary<string, object> secretInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["SecretSupport"].ToString());
+                LevelSecretSupportOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), secretInfo["Organisation"]);
+                LevelSecretSupport = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(secretInfo["Data"].ToString());
+
                 FrontEndHasFMV = bool.Parse(_config["FrontEndFMVOn"].ToString());
             }
             else
             {
-                LevelOrganisation = Organisation.Default;
-                LevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                LevelSequencingOrganisation = Organisation.Default;
+                LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 GameTrackOrganisation = Organisation.Default;
                 GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                LevelSecretSupportOrganisation = Organisation.Default;
             }
 
             ApplyConfig();
@@ -142,8 +147,8 @@ namespace TRGE.Core
                 ["FrontEndFMVOn"] = FrontEndHasFMV,
                 ["LevelSequencing"] = new Dictionary<string, object>
                 {
-                    ["Organisation"] = (int)LevelOrganisation,
-                    ["RNG"] = LevelRNG.ToJson(),
+                    ["Organisation"] = (int)LevelSequencingOrganisation,
+                    ["RNG"] = LevelSequencingRNG.ToJson(),
                     ["Data"] = LevelSequencing
                 },
                 ["GameTracks"] = new Dictionary<string, object>
@@ -151,17 +156,22 @@ namespace TRGE.Core
                     ["Organisation"] = (int)GameTrackOrganisation,
                     ["RNG"] = GameTrackRNG.ToJson(),
                     ["Data"] = GameTrackData
+                },
+                ["SecretSupport"] = new Dictionary<string, object>
+                {
+                    ["Organisation"] = (int)LevelSecretSupportOrganisation,
+                    ["Data"] = LevelSecretSupport
                 }
             };
 
             AbstractTRScript backupScript = LoadBackupScript();
-            if (LevelOrganisation == Organisation.Random)
+            if (LevelSequencingOrganisation == Organisation.Random)
             {
-                LevelManager.RandomiseLevelSequencing(backupScript.Levels);
+                LevelManager.RandomiseSequencing(backupScript.Levels);
             }
-            else if (LevelOrganisation == Organisation.Default)
+            else if (LevelSequencingOrganisation == Organisation.Default)
             {
-                LevelManager.RestoreLevelSequencing(backupScript.Levels);
+                LevelManager.RestoreSequencing(backupScript.Levels);
             }
 
             if (GameTrackOrganisation == Organisation.Random)
@@ -171,6 +181,11 @@ namespace TRGE.Core
             else if (GameTrackOrganisation == Organisation.Default)
             {
                 LevelManager.RestoreGameTracks(backupScript);
+            }
+
+            if (LevelSecretSupportOrganisation == Organisation.Default)
+            {
+                LevelManager.RestoreSecretSupport(backupScript.Levels);
             }
 
             SaveImpl();
@@ -233,27 +248,27 @@ namespace TRGE.Core
         protected abstract void SaveImpl();
         protected abstract void ApplyConfig();
 
-        public Organisation LevelOrganisation
+        public Organisation LevelSequencingOrganisation
         {
-            get => LevelManager.LevelOrganisation;
-            set => LevelManager.LevelOrganisation = value;
+            get => LevelManager.SequencingOrganisation;
+            set => LevelManager.SequencingOrganisation = value;
         }
 
-        public RandomGenerator LevelRNG
+        public RandomGenerator LevelSequencingRNG
         {
-            get => LevelManager.LevelRNG;
-            set => LevelManager.LevelRNG = value;
+            get => LevelManager.SequencingRNG;
+            set => LevelManager.SequencingRNG = value;
         }
 
         public List<Tuple<string, string>> LevelSequencing
         {
-            get => LevelManager.GetLevelSequencing();
-            set => LevelManager.SetLevelSequencing(value);
+            get => LevelManager.GetSequencing();
+            set => LevelManager.SetSequencing(value);
         }
 
         internal void RandomiseLevels()
         {
-            LevelManager.RandomiseLevelSequencing(LoadBackupScript().Levels);
+            LevelManager.RandomiseSequencing(LoadBackupScript().Levels);
         }
 
         public bool FrontEndHasFMV
@@ -276,8 +291,8 @@ namespace TRGE.Core
 
         public virtual List<MutableTuple<string, string, ushort>> GameTrackData
         {
-            get => LevelManager.GetLevelTrackData();
-            set => LevelManager.SetLevelTrackData(value);
+            get => LevelManager.GetTrackData();
+            set => LevelManager.SetTrackData(value);
         }
 
         internal TRAudioTrack TitleTrack => LevelManager.AudioProvider.GetTrack(Script.TitleSoundID);
@@ -291,6 +306,25 @@ namespace TRGE.Core
         internal void RandomiseGameTracks()
         {
             LevelManager.RandomiseGameTracks(LoadBackupScript().Levels);
+        }
+
+        public Organisation LevelSecretSupportOrganisation
+        {
+            get => LevelManager.SecretSupportOrganisation;
+            set
+            {
+                if (value == Organisation.Random)
+                {
+                    throw new ArgumentException("Randomisation of level secret support is not implemented.");
+                }
+                LevelManager.SecretSupportOrganisation = value;
+            }
+        }
+
+        public List<MutableTuple<string, string, bool>> LevelSecretSupport
+        {
+            get => LevelManager.GetSecretSupport();
+            set => LevelManager.SetSecretSupport(value);
         }
     }
 }
