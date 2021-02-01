@@ -110,10 +110,17 @@ namespace TRGE.Coord
             }
             else
             {
-                _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
+                FileInfo fi = new FileInfo(_orignalScriptFile);
+                _backupScriptFile = Path.Combine(backupDirectory, fi.Name);
                 if (!File.Exists(_backupScriptFile))
                 {
                     File.Copy(_orignalScriptFile, _backupScriptFile);
+                }
+
+                string outputFile = Path.Combine(outputDirectory, fi.Name);
+                if (!File.Exists(outputFile))
+                {
+                    File.Copy(_orignalScriptFile, outputFile);
                 }
             }
 

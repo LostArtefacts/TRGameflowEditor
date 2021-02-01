@@ -165,9 +165,11 @@ namespace TRGE.Core
             };
 
             AbstractTRScript backupScript = LoadBackupScript();
+            AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
+
             if (LevelSequencingOrganisation == Organisation.Random)
             {
-                LevelManager.RandomiseSequencing(backupScript.Levels);
+                LevelManager.RandomiseSequencing(randoBaseScript.Levels);
             }
             else if (LevelSequencingOrganisation == Organisation.Default)
             {
@@ -176,7 +178,7 @@ namespace TRGE.Core
 
             if (GameTrackOrganisation == Organisation.Random)
             {
-                LevelManager.RandomiseGameTracks(backupScript.Levels);
+                LevelManager.RandomiseGameTracks(randoBaseScript.Levels);
             }
             else if (GameTrackOrganisation == Organisation.Default)
             {
@@ -191,11 +193,10 @@ namespace TRGE.Core
             SaveImpl();
             LevelManager.Save();
 
-            string localCopyPath = Path.Combine(OutputDirectory.FullName, OriginalFile.Name);
-            Script.Write(localCopyPath);
-            //File.Copy(localCopyPath, OriginalFile.FullName, true);
+            string outputPath = GetScriptOutputPath();
+            Script.Write(outputPath);
 
-            _config["CheckSumOnSave"] = new FileInfo(localCopyPath)/*OriginalFile*/.Checksum();
+            _config["CheckSumOnSave"] = new FileInfo(outputPath).Checksum();
 
             _config.Sort(delegate(string s1, string s2)
             {
@@ -215,9 +216,6 @@ namespace TRGE.Core
             });
 
             File.WriteAllText(ConfigFile.FullName, JsonConvert.SerializeObject(_config, Formatting.Indented));
-
-            //reload at this point to reset the randomised information, to prevent this being available without playing the game
-            //Initialise(CreateScript());
         }
 
         public void Restore()
@@ -231,10 +229,30 @@ namespace TRGE.Core
             Initialise(Script);
         }
 
+        protected string GetScriptOutputPath()
+        {
+            return Path.Combine(OutputDirectory.FullName, OriginalFile.Name);
+        }
+
         internal AbstractTRScript LoadBackupScript()
         {
+            return LoadScript(BackupFile.FullName);
+        }
+
+        internal AbstractTRScript LoadOutputScript()
+        {
+            return LoadScript(GetScriptOutputPath());
+        }
+
+        internal AbstractTRScript LoadRandomisationBaseScript()
+        {
+            return AllowSuccessiveEdits ? LoadOutputScript() : LoadBackupScript();
+        }
+
+        internal AbstractTRScript LoadScript(string filePath)
+        {
             AbstractTRScript script = CreateScript();
-            script.Read(BackupFile);
+            script.Read(filePath);
             return script;
         }
 

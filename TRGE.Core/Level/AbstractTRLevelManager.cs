@@ -136,9 +136,9 @@ namespace TRGE.Core
 
         protected abstract TRScriptedLevelModification OpDefToModification(TROpDef opDef);
 
-        internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, /*List<AbstractTRScriptedLevel> originalLevels,*/ TROperation operation)
+        internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRScriptedLevel> basisLevels, TROperation operation)
         {
-            List<AbstractTRScriptedLevel> levelSet = /*originalLevels*/Levels.RandomSelection(rng.Create(), levelCount);
+            List<AbstractTRScriptedLevel> levelSet = basisLevels.RandomSelection(rng.Create(), levelCount);
             foreach (AbstractTRScriptedLevel level in Levels)
             {
                 bool modified;

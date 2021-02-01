@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace TRGE.Core
 {
@@ -112,21 +113,16 @@ namespace TRGE.Core
             _config["TitlesOn"] = TitleScreenEnabled;
 
             AbstractTRScript backupScript = LoadBackupScript();
+            AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
+
             List<AbstractTRScriptedLevel> backupLevels = backupScript.Levels;
+            List<AbstractTRScriptedLevel> randoBaseLevels = randoBaseScript.Levels;
 
             TR23LevelManager levelMan = LevelManager as TR23LevelManager;
-            /*if (BonusOrganisation == Organisation.Random)
-            {
-                levelMan.RandomiseBonuses(backupLevels);
-            }
-            else if (BonusOrganisation == Organisation.Default)
-            {
-                levelMan.RestoreBonuses(backupLevels);
-            }*/
-
+            
             if (AmmolessLevelOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseAmmolessLevels(/*backupLevels*/);
+                levelMan.RandomiseAmmolessLevels(randoBaseLevels);
             }
             else if (AmmolessLevelOrganisation == Organisation.Default)
             {
@@ -135,17 +131,18 @@ namespace TRGE.Core
 
             if (UnarmedLevelOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseUnarmedLevels(/*backupLevels*/);
+                levelMan.RandomiseUnarmedLevels(randoBaseLevels);
             }
             else if (UnarmedLevelOrganisation == Organisation.Default)
             {
                 levelMan.RestoreUnarmedLevels(backupLevels);
             }
 
-            //should occur after unarmed organisation
+            //should occur after unarmed organisation and does not use any other script
+            //as basis, as order of levels is essential
             if (SecretBonusOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseBonuses(/*backupLevels*/);
+                levelMan.RandomiseBonuses();
             }
             else if (SecretBonusOrganisation == Organisation.Default)
             {
@@ -190,7 +187,7 @@ namespace TRGE.Core
 
         internal void RandomiseUnarmedLevels()
         {
-            (LevelManager as TR23LevelManager).RandomiseUnarmedLevels(/*LoadBackupScript().Levels*/);
+            (LevelManager as TR23LevelManager).RandomiseUnarmedLevels(LoadRandomisationBaseScript().Levels);
         }
 
         internal List<TR23ScriptedLevel> GetUnarmedLevels()
@@ -230,7 +227,7 @@ namespace TRGE.Core
 
         internal void RandomiseAmmolessLevels()
         {
-            (LevelManager as TR23LevelManager).RandomiseAmmolessLevels(/*LoadBackupScript().Levels*/);
+            (LevelManager as TR23LevelManager).RandomiseAmmolessLevels(LoadRandomisationBaseScript().Levels);
         }
 
         internal List<TR23ScriptedLevel> GetAmmolessLevels()

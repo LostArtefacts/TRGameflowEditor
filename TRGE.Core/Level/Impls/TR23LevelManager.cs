@@ -107,13 +107,13 @@ namespace TRGE.Core
             }
         }
 
-        internal void RandomiseAmmolessLevels(/*List<AbstractTRScriptedLevel> originalLevels*/)
+        internal void RandomiseAmmolessLevels(List<AbstractTRScriptedLevel> basisLevels)
         {
             RandomiseLevelsWithOperation
             (
                 AmmolessLevelRNG,
                 RandomAmmolessLevelCount,
-                //originalLevels,
+                basisLevels,
                 new TROperation(TR23OpDefs.RemoveAmmo, ushort.MaxValue, true)
             );
         }
@@ -123,13 +123,13 @@ namespace TRGE.Core
             SetAmmolessLevelData(GetAmmolessLevelData(originalLevels));
         }
 
-        internal void RandomiseUnarmedLevels(/*List<AbstractTRScriptedLevel> originalLevels*/)
+        internal void RandomiseUnarmedLevels(List<AbstractTRScriptedLevel> basisLevels)
         {
             RandomiseLevelsWithOperation
             (
                 UnarmedLevelRNG,
                 RandomUnarmedLevelCount, 
-                //originalLevels, 
+                basisLevels, 
                 new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true)
             );
         }

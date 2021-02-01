@@ -14,6 +14,8 @@ namespace TRGE.Core
         public bool LevelRemovesWeapons { get; internal set; }
         public bool LevelRemovesAmmo { get; internal set; }
 
+        private TRScriptedLevelEventArgs() { }
+
         internal static TRScriptedLevelEventArgs Create(AbstractTRScriptedLevel level, TRScriptedLevelModification modification)
         {
             return new TRScriptedLevelEventArgs
