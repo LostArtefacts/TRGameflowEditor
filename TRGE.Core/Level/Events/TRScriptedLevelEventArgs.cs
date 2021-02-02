@@ -13,6 +13,7 @@ namespace TRGE.Core
         public bool IsFinalLevel { get; internal set; }
         public bool LevelRemovesWeapons { get; internal set; }
         public bool LevelRemovesAmmo { get; internal set; }
+        public bool LevelHasSunset { get; internal set; }
 
         private TRScriptedLevelEventArgs() { }
 
@@ -28,7 +29,8 @@ namespace TRGE.Core
                 LevelSequence = level.Sequence,
                 IsFinalLevel = level.IsFinalLevel,
                 LevelRemovesWeapons = level.RemovesWeapons,
-                LevelRemovesAmmo = level.RemovesAmmo
+                LevelRemovesAmmo = level.RemovesAmmo,
+                LevelHasSunset = level.HasSunset
             };
         }
     }

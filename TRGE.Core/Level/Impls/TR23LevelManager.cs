@@ -66,6 +66,10 @@ namespace TRGE.Core
             {
                 return TRScriptedLevelModification.WeaponlessStateChanged;
             }
+            if (opDef == TR23OpDefs.Sunset)
+            {
+                return TRScriptedLevelModification.SunsetChanged;
+            }
             return TRScriptedLevelModification.Generic;
         }
 
@@ -166,12 +170,8 @@ namespace TRGE.Core
                 TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(item.Item1);
                 if (level != null)
                 {
-                    //bool currentlyRemovesWeapons = level.RemovesWeapons;
                     level.RemovesWeapons = item.Item3;
-                    //if (currentlyRemovesWeapons != level.RemovesWeapons)
-                    {
-                        FireLevelModificationEvent(level, TRScriptedLevelModification.WeaponlessStateChanged);
-                    }
+                    FireLevelModificationEvent(level, TRScriptedLevelModification.WeaponlessStateChanged);
                 }
             }
         }

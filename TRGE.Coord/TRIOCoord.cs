@@ -16,8 +16,8 @@ namespace TRGE.Coord
         protected const string _editDirectoryName = "Edits";
         protected const string _backupDirectoryName = "Backup";
         protected const string _outputDirectoryName = "Output";
-        protected const string _scriptConfigFileName = "trge.json";
-        protected const string _dirConfigFileName = "alt.json";
+        protected const string _scriptConfigFileName = "trge.csf";
+        protected const string _dirConfigFileName = "alt.csf";
 
         protected OperationMode _mode;
 

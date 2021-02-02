@@ -129,5 +129,31 @@ namespace TRGE.Core.Test
             sm = editor.ScriptEditor as TR23ScriptEditor;
             Assert.IsTrue(sm.LevelManager.GetLevel(AbstractTRScriptedLevel.CreateID("HOUSE")).HasSecrets);
         }
+
+        [TestMethod]
+        protected void TestEnablingSunsets()
+        {
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+
+            sm.LevelSunsetOrganisation = Organisation.Manual;
+            List<MutableTuple<string, string, bool>> sunsetData = sm.LevelSunsetData;
+            foreach (MutableTuple<string, string, bool> levelInfo in sunsetData)
+            {
+                levelInfo.Item3 = true;
+            }
+            sm.LevelSunsetData = sunsetData;
+
+            editor.Save();
+
+            editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            sm = editor.ScriptEditor as TR23ScriptEditor;
+
+            sunsetData = sm.LevelSunsetData;
+            foreach (MutableTuple<string, string, bool> levelInfo in sunsetData)
+            {
+                Assert.IsTrue(levelInfo.Item3, string.Format("{0} is missing the sunset flag", levelInfo.Item2));
+            }
+        }
     }
 }

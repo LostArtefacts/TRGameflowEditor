@@ -46,6 +46,11 @@ namespace TRGE.Core.Test
             sm.LevelsHaveCutScenes = false;
             sm.LevelsHaveStartAnimation = false;
 
+            List<MutableTuple<string, string, bool>> sunsetData = sm.LevelSunsetData;
+            sunsetData[0].Item3 = true;
+            sm.LevelSunsetOrganisation = Organisation.Manual;
+            sm.LevelSunsetData = sunsetData;
+
             editor.Save();
         }
 

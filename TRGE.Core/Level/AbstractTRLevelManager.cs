@@ -17,6 +17,10 @@ namespace TRGE.Core
         internal Organisation GameTrackOrganisation { get; set; }
         internal RandomGenerator GameTrackRNG { get; set; }
         internal Organisation SecretSupportOrganisation { get; set; }
+        internal Organisation SunsetOrganisation { get; set; }
+        internal RandomGenerator SunsetRNG { get; set; }
+        internal uint RandomSunsetCount { get; set; }
+
         internal TREdition Edition { get; private set; }
 
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
@@ -310,6 +314,66 @@ namespace TRGE.Core
                 }
                 level.HasSecrets = originalLevel.HasSecrets;
             }
+        }
+
+        internal List<MutableTuple<string, string, bool>> GetSunsetData()
+        {
+            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            foreach (AbstractTRScriptedLevel level in Levels)
+            {
+                data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSunset));
+            }
+            return data;
+        }
+
+        internal void SetSunsetData(List<MutableTuple<string, string, bool>> data)
+        {
+            foreach (MutableTuple<string, string, bool> item in data)
+            {
+                AbstractTRScriptedLevel level = GetLevel(item.Item1);
+                if (level == null)
+                {
+                    throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
+                }
+
+                level.HasSunset = item.Item3;
+                FireLevelModificationEvent(level, TRScriptedLevelModification.SunsetChanged);
+            }
+        }
+
+        internal void RestoreSunsetData(List<AbstractTRScriptedLevel> originalLevels)
+        {
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            {
+                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+                if (level == null)
+                {
+                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+                }
+
+                level.HasSunset = originalLevel.HasSunset;
+            }
+        }
+
+        internal void RandomiseSunsets(List<AbstractTRScriptedLevel> basisLevels)
+        {
+            RandomiseLevelsWithOperation
+            (
+                SunsetRNG,
+                RandomSunsetCount,
+                basisLevels,
+                new TROperation(TR23OpDefs.Sunset, ushort.MaxValue, true)
+            );
+        }
+
+        internal List<AbstractTRScriptedLevel> GetSunsetLevels()
+        {
+            return GetLevelsWithOperation(TR23OpDefs.Sunset, true);
+        }
+
+        internal uint GetSunsetLevelCount()
+        {
+            return Convert.ToUInt32(GetSunsetLevels().Count);
         }
     }
 }

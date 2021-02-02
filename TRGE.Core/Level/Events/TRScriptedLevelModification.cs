@@ -2,6 +2,10 @@
 {
     public enum TRScriptedLevelModification
     {
-        Generic, SequenceChanged, AmmolessStateChanged, WeaponlessStateChanged
+        Generic, 
+        SequenceChanged, 
+        AmmolessStateChanged, 
+        WeaponlessStateChanged, 
+        SunsetChanged
     }
 }

@@ -23,11 +23,22 @@ namespace TRGE.Coord
 
         internal override void ScriptedLevelModified(TRScriptedLevelEventArgs e)
         {
-            if (e.Modification != TRScriptedLevelModification.WeaponlessStateChanged || e.LevelID == AbstractTRScriptedLevel.CreateID("HOUSE"))
+            switch (e.Modification)
             {
-                return;
+                case TRScriptedLevelModification.WeaponlessStateChanged:
+                    if (!e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE")))
+                    {
+                        HandleWeaponlessStateChanged(e);
+                    }
+                    break;
+                case TRScriptedLevelModification.SunsetChanged:
+                    HandleSunsetStateChanged(e);
+                    break;
             }
+        }
 
+        private void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs e)
+        {
             string levelFile = GetReadLevelFilePath(e.LevelFileBaseName);
             if (!File.Exists(levelFile))
             {
@@ -181,6 +192,47 @@ namespace TRGE.Coord
             }
 
             return false;
+        }
+
+        // If the Sunset flag is set in the script, rooms with lighting set to type 3 should dim
+        // over 20 minutes in the game. We don't need to undo this as it will be ignored if the
+        // script flag isn't set.
+        // https://opentomb.github.io/TRosettaStone3/trosettastone.html#_the_whole_room_structure
+        private void HandleSunsetStateChanged(TRScriptedLevelEventArgs e)
+        {
+            if (!e.LevelHasSunset)
+            {
+                return;
+            }
+
+            string levelFile = GetReadLevelFilePath(e.LevelFileBaseName);
+            if (!File.Exists(levelFile))
+            {
+                throw new IOException(string.Format("Missing level file {0}", levelFile));
+            }
+
+            TR2LevelReader reader = new TR2LevelReader();
+            TR2Level level = reader.ReadLevel(levelFile);
+
+            bool changesMade = false;
+            foreach (TR2Room room in level.Rooms)
+            {
+                if (room.LightMode == 0)
+                {
+                    room.LightMode = 3;
+                    changesMade = true;
+                    foreach (TR2RoomVertex vert in room.RoomData.Vertices)
+                    {
+                        vert.Attributes |= 3;
+                    }
+                }
+            }
+
+            if (changesMade)
+            {
+                TR2LevelWriter writer = new TR2LevelWriter();
+                writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+            }
         }
 
         internal override void Save(AbstractTRScriptEditor scriptEditor)

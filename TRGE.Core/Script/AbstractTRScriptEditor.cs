@@ -77,7 +77,7 @@ namespace TRGE.Core
 
         private void LoadConfig()
         {
-            _config = ConfigFile.Exists ? JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(ConfigFile.FullName)) : null;
+            _config = ConfigFile.Exists ? JsonConvert.DeserializeObject<Dictionary<string, object>>(ConfigFile.ReadCompressedText()) : null;
             //issue #36
             if (_config != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
             {
@@ -123,6 +123,13 @@ namespace TRGE.Core
                 LevelSecretSupportOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), secretInfo["Organisation"]);
                 LevelSecretSupport = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(secretInfo["Data"].ToString());
 
+                Dictionary<string, object> sunsetInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["Sunsets"].ToString());
+                LevelSunsetOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), sunsetInfo["Organisation"]);
+                LevelSunsetRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(sunsetInfo["RNG"].ToString()));
+                //see note above
+                LevelSunsetData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(sunsetInfo["Data"].ToString());
+                RandomSunsetLevelCount = uint.Parse(sunsetInfo["RandomCount"].ToString());
+
                 FrontEndHasFMV = bool.Parse(_config["FrontEndFMVOn"].ToString());
             }
             else
@@ -132,6 +139,9 @@ namespace TRGE.Core
                 GameTrackOrganisation = Organisation.Default;
                 GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 LevelSecretSupportOrganisation = Organisation.Default;
+                LevelSunsetOrganisation = Organisation.Default;
+                LevelSunsetRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                RandomSunsetLevelCount = LevelManager.GetSunsetLevelCount();
             }
 
             ApplyConfig();
@@ -161,6 +171,13 @@ namespace TRGE.Core
                 {
                     ["Organisation"] = (int)LevelSecretSupportOrganisation,
                     ["Data"] = LevelSecretSupport
+                },
+                ["Sunsets"] = new Dictionary<string, object>
+                {
+                    ["Organisation"] = (int)LevelSunsetOrganisation,
+                    ["RNG"] = LevelSunsetRNG.ToJson(),
+                    ["RandomCount"] = RandomSunsetLevelCount,
+                    ["Data"] = LevelSunsetData
                 }
             };
 
@@ -190,6 +207,15 @@ namespace TRGE.Core
                 LevelManager.RestoreSecretSupport(backupScript.Levels);
             }
 
+            if (LevelSunsetOrganisation == Organisation.Random)
+            {
+                LevelManager.RandomiseSunsets(randoBaseScript.Levels);
+            }
+            else if (LevelSunsetOrganisation == Organisation.Default)
+            {
+                LevelManager.RestoreSunsetData(backupScript.Levels);
+            }
+
             SaveImpl();
             LevelManager.Save();
 
@@ -215,7 +241,7 @@ namespace TRGE.Core
                 return s1.CompareTo(s2);
             });
 
-            File.WriteAllText(ConfigFile.FullName, JsonConvert.SerializeObject(_config, Formatting.Indented));
+            ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }
 
         public void Restore()
@@ -343,6 +369,30 @@ namespace TRGE.Core
         {
             get => LevelManager.GetSecretSupport();
             set => LevelManager.SetSecretSupport(value);
+        }
+
+        public Organisation LevelSunsetOrganisation
+        {
+            get => LevelManager.SunsetOrganisation;
+            set => LevelManager.SunsetOrganisation = value;
+        }
+
+        public RandomGenerator LevelSunsetRNG
+        {
+            get => LevelManager.SunsetRNG;
+            set => LevelManager.SunsetRNG = value;
+        }
+
+        public uint RandomSunsetLevelCount
+        {
+            get => LevelManager.RandomSunsetCount;
+            set => LevelManager.RandomSunsetCount = value;
+        }
+
+        public List<MutableTuple<string, string, bool>> LevelSunsetData
+        {
+            get => LevelManager.GetSunsetData();
+            set => LevelManager.SetSunsetData(value);
         }
     }
 }
