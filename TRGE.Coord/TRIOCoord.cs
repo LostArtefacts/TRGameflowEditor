@@ -212,7 +212,7 @@ namespace TRGE.Coord
                 string[] history = JsonConvert.DeserializeObject<string[]>(config.ToString());
                 foreach (string item in history)
                 {
-                    if (File.Exists(item))
+                    if (File.Exists(item) || Directory.Exists(item))
                     {
                         _history.Add(item);
                         FireHistoryAdded(item);

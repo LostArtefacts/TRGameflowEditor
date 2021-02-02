@@ -86,7 +86,17 @@ namespace TRGE.Core
         internal override bool HasSunset
         {
             get => HasActiveOperation(TR23OpDefs.Sunset);
-            set => SetOperationActive(TR23OpDefs.Sunset, value);
+            set
+            {
+                if (value)
+                {
+                    EnsureOperation(new TROperation(TR23OpDefs.Sunset, ushort.MaxValue, true));
+                }
+                else
+                {
+                    SetOperationActive(TR23OpDefs.Sunset, value);
+                }
+            }
         }
 
         internal override bool HasDeadlyWater

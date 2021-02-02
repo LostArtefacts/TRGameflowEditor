@@ -27,6 +27,8 @@ namespace TRGE.Coord
         private string _rootConfigDirectory;
         private readonly TRIOCoord _trioCoord;
 
+        public IReadOnlyList<string> History => _trioCoord.History;
+
         private TRCoord()
         {
             RootConfigDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -87,18 +89,18 @@ namespace TRGE.Coord
         #endregion
 
         #region Event Bubbles
-        public event EventHandler<TRHistoryEventArgs> FileHistoryAdded;
-        public event EventHandler FileHistoryChanged;
+        public event EventHandler<TRHistoryEventArgs> HistoryAdded;
+        public event EventHandler HistoryChanged;
 
         private void TRHistoryAdded(object sender, TRHistoryEventArgs e)
         {
-            FileHistoryAdded?.Invoke(this, e);
+            HistoryAdded?.Invoke(this, e);
             StoreConfig();
         }
 
         private void TRHistoryChanged(object sender, EventArgs e)
         {
-            FileHistoryChanged?.Invoke(this, e);
+            HistoryChanged?.Invoke(this, e);
             StoreConfig();
         }
 

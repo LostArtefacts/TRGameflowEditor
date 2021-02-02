@@ -50,7 +50,7 @@ namespace TRGE.Core.Test
             TRCoord.Instance.ClearHistory();
 
             List<FileInfo> openedScripts = new List<FileInfo>();
-            TRCoord.Instance.FileHistoryAdded += delegate (object sender, TRHistoryEventArgs e)
+            TRCoord.Instance.HistoryAdded += delegate (object sender, TRHistoryEventArgs e)
             {
                 openedScripts.Add(new FileInfo(e.Path));
             };

@@ -119,6 +119,10 @@ namespace TRGE.Core.Test
 
             sm.LevelSelectEnabled = true;
             sm.LevelsHaveStartAnimation = false;
+            foreach (var level in sm.LevelManager.Levels)
+            {
+                level.HasSunset = true;
+            }
             editor.Save();
 
             editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);

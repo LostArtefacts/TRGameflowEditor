@@ -13,7 +13,7 @@
         internal static readonly TROpDef JumpToSequence = new TROpDef(8, true);
         internal static readonly TROpDef End            = new TROpDef(9, false);
         internal static readonly TROpDef Track          = new TROpDef(10, true);
-        internal static readonly TROpDef Sunset         = new TROpDef(11, false);
+        internal static readonly TROpDef Sunset         = new TROpDef(11, false, Track);
         internal static readonly TROpDef LoadPic        = new TROpDef(12, true);
         internal static readonly TROpDef DeadlyWater    = new TROpDef(13, false);
         internal static readonly TROpDef RemoveWeapons  = new TROpDef(14, false, Track);
