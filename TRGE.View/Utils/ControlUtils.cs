@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,40 +8,28 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace TRGE.View
+namespace TRGE.View.Utils
 {
-    public static class WindowUtils
+    public static class ControlUtils
     {
         [DllImport("gdi32.dll", SetLastError = true)]
         private static extern bool DeleteObject(IntPtr hObject);
 
-        public static IntPtr GetWindowHandle(Window window)
-        {
-            return new WindowInteropHelper(window).Handle;
-        }
-
-        public static IntPtr GetActiveWindowHandle()
-        {
-            Window w = GetActiveWindow();
-            return w == null ? IntPtr.Zero : GetWindowHandle(w);
-        }
-
-        public static Window GetActiveWindow()
-        {
-            return Application.Current.Windows.OfType<Window>().SingleOrDefault(e => e.IsActive);
-        }
-
         public static ListViewItem GetItemAt(this ListView listView, System.Windows.Point clientRelativePosition)
         {
             HitTestResult hitTestResult = VisualTreeHelper.HitTest(listView, clientRelativePosition);
-            DependencyObject selectedItem = hitTestResult.VisualHit;
-            while (selectedItem != null)
+            DependencyObject selectedItem = null;
+            if (hitTestResult != null)
             {
-                if (selectedItem is ListViewItem)
+                selectedItem = hitTestResult.VisualHit;
+                while (selectedItem != null)
                 {
-                    break;
+                    if (selectedItem is ListViewItem)
+                    {
+                        break;
+                    }
+                    selectedItem = VisualTreeHelper.GetParent(selectedItem);
                 }
-                selectedItem = VisualTreeHelper.GetParent(selectedItem);
             }
             return selectedItem == null ? null : selectedItem as ListViewItem;
         }

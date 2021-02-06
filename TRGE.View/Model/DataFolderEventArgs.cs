@@ -1,7 +1,7 @@
 ﻿using System;
 using TRGE.Coord;
 
-namespace TRGE.View
+namespace TRGE.View.Model
 {
     public class DataFolderEventArgs : EventArgs
     {
