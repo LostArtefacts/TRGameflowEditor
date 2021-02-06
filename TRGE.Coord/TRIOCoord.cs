@@ -17,7 +17,7 @@ namespace TRGE.Coord
         protected const string _backupDirectoryName = "Backup";
         protected const string _outputDirectoryName = "Output";
         protected const string _scriptConfigFileName = "trge.csf";
-        protected const string _dirConfigFileName = "alt.csf";
+        protected const string _dirConfigFileName = "trle.csf";
 
         protected OperationMode _mode;
 
@@ -41,13 +41,19 @@ namespace TRGE.Coord
             _history = new List<string>();
         }
 
-        internal void Initialise(string path)
+        internal TREditor Open(string path, TRScriptOpenOption openOption)
         {
             _mode = Directory.Exists(path) ? OperationMode.Directory : OperationMode.File;
             _orignalScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path) : path;
             _originalDirectory = _mode == OperationMode.Directory ? path : new FileInfo(_orignalScriptFile).DirectoryName;
             _editDirectory = GetEditDirectory();
             CheckBackup();
+
+            return new TREditor(OutputDirectory, OriginalDirectory)
+            {
+                ScriptEditor = GetScriptEditor(openOption),
+                LevelEditor = GetLevelEditor()
+            };
         }
 
         internal AbstractTRScriptEditor GetScriptEditor(TRScriptOpenOption openOption)
@@ -102,7 +108,7 @@ namespace TRGE.Coord
                 DirectoryInfo outputDI = new DirectoryInfo(outputDirectory);
 
                 DirectoryInfo originalDI = new DirectoryInfo(_originalDirectory);
-                originalDI.Copy(backupDI, false, new string[] { "*.dat", "*.tr2", "*.psx" });
+                originalDI.Copy(backupDI, false, TREditor.TargetFileExtensions);
                 backupDI.ClearExcept(_orignalScriptFile);
                 backupDI.Copy(outputDI, false);
 

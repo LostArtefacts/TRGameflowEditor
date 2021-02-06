@@ -5,6 +5,8 @@ namespace TRGE.Coord
 {
     public class TREditor
     {
+        public static readonly string[] TargetFileExtensions = new string[] { "*.dat", "*.tr2", "*.psx" };
+
         private AbstractTRScriptEditor _scriptEditor;
         public AbstractTRScriptEditor ScriptEditor
         {
@@ -18,13 +20,11 @@ namespace TRGE.Coord
 
         public AbstractTRLevelEditor LevelEditor { get; internal set; }
 
-        private bool _allowSuccessiveEdits;
         public bool AllowSuccessiveEdits 
         {
-            get => _allowSuccessiveEdits;
+            get => _scriptEditor.AllowSuccessiveEdits && (LevelEditor == null || LevelEditor.AllowSuccessiveEdits);
             set
             {
-                _allowSuccessiveEdits = value;
                 _scriptEditor.AllowSuccessiveEdits = value;
                 if (LevelEditor != null)
                 {
@@ -40,7 +40,6 @@ namespace TRGE.Coord
         {
             _outputDirectory = outputDirectory;
             _targetDirectory = targetDirectory;
-            _allowSuccessiveEdits = false;
         }
 
         private void ScriptEditorLevelModified(object sender, TRScriptedLevelEventArgs e)
@@ -61,7 +60,7 @@ namespace TRGE.Coord
 
             DirectoryInfo outputDir = new DirectoryInfo(_outputDirectory);
             DirectoryInfo targetDir = new DirectoryInfo(_targetDirectory);
-            outputDir.Copy(targetDir, true, new string[] { "*.dat", "*.tr2", "*.psx" });
+            outputDir.Copy(targetDir, true, TargetFileExtensions);
 
             ScriptEditor.Initialise();
         }

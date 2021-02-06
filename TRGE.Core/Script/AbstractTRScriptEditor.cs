@@ -131,6 +131,7 @@ namespace TRGE.Core
                 RandomSunsetLevelCount = uint.Parse(sunsetInfo["RandomCount"].ToString());
 
                 FrontEndHasFMV = bool.Parse(_config["FrontEndFMVOn"].ToString());
+                AllowSuccessiveEdits = bool.Parse(_config["Successive"].ToString());
             }
             else
             {
@@ -142,6 +143,8 @@ namespace TRGE.Core
                 LevelSunsetOrganisation = Organisation.Default;
                 LevelSunsetRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 RandomSunsetLevelCount = LevelManager.GetSunsetLevelCount();
+
+                AllowSuccessiveEdits = false;
             }
 
             ApplyConfig();
@@ -155,6 +158,7 @@ namespace TRGE.Core
                 ["Original"] = OriginalFile.FullName,
                 ["CheckSumOnSave"] = string.Empty,
                 ["FrontEndFMVOn"] = FrontEndHasFMV,
+                ["Successive"] = AllowSuccessiveEdits,
                 ["LevelSequencing"] = new Dictionary<string, object>
                 {
                     ["Organisation"] = (int)LevelSequencingOrganisation,
@@ -223,23 +227,6 @@ namespace TRGE.Core
             Script.Write(outputPath);
 
             _config["CheckSumOnSave"] = new FileInfo(outputPath).Checksum();
-
-            _config.Sort(delegate(string s1, string s2)
-            {
-                object o1 = _config[s1];
-                object o2 = _config[s2];
-
-                if (o1 is Dictionary<string, object> && !(o2 is Dictionary<string, object>))
-                {
-                    return 1;
-                }
-                if (o2 is Dictionary<string, object> && !(o1 is Dictionary<string, object>))
-                {
-                    return -1;
-                }
-
-                return s1.CompareTo(s2);
-            });
 
             ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }

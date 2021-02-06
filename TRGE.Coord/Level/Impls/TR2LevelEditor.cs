@@ -194,9 +194,9 @@ namespace TRGE.Coord
             return false;
         }
 
-        // If the Sunset flag is set in the script, rooms with lighting set to type 3 should dim
-        // over 20 minutes in the game. We don't need to undo this as it will be ignored if the
-        // script flag isn't set.
+        // If the Sunset flag is set in the script, rooms with lighting set to type 3 (and with this also set
+        // for each vertex inthe room) will dim over 20 minutes in the game. We don't need to undo this as it 
+        // will be ignored if the script flag isn't set.
         // https://opentomb.github.io/TRosettaStone3/trosettastone.html#_the_whole_room_structure
         private void HandleSunsetStateChanged(TRScriptedLevelEventArgs e)
         {
@@ -235,11 +235,6 @@ namespace TRGE.Coord
             }
         }
 
-        internal override void Save(AbstractTRScriptEditor scriptEditor)
-        {
-
-        }
-
         internal override void Restore()
         {
             _io.BackupDirectory.Copy(_io.OriginalDirectory, true, new string[] { "*.dat", "*.tr2" });
@@ -248,6 +243,11 @@ namespace TRGE.Coord
             {
                 File.Copy(hshBackup, Path.Combine(_io.OriginalDirectory.FullName, "house.tr2"), true);
             }
+        }
+
+        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor)
+        {
+
         }
     }
 }
