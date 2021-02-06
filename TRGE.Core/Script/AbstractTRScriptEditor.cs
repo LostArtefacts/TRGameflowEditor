@@ -10,25 +10,25 @@ namespace TRGE.Core
     {
         protected TRScriptIOArgs _io;
 
-        public FileInfo OriginalFile
+        internal FileInfo OriginalFile
         {
             get => _io.OriginalFile;
             set => _io.OriginalFile = value;
         }
 
-        public FileInfo BackupFile
+        internal FileInfo BackupFile
         {
             get => _io.BackupFile;
             set => _io.BackupFile = value;
         }
 
-        public FileInfo ConfigFile
+        internal FileInfo ConfigFile
         {
             get => _io.ConfigFile;
             set => _io.ConfigFile = value;
         }
 
-        public DirectoryInfo OutputDirectory
+        internal DirectoryInfo OutputDirectory
         {
             get => _io.OutputDirectory;
             set => _io.OutputDirectory = value;

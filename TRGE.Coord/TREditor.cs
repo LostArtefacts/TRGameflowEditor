@@ -33,6 +33,9 @@ namespace TRGE.Coord
             }
         }
 
+        public string BackupDirectory => _scriptEditor.BackupFile.DirectoryName;
+        public string TargetDirectory => _targetDirectory;
+
         private readonly string _outputDirectory;
         private readonly string _targetDirectory;
 
