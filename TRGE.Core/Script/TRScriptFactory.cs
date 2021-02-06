@@ -4,7 +4,7 @@ namespace TRGE.Core
 {
     public static class TRScriptFactory
     {
-        public static AbstractTRScriptEditor GetScriptManager(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
+        public static AbstractTRScriptEditor GetScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
         {
             uint scriptVersion = GetDatFileVersion(ioArgs.OriginalFile.FullName);
             switch (scriptVersion)

@@ -49,10 +49,12 @@ namespace TRGE.Coord
             _editDirectory = GetEditDirectory();
             CheckBackup();
 
+            AbstractTRScriptEditor scriptEditor = GetScriptEditor(openOption);
+            AbstractTRLevelEditor levelEditor = GetLevelEditor(scriptEditor);
             return new TREditor(OutputDirectory, OriginalDirectory)
             {
-                ScriptEditor = GetScriptEditor(openOption),
-                LevelEditor = GetLevelEditor()
+                ScriptEditor = scriptEditor,
+                LevelEditor = levelEditor
             };
         }
 
@@ -65,27 +67,29 @@ namespace TRGE.Coord
                 ConfigFile = new FileInfo(_scriptConfigFile),
                 OutputDirectory = new DirectoryInfo(GetOutputDirectory())
             };
-            AbstractTRScriptEditor scriptMan = TRScriptFactory.GetScriptManager(io, openOption);
+            AbstractTRScriptEditor scriptMan = TRScriptFactory.GetScriptEditor(io, openOption);
 
             UpdateFileHistory();
 
             return scriptMan;
         }
 
-        internal TR2LevelEditor GetLevelEditor()
+        internal AbstractTRLevelEditor GetLevelEditor(AbstractTRScriptEditor scriptEditor)
         {
             if (_mode == OperationMode.File)
             {
                 return null;
             }
 
-            return new TR2LevelEditor(new TRDirectoryIOArgs
+            TRDirectoryIOArgs io = new TRDirectoryIOArgs
             {
                 OriginalDirectory = new DirectoryInfo(_originalDirectory),
                 BackupDirectory = new DirectoryInfo(GetBackupDirectory()),
                 ConfigFile = new FileInfo(_directoryConfigFile),
                 OutputDirectory = new DirectoryInfo(GetOutputDirectory())
-            });
+            };
+
+            return TRLevelEditorFactory.GetLevelEditor(io, scriptEditor.Edition);
         }
 
         private string FindScriptFile(string path)

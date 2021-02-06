@@ -50,6 +50,7 @@
     <Compile Include="Helpers\Location.cs" />
     <Compile Include="Helpers\SpriteDefinition.cs" />
     <Compile Include="Level\AbstractTRLevelEditor.cs" />
+    <Compile Include="Level\TRLevelEditorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TREditor.cs" />
     <Compile Include="TRIOCoord.cs" />
