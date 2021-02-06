@@ -1,13 +1,87 @@
 ﻿<Window x:Class="TRGE.View.Windows.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TRGE.View.Windows"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Icon="..\Resources\shuffle.ico"
+        FontFamily="Segoe UI"
+        FontSize="13"
         WindowStartupLocation="CenterOwner"
-        Title="AboutWindow" Height="450" Width="800">
-    <Grid>
+        Loaded="Window_Loaded"
+        Title="About Tomb Raider Gameflow Editor" Height="250" Width="550">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
         
+        <Image Grid.RowSpan="2"
+               VerticalAlignment="Top"
+               Width="120"
+               HorizontalAlignment="Left"
+               Source="..\Resources\shuffle.png"/>
+
+        <StackPanel Grid.Column="1">
+            <TextBlock FontSize="16"
+                       FontWeight="Bold">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} V{1}">
+                        <Binding Path="AppTitle"/>
+                        <Binding Path="Version"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <TextBlock Margin="0,0,0,10"
+                       Text="{Binding Copyright}"/>
+
+            <TextBlock>
+                Scripting functionality based on 
+                <Hyperlink NavigateUri="https://opentomb.github.io/TRosettaStone3/trosettastone.html"
+                       RequestNavigate="Hyperlink_RequestNavigate">
+                     TRosettaStone
+                </Hyperlink>
+            </TextBlock>
+
+            <TextBlock>
+                Uses TR2 level file editing from 
+                <Hyperlink NavigateUri="https://github.com/DanzaG/TR2-Rando"
+                       RequestNavigate="Hyperlink_RequestNavigate">
+                     TR2-Rando
+                </Hyperlink>
+            </TextBlock>
+
+            <TextBlock>
+                Uses 
+                <Hyperlink NavigateUri="https://www.newtonsoft.com/json"
+                       RequestNavigate="Hyperlink_RequestNavigate">
+                     NewtonSoft.Json
+                </Hyperlink>
+                by James Newton-King
+            </TextBlock>
+
+            <TextBlock Margin="0,20,0,0">
+                Icon made by 
+                <Hyperlink NavigateUri="https://www.flaticon.com/authors/pixel-perfect"
+                       RequestNavigate="Hyperlink_RequestNavigate">
+                     Pixel perfect
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+
+        <Button Grid.Column="1"
+                Grid.Row="1"
+                Content="Close"
+                MinWidth="80"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                IsCancel="True"/>
     </Grid>
 </Window>

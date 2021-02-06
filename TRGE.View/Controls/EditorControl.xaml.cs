@@ -14,8 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TRGE.Coord;
+using TRGE.Core;
 using TRGE.View.Model;
 using TRGE.View.Utils;
+using TRGE.View.Windows;
 
 namespace TRGE.View.Controls
 {
@@ -24,6 +26,30 @@ namespace TRGE.View.Controls
     /// </summary>
     public partial class EditorControl : UserControl
     {
+        #region Dependency Properties
+        public static readonly DependencyProperty TREditionProperty = DependencyProperty.Register
+        (
+            "Edition", typeof(string), typeof(EditorControl)
+        );
+
+        public static readonly DependencyProperty DataFolderProperty = DependencyProperty.Register
+        (
+            "DataFolder", typeof(string), typeof(EditorControl)
+        );
+
+        public string Edition
+        {
+            get => (string)GetValue(TREditionProperty);
+            private set => SetValue(TREditionProperty, value);
+        }
+
+        public string DataFolder
+        {
+            get => (string)GetValue(DataFolderProperty);
+            private set => SetValue(DataFolderProperty, value);
+        }
+        #endregion
+
         public TREditor Editor { get; private set; }
 
         public EditorControl()
@@ -34,6 +60,8 @@ namespace TRGE.View.Controls
         public void Load(DataFolderEventArgs e)
         {
             Editor = e.Editor;
+            Edition = Editor.Edition.Title;
+            DataFolder = e.DataFolder;
         }
 
         public void Unload()
@@ -62,6 +90,11 @@ namespace TRGE.View.Controls
         public void ImportSettings()
         {
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            new AudioWindow().ShowDialog();
         }
     }
 }

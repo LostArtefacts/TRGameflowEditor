@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TRGE.Coord;
 using TRGE.View.Model;
 using TRGE.View.Utils;
@@ -39,6 +28,11 @@ namespace TRGE.View.Windows
             "EditorControlVisibility", typeof(Visibility), typeof(MainWindow)
         );
 
+        public static readonly DependencyProperty EditorStatusVisibilityProperty = DependencyProperty.Register
+        (
+            "EditorStatusVisibility", typeof(Visibility), typeof(MainWindow)
+        );
+
         public static readonly DependencyProperty RecentFoldersProperty = DependencyProperty.Register
         (
             "RecentFolders", typeof(RecentFolderList), typeof(MainWindow)
@@ -57,6 +51,7 @@ namespace TRGE.View.Windows
                 SetValue(IsEditorActiveProperty, value);
                 FolderControlVisibility = value ? Visibility.Collapsed : Visibility.Visible;
                 EditorControlVisibility = value ? Visibility.Visible : Visibility.Collapsed;
+                EditorStatusVisibility = value ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -64,6 +59,12 @@ namespace TRGE.View.Windows
         {
             get => (Visibility)GetValue(EditorControlVisibilityProperty);
             set => SetValue(EditorControlVisibilityProperty, value);
+        }
+
+        public Visibility EditorStatusVisibility
+        {
+            get => (Visibility)GetValue(EditorStatusVisibilityProperty);
+            set => SetValue(EditorStatusVisibilityProperty, value);
         }
 
         public Visibility FolderControlVisibility
@@ -100,6 +101,8 @@ namespace TRGE.View.Windows
 
             _folderControl.DataFolderOpened += PreloadControl_DataFolderOpened;
             RefreshHistoryMenu();
+
+            _editionStatusText.DataContext = _folderStatusText.DataContext = _editorControl;
             IsEditorActive = false;
         }
 
@@ -142,8 +145,6 @@ namespace TRGE.View.Windows
 
         private void PreloadControl_DataFolderOpened(object sender, DataFolderEventArgs e)
         {
-            _mainStatusText.Text = e.DataFolder;
-
             _editorControl.Load(e);
             IsEditorActive = true;
         }

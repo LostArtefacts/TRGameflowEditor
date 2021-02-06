@@ -110,14 +110,16 @@
         </Menu>
 
         <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <TextBlock x:Name="_mainStatusText" />
+            <StatusBarItem Visibility="{Binding EditorStatusVisibility}">
+                <TextBlock x:Name="_editionStatusText"
+                           Text="{Binding Edition}"/>
             </StatusBarItem>
-            
-            <Separator/>
-            
-            <StatusBarItem>
-                <TextBlock x:Name="_statusText2"/>
+
+            <Separator Visibility="{Binding EditorStatusVisibility}"/>
+
+            <StatusBarItem Visibility="{Binding EditorStatusVisibility}">
+                <TextBlock x:Name="_folderStatusText"
+                           Text="{Binding DataFolder}"/>
             </StatusBarItem>
         </StatusBar>
 

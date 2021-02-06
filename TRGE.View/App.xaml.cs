@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TRGE.View.Utils;
 
 namespace TRGE.View
 {
@@ -13,5 +14,9 @@ namespace TRGE.View
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            WindowUtils.SetMenuAlignment();
+        }
     }
 }
