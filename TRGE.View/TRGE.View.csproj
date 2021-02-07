@@ -108,6 +108,9 @@
     <Compile Include="Windows\AudioWindow.xaml.cs">
       <DependentUpon>AudioWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\LevelSequenceWindow.xaml.cs">
+      <DependentUpon>LevelSequenceWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -148,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\AudioWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\LevelSequenceWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

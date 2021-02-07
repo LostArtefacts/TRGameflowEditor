@@ -19,6 +19,7 @@
             </Grid.RowDefinitions>
 
             <TextBox x:Name="_textBox" 
+                     PreviewKeyDown="TextBox_PreviewKeyDown"
                      PreviewTextInput="TextBox_TextInput" 
                      TextChanged="TextBox_TextChanged" 
                      DataObject.Pasting="TextBox_Pasting" 

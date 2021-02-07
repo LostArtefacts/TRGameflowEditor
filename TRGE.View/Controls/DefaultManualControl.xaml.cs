@@ -82,10 +82,26 @@ namespace TRGE.View.Controls
         }
         #endregion
 
+        public static readonly RoutedEvent ManualConfigureEvent = EventManager.RegisterRoutedEvent
+        (
+            "ManualConfigure", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(DefaultManualControl)
+        );
+
+        public event RoutedEventHandler ManualConfigure
+        {
+            add => AddHandler(ManualConfigureEvent, value);
+            remove => RemoveHandler(ManualConfigureEvent, value);
+        }
+
         public DefaultManualControl()
         {
             InitializeComponent();
             _content.DataContext = this;
+        }
+
+        private void ManualButton_Click(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ManualConfigureEvent));
         }
     }
 }

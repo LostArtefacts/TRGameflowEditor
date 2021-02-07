@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:c="clr-namespace:TRGE.View.Controls"
              mc:Ignorable="d" d:DesignHeight="750" d:DesignWidth="1050">
+    
     <Grid Background="White"
           x:Name="_editorGrid">
         <Grid.ColumnDefinitions>
@@ -125,15 +126,16 @@
         <GroupBox Margin="5" Grid.Row="1">
             <GroupBox.Header>
                 <Label Padding="0">
-                    <TextBlock FontWeight="Bold" Text="Level Sequence"/>
+                    <TextBlock FontWeight="Bold" Text="Level Sequencing"/>
                 </Label>
             </GroupBox.Header>
-
+            
             <c:DefaultManualControl 
                 Margin="5,2,5,5"
-                Text="Specify the order in which levels are played. Note that if the game contains a bonus level, this must always be the final level (e.g. Nightmare in Vegas)."
+                Text="Specify the order in which levels are played. Required pickups will be available in TR2 (e.g. the Seraph for Barkhang Monastry) regardless of when the level is reached."
                 IsDefault="{Binding UseDefaultLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                IsManual="{Binding UseManualLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                IsManual="{Binding UseManualLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                ManualConfigure="LevelSequencing_ManualConfigure"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="1" Grid.Column="1">
@@ -145,9 +147,10 @@
 
             <c:DefaultManualControl 
                 Margin="5"
-                Text="Specify the levels in which Lara loses her weapons. For TR2 and TR2G, the pistols will be added to the levels for Lara to find (excluding Offshore Rig and HSH)."
+                Text="Specify the levels in which Lara loses her weapons. For TR2 and TR2G, the pistols will be added to the levels for Lara to find."
                 IsDefault="{Binding UseDefaultUnarmed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                IsManual="{Binding UseManualUnarmed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                IsManual="{Binding UseManualUnarmed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                ManualConfigure="UnarmedLevels_ManualConfigure"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="1" Grid.Column="2">
@@ -161,7 +164,8 @@
                 Margin="5"
                 Text="Specify the levels in which Lara loses her ammo, medi-kits and flares at the start. No extra items will be added to these levels."
                 IsDefault="{Binding UseDefaultAmmoless, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                IsManual="{Binding UseManualAmmoless, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                IsManual="{Binding UseManualAmmoless, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                ManualConfigure="AmmolessLevels_ManualConfigure"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="2" 
@@ -176,7 +180,8 @@
                 Margin="5"
                 Text="Specify the items that are rewarded to Lara for collecting all secrets in each level."
                 IsDefault="{Binding UseDefaultBonuses, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                IsManual="{Binding UseManualBonuses, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                IsManual="{Binding UseManualBonuses, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                ManualConfigure="SecretRewards_ManualConfigure"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="2" Grid.Column="1"
@@ -189,9 +194,10 @@
 
             <c:DefaultManualControl 
                 Margin="5"
-                Text="Choose which levels had sunsets i.e. the lighting will fade over 20 minutes, similar to Bartol's Hideout."
+                Text="Choose which levels have sunsets. The lighting will gradually fade over 20 minutes, similar to Bartoli's Hideout. Sunset state resets if the game is reloaded."
                 IsDefault="{Binding UseDefaultSunsets, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                IsManual="{Binding UseManualSunsets, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                IsManual="{Binding UseManualSunsets, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                ManualConfigure="Sunsets_ManualConfigure"/>
         </GroupBox>
         
         <GroupBox Margin="5" Grid.Row="2" Grid.Column="2">
@@ -205,7 +211,8 @@
                 Margin="5"
                 Text="Choose the ambient tracks for each level, including the title screen, plus the sound to play when a secret is found."
                 IsDefault="{Binding UseDefaultAudio, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                IsManual="{Binding UseManualAudio, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                IsManual="{Binding UseManualAudio, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                ManualConfigure="Audio_ManualConfigure"/>
         </GroupBox>
     </Grid>
 </UserControl>

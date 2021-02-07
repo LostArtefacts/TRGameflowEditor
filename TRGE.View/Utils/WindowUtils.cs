@@ -85,6 +85,11 @@ namespace TRGE.View.Utils
         #endregion
 
         #region MessageBox
+        public static void ShowMessage(string message)
+        {
+            ShowMessage(GetActiveWindow(), message);
+        }
+
         public static void ShowWarning(string message)
         {
             ShowWarning(GetActiveWindow(), message);
@@ -103,6 +108,11 @@ namespace TRGE.View.Utils
         public static MessageBoxResult ShowConfirmWithCancel(string message)
         {
             return ShowConfirmWithCancel(GetActiveWindow(), message);
+        }
+
+        public static void ShowMessage(Window window, string message)
+        {
+            MessageBox.Show(window, message, "TRGE", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public static void ShowWarning(Window window, string message)

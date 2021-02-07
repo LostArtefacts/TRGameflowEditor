@@ -134,7 +134,32 @@ namespace TRGE.View.Controls
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void LevelSequencing_ManualConfigure(object sender, RoutedEventArgs e)
+        {
+            new LevelSequenceWindow().ShowDialog();
+        }
+
+        private void UnarmedLevels_ManualConfigure(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.ShowMessage(e.ToString());
+        }
+
+        private void AmmolessLevels_ManualConfigure(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.ShowMessage(e.ToString());
+        }
+
+        private void SecretRewards_ManualConfigure(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.ShowMessage(e.ToString());
+        }
+
+        private void Sunsets_ManualConfigure(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.ShowMessage(e.ToString());
+        }
+
+        private void Audio_ManualConfigure(object sender, RoutedEventArgs e)
         {
             new AudioWindow().ShowDialog();
         }

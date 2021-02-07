@@ -84,8 +84,25 @@ namespace TRGE.View.Controls
 
         private void TextBox_TextInput(object sender, TextCompositionEventArgs e)
         {
-            //e.Handled = !int.TryParse(e.Text, out int _);
             e.Handled = !ValidateInput(e.Text);
+        }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            int mod = 1;
+            if (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                mod = 10;
+            }
+            switch (e.Key)
+            {
+                case Key.Up:
+                    Value += mod;
+                    break;
+                case Key.Down:
+                    Value -= mod;
+                    break;
+            }
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

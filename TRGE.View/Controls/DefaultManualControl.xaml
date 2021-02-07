@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Vertical"
                 x:Name="_content">
-        <Label Padding="0">
+        <Label Padding="0" MinHeight="50">
             <TextBlock Text="{Binding Text}"
                    TextWrapping="Wrap"/>
         </Label>
@@ -43,7 +43,8 @@
                     Grid.Column="2"
                     Padding="15,4"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center"/>
+                    VerticalAlignment="Center"
+                    Click="ManualButton_Click"/>
         </Grid>
     </StackPanel>
 </UserControl>

@@ -137,7 +137,8 @@
                 <TextBlock x:Name="_editionStatusText" Text="{Binding Edition}"/>
             </StatusBarItem>
 
-            <Separator Visibility="{Binding EditorStatusVisibility}"/>
+            <Separator Margin="5,0"
+                       Visibility="{Binding EditorStatusVisibility}"/>
 
             <StatusBarItem Visibility="{Binding EditorStatusVisibility}">
                 <Hyperlink x:Name="_folderStatusText" 
@@ -147,7 +148,8 @@
                 </Hyperlink>
             </StatusBarItem>
 
-            <Separator Visibility="{Binding EditorStatusVisibility}"/>
+            <Separator Margin="5,0"
+                       Visibility="{Binding EditorStatusVisibility}"/>
 
             <StatusBarItem Visibility="{Binding EditorStatusVisibility}">
                 <StackPanel Orientation="Horizontal">
