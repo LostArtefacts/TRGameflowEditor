@@ -9,6 +9,7 @@
         FontFamily="Segoe UI"
         FontSize="13"
         WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
         Loaded="Window_Loaded"
         Title="About Tomb Raider Gameflow Editor" Height="250" Width="550">
     <Grid Margin="10">

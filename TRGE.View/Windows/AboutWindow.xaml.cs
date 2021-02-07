@@ -51,6 +51,7 @@ namespace TRGE.View.Windows
         public AboutWindow()
         {
             InitializeComponent();
+            Owner = WindowUtils.GetActiveWindow();
             DataContext = this;
 
             Assembly assembly = Assembly.GetExecutingAssembly();

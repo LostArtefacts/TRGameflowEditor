@@ -93,6 +93,8 @@ namespace TRGE.View.Controls
         {
             try
             {
+                WindowUtils.GetActiveWindow().Cursor = Cursors.Wait;
+
                 TREditor editor = TRCoord.Instance.Open(folderPath);
                 DataFolderEventArgs e = new DataFolderEventArgs(folderPath, editor);
                 DataFolderOpened?.Invoke(this, e);
@@ -100,6 +102,10 @@ namespace TRGE.View.Controls
             catch (Exception e)
             {
                 WindowUtils.ShowError(e.Message);
+            }
+            finally
+            {
+                WindowUtils.GetActiveWindow().Cursor = Cursors.Arrow;
             }
         }
     }

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White">
+    <Grid Background="White" Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
@@ -20,9 +20,9 @@
                 Text="Open a Tomb Raider Data folder to get started." 
                 VerticalAlignment="Center"/>
             <Button 
-                Padding="10,4" 
+                Padding="15,4" 
                 Margin="20,0,0,0" 
-                Content="Open" 
+                Content="Browse" 
                 VerticalAlignment="Center"
                 Click="OpenButton_Click"/>
         </StackPanel>
@@ -33,8 +33,13 @@
             Visibility="{Binding RecentFoldersVisibility}">
             <GroupBox.Header>
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="_historyIcon" Width="18" Height="18"/>
-                    <TextBlock Margin="2,0,0,0" Text="Recent Folders"/>
+                    <Image x:Name="_historyIcon" 
+                           Width="18" 
+                           Height="18"/>
+                    
+                    <TextBlock Margin="2,0,0,0" 
+                               Text="Recent Folders"
+                               FontWeight="Bold"/>
                 </StackPanel>
             </GroupBox.Header>
 

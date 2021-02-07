@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TRGE.Core
 {
@@ -32,6 +33,21 @@ namespace TRGE.Core
                 LevelRemovesAmmo = level.RemovesAmmo,
                 LevelHasSunset = level.HasSunset
             };
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TRScriptedLevelEventArgs args &&
+                   Modification == args.Modification &&
+                   LevelID == args.LevelID;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1415019149;
+            hashCode = hashCode * -1521134295 + Modification.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LevelID);
+            return hashCode;
         }
     }
 }

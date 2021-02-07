@@ -100,6 +100,11 @@ namespace TRGE.View.Utils
             return ShowConfirm(GetActiveWindow(), message);
         }
 
+        public static MessageBoxResult ShowConfirmWithCancel(string message)
+        {
+            return ShowConfirmWithCancel(GetActiveWindow(), message);
+        }
+
         public static void ShowWarning(Window window, string message)
         {
             MessageBox.Show(window, message, "TRGE", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -113,6 +118,11 @@ namespace TRGE.View.Utils
         public static bool ShowConfirm(Window window, string message)
         {
             return MessageBox.Show(window, message, "TRGE", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+        }
+
+        public static MessageBoxResult ShowConfirmWithCancel(Window window, string message)
+        {
+            return MessageBox.Show(window, message, "TRGE", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
         }
         #endregion
 
@@ -161,6 +171,20 @@ namespace TRGE.View.Utils
             IntPtr h = GetSystemMenu(GetWindowHandle(w), false);
             uint cmd = MF_BYCOMMAND | (enabled ? MF_ENABLED : MF_DISABLED);
             EnableMenuItem(h, SC_CLOSE, cmd);
+
+            if (enabled)
+            {
+                w.Closing -= W_Closing;
+            }
+            else
+            {
+                w.Closing += W_Closing;
+            }
+        }
+
+        private static void W_Closing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
         }
 
         public static void EnableMinimiseButton(Window w, bool enabled)

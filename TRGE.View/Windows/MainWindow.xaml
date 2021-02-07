@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:c="clr-namespace:TRGE.View.Controls"
         xmlns:vm="clr-namespace:TRGE.View.Model"
-        xmlns:w="clr-namespace:TRGE.View.Windows"
         mc:Ignorable="d"
         Icon="..\Resources\shuffle.ico"
         FontFamily="Segoe UI"
         FontSize="13"
         ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen"
-        Title="Tomb Raider Gameflow Editor" Height="700" Width="1200">
+        Closing="Window_Closing"
+        Title="Tomb Raider Gameflow Editor" Height="740" Width="1200">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:RecentFolderList}">
@@ -36,12 +36,27 @@
             </Grid>
         </DataTemplate>
     </Window.Resources>
-    
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"/>
+        <CommandBinding Command="Save" Executed="SaveCommandBinding_Executed"/>
+        <CommandBinding Command="Close" Executed="CloseCommandBinding_Executed"/>
+        <CommandBinding Command="Help" Executed="HelpCommandBinding_Executed"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
+        <KeyBinding Key="W" Modifiers="Control" Command="Close"/>
+        <KeyBinding Key="F1" Command="Help"/>
+    </Window.InputBindings>
+
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" 
-                          Click="OpenMenuItem_Click"/>
+                          Command="Open"
+                          InputGestureText="Ctrl+O"/>
 
                 <MenuItem Header="Open Recent" 
                           IsEnabled="{Binding HasRecentFolders}" 
@@ -56,10 +71,16 @@
                 </MenuItem>
 
                 <Separator/>
+
+                <MenuItem Header="_Save"
+                          IsEnabled="{Binding IsEditorDirty}"
+                          Command="Save"
+                          InputGestureText="Ctrl+S"/>
                 
                 <MenuItem Header="_Close" 
-                    IsEnabled="{Binding IsEditorActive}" 
-                    Click="CloseMenuItem_Click"/>
+                          IsEnabled="{Binding IsEditorActive}" 
+                          Command="Close"
+                          InputGestureText="Ctrl+W"/>
                 
                 <Separator/>
                 
@@ -70,7 +91,8 @@
                 <Separator/>
                 
                 <MenuItem Header="Exit" 
-                          Click="ExitMenuItem_Click"/>
+                          Click="ExitMenuItem_Click"
+                          InputGestureText="Alt+F4"/>
             </MenuItem>
             
             <MenuItem Header="_Edit" 
@@ -93,7 +115,8 @@
             
             <MenuItem Header="_Help">
                 <MenuItem Header="GitHub"
-                          Click="GitHubMenuItem_Click"/>
+                          Command="Help"
+                          InputGestureText="F1"/>
                 
                 <MenuItem Header="Discord"
                           Click="DiscordMenuItem_Click"/>
@@ -111,19 +134,37 @@
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem Visibility="{Binding EditorStatusVisibility}">
-                <TextBlock x:Name="_editionStatusText"
-                           Text="{Binding Edition}"/>
+                <TextBlock x:Name="_editionStatusText" Text="{Binding Edition}"/>
             </StatusBarItem>
 
             <Separator Visibility="{Binding EditorStatusVisibility}"/>
 
             <StatusBarItem Visibility="{Binding EditorStatusVisibility}">
-                <TextBlock x:Name="_folderStatusText"
-                           Text="{Binding DataFolder}"/>
+                <Hyperlink x:Name="_folderStatusText" 
+                           NavigateUri="{Binding DataFolder}" 
+                           RequestNavigate="EditorFolder_RequestNavigate">
+                    <TextBlock Text="{Binding DataFolder}"/>
+                </Hyperlink>
+            </StatusBarItem>
+
+            <Separator Visibility="{Binding EditorStatusVisibility}"/>
+
+            <StatusBarItem Visibility="{Binding EditorStatusVisibility}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Saved" 
+                               Visibility="{Binding EditorSavedStatusVisibility}"
+                               Foreground="DarkGreen"
+                               FontWeight="Bold"/>
+
+                    <TextBlock Text="Unsaved" 
+                               Visibility="{Binding EditorUnsavedStatusVisibility}"
+                               Foreground="DarkRed"
+                               FontWeight="Bold"/>
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
 
-        <Grid x:Name="_mainGrid" Margin="10">
+        <Grid x:Name="_mainGrid" Margin="5">
             <c:FolderLoadControl 
                 x:Name="_folderControl" 
                 Visibility="{Binding FolderControlVisibility}"/>

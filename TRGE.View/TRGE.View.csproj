@@ -77,9 +77,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\BoolNumericOptionControl.xaml.cs">
+      <DependentUpon>BoolNumericOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BoolOptionControl.xaml.cs">
+      <DependentUpon>BoolOptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DefaultManualControl.xaml.cs">
+      <DependentUpon>DefaultManualControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NumericUpDown.xaml.cs">
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\EditorEventArgs.cs" />
+    <Compile Include="Model\EditorOptions.cs" />
     <Compile Include="Model\IRecentFolderOpener.cs" />
     <Compile Include="Model\RecentFolder.cs" />
     <Compile Include="Model\RecentFolderList.cs" />
@@ -101,6 +112,17 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\WindowUtils.cs" />
+    <Compile Include="Windows\SaveProgressWindow.xaml.cs">
+      <DependentUpon>SaveProgressWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\BoolNumericOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DefaultManualControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\EditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -113,6 +135,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Controls\BoolOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NumericUpDown.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,6 +152,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SaveProgressWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

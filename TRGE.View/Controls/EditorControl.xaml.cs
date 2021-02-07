@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -34,7 +35,7 @@ namespace TRGE.View.Controls
 
         public static readonly DependencyProperty DataFolderProperty = DependencyProperty.Register
         (
-            "DataFolder", typeof(string), typeof(EditorControl)
+            "DataFolder", typeof(string), typeof(EditorControl), new PropertyMetadata(string.Empty)
         );
 
         public string Edition
@@ -50,11 +51,30 @@ namespace TRGE.View.Controls
         }
         #endregion
 
+        private readonly EditorOptions _options;
+        private bool _dirty;
+
+        public event EventHandler<EditorEventArgs> EditorStateChanged;
+
         public TREditor Editor { get; private set; }
 
         public EditorControl()
         {
             InitializeComponent();
+            _editorGrid.DataContext = _options = new EditorOptions();
+            _options.PropertyChanged += Editor_PropertyChanged;
+            _dirty = false;
+        }
+
+        private void Editor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            _dirty = true;
+            FireEditorStateChanged();
+        }
+
+        private void FireEditorStateChanged()
+        {
+            EditorStateChanged?.Invoke(this, new EditorEventArgs { IsDirty = _dirty });
         }
 
         public void Load(DataFolderEventArgs e)
@@ -62,6 +82,28 @@ namespace TRGE.View.Controls
             Editor = e.Editor;
             Edition = Editor.Edition.Title;
             DataFolder = e.DataFolder;
+
+            _options.Load(Editor.ScriptEditor as TR23ScriptEditor);
+
+            _dirty = false;
+            FireEditorStateChanged();
+        }
+
+        public void Save()
+        {
+            _options.Save(Editor.ScriptEditor as TR23ScriptEditor);
+
+            SaveProgressWindow spw = new SaveProgressWindow(Editor);
+            spw.ShowDialog();
+            if (spw.SaveException != null)
+            {
+                WindowUtils.ShowError(spw.SaveException.Message);
+            }
+            else
+            {
+                _dirty = false;
+                FireEditorStateChanged();
+            }
         }
 
         public void Unload()
