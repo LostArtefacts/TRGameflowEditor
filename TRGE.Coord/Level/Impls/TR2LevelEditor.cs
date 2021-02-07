@@ -21,15 +21,25 @@ namespace TRGE.Coord
             CheckHSHBackup();
         }
 
-        internal override void ScriptedLevelModified(TRScriptedLevelEventArgs e)
+        internal override bool ShouldHandleModification(TRScriptedLevelEventArgs e)
         {
             switch (e.Modification)
             {
                 case TRScriptedLevelModification.WeaponlessStateChanged:
-                    if (!e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE")))
-                    {
-                        HandleWeaponlessStateChanged(e);
-                    }
+                    return !e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE"));
+                case TRScriptedLevelModification.SunsetChanged:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        internal override void ProcessModification(TRScriptedLevelEventArgs e)
+        {
+            switch (e.Modification)
+            {
+                case TRScriptedLevelModification.WeaponlessStateChanged:
+                    HandleWeaponlessStateChanged(e);
                     break;
                 case TRScriptedLevelModification.SunsetChanged:
                     HandleSunsetStateChanged(e);
@@ -245,7 +255,7 @@ namespace TRGE.Coord
             }
         }
 
-        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor)
+        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveEventArgs e)
         {
 
         }

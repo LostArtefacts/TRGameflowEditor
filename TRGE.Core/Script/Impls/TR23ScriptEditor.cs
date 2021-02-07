@@ -137,6 +137,10 @@ namespace TRGE.Core
             {
                 levelMan.RestoreUnarmedLevels(backupLevels);
             }
+            else
+            {
+                levelMan.SetUnarmedLevelData(UnarmedLevelData); //TODO: Fix this - it's in place to ensure the event is triggered for any listeners
+            }
 
             //should occur after unarmed organisation and does not use any other script
             //as basis, as order of levels is essential

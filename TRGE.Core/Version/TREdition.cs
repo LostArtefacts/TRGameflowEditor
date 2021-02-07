@@ -10,7 +10,8 @@ namespace TRGE.Core
             Version = TRVersion.Unknown,
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
-            SecretBonusesSupported = false
+            SecretBonusesSupported = false,
+            SunsetsSupported = false
         };
 
         internal static readonly TREdition GenericPSX = new TREdition
@@ -19,7 +20,8 @@ namespace TRGE.Core
             Version = TRVersion.Unknown,
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
-            SecretBonusesSupported = false
+            SecretBonusesSupported = false,
+            SunsetsSupported = false
         };
 
         internal static readonly TREdition TR2PC = new TREdition
@@ -29,7 +31,8 @@ namespace TRGE.Core
             ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
-            SecretBonusesSupported = true
+            SecretBonusesSupported = true,
+            SunsetsSupported = true
         };
 
         internal static readonly TREdition TR2PSX = new TREdition
@@ -39,7 +42,8 @@ namespace TRGE.Core
             ScriptName = "TOMBPSX.dat",
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
-            SecretBonusesSupported = true
+            SecretBonusesSupported = true,
+            SunsetsSupported = true
         };
 
         internal static readonly TREdition TR2PSXBeta = new TREdition
@@ -49,7 +53,8 @@ namespace TRGE.Core
             ScriptName = "TOMBPSX.dat",
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
-            SecretBonusesSupported = true
+            SecretBonusesSupported = true,
+            SunsetsSupported = true
         };
 
         internal static readonly TREdition TR2G = new TREdition
@@ -59,7 +64,8 @@ namespace TRGE.Core
             ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
-            SecretBonusesSupported = true
+            SecretBonusesSupported = true,
+            SunsetsSupported = true
         };
 
         internal static readonly TREdition TR3PC = new TREdition
@@ -69,7 +75,8 @@ namespace TRGE.Core
             ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
-            SecretBonusesSupported = false
+            SecretBonusesSupported = false,
+            SunsetsSupported = false
         };
 
         internal static readonly TREdition TR3PSX = new TREdition
@@ -79,7 +86,8 @@ namespace TRGE.Core
             ScriptName = "TOMBPSX.dat",
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 1,
-            SecretBonusesSupported = false
+            SecretBonusesSupported = false,
+            SunsetsSupported = false
         };
 
         internal static readonly TREdition TR3G = new TREdition
@@ -89,7 +97,8 @@ namespace TRGE.Core
             ScriptName = "TOMBPC.dat",
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
-            SecretBonusesSupported = false
+            SecretBonusesSupported = false,
+            SunsetsSupported = false
         };
 
         internal static readonly IReadOnlyList<TREdition> All = new List<TREdition>
@@ -110,6 +119,10 @@ namespace TRGE.Core
         /// Whether or not secret bonus selection/organisation is supported
         /// </summary>
         public bool SecretBonusesSupported { get; private set; }
+        /// <summary>
+        /// Whether or not sunsets can be set
+        /// </summary>
+        public bool SunsetsSupported { get; private set; }
 
         private TREdition() { }
 

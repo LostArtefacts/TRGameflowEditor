@@ -23,6 +23,8 @@ namespace TRGE.Core
 
         internal TREdition Edition { get; private set; }
 
+        internal bool CanSetSunsets => Edition.SunsetsSupported;
+
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
 
         internal AbstractTRLevelManager(TREdition edition)

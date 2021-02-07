@@ -45,6 +45,7 @@ namespace TRGE.Core
         protected Dictionary<string, object> _config;
 
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
+        internal event EventHandler<TRSaveEventArgs> SaveStateChanged;
 
         internal AbstractTRScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
         {
@@ -73,6 +74,16 @@ namespace TRGE.Core
         private void LevelManagerLevelModified(object sender, TRScriptedLevelEventArgs e)
         {
             LevelModified?.Invoke(this, e);
+        }
+
+        protected void FireSaveStateChanged(TRSaveEventArgs e, int progress = 0, string description = null)
+        {
+            e.ProgressValue += progress;
+            if (description != null)
+            {
+                e.ProgressDescription = description;
+            }
+            SaveStateChanged?.Invoke(this, e);
         }
 
         private void LoadConfig()
@@ -150,8 +161,10 @@ namespace TRGE.Core
             ApplyConfig();
         }
 
-        internal void Save()
+        internal void Save(TRSaveEventArgs e)
         {
+            FireSaveStateChanged(e, 0, "Saving script data");
+
             _config = new Dictionary<string, object>
             {
                 ["Version"] = Assembly.GetExecutingAssembly().GetName().Version,
@@ -219,6 +232,10 @@ namespace TRGE.Core
             {
                 LevelManager.RestoreSunsetData(backupScript.Levels);
             }
+            else
+            {
+                LevelManager.SetSunsetData(LevelSunsetData); //TODO: Fix this - it's in place to ensure the event is triggered for any listeners
+            }
 
             SaveImpl();
             LevelManager.Save();
@@ -229,6 +246,8 @@ namespace TRGE.Core
             _config["CheckSumOnSave"] = new FileInfo(outputPath).Checksum();
 
             ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
+
+            FireSaveStateChanged(e, 1);
         }
 
         public void Restore()
@@ -357,6 +376,8 @@ namespace TRGE.Core
             get => LevelManager.GetSecretSupport();
             set => LevelManager.SetSecretSupport(value);
         }
+
+        public bool CanSetSunsets => LevelManager.CanSetSunsets;
 
         public Organisation LevelSunsetOrganisation
         {

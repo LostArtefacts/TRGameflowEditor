@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TRGE.Core;
 
 namespace TRGE.Coord
@@ -15,10 +16,23 @@ namespace TRGE.Coord
             {
                 _scriptEditor = value;
                 _scriptEditor.LevelModified += ScriptEditorLevelModified;
+                _scriptEditor.SaveStateChanged += Editor_SaveStateChanged;
             }
         }
 
-        public AbstractTRLevelEditor LevelEditor { get; internal set; }
+        private AbstractTRLevelEditor _levelEditor;
+        public AbstractTRLevelEditor LevelEditor
+        {
+            get => _levelEditor;
+            internal set
+            {
+                if ((_levelEditor = value) != null)
+                {
+                    _levelEditor.Initialise(ScriptEditor);
+                    _levelEditor.SaveStateChanged += Editor_SaveStateChanged;
+                }
+            }
+        }
 
         public bool AllowSuccessiveEdits 
         {
@@ -41,6 +55,8 @@ namespace TRGE.Coord
         private readonly string _outputDirectory;
         private readonly string _targetDirectory;
 
+        public event EventHandler<TRSaveEventArgs> SaveProgressChanged;
+
         internal TREditor(string outputDirectory, string targetDirectory)
         {
             _outputDirectory = outputDirectory;
@@ -55,12 +71,29 @@ namespace TRGE.Coord
             }
         }
 
+        private void Editor_SaveStateChanged(object sender, TRSaveEventArgs e)
+        {
+            FireSaveProgressChanged(e);
+        }
+
+        private void FireSaveProgressChanged(TRSaveEventArgs e)
+        {
+            SaveProgressChanged?.Invoke(this, e);
+        }
+
         public void Save()
         {
-            ScriptEditor.Save();
+            TRSaveEventArgs e = new TRSaveEventArgs
+            {
+                ProgressTarget = ScriptEditor.LevelManager.LevelCount + 1,
+                ProgressValue = 0
+            };
+
+            ScriptEditor.Save(e);
+
             if (LevelEditor != null)
             {
-                LevelEditor.Save(ScriptEditor);
+                LevelEditor.Save(ScriptEditor, e);
             }
 
             DirectoryInfo outputDir = new DirectoryInfo(_outputDirectory);
@@ -68,6 +101,10 @@ namespace TRGE.Coord
             outputDir.Copy(targetDir, true, TargetFileExtensions);
 
             ScriptEditor.Initialise();
+            if (LevelEditor != null)
+            {
+                LevelEditor.Initialise(ScriptEditor);
+            }
         }
 
         public void Restore()
