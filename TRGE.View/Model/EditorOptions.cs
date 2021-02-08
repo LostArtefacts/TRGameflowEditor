@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using TRGE.Core;
 
@@ -22,6 +24,8 @@ namespace TRGE.View.Model
         private bool _useDefaultSunsets, _useManualSunsets;
 
         private bool _useDefaultAudio, _useManualAudio;
+
+        private List<Tuple<string, string>> _levelSequencing;
 
         public bool TitleEnabled
         {
@@ -293,6 +297,16 @@ namespace TRGE.View.Model
             }
         }
 
+        public IReadOnlyList<Tuple<string, string>> LevelSequencing
+        {
+            get => _levelSequencing;
+            set
+            {
+                _levelSequencing = new List<Tuple<string, string>>(value);
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -301,8 +315,11 @@ namespace TRGE.View.Model
         }
         #endregion
 
+        private TR23ScriptEditor _editor;
+
         public void Load(TR23ScriptEditor editor)
         {
+            _editor = editor;
             TitleEnabled = editor.TitleScreenEnabled;
             LevelSelectEnabled = editor.LevelSelectEnabled;
             SaveLoadEnabled = editor.SaveLoadEnabled;
@@ -321,6 +338,7 @@ namespace TRGE.View.Model
 
             UseManualLevelSequence = editor.LevelSequencingOrganisation == Organisation.Manual;
             UseDefaultLevelSequence = !UseManualLevelSequence;
+            LevelSequencing = editor.LevelSequencing;
 
             UseManualUnarmed = editor.UnarmedLevelOrganisation == Organisation.Manual;
             UseDefaultUnarmed = !UseManualUnarmed;
@@ -340,40 +358,44 @@ namespace TRGE.View.Model
             UseDefaultAudio = !UseManualAudio;
         }
 
-        public void Save(TR23ScriptEditor editor)
+        public void Save()
         {
-            editor.TitleScreenEnabled = TitleEnabled;
-            editor.LevelSelectEnabled = LevelSelectEnabled;
-            editor.SaveLoadEnabled = SaveLoadEnabled;
-            editor.OptionRingEnabled = OptionRingEnabled;
+            _editor.TitleScreenEnabled = TitleEnabled;
+            _editor.LevelSelectEnabled = LevelSelectEnabled;
+            _editor.SaveLoadEnabled = SaveLoadEnabled;
+            _editor.OptionRingEnabled = OptionRingEnabled;
 
-            editor.LevelsHaveFMV = editor.FrontEndHasFMV = FMVsEnabled;
-            editor.LevelsHaveCutScenes = CutscenesEnabled;
-            editor.LevelsHaveStartAnimation = StartAnimationsEnabled;
-            editor.CheatsEnabled = CheatsEnabled;
-            editor.DozyEnabled = DozyEnabled;
+            _editor.LevelsHaveFMV = _editor.FrontEndHasFMV = FMVsEnabled;
+            _editor.LevelsHaveCutScenes = CutscenesEnabled;
+            _editor.LevelsHaveStartAnimation = StartAnimationsEnabled;
+            _editor.CheatsEnabled = CheatsEnabled;
+            _editor.DozyEnabled = DozyEnabled;
 
-            editor.DemosEnabled = DemosEnabled;
-            editor.DemoTime = (uint)DemoDelay;
-            editor.GymEnabled = TrainingEnabled;
+            _editor.DemosEnabled = DemosEnabled;
+            _editor.DemoTime = (uint)DemoDelay;
+            _editor.GymEnabled = TrainingEnabled;
 
-            editor.LevelSequencingOrganisation = UseManualLevelSequence ? Organisation.Manual : Organisation.Default;
+            _editor.LevelSequencingOrganisation = UseManualLevelSequence ? Organisation.Manual : Organisation.Default;
+            if (UseManualLevelSequence)
+            {
+                _editor.LevelSequencing = new List<Tuple<string, string>>(LevelSequencing);
+            }
 
-            editor.UnarmedLevelOrganisation = UseManualUnarmed ? Organisation.Manual : Organisation.Default;
+            _editor.UnarmedLevelOrganisation = UseManualUnarmed ? Organisation.Manual : Organisation.Default;
 
-            editor.AmmolessLevelOrganisation = UseManualAmmoless ? Organisation.Manual : Organisation.Default;
+            _editor.AmmolessLevelOrganisation = UseManualAmmoless ? Organisation.Manual : Organisation.Default;
 
             if (SecretRewardsViable)
             {
-                editor.SecretBonusOrganisation = UseManualBonuses ? Organisation.Manual : Organisation.Default;
+                _editor.SecretBonusOrganisation = UseManualBonuses ? Organisation.Manual : Organisation.Default;
             }
 
             if (SunsetsViable)
             {
-                editor.LevelSunsetOrganisation = UseManualSunsets ? Organisation.Manual : Organisation.Default;
+                _editor.LevelSunsetOrganisation = UseManualSunsets ? Organisation.Manual : Organisation.Default;
             }
 
-            editor.GameTrackOrganisation = UseManualAudio ? Organisation.Manual : Organisation.Default;
+            _editor.GameTrackOrganisation = UseManualAudio ? Organisation.Manual : Organisation.Default;
         }
     }
 }

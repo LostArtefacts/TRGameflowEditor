@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TRGE.Coord;
 using TRGE.Core;
 using TRGE.View.Model;
@@ -91,15 +80,8 @@ namespace TRGE.View.Controls
 
         public void Save()
         {
-            _options.Save(Editor.ScriptEditor as TR23ScriptEditor);
-
-            SaveProgressWindow spw = new SaveProgressWindow(Editor);
-            spw.ShowDialog();
-            if (spw.SaveException != null)
-            {
-                WindowUtils.ShowError(spw.SaveException.Message);
-            }
-            else
+            SaveProgressWindow spw = new SaveProgressWindow(Editor, _options);
+            if (spw.ShowDialog() ?? false)
             {
                 _dirty = false;
                 FireEditorStateChanged();
@@ -136,7 +118,11 @@ namespace TRGE.View.Controls
 
         private void LevelSequencing_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            new LevelSequenceWindow().ShowDialog();
+            LevelSequenceWindow lsw = new LevelSequenceWindow(_options.LevelSequencing);
+            if (lsw.ShowDialog() ?? false)
+            {
+                _options.LevelSequencing = lsw.Sequencing;
+            }
         }
 
         private void UnarmedLevels_ManualConfigure(object sender, RoutedEventArgs e)

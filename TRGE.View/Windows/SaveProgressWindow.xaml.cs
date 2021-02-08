@@ -1,9 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using TRGE.Coord;
 using TRGE.Core;
+using TRGE.View.Model;
 using TRGE.View.Utils;
 
 namespace TRGE.View.Windows
@@ -49,16 +49,15 @@ namespace TRGE.View.Windows
         #endregion
 
         private readonly TREditor _editor;
+        private readonly EditorOptions _options;
 
-        public Exception SaveException { get; private set; }
-
-        public SaveProgressWindow(TREditor editor)
+        public SaveProgressWindow(TREditor editor, EditorOptions options)
         {
             InitializeComponent();
             Owner = WindowUtils.GetActiveWindow();
             DataContext = this;
             _editor = editor;
-            _editor.SaveProgressChanged += Editor_SaveProgressChanged;
+            _options = options;
         }
 
         private void Editor_SaveProgressChanged(object sender, TRSaveEventArgs e)
@@ -81,21 +80,34 @@ namespace TRGE.View.Windows
 
         private void Save()
         {
+            _editor.SaveProgressChanged += Editor_SaveProgressChanged;
+            Exception error = null;
+
             try
             {
+                _options.Save();
                 _editor.Save();
             }
             catch (Exception e)
             {
-                SaveException = e;
+                error = e;
             }
             finally
             {
                 _editor.SaveProgressChanged -= Editor_SaveProgressChanged;
+
                 Dispatcher.Invoke(delegate
                 {
                     WindowUtils.EnableCloseButton(this, true);
-                    Close();
+                    if (error != null)
+                    {
+                        WindowUtils.ShowError(error.Message);
+                        DialogResult = false;
+                    }
+                    else
+                    {
+                        DialogResult = true;
+                    }
                 });
             }
         }
