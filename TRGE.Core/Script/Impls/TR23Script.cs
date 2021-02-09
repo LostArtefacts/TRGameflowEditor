@@ -484,7 +484,6 @@ namespace TRGE.Core
                     offsets[i] = br.ReadUInt16();
                 }
 
-
                 for (int i = 0; i < size; i++)
                 {
 
@@ -492,7 +491,7 @@ namespace TRGE.Core
                     StringBuilder sb = new StringBuilder();
                     for (int k = 0; k < target; k++)
                     {
-                        sb.Append(((char)((uint)br.ReadByte() ^ Xor)).ToString());
+                        sb.Append((char)(br.ReadByte() ^ Xor));
                     }
                     stringData.Add(sb.ToString());
                     br.ReadByte(); //xor
@@ -652,7 +651,7 @@ namespace TRGE.Core
                 
                 foreach (int j in chars)
                 {
-                    encodedStringData.Add((byte)int.Parse((j ^ Xor).ToString()));
+                    encodedStringData.Add((byte)(j ^ Xor));
                 }
                 encodedStringData.Add(Xor);
             }
