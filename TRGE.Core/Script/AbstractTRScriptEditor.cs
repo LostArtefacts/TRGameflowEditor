@@ -336,6 +336,8 @@ namespace TRGE.Core
             set => LevelManager.SetTrackData(value);
         }
 
+        public IReadOnlyList<Tuple<ushort, string>> AllGameTracks => LevelManager.GetAllGameTracks();
+
         internal TRAudioTrack TitleTrack => LevelManager.AudioProvider.GetTrack(Script.TitleSoundID);
         internal TRAudioTrack SecretTrack => LevelManager.AudioProvider.GetTrack(Script.SecretSoundID);
 

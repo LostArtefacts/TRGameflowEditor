@@ -184,6 +184,16 @@ namespace TRGE.Core
             return levels;
         }
 
+        internal List<Tuple<ushort, string>> GetAllGameTracks()
+        {
+            List<Tuple<ushort, string>> tracks = new List<Tuple<ushort, string>>();
+            foreach (TRAudioTrack track in AudioProvider.Tracks)
+            {
+                tracks.Add(new Tuple<ushort, string>(track.ID, track.Name));
+            }
+            return tracks;
+        }
+
         internal List<MutableTuple<string, string, ushort>> GetTrackData(List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, ushort>> ret = new List<MutableTuple<string, string, ushort>>();
