@@ -54,9 +54,11 @@
     <Compile Include="Audio\TRAudioTrack.cs" />
     <Compile Include="Audio\TRAudioType.cs" />
     <Compile Include="Helpers\Extensions\IOExtensions.cs" />
-    <Compile Include="Helpers\TRDirectoryIOArgs.cs" />
-    <Compile Include="Helpers\TRSaveEventArgs.cs" />
-    <Compile Include="Helpers\TRScriptIOArgs.cs" />
+    <Compile Include="IO\TRDirectoryIOArgs.cs" />
+    <Compile Include="IO\TRSaveCategory.cs" />
+    <Compile Include="IO\TRSaveEventArgs.cs" />
+    <Compile Include="IO\TRSaveMonitor.cs" />
+    <Compile Include="IO\TRScriptIOArgs.cs" />
     <Compile Include="ITRConfigProvider.cs" />
     <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
     <Compile Include="Level\Events\TRScriptedLevelModification.cs" />
@@ -69,8 +71,8 @@
     <Compile Include="Helpers\MutableTuple.cs" />
     <Compile Include="Helpers\Organisation.cs" />
     <Compile Include="Helpers\RandomGenerator.cs" />
-    <Compile Include="Helpers\TRDownloader.cs" />
-    <Compile Include="Helpers\TRDownloadEventArgs.cs" />
+    <Compile Include="IO\TRDownloader.cs" />
+    <Compile Include="IO\TRDownloadEventArgs.cs" />
     <Compile Include="Item\BaseTRItemBroker.cs" />
     <Compile Include="Item\AbstractTRItemProvider.cs" />
     <Compile Include="Item\Impls\AbstractTR23ItemProvider.cs" />

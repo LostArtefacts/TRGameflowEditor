@@ -255,7 +255,7 @@ namespace TRGE.Coord
             }
         }
 
-        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveEventArgs e)
+        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
         {
 
         }

@@ -16,7 +16,6 @@ namespace TRGE.Coord
             {
                 _scriptEditor = value;
                 _scriptEditor.LevelModified += ScriptEditorLevelModified;
-                _scriptEditor.SaveStateChanged += Editor_SaveStateChanged;
             }
         }
 
@@ -29,7 +28,6 @@ namespace TRGE.Coord
                 if ((_levelEditor = value) != null)
                 {
                     _levelEditor.Initialise(ScriptEditor);
-                    _levelEditor.SaveStateChanged += Editor_SaveStateChanged;
                 }
             }
         }
@@ -83,18 +81,20 @@ namespace TRGE.Coord
 
         public void Save()
         {
-            TRSaveEventArgs e = new TRSaveEventArgs
+            TRSaveMonitor monitor = new TRSaveMonitor(new TRSaveEventArgs
             {
-                ProgressTarget = ScriptEditor.LevelManager.LevelCount + 1,
-                ProgressValue = 0
-            };
+                ProgressTarget = ScriptEditor.LevelManager.LevelCount + 1
+            });
+            monitor.SaveStateChanged += Editor_SaveStateChanged;
 
-            ScriptEditor.Save(e);
+            ScriptEditor.Save(monitor);
 
             if (LevelEditor != null)
             {
-                LevelEditor.Save(ScriptEditor, e);
+                LevelEditor.Save(ScriptEditor, monitor);
             }
+
+            monitor.FireSaveStateChanged(0, TRSaveCategory.Commit);
 
             DirectoryInfo outputDir = new DirectoryInfo(_outputDirectory);
             DirectoryInfo targetDir = new DirectoryInfo(_targetDirectory);

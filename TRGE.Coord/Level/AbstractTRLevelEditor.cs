@@ -13,8 +13,6 @@ namespace TRGE.Coord
         protected readonly Dictionary<string, ISet<TRScriptedLevelEventArgs>> _levelModifications;
         protected Dictionary<string, object> _config;
 
-        internal event EventHandler<TRSaveEventArgs> SaveStateChanged;
-
         internal bool AllowSuccessiveEdits { get; set; }
 
         internal AbstractTRLevelEditor(TRDirectoryIOArgs io)
@@ -43,7 +41,7 @@ namespace TRGE.Coord
             }
         }
 
-        internal void Save(AbstractTRScriptEditor scriptEditor, TRSaveEventArgs e)
+        internal void Save(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
         {
             _config = new Dictionary<string, object>
             {
@@ -51,7 +49,7 @@ namespace TRGE.Coord
                 ["Successive"] = AllowSuccessiveEdits
             };
 
-            FireSaveStateChanged(e, 0, "Saving level file modifications");
+            monitor.FireSaveStateChanged(0, TRSaveCategory.LevelFile);
             foreach (string levelID in _levelModifications.Keys)
             {
                 foreach (TRScriptedLevelEventArgs mod in _levelModifications[levelID])
@@ -59,10 +57,10 @@ namespace TRGE.Coord
                     ProcessModification(mod);
                 }
 
-                FireSaveStateChanged(e, 1);
+                monitor.FireSaveStateChanged(1);
             }
 
-            SaveImpl(scriptEditor, e);
+            SaveImpl(scriptEditor, monitor);
 
             _io.ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }
@@ -75,21 +73,11 @@ namespace TRGE.Coord
             }
         }
 
-        protected void FireSaveStateChanged(TRSaveEventArgs e, int progress = 0, string description = null)
-        {
-            e.ProgressValue += progress;
-            if (description != null)
-            {
-                e.ProgressDescription = description;
-            }
-            SaveStateChanged?.Invoke(this, e);
-        }
-
         protected virtual void ApplyConfig() { }
         internal abstract bool ShouldHandleModification(TRScriptedLevelEventArgs e);
         internal abstract void ProcessModification(TRScriptedLevelEventArgs e);
 
-        internal abstract void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveEventArgs e);
+        internal abstract void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor);
         internal abstract void Restore();
         
         /// <summary>

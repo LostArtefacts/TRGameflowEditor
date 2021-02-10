@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -10,7 +11,7 @@ namespace TRGE.Core
         /// <summary>
         /// Copies the content of this directory to the target directory.
         /// </summary>
-        internal static void Copy(this DirectoryInfo directory, DirectoryInfo targetDirectory, bool overwrite = true, string[] extensions = null)
+        internal static void Copy(this DirectoryInfo directory, DirectoryInfo targetDirectory, bool overwrite = true, string[] extensions = null, Action<FileInfo> callback = null)
         {
             FileInfo[] farr;
             if (extensions == null)
@@ -35,12 +36,13 @@ namespace TRGE.Core
                 {
                     File.Copy(fi.FullName, targetFile.FullName, true);
                 }
+                callback?.Invoke(fi);
             }
         }
 
-        internal static void Copy(this DirectoryInfo directory, string targetDirectory, bool overwrite = true, string[] extensions = null)
+        internal static void Copy(this DirectoryInfo directory, string targetDirectory, bool overwrite = true, string[] extensions = null, Action<FileInfo> callback = null)
         {
-            Copy(directory, new DirectoryInfo(targetDirectory), overwrite, extensions);
+            Copy(directory, new DirectoryInfo(targetDirectory), overwrite, extensions, callback);
         }
 
         /// <summary>

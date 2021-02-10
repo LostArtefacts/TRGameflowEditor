@@ -45,7 +45,6 @@ namespace TRGE.Core
         protected Dictionary<string, object> _config;
 
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
-        internal event EventHandler<TRSaveEventArgs> SaveStateChanged;
 
         internal AbstractTRScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
         {
@@ -74,16 +73,6 @@ namespace TRGE.Core
         private void LevelManagerLevelModified(object sender, TRScriptedLevelEventArgs e)
         {
             LevelModified?.Invoke(this, e);
-        }
-
-        protected void FireSaveStateChanged(TRSaveEventArgs e, int progress = 0, string description = null)
-        {
-            e.ProgressValue += progress;
-            if (description != null)
-            {
-                e.ProgressDescription = description;
-            }
-            SaveStateChanged?.Invoke(this, e);
         }
 
         private void LoadConfig()
@@ -161,9 +150,9 @@ namespace TRGE.Core
             ApplyConfig();
         }
 
-        internal void Save(TRSaveEventArgs e)
+        internal void Save(TRSaveMonitor monitor)
         {
-            FireSaveStateChanged(e, 0, "Saving script data");
+            monitor.FireSaveStateChanged(0, TRSaveCategory.Scripting);
 
             _config = new Dictionary<string, object>
             {
@@ -247,7 +236,7 @@ namespace TRGE.Core
 
             ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
 
-            FireSaveStateChanged(e, 1);
+            monitor.FireSaveStateChanged(1);
         }
 
         public void Restore()
