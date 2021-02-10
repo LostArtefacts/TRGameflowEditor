@@ -121,7 +121,7 @@ namespace TRGE.Core.Test
 
             sm.GameTrackOrganisation = Organisation.Random;
             sm.GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
-            sm.Save(new TRSaveEventArgs());
+            sm.Save(new TRSaveMonitor(new TRSaveEventArgs()));
 
             CollectionAssert.AreNotEquivalent(sm.GameTrackData, randoTrackData);
         }

@@ -58,17 +58,14 @@ namespace TRGE.Coord
             TR2LevelReader reader = new TR2LevelReader();
             TR2Level level = reader.ReadLevel(levelFile);
 
-            bool changesMade = SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
+            SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
             if ((e.ScriptedLevel as TR23ScriptedLevel).RequiresPistolTextureInjection)
             {
-                changesMade |= MaybeInjectPistolTexture(level);
+                MaybeInjectPistolTexture(level);
             }
 
-            if (changesMade)
-            {
-                TR2LevelWriter writer = new TR2LevelWriter();
-                writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
-            }
+            TR2LevelWriter writer = new TR2LevelWriter();
+            writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
         }
 
         internal Location GetLocationForLevel(string levelFileName)
