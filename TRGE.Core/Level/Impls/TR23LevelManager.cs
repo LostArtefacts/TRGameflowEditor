@@ -83,16 +83,17 @@ namespace TRGE.Core
             return Convert.ToUInt32(GetAmmolessLevels().Count);
         }
 
-        internal virtual List<MutableTuple<string, string, bool>> GetAmmolessLevelData()
+        internal virtual List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> originalLevels)
         {
-            return GetAmmolessLevelData(Levels);
+            return GetAmmolessLevelData(Levels, originalLevels);
         }
 
-        private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> levels)
+        private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
-            foreach (TR23ScriptedLevel level in levels)
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
+                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesAmmo));
             }
             return data;
@@ -148,16 +149,17 @@ namespace TRGE.Core
             return Convert.ToUInt32(GetUnarmedLevels().Count);
         }
 
-        internal virtual List<MutableTuple<string, string, bool>> GetUnarmedLevelData()
+        internal virtual List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> originalLevels)
         {
-            return GetUnarmedLevelData(Levels);
+            return GetUnarmedLevelData(Levels, originalLevels);
         }
 
-        private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> levels)
+        private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
-            foreach (TR23ScriptedLevel level in levels)
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
+                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesWeapons));
             }
             return data;
@@ -218,16 +220,17 @@ namespace TRGE.Core
             }
         }
 
-        internal List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData()
+        internal List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> originalLevels)
         {
-            return GetLevelBonusData(Levels);
+            return GetLevelBonusData(Levels, originalLevels);
         }
 
-        private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> levels)
+        private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
-            foreach (TR23ScriptedLevel level in levels)
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
+                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
                 if (level.HasSecrets)
                 {
                     List<MutableTuple<ushort, TRItemCategory, string, int>> items = new List<MutableTuple<ushort, TRItemCategory, string, int>>();

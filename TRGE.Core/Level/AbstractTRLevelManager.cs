@@ -184,7 +184,7 @@ namespace TRGE.Core
             return levels;
         }
 
-        internal List<MutableTuple<string, string, ushort>> GetTrackData()
+        internal List<MutableTuple<string, string, ushort>> GetTrackData(List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, ushort>> ret = new List<MutableTuple<string, string, ushort>>();
 
@@ -199,8 +199,9 @@ namespace TRGE.Core
                 ret.Add(new MutableTuple<string, string, ushort>("SECRET", "Secret Found", SecretSoundID));
             }
 
-            foreach (AbstractTRScriptedLevel level in Levels)
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
+                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
                 track = AudioProvider.GetTrack(level.TrackID);
                 if (track == null)
                 {
@@ -281,11 +282,12 @@ namespace TRGE.Core
             }
         }
 
-        internal List<MutableTuple<string, string, bool>> GetSecretSupport()
+        internal List<MutableTuple<string, string, bool>> GetSecretSupport(List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, bool>> support = new List<MutableTuple<string, string, bool>>();
-            foreach (AbstractTRScriptedLevel level in Levels)
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
+                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
                 support.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSecrets));
             }
             return support;
@@ -318,11 +320,12 @@ namespace TRGE.Core
             }
         }
 
-        internal List<MutableTuple<string, string, bool>> GetSunsetData()
+        internal List<MutableTuple<string, string, bool>> GetSunsetData(List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
-            foreach (AbstractTRScriptedLevel level in Levels)
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
+                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSunset));
             }
             return data;

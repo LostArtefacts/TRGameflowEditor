@@ -167,7 +167,7 @@ namespace TRGE.Core
         /// </summary>
         public List<MutableTuple<string, string, bool>> UnarmedLevelData
         {
-            get => (LevelManager as TR23LevelManager).GetUnarmedLevelData();
+            get => (LevelManager as TR23LevelManager).GetUnarmedLevelData(LoadBackupScript().Levels);
             set => (LevelManager as TR23LevelManager).SetUnarmedLevelData(value);
         }
 
@@ -207,7 +207,7 @@ namespace TRGE.Core
         /// </summary>
         public List<MutableTuple<string, string, bool>> AmmolessLevelData
         {
-            get => (LevelManager as TR23LevelManager).GetAmmolessLevelData();
+            get => (LevelManager as TR23LevelManager).GetAmmolessLevelData(LoadBackupScript().Levels);
             set => (LevelManager as TR23LevelManager).SetAmmolessLevelData(value);
         }
 
@@ -258,7 +258,7 @@ namespace TRGE.Core
             {
                 if (CanOrganiseBonuses)
                 {
-                    return (LevelManager as TR23LevelManager).GetLevelBonusData();
+                    return (LevelManager as TR23LevelManager).GetLevelBonusData(LoadBackupScript().Levels);
                 }
                 return null;
             }

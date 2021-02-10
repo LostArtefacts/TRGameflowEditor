@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace TRGE.Core
 {
@@ -330,7 +332,7 @@ namespace TRGE.Core
 
         public virtual List<MutableTuple<string, string, ushort>> GameTrackData
         {
-            get => LevelManager.GetTrackData();
+            get => LevelManager.GetTrackData(LoadBackupScript().Levels);
             set => LevelManager.SetTrackData(value);
         }
 
@@ -362,7 +364,7 @@ namespace TRGE.Core
 
         public List<MutableTuple<string, string, bool>> LevelSecretSupport
         {
-            get => LevelManager.GetSecretSupport();
+            get => LevelManager.GetSecretSupport(LoadBackupScript().Levels);
             set => LevelManager.SetSecretSupport(value);
         }
 
@@ -388,7 +390,7 @@ namespace TRGE.Core
 
         public List<MutableTuple<string, string, bool>> LevelSunsetData
         {
-            get => LevelManager.GetSunsetData();
+            get => LevelManager.GetSunsetData(LoadBackupScript().Levels);
             set => LevelManager.SetSunsetData(value);
         }
     }
