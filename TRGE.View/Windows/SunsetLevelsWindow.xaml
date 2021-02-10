@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Select the levels that have a sunset."
-                   Margin="10,10,10,0" Grid.ColumnSpan="2"/>
+                   Margin="10,10,10,0"/>
 
         <ListView x:Name="_listView"
                   Grid.Row="1"

@@ -6,8 +6,7 @@
              xmlns:c="clr-namespace:TRGE.View.Controls"
              mc:Ignorable="d" d:DesignHeight="750" d:DesignWidth="1050">
     
-    <Grid Background="White"
-          x:Name="_editorGrid">
+    <Grid x:Name="_editorGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>

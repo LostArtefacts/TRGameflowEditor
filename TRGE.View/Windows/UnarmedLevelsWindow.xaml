@@ -9,9 +9,8 @@
         ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterOwner"
         Loaded="Window_Loaded"
-        Foreground="#fff"
         Title="TRGE : Unarmed Levels" Height="480" Width="430">
-    <Grid Background="#1E1E1E">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="26"/>
             <RowDefinition Height="*"/>
@@ -21,7 +20,7 @@
         <TextBlock Text="Select the levels where Lara will begin with no weapons."
                    Margin="10,10,10,0"/>
 
-        <ListView BorderBrush="#000" Background="#333" x:Name="_listView"
+        <ListView x:Name="_listView"
                   Grid.Row="1"
                   Margin="10,5,10,10"
                   SelectionMode="Single"
@@ -31,7 +30,6 @@
                 <DataTemplate>
                     <CheckBox IsChecked="{Binding Item3}"
                               Content="{Binding Item2}"
-                              Foreground="#fff"
                               HorizontalAlignment="Stretch"
                               HorizontalContentAlignment="Stretch"/>
                 </DataTemplate>
@@ -39,8 +37,8 @@
         </ListView>
 
         <Border BorderThickness="0 1 0 0"
-                BorderBrush="#000"
-                Background="#252525"
+                BorderBrush="#ccc"
+                Background="#eee"
                 Grid.Row="2">
             <StackPanel Width="160" 
                         Orientation="Horizontal"

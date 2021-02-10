@@ -77,6 +77,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\AudioControl.xaml.cs">
+      <DependentUpon>AudioControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BoolNumericOptionControl.xaml.cs">
       <DependentUpon>BoolNumericOptionControl.xaml</DependentUpon>
     </Compile>
@@ -134,6 +137,10 @@
     <Compile Include="Windows\UnarmedLevelsWindow.xaml.cs">
       <DependentUpon>UnarmedLevelsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\AudioControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\BoolNumericOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -163,7 +163,11 @@ namespace TRGE.View.Controls
 
         private void Audio_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            new AudioWindow().ShowDialog();
+            AudioWindow aw = new AudioWindow(_options.AudioData, _options.AllAudioTracks);
+            if (aw.ShowDialog() ?? false)
+            {
+                _options.AudioData = aw.AudioData;
+            }
         }
     }
 }

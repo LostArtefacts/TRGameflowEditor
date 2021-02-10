@@ -33,6 +33,8 @@ namespace TRGE.View.Model
         private List<MutableTuple<string, string, bool>> _sunsetLevelData;
 
         private bool _useDefaultAudio, _useManualAudio;
+        private List<MutableTuple<string, string, ushort>> _audioData;
+        private IReadOnlyList<Tuple<ushort, string>> _allAudioTracks;
 
         public bool TitleEnabled
         {
@@ -314,6 +316,26 @@ namespace TRGE.View.Model
             }
         }
 
+        public IReadOnlyList<MutableTuple<string, string, ushort>> AudioData
+        {
+            get => _audioData;
+            set
+            {
+                _audioData = new List<MutableTuple<string, string, ushort>>(value);
+                OnPropertyChanged();
+            }
+        }
+
+        public IReadOnlyList<Tuple<ushort, string>> AllAudioTracks
+        {
+            get => _allAudioTracks;
+            private set
+            {
+                _allAudioTracks = value;
+                OnPropertyChanged();
+            }
+        }
+
         public IReadOnlyList<Tuple<string, string>> LevelSequencing
         {
             get => _levelSequencing;
@@ -407,6 +429,9 @@ namespace TRGE.View.Model
 
             UseManualAudio = editor.GameTrackOrganisation == Organisation.Manual;
             UseDefaultAudio = !UseManualAudio;
+            AudioData = editor.GameTrackData;
+
+            AllAudioTracks = editor.AllGameTracks;
         }
 
         public void Save()
@@ -463,6 +488,10 @@ namespace TRGE.View.Model
             }
 
             _editor.GameTrackOrganisation = UseManualAudio ? Organisation.Manual : Organisation.Default;
+            if (UseManualAudio)
+            {
+                _editor.GameTrackData = new List<MutableTuple<string, string, ushort>>(AudioData);
+            }
         }
     }
 }

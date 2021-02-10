@@ -3,14 +3,55 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TRGE.View.Windows"
+        xmlns:c="clr-namespace:TRGE.View.Controls"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         ResizeMode="CanResizeWithGrip"
-        Title="AudioWindow" Height="450" Width="800">
+        Title="TRGE : Audio" Height="450" Width="500">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="_listView"
+                  Margin="10"
+                  SelectionMode="Single"
+                  ItemsSource="{Binding AudioData, Mode=TwoWay, NotifyOnSourceUpdated=True}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <c:AudioControl AudioData="{Binding AllAudioData,RelativeSource={RelativeSource Mode=FindAncestor,
+                                                         AncestorType=Window}}"
+                                    LevelName="{Binding Item2}"
+                                    LevelTrack="{Binding Item3}"
+                                    TrackValue="{Binding}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Border BorderThickness="0 1 0 0"
+                BorderBrush="#ccc"
+                Background="#eee"
+                Grid.Row="2">
+            <StackPanel Width="160" 
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="_OK"
+                        IsDefault="True"
+                        Width="70"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,10,0"
+                        Click="OkButton_Click"/>
+
+                <Button Content="_Cancel"
+                        IsCancel="True"
+                        Width="70"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

@@ -22,7 +22,7 @@
 
         <Grid Margin="30,5,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
@@ -32,6 +32,8 @@
             </Grid.RowDefinitions>
 
             <Label IsEnabled="{Binding IsActive}"
+                   Padding="0"
+                   VerticalAlignment="Center"
                    Content="{Binding NumericTitle}"
                    FontWeight="Bold" />
 

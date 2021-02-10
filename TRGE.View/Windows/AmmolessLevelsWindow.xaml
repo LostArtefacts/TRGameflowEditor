@@ -11,8 +11,6 @@
         Loaded="Window_Loaded"
         Title="TRGE : Ammoless Levels" Height="480" Width="430">
     <Grid>
-        <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="26"/>
             <RowDefinition Height="*"/>
@@ -20,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Select the levels where Lara will begin with no ammo, health pack or flares."
-                   Margin="10,10,10,0" Grid.ColumnSpan="2"/>
+                   Margin="10,10,10,0"/>
 
         <ListView x:Name="_listView"
                   Grid.Row="1"
