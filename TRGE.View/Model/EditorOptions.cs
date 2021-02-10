@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using TRGE.Core;
 
@@ -13,19 +14,25 @@ namespace TRGE.View.Model
         private bool _fmvsEnabled, _cutscenesEnabled, _startAnimationsEnabled, _cheatsEnabled, _dozyViable, _dozyEnabled;
         private bool _demosEnabled, _trainingEnabled;
         private int _demoDelay;
+        
         private bool _useDefaultLevelSequence, _useManualLevelSequence;
+        private List<Tuple<string, string>> _levelSequencing;
+
         private bool _useDefaultUnarmedLevels, _useManualUnarmedLevels;
+        private List<MutableTuple<string, string, bool>> _unarmedLevelData;
+
         private bool _useDefaultAmmolessLevels, _useManualAmmolessLevels;
+        private List<MutableTuple<string, string, bool>> _ammolessLevelData;
 
         private bool _secretRewardsViable;
         private bool _useDefaultSecretBonuses, _useManualSecretBonuses;
+        private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> _secretBonusData;
 
         private bool _sunsetsViable;
         private bool _useDefaultSunsets, _useManualSunsets;
+        private List<MutableTuple<string, string, bool>> _sunsetLevelData;
 
         private bool _useDefaultAudio, _useManualAudio;
-
-        private List<Tuple<string, string>> _levelSequencing;
 
         public bool TitleEnabled
         {
@@ -247,6 +254,16 @@ namespace TRGE.View.Model
             }
         }
 
+        public GlobalSecretBonusData SecretBonusData
+        {
+            get => new GlobalSecretBonusData(_secretBonusData);
+            set
+            {
+                _secretBonusData = value.ToTuple();
+                OnPropertyChanged();
+            }
+        }
+
         public bool SunsetsViable
         {
             get => _sunsetsViable;
@@ -307,6 +324,36 @@ namespace TRGE.View.Model
             }
         }
 
+        public IReadOnlyList<MutableTuple<string, string, bool>> UnarmedLevelData
+        {
+            get => _unarmedLevelData.Select(levelData => levelData.DeepCopy()).ToList();
+            set
+            {
+                _unarmedLevelData = new List<MutableTuple<string, string, bool>>(value);
+                OnPropertyChanged();
+            }
+        }
+
+        public IReadOnlyList<MutableTuple<string, string, bool>> AmmolessLevelData
+        {
+            get => _ammolessLevelData.Select(levelData => levelData.DeepCopy()).ToList();
+            set
+            {
+                _ammolessLevelData = new List<MutableTuple<string, string, bool>>(value);
+                OnPropertyChanged();
+            }
+        }
+
+        public IReadOnlyList<MutableTuple<string, string, bool>> SunsetLevelData
+        {
+            get => _sunsetLevelData.Select(levelData => levelData.DeepCopy()).ToList();
+            set
+            {
+                _sunsetLevelData = new List<MutableTuple<string, string, bool>>(value);
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -342,17 +389,21 @@ namespace TRGE.View.Model
 
             UseManualUnarmed = editor.UnarmedLevelOrganisation == Organisation.Manual;
             UseDefaultUnarmed = !UseManualUnarmed;
+            UnarmedLevelData = editor.UnarmedLevelData;
 
             UseManualAmmoless = editor.AmmolessLevelOrganisation == Organisation.Manual;
             UseDefaultAmmoless = !UseManualAmmoless;
+            AmmolessLevelData = editor.AmmolessLevelData;
 
             SecretRewardsViable = editor.CanOrganiseBonuses;
             UseManualBonuses = editor.SecretBonusOrganisation == Organisation.Manual;
             UseDefaultBonuses = !UseManualBonuses;
+            _secretBonusData = editor.LevelSecretBonusData;
 
             SunsetsViable = editor.CanSetSunsets;
             UseManualSunsets = editor.LevelSunsetOrganisation == Organisation.Manual;
             UseDefaultSunsets = !UseManualSunsets;
+            SunsetLevelData = editor.LevelSunsetData;
 
             UseManualAudio = editor.GameTrackOrganisation == Organisation.Manual;
             UseDefaultAudio = !UseManualAudio;
@@ -382,17 +433,33 @@ namespace TRGE.View.Model
             }
 
             _editor.UnarmedLevelOrganisation = UseManualUnarmed ? Organisation.Manual : Organisation.Default;
+            if (UseManualUnarmed)
+            {
+                _editor.UnarmedLevelData = new List<MutableTuple<string, string, bool>>(UnarmedLevelData);
+            }
 
             _editor.AmmolessLevelOrganisation = UseManualAmmoless ? Organisation.Manual : Organisation.Default;
+            if (UseManualAmmoless)
+            {
+                _editor.AmmolessLevelData = new List<MutableTuple<string, string, bool>>(AmmolessLevelData);
+            }
 
             if (SecretRewardsViable)
             {
                 _editor.SecretBonusOrganisation = UseManualBonuses ? Organisation.Manual : Organisation.Default;
+                if (UseManualBonuses)
+                {
+                    _editor.LevelSecretBonusData = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>(_secretBonusData);
+                }
             }
 
             if (SunsetsViable)
             {
                 _editor.LevelSunsetOrganisation = UseManualSunsets ? Organisation.Manual : Organisation.Default;
+                if (UseManualSunsets)
+                {
+                    _editor.LevelSunsetData = new List<MutableTuple<string, string, bool>>(SunsetLevelData);
+                }
             }
 
             _editor.GameTrackOrganisation = UseManualAudio ? Organisation.Manual : Organisation.Default;

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TRGE.Core;
 using TRGE.View.Utils;
 
 namespace TRGE.View.Windows
@@ -23,7 +24,7 @@ namespace TRGE.View.Windows
         #region Dependency Properties
         public static readonly DependencyProperty SequencingProperty = DependencyProperty.Register
         (
-            "Sequencing", typeof(List<Tuple<string, string>>), typeof(LevelSequenceWindow)
+            "Sequencing", typeof(List<MutableTuple<int, string, string>>), typeof(LevelSequenceWindow)
         );
 
         public static readonly DependencyProperty SelectionCanMoveUpProperty = DependencyProperty.Register
@@ -36,9 +37,9 @@ namespace TRGE.View.Windows
             "CanMoveDown", typeof(bool), typeof(LevelSequenceWindow), new PropertyMetadata(false)
         );
 
-        public List<Tuple<string, string>> Sequencing
+        public List<MutableTuple<int, string, string>> Sequencing
         {
-            get => (List<Tuple<string, string>>)GetValue(SequencingProperty);
+            get => (List<MutableTuple<int, string, string>>)GetValue(SequencingProperty);
             set => SetValue(SequencingProperty, value);
         }
 
@@ -60,10 +61,26 @@ namespace TRGE.View.Windows
             InitializeComponent();
             Owner = WindowUtils.GetActiveWindow();
             DataContext = this;
-            Sequencing = new List<Tuple<string, string>>(sequencing);
+
+            List<MutableTuple<int, string, string>> indexedSquencing = new List<MutableTuple<int, string, string>>();
+            for (int i = 0; i < sequencing.Count; i++)
+            {
+                indexedSquencing.Add(new MutableTuple<int, string, string>(i + 1, sequencing[i].Item1, sequencing[i].Item2));
+            }
+            Sequencing = indexedSquencing;
 
             MinHeight = Height;
             MinWidth = Width;
+        }
+
+        public IReadOnlyList<Tuple<string, string>> GetSequencing()
+        {
+            List<Tuple<string, string>> result = new List<Tuple<string, string>>();
+            foreach (MutableTuple<int, string, string> data in Sequencing)
+            {
+                result.Add(new Tuple<string, string>(data.Item2, data.Item3));
+            }
+            return result;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -98,13 +115,22 @@ namespace TRGE.View.Windows
 
         private void SwapItems(int i, int j)
         {
-            List<Tuple<string, string>> sequencing = Sequencing;
-            Tuple<string, string> t1 = sequencing[i];
+            List<MutableTuple<int, string, string>> sequencing = Sequencing;
+            MutableTuple<int, string, string> t1 = sequencing[i];
+            int seq1 = t1.Item1;
+            int seq2 = sequencing[j].Item1;
+
             sequencing[i] = sequencing[j];
             sequencing[j] = t1;
-            Sequencing = new List<Tuple<string, string>>(sequencing);
+
+            sequencing[i].Item1 = seq1;
+            sequencing[j].Item1 = seq2;
+
+            Sequencing = new List<MutableTuple<int, string, string>>(sequencing);
 
             _listView.SelectedIndex = j;
+            _listView.Focus();
+            _listView.ScrollIntoView(_listView.SelectedItem);
             UpdateMoveStatus();
         }
 

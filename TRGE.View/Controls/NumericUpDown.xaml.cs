@@ -13,17 +13,17 @@ namespace TRGE.View.Controls
         #region Dependency Properties
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register
         (
-            "Value", typeof(int), typeof(NumericUpDown)
+            "Value", typeof(int), typeof(NumericUpDown), new PropertyMetadata(1)
         );
 
         public static readonly DependencyProperty MinValueProperty = DependencyProperty.Register
         (
-            "MinValue", typeof(int), typeof(NumericUpDown)
+            "MinValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(1)
         );
 
         public static readonly DependencyProperty MaxValueProperty = DependencyProperty.Register
         (
-            "MaxValue", typeof(int), typeof(NumericUpDown)
+            "MaxValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(int.MaxValue)
         );
 
         public int Value
@@ -57,11 +57,6 @@ namespace TRGE.View.Controls
         {
             InitializeComponent();
             _textBox.DataContext = this;
-
-            MinValue = 1;
-            MaxValue = int.MaxValue;
-
-            Value = 1;
         }
 
         private void RepeatUpButton_Click(object sender, RoutedEventArgs e)
@@ -76,7 +71,8 @@ namespace TRGE.View.Controls
 
         private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
         {
-            if (!ValidateInput(_textBox.Text))
+            object data = e.DataObject.GetData(DataFormats.UnicodeText);
+            if (!ValidateInput(data.ToString()))
             {
                 e.CancelCommand();
             }

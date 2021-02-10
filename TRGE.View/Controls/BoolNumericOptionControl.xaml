@@ -19,7 +19,7 @@
             <TextBlock Text="{Binding Text}"
                        TextWrapping="Wrap"/>
         </Label>
-        
+
         <Grid Margin="30,5,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>

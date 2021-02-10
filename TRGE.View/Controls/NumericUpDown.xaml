@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" 
-             d:DesignHeight="25" d:DesignWidth="140" MinWidth="140">
+             d:DesignHeight="25" d:DesignWidth="140" MinWidth="80">
     <Border BorderBrush="#666" BorderThickness="1">
         <Grid Background="White">
             <Grid.ColumnDefinitions>
@@ -23,7 +23,7 @@
                      PreviewTextInput="TextBox_TextInput" 
                      TextChanged="TextBox_TextChanged" 
                      DataObject.Pasting="TextBox_Pasting" 
-                     Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
+                     Text="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                      HorizontalContentAlignment="Right" 
                      VerticalAlignment="Center"
                      BorderThickness="0" 

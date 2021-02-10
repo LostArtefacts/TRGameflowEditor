@@ -121,28 +121,44 @@ namespace TRGE.View.Controls
             LevelSequenceWindow lsw = new LevelSequenceWindow(_options.LevelSequencing);
             if (lsw.ShowDialog() ?? false)
             {
-                _options.LevelSequencing = lsw.Sequencing;
+                _options.LevelSequencing = lsw.GetSequencing();
             }
         }
 
         private void UnarmedLevels_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            WindowUtils.ShowMessage(e.ToString());
+            UnarmedLevelsWindow ulw = new UnarmedLevelsWindow(_options.UnarmedLevelData);
+            if (ulw.ShowDialog() ?? false)
+            {
+                _options.UnarmedLevelData = ulw.LevelData;
+            }
         }
 
         private void AmmolessLevels_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            WindowUtils.ShowMessage(e.ToString());
+            AmmolessLevelsWindow alw = new AmmolessLevelsWindow(_options.AmmolessLevelData);
+            if (alw.ShowDialog() ?? false)
+            {
+                _options.AmmolessLevelData = alw.LevelData;
+            }
         }
 
         private void SecretRewards_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            WindowUtils.ShowMessage(e.ToString());
+            BonusItemsWindow biw = new BonusItemsWindow(_options.SecretBonusData);
+            if (biw.ShowDialog() ?? false)
+            {
+                _options.SecretBonusData = biw.SecretBonusData;
+            }
         }
 
         private void Sunsets_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            WindowUtils.ShowMessage(e.ToString());
+            SunsetLevelsWindow slw = new SunsetLevelsWindow(_options.SunsetLevelData);
+            if (slw.ShowDialog() ?? false)
+            {
+                _options.SunsetLevelData = slw.LevelData;
+            }
         }
 
         private void Audio_ManualConfigure(object sender, RoutedEventArgs e)

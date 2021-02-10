@@ -83,6 +83,9 @@
     <Compile Include="Controls\BoolOptionControl.xaml.cs">
       <DependentUpon>BoolOptionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CompactBoolNumericOptionControl.xaml.cs">
+      <DependentUpon>CompactBoolNumericOptionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DefaultManualControl.xaml.cs">
       <DependentUpon>DefaultManualControl.xaml</DependentUpon>
     </Compile>
@@ -94,6 +97,7 @@
     <Compile Include="Model\IRecentFolderOpener.cs" />
     <Compile Include="Model\RecentFolder.cs" />
     <Compile Include="Model\RecentFolderList.cs" />
+    <Compile Include="Model\SecretBonusData.cs" />
     <Compile Include="Utils\ControlUtils.cs" />
     <Compile Include="Controls\EditorControl.xaml.cs">
       <DependentUpon>EditorControl.xaml</DependentUpon>
@@ -105,8 +109,14 @@
     <Compile Include="Windows\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\AmmolessLevelsWindow.xaml.cs">
+      <DependentUpon>AmmolessLevelsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\AudioWindow.xaml.cs">
       <DependentUpon>AudioWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\BonusItemsWindow.xaml.cs">
+      <DependentUpon>BonusItemsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\LevelSequenceWindow.xaml.cs">
       <DependentUpon>LevelSequenceWindow.xaml</DependentUpon>
@@ -118,7 +128,17 @@
     <Compile Include="Windows\SaveProgressWindow.xaml.cs">
       <DependentUpon>SaveProgressWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SunsetLevelsWindow.xaml.cs">
+      <DependentUpon>SunsetLevelsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\UnarmedLevelsWindow.xaml.cs">
+      <DependentUpon>UnarmedLevelsWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Controls\BoolNumericOptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CompactBoolNumericOptionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -150,7 +170,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\AmmolessLevelsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\AudioWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\BonusItemsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -163,6 +191,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\SaveProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SunsetLevelsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\UnarmedLevelsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

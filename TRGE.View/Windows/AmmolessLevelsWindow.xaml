@@ -1,4 +1,4 @@
-﻿<Window x:Class="TRGE.View.Windows.LevelSequenceWindow"
+﻿<Window x:Class="TRGE.View.Windows.AmmolessLevelsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,61 +9,37 @@
         ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterOwner"
         Loaded="Window_Loaded"
-        Title="TRGE : Level Sequencing" Height="480" Width="430">
+        Title="TRGE : Ammoless Levels" Height="480" Width="430">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="80"/>
         </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
+            <RowDefinition Height="26"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
+        <TextBlock Text="Select the levels where Lara will begin with no ammo, health pack or flares."
+                   Margin="10,10,10,0" Grid.ColumnSpan="2"/>
+
         <ListView x:Name="_listView"
-                  Margin="10"
+                  Grid.Row="1"
+                  Margin="10,5,10,10"
                   SelectionMode="Single"
-                  ItemsSource="{Binding Sequencing, Mode=OneWay, NotifyOnSourceUpdated=True}"
-                  SelectionChanged="ListView_SelectionChanged">
+                  ItemsSource="{Binding LevelData, Mode=TwoWay, NotifyOnSourceUpdated=True}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="18"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="{Binding Item1}"
-                                   HorizontalAlignment="Right"
-                                   FontWeight="Bold"
-                                   Margin="0,0,5,0"/>
-
-                        <TextBlock Text="{Binding Item3}"
-                                   Grid.Column="1"/>
-                    </Grid>
+                    <CheckBox IsChecked="{Binding Item3}"
+                              HorizontalAlignment="Stretch"
+                              Content="{Binding Item2}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Column="1"
-                    Margin="0,10,10,10">
-            <Button Content="Move _Up"
-                    Margin="0,0,0,10"
-                    IsEnabled="{Binding CanMoveUp}"
-                    Click="MoveUpButton_Click"/>
-            
-            <Button Content="Move _Down"
-                    IsEnabled="{Binding CanMoveDown}"
-                    Click="MoveDownButton_Click"/>
-        </StackPanel>
-
         <Border BorderThickness="0 1 0 0"
                 BorderBrush="#ccc"
                 Background="#eee"
-                Grid.Row="1"
-                Grid.ColumnSpan="2">
+                Grid.Row="2">
             <StackPanel Width="160" 
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
@@ -74,7 +50,7 @@
                         HorizontalAlignment="Right"
                         Margin="0,0,10,0"
                         Click="OkButton_Click"/>
-                
+
                 <Button Content="_Cancel"
                         IsCancel="True"
                         Width="70"
