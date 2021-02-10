@@ -62,6 +62,11 @@ namespace TRGE.Core
             hashCode = hashCode * -1521134295 + EqualityComparer<T2>.Default.GetHashCode(Item2);
             return hashCode;
         }
+
+        public MutableTuple<T1, T2> DeepCopy()
+        {
+            return new MutableTuple<T1, T2>(Item1, Item2);
+        }
     }
 
     public class MutableTuple<T1, T2, T3> : ITuple
@@ -129,6 +134,11 @@ namespace TRGE.Core
             hashCode = hashCode * -1521134295 + EqualityComparer<T2>.Default.GetHashCode(Item2);
             hashCode = hashCode * -1521134295 + EqualityComparer<T3>.Default.GetHashCode(Item3);
             return hashCode;
+        }
+
+        public MutableTuple<T1, T2, T3> DeepCopy()
+        {
+            return new MutableTuple<T1, T2, T3>(Item1, Item2, Item3);
         }
     }
 
@@ -206,6 +216,11 @@ namespace TRGE.Core
             hashCode = hashCode * -1521134295 + EqualityComparer<T3>.Default.GetHashCode(Item3);
             hashCode = hashCode * -1521134295 + EqualityComparer<T4>.Default.GetHashCode(Item4);
             return hashCode;
+        }
+
+        public MutableTuple<T1, T2, T3, T4> DeepCopy()
+        {
+            return new MutableTuple<T1, T2, T3, T4>(Item1, Item2, Item3, Item4);
         }
     }
 }
