@@ -6,7 +6,8 @@ namespace TRGE.Core
 {
     public static class TRDownloader
     {
-        private const string _resourceURLBase = "https://raw.githubusercontent.com/lahm86/TRGameflowEditor/main/";
+        //private const string _resourceURLBase = "https://raw.githubusercontent.com/lahm86/TRGameflowEditor/main/";
+        private const string _resourceURLBase = "https://www.inverfarigaig.org/tmp/";
 
         public static event EventHandler<TRDownloadEventArgs> ResourceDownloading;
 
@@ -37,13 +38,20 @@ namespace TRGE.Core
                     int size;
                     while ((size = receiveStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
+                        if (args.IsCancelled)
+                        {
+                            break;
+                        }
                         ouputStream.Write(buffer, 0, size);
                         args.DownloadProgress += size;
                         args.DownloadDifference = size;
                         ResourceDownloading?.Invoke(null, args);
                     }
 
-                    args.Status = TRDownloadStatus.Completed;
+                    if (!args.IsCancelled)
+                    {
+                        args.Status = TRDownloadStatus.Completed;
+                    }
                 }
             }
             catch (Exception e)
@@ -53,6 +61,11 @@ namespace TRGE.Core
             }
 
             ResourceDownloading?.Invoke(null, args);
+
+            if (File.Exists(targetFile) && (args.IsCancelled || args.Status == TRDownloadStatus.Failed))
+            {
+                File.Delete(targetFile);
+            }
 
             return args.Status == TRDownloadStatus.Completed;
         }

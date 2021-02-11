@@ -11,6 +11,11 @@ namespace TRGE.Core
         public int DownloadDifference { get; internal set; }
         public Exception Exception { get; internal set; }
         public TRDownloadStatus Status { get; internal set; }
+        public bool IsCancelled
+        {
+            get => Status == TRDownloadStatus.Cancelled;
+            set => Status = value ? TRDownloadStatus.Cancelled : TRDownloadStatus.Initialising;
+        }
 
         internal TRDownloadEventArgs()
         {
@@ -21,6 +26,6 @@ namespace TRGE.Core
 
     public enum TRDownloadStatus
     {
-        Initialising, Downloading, Completed, Failed
+        Initialising, Downloading, Completed, Failed, Cancelled
     }
 }
