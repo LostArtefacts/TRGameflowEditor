@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.IO;
+using System.Media;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using TRGE.Coord;
 using TRGE.Core;
+using TRGE.View.Model;
+using TRGE.View.Model.Audio;
+using TRGE.View.Model.Data;
 using TRGE.View.Utils;
 
 namespace TRGE.View.Windows
@@ -24,40 +23,107 @@ namespace TRGE.View.Windows
         #region Dependency Properties
         public static readonly DependencyProperty AudioDataProperty = DependencyProperty.Register
         (
-            "AudioData", typeof(List<MutableTuple<string, string, ushort>>), typeof(AudioWindow)
+            "AudioData", typeof(AudioData), typeof(AudioWindow)
         );
 
         public static readonly DependencyProperty AllAudioDataProperty = DependencyProperty.Register
         (
-            "AllAudioData", typeof(IReadOnlyList<Tuple<ushort, string>>), typeof(AudioWindow)
+            "AllAudioData", typeof(IReadOnlyList<AudioTrack>), typeof(AudioWindow)
         );
 
-        public List<MutableTuple<string, string, ushort>> AudioData
+        public AudioData AudioData
         {
-            get => (List<MutableTuple<string, string, ushort>>)GetValue(AudioDataProperty);
+            get => (AudioData)GetValue(AudioDataProperty);
             set => SetValue(AudioDataProperty, value);
         }
 
-        public IReadOnlyList<Tuple<ushort, string>> AllAudioData
+        public IReadOnlyList<AudioTrack> AllAudioData
         {
-            get => (List<Tuple<ushort, string>>)GetValue(AllAudioDataProperty);
+            get => (List<AudioTrack>)GetValue(AllAudioDataProperty);
             private set => SetValue(AllAudioDataProperty, value);
         }
         #endregion
 
-        public AudioWindow(IReadOnlyList<MutableTuple<string, string, ushort>> audioData, IReadOnlyList<Tuple<ushort, string>> allAudioData)
+        private readonly IAudioDataProvider _dataProvider;
+        private PlayAudioEventArgs _audioPlayingArgs;
+        private AudioPlayer _audioPlayer;
+
+        public AudioWindow(IAudioDataProvider dataProvider)
         {
             InitializeComponent();
             Owner = WindowUtils.GetActiveWindow();
             DataContext = this;
-            AudioData = new List<MutableTuple<string, string, ushort>>(audioData);
-            AllAudioData = allAudioData;
+
+            _dataProvider = dataProvider;
+            AudioData = _dataProvider.GetAudioData();
+            AllAudioData = AudioData.AllTracks;
+
+            TRCoord.Instance.ResourceDownloading += TRCoord_ResourceDownloading;
+
+            MinWidth = Width;
+            MinHeight = Height;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             WindowUtils.EnableMinimiseButton(this, false);
             WindowUtils.TidyMenu(this);
+        }
+
+        private void AudioControl_AudioPlayRequest(object sender, PlayAudioEventArgs e)
+        {
+            StopAudio();
+            _audioPlayingArgs = e;
+            new Thread(LoadAndPlayAudio).Start();
+        }
+
+        private void AudioControl_AudioStopRequest(object sender, PlayAudioEventArgs e)
+        {
+            StopAudio();
+        }
+
+        private void LoadAndPlayAudio()
+        {
+            byte[] trackData = _dataProvider.GetAudioTrackData(_audioPlayingArgs.Track);
+            Dispatcher.Invoke(new Action(() => PlayAudio(trackData)));
+        }
+
+        private void PlayAudio(byte[] trackData)
+        {
+            _audioPlayer = new AudioPlayer(trackData);
+            _audioPlayer.AudioStarted += delegate (object sender, EventArgs e)
+            {
+                _audioPlayingArgs.Callback.AudioStarted(_audioPlayingArgs.Track);
+            };
+            _audioPlayer.AudioCompleted += delegate (object sender, EventArgs e)
+            {
+                _audioPlayingArgs.Callback.AudioFinished(_audioPlayingArgs.Track);
+            };
+            _audioPlayer.PlayAudio();
+        }
+
+        private void StopAudio()
+        {
+            if (_audioPlayer != null)
+            {
+                _audioPlayer.StopAudio();
+            }
+        }
+
+        private void TRCoord_ResourceDownloading(object sender, TRDownloadEventArgs e)
+        {
+            if (e.Status == TRDownloadStatus.Initialising)
+            {
+                Dispatcher.Invoke(delegate
+                {
+
+                });
+            }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            StopAudio();
         }
 
         private void OkButton_Click(object sender, RoutedEventArgs e)

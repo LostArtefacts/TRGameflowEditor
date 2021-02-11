@@ -28,8 +28,8 @@
                   ItemsSource="{Binding LevelData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <CheckBox IsChecked="{Binding Item3}"
-                              Content="{Binding Item2}"
+                    <CheckBox IsChecked="{Binding Flag}"
+                              Content="{Binding LevelName}"
                               HorizontalAlignment="Stretch"
                               HorizontalContentAlignment="Stretch"/>
                 </DataTemplate>

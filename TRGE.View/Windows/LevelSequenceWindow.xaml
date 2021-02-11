@@ -24,7 +24,6 @@
         <ListView x:Name="_listView"
                   Margin="10"
                   SelectionMode="Single"
-                  ItemsSource="{Binding Sequencing, Mode=OneWay, NotifyOnSourceUpdated=True}"
                   SelectionChanged="ListView_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -34,12 +33,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{Binding Item1}"
+                        <TextBlock Text="{Binding DisplaySequence}"
                                    HorizontalAlignment="Right"
                                    FontWeight="Bold"
                                    Margin="0,0,5,0"/>
 
-                        <TextBlock Text="{Binding Item3}"
+                        <TextBlock Text="{Binding LevelName}"
                                    Grid.Column="1"/>
                     </Grid>
                 </DataTemplate>

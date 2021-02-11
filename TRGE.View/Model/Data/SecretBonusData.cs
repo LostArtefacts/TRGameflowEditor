@@ -2,7 +2,7 @@
 using System.Linq;
 using TRGE.Core;
 
-namespace TRGE.View.Model
+namespace TRGE.View.Model.Data
 {
     public class GlobalSecretBonusData : List<LevelSecretBonusData>
     {
@@ -14,7 +14,7 @@ namespace TRGE.View.Model
             }
         }
 
-        public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ToTuple()
+        public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ToTupleList()
         {
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> result = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
             foreach (LevelSecretBonusData data in this)
@@ -25,16 +25,13 @@ namespace TRGE.View.Model
         }
     }
 
-    public class LevelSecretBonusData
+    public class LevelSecretBonusData : BaseLevelData
     {
-        public string LevelID { get; private set; }
-        public string LevelName { get; private set; }
         public SecretBonusData BonusData { get; private set; }
 
         public LevelSecretBonusData(string levelID, string levelName, List<MutableTuple<ushort, TRItemCategory, string, int>> bonusItems)
+            :base(levelID, levelName)
         {
-            LevelID = levelID;
-            LevelName = levelName;
             BonusData = new SecretBonusData(bonusItems);
         }
 

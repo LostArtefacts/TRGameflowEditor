@@ -121,7 +121,7 @@ namespace TRGE.View.Controls
             LevelSequenceWindow lsw = new LevelSequenceWindow(_options.LevelSequencing);
             if (lsw.ShowDialog() ?? false)
             {
-                _options.LevelSequencing = lsw.GetSequencing();
+                _options.LevelSequencing = lsw.LevelSequencingData;
             }
         }
 
@@ -163,10 +163,10 @@ namespace TRGE.View.Controls
 
         private void Audio_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            AudioWindow aw = new AudioWindow(_options.AudioData, _options.AllAudioTracks);
+            AudioWindow aw = new AudioWindow(_options);
             if (aw.ShowDialog() ?? false)
             {
-                _options.AudioData = aw.AudioData;
+                _options.GlobalAudioData = aw.AudioData;
             }
         }
     }

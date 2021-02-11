@@ -95,12 +95,22 @@
     <Compile Include="Controls\NumericUpDown.xaml.cs">
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Audio\IAudioDataProvider.cs" />
+    <Compile Include="Model\Data\AudioData.cs" />
+    <Compile Include="Model\Data\FlaggedLevelData.cs" />
     <Compile Include="Model\EditorEventArgs.cs" />
     <Compile Include="Model\EditorOptions.cs" />
+    <Compile Include="Model\IPlayAudioCallback.cs" />
     <Compile Include="Model\IRecentFolderOpener.cs" />
+    <Compile Include="Model\Data\LevelSequencingData.cs" />
+    <Compile Include="Model\Data\BaseLevelData.cs" />
+    <Compile Include="Model\PlayAudioEventArgs.cs" />
     <Compile Include="Model\RecentFolder.cs" />
     <Compile Include="Model\RecentFolderList.cs" />
-    <Compile Include="Model\SecretBonusData.cs" />
+    <Compile Include="Model\Data\SecretBonusData.cs" />
+    <Compile Include="Utils\AudioPlayer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utils\ControlUtils.cs" />
     <Compile Include="Controls\EditorControl.xaml.cs">
       <DependentUpon>EditorControl.xaml</DependentUpon>

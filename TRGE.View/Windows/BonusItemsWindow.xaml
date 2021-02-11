@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:c="clr-namespace:TRGE.View.Controls"
-        xmlns:vm="clr-namespace:TRGE.View.Model"
+        xmlns:vm="clr-namespace:TRGE.View.Model.Data"
         mc:Ignorable="d"
         ShowInTaskbar="False"
         Icon="..\Resources\shuffle.ico"
@@ -14,17 +14,6 @@
         Title="TRGE : Secret Bonus Items" Height="450" Width="800">
 
     <Window.Resources>
-        <Style TargetType="ListViewItem" x:Key="UnstyledListViewItem">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListViewItem}">
-                        <ContentPresenter />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <DataTemplate x:Key="QuantityAndSpinner" DataType="{x:Type vm:SecretBonusItem}">
             <c:CompactBoolNumericOptionControl 
                 IsActive="{Binding Enabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

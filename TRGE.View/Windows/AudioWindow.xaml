@@ -6,10 +6,12 @@
         xmlns:c="clr-namespace:TRGE.View.Controls"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
+        Closing="Window_Closing"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         ResizeMode="CanResizeWithGrip"
         Title="TRGE : Audio" Height="450" Width="500">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -19,14 +21,16 @@
         <ListView x:Name="_listView"
                   Margin="10"
                   SelectionMode="Single"
+                  ItemContainerStyle="{StaticResource UnstyledListViewItem}"
                   ItemsSource="{Binding AudioData, Mode=TwoWay, NotifyOnSourceUpdated=True}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <c:AudioControl AudioData="{Binding AllAudioData,RelativeSource={RelativeSource Mode=FindAncestor,
-                                                         AncestorType=Window}}"
-                                    LevelName="{Binding Item2}"
-                                    LevelTrack="{Binding Item3}"
-                                    TrackValue="{Binding}"/>
+                    <c:AudioControl AudioData="{Binding AllAudioData,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}"
+                                    AudioLevelData="{Binding}"
+                                    LevelName="{Binding LevelName}"
+                                    LevelTrack="{Binding Track}"
+                                    AudioPlayRequest="AudioControl_AudioPlayRequest"
+                                    AudioStopRequest="AudioControl_AudioStopRequest"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

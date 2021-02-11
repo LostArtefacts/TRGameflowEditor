@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using TRGE.Core;
+﻿using System.Windows;
+using TRGE.View.Model.Data;
 using TRGE.View.Utils;
 
 namespace TRGE.View.Windows
@@ -13,23 +12,23 @@ namespace TRGE.View.Windows
         #region Dependency Properties
         public static readonly DependencyProperty SequencingProperty = DependencyProperty.Register
         (
-            "LevelData", typeof(List<MutableTuple<string, string, bool>>), typeof(UnarmedLevelsWindow)
+            "LevelData", typeof(FlaggedLevelData), typeof(UnarmedLevelsWindow)
         );
 
-        public List<MutableTuple<string, string, bool>> LevelData
+        public FlaggedLevelData LevelData
         {
-            get => (List<MutableTuple<string, string, bool>>)GetValue(SequencingProperty);
+            get => (FlaggedLevelData)GetValue(SequencingProperty);
             set => SetValue(SequencingProperty, value);
         }
         #endregion
 
-        public UnarmedLevelsWindow(IReadOnlyList<MutableTuple<string, string, bool>> levelData)
+        public UnarmedLevelsWindow(FlaggedLevelData levelData)
         {
             InitializeComponent();
             Owner = WindowUtils.GetActiveWindow();
             DataContext = this;
 
-            LevelData = new List<MutableTuple<string, string, bool>>(levelData);
+            LevelData = levelData;
 
             MinHeight = Height;
             MinWidth = Width;

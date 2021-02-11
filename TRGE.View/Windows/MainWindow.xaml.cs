@@ -180,7 +180,10 @@ namespace TRGE.View.Windows
 
         private void OpenCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            _folderControl.OpenDataFolder();
+            if (ConfirmEditorSaveState())
+            {
+                _folderControl.OpenDataFolder();
+            }
         }
 
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
