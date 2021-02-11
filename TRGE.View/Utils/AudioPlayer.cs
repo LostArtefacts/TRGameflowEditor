@@ -29,9 +29,7 @@ namespace TRGE.View.Utils
                 throw new ArgumentException();
             }
 
-            //_duration = 2 + (trackData.Length - 8) / BitConverter.ToInt32(trackData, 28);
             _duration = 1000 * (double)(trackData.Length - 8) / BitConverter.ToInt32(trackData, 28);
-            //long d = Convert.ToInt64(Math.Round(duration * 1000));
 
             _playing = false;
         }
@@ -49,7 +47,6 @@ namespace TRGE.View.Utils
                 {
                     _playing = true;
                     AudioStarted?.Invoke(this, EventArgs.Empty);
-                    //DateTime stopAt = DateTime.Now.AddSeconds(_duration);
                     DateTime endTime = DateTime.Now.AddMilliseconds(_duration);
                     Play();
                     while (DateTime.Now < endTime)

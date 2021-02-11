@@ -131,6 +131,9 @@
     <Compile Include="Windows\BonusItemsWindow.xaml.cs">
       <DependentUpon>BonusItemsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\DownloadingWindow.xaml.cs">
+      <DependentUpon>DownloadingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\LevelSequenceWindow.xaml.cs">
       <DependentUpon>LevelSequenceWindow.xaml</DependentUpon>
     </Compile>
@@ -196,6 +199,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\BonusItemsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\DownloadingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

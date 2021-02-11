@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Media;
 using System.Threading;
 using System.Windows;
-using System.Windows.Media;
-using TRGE.Coord;
-using TRGE.Core;
 using TRGE.View.Model;
 using TRGE.View.Model.Audio;
 using TRGE.View.Model.Data;
@@ -58,8 +53,6 @@ namespace TRGE.View.Windows
             AudioData = _dataProvider.GetAudioData();
             AllAudioData = AudioData.AllTracks;
 
-            TRCoord.Instance.ResourceDownloading += TRCoord_ResourceDownloading;
-
             MinWidth = Width;
             MinHeight = Height;
         }
@@ -84,12 +77,21 @@ namespace TRGE.View.Windows
 
         private void LoadAndPlayAudio()
         {
+            //get track data may invoke a download from GitHub, so this is performed
+            //in a separate thread to allow a download window to show - see App.xaml.cs
             byte[] trackData = _dataProvider.GetAudioTrackData(_audioPlayingArgs.Track);
             Dispatcher.Invoke(new Action(() => PlayAudio(trackData)));
         }
 
         private void PlayAudio(byte[] trackData)
         {
+            if (trackData == null || trackData.Length == 0)
+            {
+                WindowUtils.ShowError("Failed to load track data.");
+                _audioPlayingArgs.Callback.AudioFinished(_audioPlayingArgs.Track);
+                return;
+            }
+
             _audioPlayer = new AudioPlayer(trackData);
             _audioPlayer.AudioStarted += delegate (object sender, EventArgs e)
             {
@@ -107,17 +109,6 @@ namespace TRGE.View.Windows
             if (_audioPlayer != null)
             {
                 _audioPlayer.StopAudio();
-            }
-        }
-
-        private void TRCoord_ResourceDownloading(object sender, TRDownloadEventArgs e)
-        {
-            if (e.Status == TRDownloadStatus.Initialising)
-            {
-                Dispatcher.Invoke(delegate
-                {
-
-                });
             }
         }
 
