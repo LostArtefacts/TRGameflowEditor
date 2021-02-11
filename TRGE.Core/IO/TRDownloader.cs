@@ -6,8 +6,7 @@ namespace TRGE.Core
 {
     public static class TRDownloader
     {
-        //private const string _resourceURLBase = "https://raw.githubusercontent.com/lahm86/TRGameflowEditor/main/";
-        private const string _resourceURLBase = "https://www.inverfarigaig.org/tmp/";
+        private const string _resourceURLBase = "https://raw.githubusercontent.com/lahm86/TRGameflowEditor/main/";
 
         public static event EventHandler<TRDownloadEventArgs> ResourceDownloading;
 
