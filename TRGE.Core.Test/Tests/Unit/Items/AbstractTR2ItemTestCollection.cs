@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.IO;
 using TRGE.Coord;
 
 namespace TRGE.Core.Test
@@ -92,56 +93,31 @@ namespace TRGE.Core.Test
         [TestSequence(2)]
         protected void TestRandomiseItemsReload()
         {
+            // This simulates randomising with a particular seed, saving, then manually setting
+            // the bonus items, saving, and finally randomising again with the first seed to 
+            // prove randomisation is consistent.
+
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
 
             sm.SecretBonusOrganisation = Organisation.Random;
             sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
             editor.Save();
+            byte[] firstRandoBytes = File.ReadAllBytes(_validScripts[ScriptFileIndex]);
 
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> randoData = sm.LevelSecretBonusData;
-
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = ConvertManualBonusData(sm);
-            sm.LevelSecretBonusData = newBonusData;
+            sm.LevelSecretBonusData = ConvertManualBonusData(sm);
             sm.SecretBonusOrganisation = Organisation.Manual;
             editor.Save();
+            byte[] manualBytes = File.ReadAllBytes(_validScripts[ScriptFileIndex]);
 
-            sm.LevelSequencingOrganisation = Organisation.Random;
-            sm.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
-            editor.Save();
+            CollectionAssert.AreNotEqual(firstRandoBytes, manualBytes);
 
             sm.SecretBonusOrganisation = Organisation.Random;
             sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
             editor.Save();
+            byte[] secondRandoBytes = File.ReadAllBytes(_validScripts[ScriptFileIndex]);
 
-            //CollectionAssert.AreEquivalent(sm.LevelBonusData, randoData); fails but test below seems to pass
-
-            foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData in sm.LevelSecretBonusData)
-            {
-                foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData2 in randoData)
-                {
-                    if (levelData.Item1.Equals(levelData2.Item1))
-                    {
-                        foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusData1 in levelData.Item3)
-                        {
-                            bool found = false;
-                            foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusData2 in levelData2.Item3)
-                            {
-                                if (bonusData1.Equals(bonusData2))
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found)
-                            {
-                                Assert.Fail();
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
+            CollectionAssert.AreEqual(firstRandoBytes, secondRandoBytes);
         }
 
         [TestMethod]

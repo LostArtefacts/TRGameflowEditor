@@ -2,7 +2,7 @@
 
 namespace TRGE.Core
 {
-    class ChecksumMismatchException : Exception
+    public class ChecksumMismatchException : Exception
     {
         public ChecksumMismatchException()
             : base() { }

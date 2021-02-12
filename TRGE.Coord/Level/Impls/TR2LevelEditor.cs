@@ -242,6 +242,13 @@ namespace TRGE.Coord
             }
         }
 
+        
+
+        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
+        {
+
+        }
+
         internal override void Restore()
         {
             _io.BackupDirectory.Copy(_io.OriginalDirectory, true, new string[] { "*.dat", "*.tr2" });
@@ -250,11 +257,6 @@ namespace TRGE.Coord
             {
                 File.Copy(hshBackup, Path.Combine(_io.OriginalDirectory.FullName, "house.tr2"), true);
             }
-        }
-
-        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
-        {
-
         }
     }
 }

@@ -2,13 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace TRGE.Core
 {
-    public abstract class AbstractTRScriptEditor : ITRSaveProgressProvider
+    public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
     {
         protected TRScriptIOArgs _io;
 
@@ -37,14 +35,12 @@ namespace TRGE.Core
         }
 
         public TREdition Edition => Script.Edition;
-        internal bool AllowSuccessiveEdits { get; set; }
 
         internal AbstractTRLevelManager LevelManager { get; private set; }
         internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
         internal AbstractTRScript Script { get; private set; }
 
         protected TRScriptOpenOption _openOption;
-        protected Dictionary<string, object> _config;
 
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
 
@@ -69,7 +65,7 @@ namespace TRGE.Core
             LevelManager = TRScriptedLevelFactory.GetLevelManager(script);
             LevelManager.LevelModified += LevelManagerLevelModified;
 
-            ReadConfig();
+            ReadConfig(_config);
         }
 
         private void LevelManagerLevelModified(object sender, TRScriptedLevelEventArgs e)
@@ -79,7 +75,7 @@ namespace TRGE.Core
 
         private void LoadConfig()
         {
-            _config = ConfigFile.Exists ? JsonConvert.DeserializeObject<Dictionary<string, object>>(ConfigFile.ReadCompressedText()) : null;
+            _config = File.Exists(ConfigFile.FullName) ? JsonConvert.DeserializeObject<Dictionary<string, object>>(ConfigFile.ReadCompressedText()) : null;
             //issue #36
             if (_config != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
             {
@@ -103,11 +99,22 @@ namespace TRGE.Core
             }
         }
 
-        protected void ReadConfig()
+        protected override void ReadConfig(Dictionary<string, object> config)
         {
-            if (_config != null)
+            if (config != null)
             {
-                Dictionary<string, object> levelSeq = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["LevelSequencing"].ToString());
+                Dictionary<string, object> configEdition = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["Edition"].ToString());
+                TREdition checkEdition = TREdition.From
+                (
+                    (Hardware)Enum.ToObject(typeof(Hardware), configEdition["Hardware"]), 
+                    (TRVersion)Enum.ToObject(typeof(TRVersion), configEdition["Version"])
+                );
+                if (checkEdition == null || !checkEdition.Equals(Edition))
+                {
+                    throw new EditionMismatchException("The TR edition in the configuration file does not match the edition of the current script file.");
+                }
+
+                Dictionary<string, object> levelSeq = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["LevelSequencing"].ToString());
                 LevelSequencingOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), levelSeq["Organisation"]);
                 LevelSequencingRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(levelSeq["RNG"].ToString()));
                 //note that even if the levels were randomised, this would have been done after saving the config file
@@ -115,25 +122,25 @@ namespace TRGE.Core
                 //picked that at one point in the previous edit
                 LevelSequencing = JsonConvert.DeserializeObject<List<Tuple<string, string>>>(levelSeq["Data"].ToString());
 
-                Dictionary<string, object> trackInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["GameTracks"].ToString());
+                Dictionary<string, object> trackInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["GameTracks"].ToString());
                 GameTrackOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), trackInfo["Organisation"]);
                 GameTrackRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(trackInfo["RNG"].ToString()));
                 //see note above
                 GameTrackData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, ushort>>>(trackInfo["Data"].ToString());
 
-                Dictionary<string, object> secretInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["SecretSupport"].ToString());
+                Dictionary<string, object> secretInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["SecretSupport"].ToString());
                 LevelSecretSupportOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), secretInfo["Organisation"]);
                 LevelSecretSupport = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(secretInfo["Data"].ToString());
 
-                Dictionary<string, object> sunsetInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["Sunsets"].ToString());
+                Dictionary<string, object> sunsetInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["Sunsets"].ToString());
                 LevelSunsetOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), sunsetInfo["Organisation"]);
                 LevelSunsetRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(sunsetInfo["RNG"].ToString()));
                 //see note above
                 LevelSunsetData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(sunsetInfo["Data"].ToString());
                 RandomSunsetLevelCount = uint.Parse(sunsetInfo["RandomCount"].ToString());
 
-                FrontEndHasFMV = bool.Parse(_config["FrontEndFMVOn"].ToString());
-                AllowSuccessiveEdits = bool.Parse(_config["Successive"].ToString());
+                FrontEndHasFMV = bool.Parse(config["FrontEndFMVOn"].ToString());
+                AllowSuccessiveEdits = bool.Parse(config["Successive"].ToString());
             }
             else
             {
@@ -149,10 +156,10 @@ namespace TRGE.Core
                 AllowSuccessiveEdits = false;
             }
 
-            ApplyConfig();
+            ApplyConfig(config);
         }
 
-        public int GetSaveTargetCount()
+        public override int GetSaveTargetCount()
         {
             return 1;
         }
@@ -164,6 +171,7 @@ namespace TRGE.Core
             _config = new Dictionary<string, object>
             {
                 ["Version"] = Assembly.GetExecutingAssembly().GetName().Version,
+                ["Edition"] = Edition.ToJson(),
                 ["Original"] = OriginalFile.FullName,
                 ["CheckSumOnSave"] = string.Empty,
                 ["FrontEndFMVOn"] = FrontEndHasFMV,
@@ -246,7 +254,21 @@ namespace TRGE.Core
             monitor.FireSaveStateChanged(1);
         }
 
-        public void Restore()
+        internal override Dictionary<string, object> ExportConfig()
+        {
+            Dictionary<string, object> config = base.ExportConfig();
+            if (config.ContainsKey("CheckSumOnSave"))
+            {
+                config.Remove("CheckSumOnSave");
+            }
+            if (config.ContainsKey("Original"))
+            {
+                config.Remove("Original");
+            }
+            return config;
+        }
+
+        internal override void Restore()
         {
             BackupFile.CopyTo(OriginalFile.FullName, true);
             while (File.Exists(ConfigFile.FullName))
@@ -292,7 +314,6 @@ namespace TRGE.Core
         internal abstract AbstractTRScript CreateScript();
 
         protected abstract void SaveImpl();
-        protected abstract void ApplyConfig();
 
         public Organisation LevelSequencingOrganisation
         {

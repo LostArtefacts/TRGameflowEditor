@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractTRGEEditor.cs" />
     <Compile Include="Audio\AbstractTRAudioProvider.cs" />
     <Compile Include="Audio\Impls\AbstractTR23AudioProvider.cs" />
     <Compile Include="Audio\Impls\TR23AudioExtractor.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
     <Compile Include="Level\Events\TRScriptedLevelModification.cs" />
     <Compile Include="Script\Exceptions\ChecksumMismatchException.cs" />
+    <Compile Include="Script\Exceptions\EditionMismatchException.cs" />
     <Compile Include="Script\TRScriptOpenOption.cs" />
     <Compile Include="TRInterop.cs" />
     <Compile Include="FrontEnd\Impls\TR23FrontEnd.cs" />

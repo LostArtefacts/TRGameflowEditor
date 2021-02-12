@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace TRGE.Core
 {
@@ -10,9 +9,9 @@ namespace TRGE.Core
         internal TR23ScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
             : base(ioArgs, openOption) { }        
 
-        protected override void ApplyConfig()
+        protected override void ApplyConfig(Dictionary<string, object> config)
         {
-            if (_config == null)
+            if (config == null)
             {
                 UnarmedLevelOrganisation = Organisation.Default;
                 UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
@@ -28,14 +27,14 @@ namespace TRGE.Core
                 return;
             }
 
-            Dictionary<string, object> unarmedLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["UnarmedLevels"].ToString());
+            Dictionary<string, object> unarmedLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["UnarmedLevels"].ToString());
             UnarmedLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), unarmedLevels["Organisation"]);
             UnarmedLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(unarmedLevels["RNG"].ToString()));
             RandomUnarmedLevelCount = uint.Parse(unarmedLevels["RandomCount"].ToString());
             //see note in base.LoadConfig re restoring randomised - same applies for Unarmed
             UnarmedLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(unarmedLevels["Data"].ToString());
 
-            Dictionary<string, object> ammolessLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["AmmolessLevels"].ToString());
+            Dictionary<string, object> ammolessLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["AmmolessLevels"].ToString());
             AmmolessLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), ammolessLevels["Organisation"]);
             AmmolessLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(ammolessLevels["RNG"].ToString()));
             RandomAmmolessLevelCount = uint.Parse(ammolessLevels["RandomCount"].ToString());
@@ -44,26 +43,26 @@ namespace TRGE.Core
 
             if (CanOrganiseBonuses)
             {
-                Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(_config["BonusSetup"].ToString());
+                Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["BonusSetup"].ToString());
                 SecretBonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Organisation"]);
                 SecretBonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
                 LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses["Data"].ToString());
             }
 
-            LevelsHaveCutScenes = bool.Parse(_config["LevelCutScenesOn"].ToString());
-            LevelsHaveFMV = bool.Parse(_config["LevelFMVsOn"].ToString());
-            LevelsHaveStartAnimation = bool.Parse(_config["LevelStartAnimsOn"].ToString());
-            CheatsEnabled = bool.Parse(_config["CheatsOn"].ToString());
-            DemosEnabled = bool.Parse(_config["DemosOn"].ToString());
-            DemoTime = uint.Parse(_config["DemoTime"].ToString());
-            IsDemoVersion = bool.Parse(_config["DemoVersion"].ToString());
-            DozyEnabled = bool.Parse(_config["DozyOn"].ToString());
-            GymEnabled = bool.Parse(_config["GymOn"].ToString());
-            LevelSelectEnabled = bool.Parse(_config["LevelSelectOn"].ToString());
-            OptionRingEnabled = bool.Parse(_config["OptionRingOn"].ToString());
-            SaveLoadEnabled = bool.Parse(_config["SaveLoadOn"].ToString());
-            ScreensizingEnabled = bool.Parse(_config["ScreensizeOn"].ToString());
-            TitleScreenEnabled = bool.Parse(_config["TitlesOn"].ToString());
+            LevelsHaveCutScenes = bool.Parse(config["LevelCutScenesOn"].ToString());
+            LevelsHaveFMV = bool.Parse(config["LevelFMVsOn"].ToString());
+            LevelsHaveStartAnimation = bool.Parse(config["LevelStartAnimsOn"].ToString());
+            CheatsEnabled = bool.Parse(config["CheatsOn"].ToString());
+            DemosEnabled = bool.Parse(config["DemosOn"].ToString());
+            DemoTime = uint.Parse(config["DemoTime"].ToString());
+            IsDemoVersion = bool.Parse(config["DemoVersion"].ToString());
+            DozyEnabled = bool.Parse(config["DozyOn"].ToString());
+            GymEnabled = bool.Parse(config["GymOn"].ToString());
+            LevelSelectEnabled = bool.Parse(config["LevelSelectOn"].ToString());
+            OptionRingEnabled = bool.Parse(config["OptionRingOn"].ToString());
+            SaveLoadEnabled = bool.Parse(config["SaveLoadOn"].ToString());
+            ScreensizingEnabled = bool.Parse(config["ScreensizeOn"].ToString());
+            TitleScreenEnabled = bool.Parse(config["TitlesOn"].ToString());
         }
 
         protected override void SaveImpl()

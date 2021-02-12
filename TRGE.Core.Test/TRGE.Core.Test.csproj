@@ -63,6 +63,8 @@
     <Compile Include="Tests\Unit\Audio\TR3PCAudioTests.cs" />
     <Compile Include="Tests\Unit\Audio\TR3PSXAudioTests.cs" />
     <Compile Include="Tests\Integration\Audio\AbstractTR23AudioIntegrationTestCollection.cs" />
+    <Compile Include="Tests\Unit\ImportExport\AbstractTR23ImportExportTestCollection.cs" />
+    <Compile Include="Tests\Unit\ImportExport\TR2PCImportExportTests.cs" />
     <Compile Include="Tests\Unit\Interruptions\AbstractTR23InterruptionTestCollection.cs" />
     <Compile Include="Tests\Unit\Interruptions\TR2GPCInterruptionTests.cs" />
     <Compile Include="Tests\Unit\Interruptions\TR2PCInterruptionTests.cs" />

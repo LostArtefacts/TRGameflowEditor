@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -7,13 +6,10 @@ using TRGE.Core;
 
 namespace TRGE.Coord
 {
-    public abstract class AbstractTRLevelEditor : ITRSaveProgressProvider
+    public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
     {
         protected readonly TRDirectoryIOArgs _io;
         protected readonly Dictionary<string, ISet<TRScriptedLevelEventArgs>> _levelModifications;
-        protected Dictionary<string, object> _config;
-
-        internal bool AllowSuccessiveEdits { get; set; }
 
         internal AbstractTRLevelEditor(TRDirectoryIOArgs io)
         {
@@ -24,11 +20,16 @@ namespace TRGE.Coord
 
         private void LoadConfig()
         {
-            _config = _io.ConfigFile.Exists ? JsonConvert.DeserializeObject<Dictionary<string, object>>(_io.ConfigFile.ReadCompressedText()) : null;
-            if (_config != null)
+            _config = File.Exists(_io.ConfigFile.FullName) ? JsonConvert.DeserializeObject<Dictionary<string, object>>(_io.ConfigFile.ReadCompressedText()) : null;
+            ReadConfig(_config);
+        }
+
+        protected override void ReadConfig(Dictionary<string, object> config)
+        {
+            if (config != null)
             {
-                AllowSuccessiveEdits = bool.Parse(_config["Successive"].ToString());
-                ApplyConfig();
+                AllowSuccessiveEdits = bool.Parse(config["Successive"].ToString());
+                ApplyConfig(config);
             }
         }
 
@@ -73,17 +74,16 @@ namespace TRGE.Coord
             }
         }
 
-        public virtual int GetSaveTargetCount()
+        public override int GetSaveTargetCount()
         {
             return _levelModifications.Count;
         }
 
-        protected virtual void ApplyConfig() { }
+        protected override void ApplyConfig(Dictionary<string, object> config) { }
         internal abstract bool ShouldHandleModification(TRScriptedLevelEventArgs e);
         internal abstract void ProcessModification(TRScriptedLevelEventArgs e);
 
         internal abstract void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor);
-        internal abstract void Restore();
         
         /// <summary>
         /// Depending on wheter AllowSuccessiveEdits is set this will either return the current

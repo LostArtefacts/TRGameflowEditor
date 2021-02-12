@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TRGE.Core
 {
@@ -115,6 +117,11 @@ namespace TRGE.Core
             TR2PC, TR2G, TR2PSXBeta, TR2PSX, TR3PC, TR3G, TR3PSX
         };
 
+        internal static TREdition From(Hardware hardware, TRVersion version)
+        {
+            return All.FirstOrDefault(e => e.Hardware == hardware && e.Version == version);
+        }
+
         public string Title { get; private set; }
         public TRVersion Version { get; private set; }
         public string ScriptName { get; private set; }
@@ -138,6 +145,15 @@ namespace TRGE.Core
         public bool SecretSoundSupported { get; private set; }
 
         private TREdition() { }
+
+        public object ToJson()
+        {
+            return new Dictionary<string, object>
+            {
+                { "Hardware", (int)Hardware },
+                { "Version", (int)Version }
+            };
+        }
 
         public override bool Equals(object obj)
         {

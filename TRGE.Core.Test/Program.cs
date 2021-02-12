@@ -107,7 +107,11 @@ namespace TRGE.Core.Test
             RunTest(new TR3GPCAudioTests());
             RunTest(new TR3PSXAudioTests());
             #endregion
-            
+
+            #region Import/Export
+            RunTest(new TR2PCImportExportTests());
+            #endregion
+
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);
             Console.WriteLine("FAIL: {0}", _fail);

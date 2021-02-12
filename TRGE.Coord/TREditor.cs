@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using TRGE.Core;
 
@@ -54,6 +56,8 @@ namespace TRGE.Coord
         private readonly string _targetDirectory;
 
         public event EventHandler<TRSaveEventArgs> SaveProgressChanged;
+
+        public bool IsExportPossible => ScriptEditor.IsExportPossible && (LevelEditor == null || LevelEditor.IsExportPossible);
 
         internal TREditor(string outputDirectory, string targetDirectory)
         {
@@ -114,6 +118,38 @@ namespace TRGE.Coord
             if (LevelEditor != null)
             {
                 LevelEditor.Restore();
+            }
+        }
+
+        public void ExportSettings(string filePath)
+        {
+            if (!IsExportPossible)
+            {
+                throw new InvalidOperationException();
+            }
+
+            Dictionary<string, object> config = new Dictionary<string, object>
+            {
+                ["TRGE"] = ScriptEditor.ExportConfig()
+            };
+            if (LevelEditor != null)
+            {
+                config["TRLE"] = LevelEditor.ExportConfig();
+            }
+
+            new FileInfo(filePath).WriteCompressedText(JsonConvert.SerializeObject(config, Formatting.None));
+        }
+
+        public void ImportSettings(string filePath)
+        {
+            Dictionary<string, object> config = JsonConvert.DeserializeObject<Dictionary<string, object>>(new FileInfo(filePath).ReadCompressedText());
+            if (config.ContainsKey("TRGE"))
+            {
+                ScriptEditor.ImportConfig(JsonConvert.DeserializeObject<Dictionary<string, object>>(config["TRGE"].ToString()));
+            }
+            if (config.ContainsKey("TRLE") && LevelEditor != null)
+            {
+                LevelEditor.ImportConfig(JsonConvert.DeserializeObject<Dictionary<string, object>>(config["TRLE"].ToString()));
             }
         }
     }
