@@ -85,7 +85,7 @@
                 <Separator/>
                 
                 <MenuItem Header="_Empty Recent Folder List" 
-                          IsEnabled="{Binding HasRecentFolders}"
+                          IsEnabled="{Binding CanEmptyRecentFolders}"
                           Click="EmptyRecentFoldersMenuItem_Click"/>
                 
                 <Separator/>
@@ -105,12 +105,13 @@
                           Click="RestoreDefaultsMenuItem_Click"/>
                 
                 <Separator/>
-                
-                <MenuItem Header="Export Settings"
-                          Click="ExportMenuItem_Click"/>
-                
+
                 <MenuItem Header="Import Settings"
                           Click="ImportMenuItem_Click"/>
+                
+                <MenuItem Header="Export Settings"
+                          IsEnabled="{Binding EditorCanExport}"
+                          Click="ExportMenuItem_Click"/>            
             </MenuItem>
             
             <MenuItem Header="_Help">

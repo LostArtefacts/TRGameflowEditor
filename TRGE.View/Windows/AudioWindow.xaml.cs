@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
+using TRGE.Core;
 using TRGE.View.Model;
 using TRGE.View.Model.Audio;
 using TRGE.View.Model.Data;
@@ -132,7 +133,7 @@ namespace TRGE.View.Windows
         {
             using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
             {
-                dlg.DefaultFileName = new Regex("[^a-zA-Z0-9 -]").Replace(e.Track.Name, string.Empty) + ".wav";
+                dlg.DefaultFileName = e.Track.Name.ToSafeFileName() + ".wav";
                 dlg.DefaultExtension = ".wav";
                 dlg.Filters.Add(new CommonFileDialogFilter("WAV Files", "wav"));
                 dlg.OverwritePrompt = true;

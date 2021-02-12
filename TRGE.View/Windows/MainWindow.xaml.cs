@@ -27,6 +27,16 @@ namespace TRGE.View.Windows
             "IsEditorDirty", typeof(bool), typeof(MainWindow)
         );
 
+        public static readonly DependencyProperty EditorCanExportProperty = DependencyProperty.Register
+        (
+            "EditorCanExport", typeof(bool), typeof(MainWindow)
+        );
+
+        public static readonly DependencyProperty CanEmptyRecentFoldersProperty = DependencyProperty.Register
+        (
+            "CanEmptyRecentFolders", typeof(bool), typeof(MainWindow)
+        );
+
         public static readonly DependencyProperty FolderControlVisibilityProperty = DependencyProperty.Register
         (
             "FolderControlVisibility", typeof(Visibility), typeof(MainWindow)
@@ -71,6 +81,7 @@ namespace TRGE.View.Windows
                 FolderControlVisibility = value ? Visibility.Collapsed : Visibility.Visible;
                 EditorControlVisibility = value ? Visibility.Visible : Visibility.Collapsed;
                 EditorStatusVisibility = value ? Visibility.Visible : Visibility.Hidden;
+                CanEmptyRecentFolders = !value;
             }
         }
 
@@ -83,6 +94,12 @@ namespace TRGE.View.Windows
                 EditorSavedStatusVisibility = !value ? Visibility.Visible : Visibility.Collapsed;
                 EditorUnsavedStatusVisibility = value ? Visibility.Visible : Visibility.Collapsed;
             }
+        }
+
+        public bool EditorCanExport
+        {
+            get => (bool)GetValue(EditorCanExportProperty);
+            set => SetValue(EditorCanExportProperty, value);
         }
 
         public Visibility EditorControlVisibility
@@ -107,6 +124,12 @@ namespace TRGE.View.Windows
         {
             get => (Visibility)GetValue(EditorUnsavedStatusVisibilityProperty);
             set => SetValue(EditorUnsavedStatusVisibilityProperty, value);
+        }
+
+        public bool CanEmptyRecentFolders
+        {
+            get => (bool)GetValue(CanEmptyRecentFoldersProperty);
+            set => SetValue(CanEmptyRecentFoldersProperty, HasRecentFolders && value);
         }
 
         public Visibility FolderControlVisibility
@@ -172,10 +195,7 @@ namespace TRGE.View.Windows
 
         private void EmptyRecentFoldersMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (WindowUtils.ShowConfirm("Are you sure you want to clear the list of recent folders?"))
-            {
-                TRCoord.Instance.ClearHistory();
-            }
+            _folderControl.EmptyRecentFolders();
         }
         #endregion
 
@@ -212,6 +232,7 @@ namespace TRGE.View.Windows
         private void EditorControl_EditorStateChanged(object sender, EditorEventArgs e)
         {
             IsEditorDirty = e.IsDirty;
+            EditorCanExport = e.CanExport;
         }
         #endregion
 
@@ -226,15 +247,18 @@ namespace TRGE.View.Windows
             _editorControl.RestoreDefaults();
         }
 
-        private void ExportMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            _editorControl.ExportSettings();
-        }
-
         private void ImportMenuItem_Click(object sender, RoutedEventArgs e)
         {
             _editorControl.ImportSettings();
         }
+
+        private void ExportMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (ConfirmEditorSaveState())
+            {
+                _editorControl.ExportSettings();
+            }
+        }        
 
         private void EditorFolder_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {

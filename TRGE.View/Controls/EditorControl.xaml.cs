@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
@@ -63,7 +64,11 @@ namespace TRGE.View.Controls
 
         private void FireEditorStateChanged()
         {
-            EditorStateChanged?.Invoke(this, new EditorEventArgs { IsDirty = _dirty });
+            EditorStateChanged?.Invoke(this, new EditorEventArgs
+            { 
+                IsDirty = _dirty,
+                CanExport = Editor.IsExportPossible
+            });
         }
 
         public void Load(DataFolderEventArgs e)
@@ -106,14 +111,48 @@ namespace TRGE.View.Controls
             }
         }
 
-        public void ExportSettings()
-        {
-
-        }
-
         public void ImportSettings()
         {
+            using (CommonOpenFileDialog dlg = new CommonOpenFileDialog())
+            {
+                dlg.Filters.Add(new CommonFileDialogFilter("TRGE Files", "trge"));
+                dlg.Title = "TRGE : Import Settings";
+                if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
+                {
+                    try
+                    {
+                        Editor.ImportSettings(dlg.FileName);
+                        _options.Load(Editor.ScriptEditor as TR23ScriptEditor);
+                    }
+                    catch (Exception e)
+                    {
+                        WindowUtils.ShowError(e.Message);
+                    }
+                }
+            }
+        }
 
+        public void ExportSettings()
+        {
+            using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
+            {
+                dlg.DefaultFileName = Edition.ToSafeFileName() + ".trge";
+                dlg.DefaultExtension = ".trge";
+                dlg.Filters.Add(new CommonFileDialogFilter("TRGE Files", "trge"));
+                dlg.OverwritePrompt = true;
+                dlg.Title = "TRGE : Export Settings";
+                if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
+                {
+                    try
+                    {
+                        Editor.ExportSettings(dlg.FileName);
+                    }
+                    catch (Exception e)
+                    {
+                        WindowUtils.ShowError(e.Message);
+                    }
+                }
+            }
         }
 
         private void LevelSequencing_ManualConfigure(object sender, RoutedEventArgs e)
