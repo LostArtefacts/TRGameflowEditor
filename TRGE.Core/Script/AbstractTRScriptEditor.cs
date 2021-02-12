@@ -86,12 +86,16 @@ namespace TRGE.Core
                         throw new ChecksumMismatchException();
                     //overwrite the existing backup with the "new" original file, delete the config as though we have never opened the file before
                     case TRScriptOpenOption.DiscardBackup:
-                        OriginalFile.CopyTo(BackupFile.FullName, true);
-                        ConfigFile.Delete();
+                        File.Copy(OriginalFile.FullName, BackupFile.FullName, true);
+                        while (File.Exists(ConfigFile.FullName))
+                        {
+                            ConfigFile.Delete(); //issue #39
+                        }
+                        _config = null;
                         break;
                     //overwrite the original file with the backup
                     case TRScriptOpenOption.RestoreBackup:
-                        BackupFile.CopyTo(OriginalFile.FullName, true);
+                        File.Copy(BackupFile.FullName, OriginalFile.FullName, true);
                         break;
                 }
 
