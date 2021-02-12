@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.ComponentModel;
+using System.Windows;
 using TRGE.Core;
 using TRGE.View.Utils;
 
@@ -55,6 +55,11 @@ namespace TRGE.View.Windows
             _cancelPending = false;
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.TidyMenu(this);
+        }
+
         public void HandleDownloadEvent(TRDownloadEventArgs e)
         {
             if (e.Status == TRDownloadStatus.Failed)
@@ -73,6 +78,7 @@ namespace TRGE.View.Windows
                 if (_cancelPending)
                 {
                     e.IsCancelled = true;
+                    _cancelPending = false;
                 }
                 else
                 {
@@ -90,9 +96,23 @@ namespace TRGE.View.Windows
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            Cancel();
+        }
+
+        private void Cancel()
+        {
             _cancelPending = true;
-            (sender as Button).IsEnabled = false;
+            _cancelButton.IsEnabled = false;
             WindowUtils.EnableCloseButton(this, false);
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (!_cancelPending && DialogResult == null)
+            {
+                Cancel();
+                e.Cancel = true;
+            }
         }
     }
 }

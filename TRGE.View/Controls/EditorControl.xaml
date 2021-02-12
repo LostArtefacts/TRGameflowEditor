@@ -208,7 +208,7 @@
 
             <c:DefaultManualControl 
                 Margin="5"
-                Text="Choose the ambient tracks for each level, including the title screen, plus the sound to play when a secret is found."
+                Text="Choose the ambient tracks for each level, including the title screen, plus the sound to play when a secret is found (TR2 and TR2G only)."
                 IsDefault="{Binding UseDefaultAudio, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualAudio, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 ManualConfigure="Audio_ManualConfigure"/>

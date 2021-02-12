@@ -6,6 +6,8 @@
         mc:Ignorable="d"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
         ResizeMode="NoResize"
         Icon="..\Resources\shuffle.ico"
         Title="TRGE : Downloading Resource" Height="140" Width="400">
@@ -32,6 +34,7 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="_Cancel"
+                        x:Name="_cancelButton"
                         IsCancel="True"
                         Click="CancelButton_Click"
                         Width="70"
