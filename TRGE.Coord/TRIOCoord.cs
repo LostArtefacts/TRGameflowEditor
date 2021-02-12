@@ -205,6 +205,11 @@ namespace TRGE.Coord
 
         internal void ClearHistory()
         {
+            string mainEditDirectory = Path.Combine(TRCoord.Instance.ConfigDirectory, _editDirectoryName);
+            if (Directory.Exists(mainEditDirectory))
+            {
+                Directory.Delete(mainEditDirectory, true);
+            }
             _history.Clear();
             FireHistoryChanged();
         }

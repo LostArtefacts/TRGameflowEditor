@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TRGE.Core
 {
@@ -137,6 +138,11 @@ namespace TRGE.Core
             }
 
             return string.Format("{0:n" + decimalPlaces + "} {1}", d, _sizeSuffixes[i]);
+        }
+
+        public static string ToSafeFileName(this string str)
+        {
+            return new Regex("[^a-zA-Z0-9_-]").Replace(str, string.Empty);
         }
     }
 }
