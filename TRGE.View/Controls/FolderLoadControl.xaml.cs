@@ -4,8 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TRGE.Coord;
+using TRGE.Core;
 using TRGE.View.Model;
 using TRGE.View.Utils;
+using TRGE.View.Windows;
 
 namespace TRGE.View.Controls
 {
@@ -89,23 +91,40 @@ namespace TRGE.View.Controls
             OpenDataFolder(folder.FolderPath);
         }
 
-        public void OpenDataFolder(string folderPath)
+        public void OpenDataFolder(string folderPath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
             try
             {
-                WindowUtils.GetActiveWindow().Cursor = Cursors.Wait;
+                TREditor editor = TRCoord.Instance.Open(folderPath, openOption);
+                DataFolderOpened?.Invoke(this, new DataFolderEventArgs(folderPath, editor));
+            }
+            catch (ChecksumMismatchException)
+            {
+                if (openOption != TRScriptOpenOption.Default)
+                {
+                    throw;
+                }
 
-                TREditor editor = TRCoord.Instance.Open(folderPath);
-                DataFolderEventArgs e = new DataFolderEventArgs(folderPath, editor);
-                DataFolderOpened?.Invoke(this, e);
+                HandleChecksumMismatch(folderPath);
             }
             catch (Exception e)
             {
                 WindowUtils.ShowError(e.Message);
             }
-            finally
+        }
+
+        private void HandleChecksumMismatch(string folderPath)
+        {
+            TRScriptOpenOption option = TRScriptOpenOption.Default;
+            ScriptOptionWindow sow = new ScriptOptionWindow();
+            if (sow.ShowDialog() ?? false)
             {
-                WindowUtils.GetActiveWindow().Cursor = Cursors.Arrow;
+                option = sow.Option;
+            }
+            
+            if (option != TRScriptOpenOption.Default)
+            {
+                OpenDataFolder(folderPath, option);
             }
         }
 

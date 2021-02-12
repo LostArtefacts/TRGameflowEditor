@@ -150,6 +150,9 @@
     <Compile Include="Windows\SaveProgressWindow.xaml.cs">
       <DependentUpon>SaveProgressWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ScriptOptionWindow.xaml.cs">
+      <DependentUpon>ScriptOptionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SunsetLevelsWindow.xaml.cs">
       <DependentUpon>SunsetLevelsWindow.xaml</DependentUpon>
     </Compile>
@@ -224,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\SaveProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ScriptOptionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
