@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using TRGE.Coord;
 using TRGE.Core;
@@ -20,10 +16,35 @@ namespace TRGE.View
     {
         private DownloadingWindow _downloadingWindow;
 
+        public string Version { get; private set; }
+        public string TaggedVersion { get; private set; }
+
         public App()
         {
             WindowUtils.SetMenuAlignment();
             TRCoord.Instance.ResourceDownloading += TRCoord_ResourceDownloading;
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Version v = assembly.GetName().Version;
+            Version = string.Format("{0}.{1}.{2}", v.Major, v.Minor, v.Build);
+
+            object[] attributes = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+            if (attributes.Length > 0)
+            {
+                TaggedVersion = ((AssemblyProductAttribute)attributes[0]).Product.Trim();
+                if (TaggedVersion.Contains(" "))
+                {
+                    string[] tagArr = TaggedVersion.Split(' ');
+                    TaggedVersion = tagArr[tagArr.Length - 1];
+                }
+            }
+            else
+            {
+                TaggedVersion = "v" + Version;
+            }
+
+            TRInterop.ExecutingVersion = Version;
+            TRInterop.TaggedVersion = TaggedVersion;
         }
 
         private void TRCoord_ResourceDownloading(object sender, TRDownloadEventArgs e)

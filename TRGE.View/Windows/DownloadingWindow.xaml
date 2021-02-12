@@ -10,7 +10,7 @@
         Closing="Window_Closing"
         ResizeMode="NoResize"
         Icon="..\Resources\shuffle.ico"
-        Title="TRGE : Downloading Resource" Height="140" Width="400">
+        Title="TRGE : Downloading Resource" Height="140" Width="550">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -18,7 +18,9 @@
         </Grid.RowDefinitions>
 
         <StackPanel Margin="10">
-            <TextBlock Text="{Binding ProgressDescription}"/>
+            <TextBlock Text="{Binding ProgressDescription}"
+                       FontSize="12"/>
+            
             <ProgressBar 
                 Margin="0,5,0,0"
                 Value="{Binding ProgressValue}" 
@@ -30,17 +32,24 @@
                 BorderBrush="#ccc"
                 Background="#eee"
                 Grid.Row="1">
-            <StackPanel Margin="10,0"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-                <Button Content="_Cancel"
+            <Grid Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding LengthDescription}"
+                           VerticalAlignment="Center"/>
+                
+                <Button Grid.Column="1"
+                        Content="_Cancel"
                         x:Name="_cancelButton"
                         IsCancel="True"
                         Click="CancelButton_Click"
                         Width="70"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Right"/>
-            </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Window>

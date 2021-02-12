@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using TRGE.View.Model;
+using TRGE.View.Model.Audio;
 using TRGE.View.Model.Data;
 
 namespace TRGE.View.Controls
@@ -63,6 +63,7 @@ namespace TRGE.View.Controls
         private static readonly Brush _playingBackground = new SolidColorBrush(Color.FromArgb(0xFF, 0xE5, 0xF3, 0xFB));
 
         public event EventHandler<PlayAudioEventArgs> AudioPlayRequest;
+        public event EventHandler<PlayAudioEventArgs> AudioSaveRequest;
         public event EventHandler<PlayAudioEventArgs> AudioStopRequest;
         private PlayAudioEventArgs _audioPlayingArgs;
 
@@ -88,7 +89,7 @@ namespace TRGE.View.Controls
                         PlaySelectedAudio();
                     }
                 }
-                _playButton.IsEnabled = LevelTrack.ID != 0; //TODO: check for blank track better than this
+                _playButton.IsEnabled = _saveButton.IsEnabled = LevelTrack.ID != 0; //TODO: check for blank track better than this
             }
         }
 
@@ -112,6 +113,12 @@ namespace TRGE.View.Controls
         {
             AudioStopRequest?.Invoke(this, _audioPlayingArgs);
             _stopButton.IsEnabled = false;
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            AudioSaveRequest?.Invoke(this, new PlayAudioEventArgs(this, LevelTrack));
+            _saveButton.IsEnabled = false;
         }
 
         public void AudioStarted(AudioTrack track)
@@ -142,6 +149,18 @@ namespace TRGE.View.Controls
                 _stopButton.Visibility = Visibility.Collapsed;
                 _stopButton.IsEnabled = false;
                 _playButton.IsEnabled = LevelTrack.ID != 0;
+            }
+        }
+
+        public void AudioExportComplete(AudioTrack track)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(new Action(() => AudioFinished(track)));
+            }
+            else
+            {
+                _saveButton.IsEnabled = LevelTrack.ID != 0;
             }
         }
     }

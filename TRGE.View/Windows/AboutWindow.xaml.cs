@@ -65,8 +65,7 @@ namespace TRGE.View.Windows
                 AppTitle = Path.GetFileNameWithoutExtension(assembly.CodeBase);
             }
 
-            Version v = assembly.GetName().Version;
-            Version = string.Format("{0}.{1}.{2}", v.Major, v.Minor, v.Build);
+            Version = ((App)Application.Current).TaggedVersion;
 
             attributes = assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
             if (attributes.Length > 0)

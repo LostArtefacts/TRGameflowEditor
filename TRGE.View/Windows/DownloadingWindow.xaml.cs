@@ -26,6 +26,11 @@ namespace TRGE.View.Windows
             "ProgressDescription", typeof(string), typeof(DownloadingWindow), new PropertyMetadata("Downloading - please wait")
         );
 
+        public static readonly DependencyProperty LengthDescriptionProperty = DependencyProperty.Register
+        (
+            "LengthDescription", typeof(string), typeof(DownloadingWindow), new PropertyMetadata(string.Empty)
+        );
+
         public int ProgressValue
         {
             get => (int)GetValue(ProgressValueProperty);
@@ -42,6 +47,12 @@ namespace TRGE.View.Windows
         {
             get => (string)GetValue(ProgressDescriptionProperty);
             set => SetValue(ProgressDescriptionProperty, value);
+        }
+
+        public string LengthDescription
+        {
+            get => (string)GetValue(LengthDescriptionProperty);
+            set => SetValue(LengthDescriptionProperty, value);
         }
         #endregion
 
@@ -85,6 +96,7 @@ namespace TRGE.View.Windows
                     ProgressTarget = (int)e.DownloadLength;
                     ProgressValue = (int)e.DownloadProgress;
                     ProgressDescription = e.URL;
+                    LengthDescription = e.DownloadProgress.ToDescriptiveSize() + " / " + e.DownloadLength.ToDescriptiveSize();
                 }
             }
             else if (e.IsCancelled)

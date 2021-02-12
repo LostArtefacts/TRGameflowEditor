@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using TRGE.View.Model;
@@ -110,6 +113,37 @@ namespace TRGE.View.Windows
             {
                 _audioPlayer.StopAudio();
             }
+        }
+
+        private void AudioControl_AudioSaveRequest(object sender, PlayAudioEventArgs e)
+        {
+            new Thread(() => LoadAndExportAudio(e)).Start();
+        }
+
+        private void LoadAndExportAudio(PlayAudioEventArgs e)
+        {
+            //get track data may invoke a download from GitHub, so this is performed
+            //in a separate thread to allow a download window to show - see App.xaml.cs
+            byte[] trackData = _dataProvider.GetAudioTrackData(e.Track);
+            Dispatcher.Invoke(new Action(() => ExportAudio(e, trackData)));
+        }
+
+        private void ExportAudio(PlayAudioEventArgs e, byte[] trackData)
+        {
+            using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
+            {
+                dlg.DefaultFileName = new Regex("[^a-zA-Z0-9 -]").Replace(e.Track.Name, string.Empty) + ".wav";
+                dlg.DefaultExtension = ".wav";
+                dlg.Filters.Add(new CommonFileDialogFilter("WAV Files", "wav"));
+                dlg.OverwritePrompt = true;
+                dlg.Title = "TRGE : Save Audio Track";
+                if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
+                {
+                    File.WriteAllBytes(dlg.FileName, trackData);
+                }
+            }
+
+            e.Callback.AudioExportComplete(e.Track);
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Navigation;
 using TRGE.Coord;
 using TRGE.View.Model;
+using TRGE.View.Updates;
 using TRGE.View.Utils;
 
 namespace TRGE.View.Windows
@@ -147,6 +148,8 @@ namespace TRGE.View.Windows
             _editionStatusText.DataContext = _folderStatusText.DataContext = _editorControl;
             IsEditorActive = false;
 
+            UpdateChecker.Instance.UpdateAvailable += UpdateChecker_UpdateAvailable;
+
             MinHeight = Height;
             MinWidth = Width;
         }
@@ -253,7 +256,43 @@ namespace TRGE.View.Windows
 
         private void UpdatesMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (UpdateChecker.Instance.CheckForUpdates())
+                {
+                    ShowUpdateWindow();
+                }
+                else
+                {
+                    WindowUtils.ShowMessage("The current version of TRGE is up to date.");
+                }
+            }
+            catch (Exception ex)
+            {
+                WindowUtils.ShowError(ex.Message);
+            }
+        }
 
+        private void UpdateChecker_UpdateAvailable(object sender, UpdateEventArgs e)
+        {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.Invoke(() => UpdateChecker_UpdateAvailable(sender, e));
+            }
+            else
+            {
+                _updateAvailableMenu.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void UpdateAvailableMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowUpdateWindow();
+        }
+
+        private void ShowUpdateWindow()
+        {
+            new UpdateAvailableWindow().ShowDialog();
         }
 
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)

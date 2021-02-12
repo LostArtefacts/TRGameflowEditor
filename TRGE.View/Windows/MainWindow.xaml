@@ -130,6 +130,11 @@
                 <MenuItem Header="About Tomb Raider Gameflow Editor"
                           Click="AboutMenuItem_Click"/>
             </MenuItem>
+
+            <MenuItem Header="_Update Available"
+                      x:Name="_updateAvailableMenu"
+                      Visibility="Collapsed"
+                      Click="UpdateAvailableMenuItem_Click"/>
         </Menu>
 
         <StatusBar DockPanel.Dock="Bottom">

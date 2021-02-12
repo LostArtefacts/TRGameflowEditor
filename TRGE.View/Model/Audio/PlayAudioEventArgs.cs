@@ -1,7 +1,7 @@
 ﻿using System;
 using TRGE.View.Model.Data;
 
-namespace TRGE.View.Model
+namespace TRGE.View.Model.Audio
 {
     public class PlayAudioEventArgs : EventArgs
     {

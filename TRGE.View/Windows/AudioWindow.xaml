@@ -30,7 +30,8 @@
                                     LevelName="{Binding LevelName}"
                                     LevelTrack="{Binding Track}"
                                     AudioPlayRequest="AudioControl_AudioPlayRequest"
-                                    AudioStopRequest="AudioControl_AudioStopRequest"/>
+                                    AudioStopRequest="AudioControl_AudioStopRequest"
+                                    AudioSaveRequest="AudioControl_AudioSaveRequest"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

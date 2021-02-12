@@ -78,9 +78,27 @@ namespace TRGE.View.Utils
             return w == null ? IntPtr.Zero : GetWindowHandle(w);
         }
 
+        /// <summary>
+        /// If the application has an active (focussed) window, it will be returned. Otherwise,
+        /// the most recently opened Application window will be returned. Additional checks are performed
+        /// for VS Adorner Windows to exclude these.
+        /// </summary>
         public static Window GetActiveWindow()
         {
-            return Application.Current.Windows.OfType<Window>().SingleOrDefault(e => e.IsActive);
+            Window w = Application.Current.Windows.OfType<Window>().SingleOrDefault(e => e.IsActive);
+            if (w == null)
+            {
+                WindowCollection wc = Application.Current.Windows;
+                for (int i = wc.Count - 1; i >= 0; i--)
+                {
+                    w = wc[i];
+                    if (!w.GetType().FullName.ToLower().Contains("adornerwindow"))
+                    {
+                        break;
+                    }
+                }
+            }
+            return w;
         }
         #endregion
 

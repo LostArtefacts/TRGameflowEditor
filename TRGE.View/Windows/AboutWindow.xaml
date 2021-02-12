@@ -33,7 +33,7 @@
             <TextBlock FontSize="16"
                        FontWeight="Bold">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{0} V{1}">
+                    <MultiBinding StringFormat="{}{0} {1}">
                         <Binding Path="AppTitle"/>
                         <Binding Path="Version"/>
                     </MultiBinding>
@@ -45,24 +45,27 @@
 
             <TextBlock>
                 Scripting functionality based on 
-                <Hyperlink NavigateUri="https://opentomb.github.io/TRosettaStone3/trosettastone.html"
-                       RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink ToolTip="https://opentomb.github.io/TRosettaStone3/trosettastone.html" 
+                           NavigateUri="https://opentomb.github.io/TRosettaStone3/trosettastone.html"
+                           RequestNavigate="Hyperlink_RequestNavigate">
                      TRosettaStone
                 </Hyperlink>
             </TextBlock>
 
             <TextBlock>
                 Uses TR2 level file editing from 
-                <Hyperlink NavigateUri="https://github.com/DanzaG/TR2-Rando"
-                       RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink ToolTip="https://github.com/DanzaG/TR2-Rando"
+                           NavigateUri="https://github.com/DanzaG/TR2-Rando"
+                           RequestNavigate="Hyperlink_RequestNavigate">
                      TR2-Rando
                 </Hyperlink>
             </TextBlock>
 
             <TextBlock>
                 Uses 
-                <Hyperlink NavigateUri="https://www.newtonsoft.com/json"
-                       RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink ToolTip="https://www.newtonsoft.com/json"
+                           NavigateUri="https://www.newtonsoft.com/json"
+                           RequestNavigate="Hyperlink_RequestNavigate">
                      NewtonSoft.Json
                 </Hyperlink>
                 by James Newton-King
@@ -70,8 +73,9 @@
 
             <TextBlock Margin="0,20,0,0">
                 Icon made by 
-                <Hyperlink NavigateUri="https://www.flaticon.com/authors/pixel-perfect"
-                       RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink ToolTip="https://www.flaticon.com/authors/pixel-perfect" 
+                           NavigateUri="https://www.flaticon.com/authors/pixel-perfect"
+                           RequestNavigate="Hyperlink_RequestNavigate">
                      Pixel perfect
                 </Hyperlink>
             </TextBlock>
