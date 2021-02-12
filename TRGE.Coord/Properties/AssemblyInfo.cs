@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TRGE.Coord")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Tomb Raider Gameflow Editor Coordinator")]
+[assembly: AssemblyDescription("Coordinating functionality for TRGE")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Tomp Community")]
 [assembly: AssemblyProduct("TRGE.Coord")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("Copyright © Tomp Community 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
