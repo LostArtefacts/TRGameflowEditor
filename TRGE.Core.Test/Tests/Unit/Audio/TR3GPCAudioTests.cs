@@ -10,7 +10,6 @@ namespace TRGE.Core.Test
         internal override Dictionary<string, ushort> ExpectedLevelTracks => new Dictionary<string, ushort>
         {
             ["TITLE"] = 5,
-            ["SECRET"] = 2,
             [AbstractTRScriptedLevel.CreateID(@"data\scotland.TR2")] = 36,
             [AbstractTRScriptedLevel.CreateID(@"data\willsden.TR2")] = 30,
             [AbstractTRScriptedLevel.CreateID(@"data\chunnel.TR2")] = 74,
@@ -23,7 +22,7 @@ namespace TRGE.Core.Test
 
         protected Dictionary<string, ushort> _newTracks = new Dictionary<string, ushort>
         {
-            ["SECRET"] = 50,
+            ["TITLE"] = 50,
             [AbstractTRScriptedLevel.CreateID(@"data\willsden.TR2")] = 35,
             [AbstractTRScriptedLevel.CreateID(@"data\undersea.TR2")] = 28
         };

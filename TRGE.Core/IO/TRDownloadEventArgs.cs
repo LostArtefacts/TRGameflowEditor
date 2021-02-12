@@ -14,7 +14,7 @@ namespace TRGE.Core
         public bool IsCancelled
         {
             get => Status == TRDownloadStatus.Cancelled;
-            set => Status = value ? TRDownloadStatus.Cancelled : TRDownloadStatus.Initialising;
+            set => Status = value ? TRDownloadStatus.Cancelled : TRDownloadStatus.Undefined;
         }
 
         internal TRDownloadEventArgs()
@@ -26,6 +26,6 @@ namespace TRGE.Core
 
     public enum TRDownloadStatus
     {
-        Initialising, Downloading, Completed, Failed, Cancelled
+        Initialising, Downloading, Completed, Failed, Cancelled, Undefined
     }
 }

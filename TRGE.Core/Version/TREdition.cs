@@ -11,7 +11,8 @@ namespace TRGE.Core
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = false,
-            SunsetsSupported = false
+            SunsetsSupported = false,
+            SecretSoundSupported = false
         };
 
         internal static readonly TREdition GenericPSX = new TREdition
@@ -21,7 +22,8 @@ namespace TRGE.Core
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = false,
-            SunsetsSupported = false
+            SunsetsSupported = false,
+            SecretSoundSupported = false
         };
 
         internal static readonly TREdition TR2PC = new TREdition
@@ -32,7 +34,8 @@ namespace TRGE.Core
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = true,
-            SunsetsSupported = true
+            SunsetsSupported = true,
+            SecretSoundSupported = true
         };
 
         internal static readonly TREdition TR2PSX = new TREdition
@@ -43,7 +46,8 @@ namespace TRGE.Core
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = true,
-            SunsetsSupported = true
+            SunsetsSupported = true,
+            SecretSoundSupported = true
         };
 
         internal static readonly TREdition TR2PSXBeta = new TREdition
@@ -54,7 +58,8 @@ namespace TRGE.Core
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = true,
-            SunsetsSupported = true
+            SunsetsSupported = true,
+            SecretSoundSupported = true
         };
 
         internal static readonly TREdition TR2G = new TREdition
@@ -65,7 +70,8 @@ namespace TRGE.Core
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
             SecretBonusesSupported = true,
-            SunsetsSupported = true
+            SunsetsSupported = true,
+            SecretSoundSupported = true
         };
 
         internal static readonly TREdition TR3PC = new TREdition
@@ -76,7 +82,8 @@ namespace TRGE.Core
             Hardware = Hardware.PC,
             LevelCompleteOffset = 1,
             SecretBonusesSupported = false,
-            SunsetsSupported = false
+            SunsetsSupported = false,
+            SecretSoundSupported = false
         };
 
         internal static readonly TREdition TR3PSX = new TREdition
@@ -87,7 +94,8 @@ namespace TRGE.Core
             Hardware = Hardware.PSX,
             LevelCompleteOffset = 1,
             SecretBonusesSupported = false,
-            SunsetsSupported = false
+            SunsetsSupported = false,
+            SecretSoundSupported = false
         };
 
         internal static readonly TREdition TR3G = new TREdition
@@ -98,7 +106,8 @@ namespace TRGE.Core
             Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = false,
-            SunsetsSupported = false
+            SunsetsSupported = false,
+            SecretSoundSupported = false
         };
 
         internal static readonly IReadOnlyList<TREdition> All = new List<TREdition>
@@ -123,6 +132,10 @@ namespace TRGE.Core
         /// Whether or not sunsets can be set
         /// </summary>
         public bool SunsetsSupported { get; private set; }
+        /// <summary>
+        /// Whether or not the secret sound can be changed
+        /// </summary>
+        public bool SecretSoundSupported { get; private set; }
 
         private TREdition() { }
 

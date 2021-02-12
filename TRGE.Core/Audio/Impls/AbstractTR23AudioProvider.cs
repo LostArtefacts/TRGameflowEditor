@@ -31,7 +31,7 @@ namespace TRGE.Core
             }
 
             string wadFile = Path.Combine(TRInterop.ConfigDirectory, _wadFileName);
-            if (!File.Exists(wadFile) && !TRDownloader.Download(_wadFileName, wadFile))
+            if (!File.Exists(wadFile) && !TRDownloader.Download(_wadFileName, wadFile, true))
             {
                 return null;
             }

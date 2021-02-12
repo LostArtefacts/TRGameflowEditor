@@ -203,10 +203,14 @@ namespace TRGE.Core
             {
                 ret.Add(new MutableTuple<string, string, ushort>("TITLE", "Title Screen", TitleSoundID));
             }
-            track = AudioProvider.GetTrack(SecretSoundID);
-            if (track != null)
+
+            if (Edition.SecretSoundSupported)
             {
-                ret.Add(new MutableTuple<string, string, ushort>("SECRET", "Secret Found", SecretSoundID));
+                track = AudioProvider.GetTrack(SecretSoundID);
+                if (track != null)
+                {
+                    ret.Add(new MutableTuple<string, string, ushort>("SECRET", "Secret Found", SecretSoundID));
+                }
             }
 
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
@@ -232,7 +236,10 @@ namespace TRGE.Core
                 }
                 else if (item.Item1.Equals("SECRET"))
                 {
-                    SecretSoundID = item.Item3;
+                    if (Edition.SecretSoundSupported)
+                    {
+                        SecretSoundID = item.Item3;
+                    }
                 }
                 else
                 {

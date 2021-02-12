@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 
 namespace TRGE.Core
@@ -10,7 +11,7 @@ namespace TRGE.Core
 
         public static event EventHandler<TRDownloadEventArgs> ResourceDownloading;
 
-        internal static bool Download(string urlPath, string targetFile)
+        internal static bool Download(string urlPath, string targetFile, bool isCompressed)
         {
             string url = _resourceURLBase + urlPath;
 
@@ -22,12 +23,14 @@ namespace TRGE.Core
 
             ResourceDownloading?.Invoke(null, args);
 
+            string tempFile = Path.GetTempFileName();
+
             try
             {
                 HttpWebRequest req = WebRequest.CreateHttp(url);
                 using (WebResponse response = req.GetResponse())
                 using (Stream receiveStream = response.GetResponseStream())
-                using (FileStream ouputStream = File.OpenWrite(targetFile))
+                using (FileStream ouputStream = File.OpenWrite(tempFile))// targetFile))
                 {
                     args.DownloadLength = response.ContentLength;
                     args.Status = TRDownloadStatus.Downloading;
@@ -46,11 +49,25 @@ namespace TRGE.Core
                         args.DownloadDifference = size;
                         ResourceDownloading?.Invoke(null, args);
                     }
+                }
 
-                    if (!args.IsCancelled)
+                if (!args.IsCancelled)
+                {
+                    if (isCompressed)
                     {
-                        args.Status = TRDownloadStatus.Completed;
+                        using (FileStream fs = File.OpenRead(tempFile))
+                        using (GZipStream zs = new GZipStream(fs, CompressionMode.Decompress))
+                        using (FileStream os = File.OpenWrite(targetFile))
+                        {
+                            zs.CopyTo(os);
+                        }
                     }
+                    else
+                    {
+                        File.Move(tempFile, targetFile);
+                    }
+
+                    args.Status = TRDownloadStatus.Completed;
                 }
             }
             catch (Exception e)
@@ -61,10 +78,15 @@ namespace TRGE.Core
 
             ResourceDownloading?.Invoke(null, args);
 
-            if (File.Exists(targetFile) && (args.IsCancelled || args.Status == TRDownloadStatus.Failed))
+            if (File.Exists(tempFile))
             {
-                File.Delete(targetFile);
+                File.Delete(tempFile);
             }
+
+            //if (File.Exists(targetFile) && (args.IsCancelled || args.Status == TRDownloadStatus.Failed))
+            //{
+            //    File.Delete(targetFile);
+            //}
 
             return args.Status == TRDownloadStatus.Completed;
         }

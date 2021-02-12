@@ -107,9 +107,9 @@ namespace TRGE.Core
             {
                 encoding = Encoding.Default;
             }
-
+            
             byte[] data = encoding.GetBytes(text);
-            using (FileStream fs = fileInfo.OpenWrite())
+            using (FileStream fs = fileInfo.Create())
             using (GZipStream zs = new GZipStream(fs, CompressionMode.Compress))
             {
                 zs.Write(data, 0, data.Length);
