@@ -7,7 +7,7 @@ using TRGE.Core;
 
 namespace TRGE.Coord
 {
-    public abstract class AbstractTRLevelEditor
+    public abstract class AbstractTRLevelEditor : ITRSaveProgressProvider
     {
         protected readonly TRDirectoryIOArgs _io;
         protected readonly Dictionary<string, ISet<TRScriptedLevelEventArgs>> _levelModifications;
@@ -71,6 +71,11 @@ namespace TRGE.Coord
             {
                 _levelModifications[e.LevelID].Add(e);
             }
+        }
+
+        public virtual int GetSaveTargetCount()
+        {
+            return _levelModifications.Count;
         }
 
         protected virtual void ApplyConfig() { }

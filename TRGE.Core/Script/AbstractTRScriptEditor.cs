@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 namespace TRGE.Core
 {
-    public abstract class AbstractTRScriptEditor
+    public abstract class AbstractTRScriptEditor : ITRSaveProgressProvider
     {
         protected TRScriptIOArgs _io;
 
@@ -150,6 +150,11 @@ namespace TRGE.Core
             }
 
             ApplyConfig();
+        }
+
+        public int GetSaveTargetCount()
+        {
+            return 1;
         }
 
         internal void Save(TRSaveMonitor monitor)

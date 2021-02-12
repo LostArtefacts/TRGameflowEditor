@@ -7,13 +7,13 @@ namespace TRGE.Core
 {
     public static class TRDownloader
     {
-        private const string _resourceURLBase = "https://raw.githubusercontent.com/lahm86/TRGameflowEditor/main/";
+        private const string _resourceURL = "https://github.com/lahm86/TRGameflowEditor/releases/download/{0}/{1}";
 
         public static event EventHandler<TRDownloadEventArgs> ResourceDownloading;
 
         internal static bool Download(string urlPath, string targetFile, bool isCompressed)
         {
-            string url = _resourceURLBase + urlPath;
+            string url = string.Format(_resourceURL, TRInterop.TaggedVersion, urlPath);
 
             TRDownloadEventArgs args = new TRDownloadEventArgs
             {
@@ -30,7 +30,7 @@ namespace TRGE.Core
                 HttpWebRequest req = WebRequest.CreateHttp(url);
                 using (WebResponse response = req.GetResponse())
                 using (Stream receiveStream = response.GetResponseStream())
-                using (FileStream ouputStream = File.OpenWrite(tempFile))// targetFile))
+                using (FileStream ouputStream = File.OpenWrite(tempFile))
                 {
                     args.DownloadLength = response.ContentLength;
                     args.Status = TRDownloadStatus.Downloading;
@@ -56,7 +56,7 @@ namespace TRGE.Core
                     if (isCompressed)
                     {
                         using (FileStream fs = File.OpenRead(tempFile))
-                        using (GZipStream zs = new GZipStream(fs, CompressionMode.Decompress))
+                        using (GZipStream zs = new GZipStream(fs, CompressionMode.Decompress, false))
                         using (FileStream os = File.OpenWrite(targetFile))
                         {
                             zs.CopyTo(os);
@@ -82,11 +82,6 @@ namespace TRGE.Core
             {
                 File.Delete(tempFile);
             }
-
-            //if (File.Exists(targetFile) && (args.IsCancelled || args.Status == TRDownloadStatus.Failed))
-            //{
-            //    File.Delete(targetFile);
-            //}
 
             return args.Status == TRDownloadStatus.Completed;
         }

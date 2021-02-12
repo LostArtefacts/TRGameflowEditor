@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TRGE.Core
 {
-    internal static class IOExtensions
+    public static class IOExtensions
     {
         /// <summary>
         /// Copies the content of this directory to the target directory.
@@ -114,6 +114,29 @@ namespace TRGE.Core
             {
                 zs.Write(data, 0, data.Length);
             }
+        }
+
+        private static readonly string[] _sizeSuffixes =
+        {
+            "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"
+        };
+
+        public static string ToDescriptiveSize(this long length, int decimalPlaces = 1)
+        {
+            if (length < 0)
+            {
+                return "-" + (-length).ToDescriptiveSize(decimalPlaces);
+            }
+
+            int i = 0;
+            decimal d = length;
+            while (Math.Round(d, decimalPlaces) >= 1000)
+            {
+                d /= 1024;
+                i++;
+            }
+
+            return string.Format("{0:n" + decimalPlaces + "} {1}", d, _sizeSuffixes[i]);
         }
     }
 }

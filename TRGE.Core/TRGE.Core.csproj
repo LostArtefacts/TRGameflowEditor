@@ -54,6 +54,7 @@
     <Compile Include="Audio\TRAudioTrack.cs" />
     <Compile Include="Audio\TRAudioType.cs" />
     <Compile Include="Helpers\Extensions\IOExtensions.cs" />
+    <Compile Include="IO\ITRSaveProgressProvider.cs" />
     <Compile Include="IO\TRDirectoryIOArgs.cs" />
     <Compile Include="IO\TRSaveCategory.cs" />
     <Compile Include="IO\TRSaveEventArgs.cs" />

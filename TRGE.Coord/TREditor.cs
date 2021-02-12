@@ -83,7 +83,8 @@ namespace TRGE.Coord
         {
             TRSaveMonitor monitor = new TRSaveMonitor(new TRSaveEventArgs
             {
-                ProgressTarget = ScriptEditor.LevelManager.LevelCount + 1
+                ProgressTarget = ScriptEditor.GetSaveTargetCount() + 
+                (LevelEditor == null ? 0 : LevelEditor.GetSaveTargetCount())
             });
             monitor.SaveStateChanged += Editor_SaveStateChanged;
 
