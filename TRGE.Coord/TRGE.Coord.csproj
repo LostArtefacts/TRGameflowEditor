@@ -50,7 +50,6 @@
     <Compile Include="Helpers\Location.cs" />
     <Compile Include="Helpers\SpriteDefinition.cs" />
     <Compile Include="Level\AbstractTRLevelEditor.cs" />
-    <Compile Include="Level\AbstractTRLevelEditorPlugin.cs" />
     <Compile Include="Level\Exceptions\ScriptedLevelMismatchException.cs" />
     <Compile Include="Level\TRLevelEditorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
