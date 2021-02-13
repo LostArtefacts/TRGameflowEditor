@@ -51,6 +51,21 @@ namespace TRGE.View.Controls
             "ManualButtonText", typeof(string), typeof(DefaultManualControl), new PropertyMetadata("Organise")
         );
 
+        public static readonly DependencyProperty IsRandomProperty = DependencyProperty.Register
+        (
+            "IsRandom", typeof(bool), typeof(DefaultManualControl), new PropertyMetadata(false)
+        );
+
+        public static readonly DependencyProperty ConfigurableVisibilityProperty = DependencyProperty.Register
+        (
+            "ConfigurableVisibilityProperty", typeof(Visibility), typeof(DefaultManualControl), new PropertyMetadata(Visibility.Visible)
+        );
+
+        public static readonly DependencyProperty UnconfigurableVisibilityProperty = DependencyProperty.Register
+        (
+            "UnconfigurableVisibilityProperty", typeof(Visibility), typeof(DefaultManualControl), new PropertyMetadata(Visibility.Collapsed)
+        );
+
         public string Text
         {
             get => (string)GetValue(TextProperty);
@@ -72,13 +87,43 @@ namespace TRGE.View.Controls
         public bool IsDefault
         {
             get => (bool)GetValue(IsDefaultProperty);
-            set => SetValue(IsDefaultProperty, value);
+            set
+            {
+                SetValue(IsDefaultProperty, value);
+                SetConfigurable();
+            }
         }
 
         public bool IsManual
         {
             get => (bool)GetValue(IsManualProperty);
-            set => SetValue(IsManualProperty, value);
+            set
+            {
+                SetValue(IsManualProperty, value);
+                SetConfigurable();
+            }
+        }
+
+        public bool IsRandom
+        {
+            get => (bool)GetValue(IsRandomProperty);
+            set
+            {
+                SetValue(IsRandomProperty, value);
+                SetConfigurable();
+            }
+        }
+
+        public Visibility ConfigurableVisibility
+        {
+            get => (Visibility)GetValue(ConfigurableVisibilityProperty);
+            set => SetValue(ConfigurableVisibilityProperty, value);
+        }
+
+        public Visibility UnconfigurableVisibility
+        {
+            get => (Visibility)GetValue(UnconfigurableVisibilityProperty);
+            set => SetValue(UnconfigurableVisibilityProperty, value);
         }
         #endregion
 
@@ -97,6 +142,12 @@ namespace TRGE.View.Controls
         {
             InitializeComponent();
             _content.DataContext = this;
+        }
+
+        private void SetConfigurable()
+        {
+            ConfigurableVisibility = (IsDefault || IsManual) ? Visibility.Visible : Visibility.Collapsed;
+            UnconfigurableVisibility = IsRandom ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ManualButton_Click(object sender, RoutedEventArgs e)

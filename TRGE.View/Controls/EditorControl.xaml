@@ -134,6 +134,7 @@
                 Text="Specify the order in which levels are played. Required pickups will be available in TR2 (e.g. the Seraph for Barkhang Monastry) regardless of when the level is reached."
                 IsDefault="{Binding UseDefaultLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                IsRandom="{Binding UseRandomLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 ManualConfigure="LevelSequencing_ManualConfigure"/>
         </GroupBox>
 
