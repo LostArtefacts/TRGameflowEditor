@@ -34,6 +34,15 @@ namespace TRGE.Coord
             }
         }
 
+        internal override Dictionary<string, object> ExportConfig()
+        {
+            Dictionary<string, object> config = base.ExportConfig();
+            SaveConfig(config);
+            return config;
+        }
+
+        protected virtual void SaveConfig(Dictionary<string, object> config) { }
+
         internal void Initialise(AbstractTRScriptEditor scriptEditor)
         {
             _levelModifications.Clear();
@@ -64,6 +73,8 @@ namespace TRGE.Coord
 
             SaveImpl(scriptEditor, monitor);
 
+            SaveConfig(_config);
+
             _io.ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }
 
@@ -77,14 +88,19 @@ namespace TRGE.Coord
 
         public override int GetSaveTargetCount()
         {
-            return _levelModifications.Count;
+            return _levelModifications.Count + GetSaveTarget(_levelModifications.Count);
+        }
+
+        protected virtual int GetSaveTarget(int numLevels)
+        {
+            return 0;
         }
 
         protected override void ApplyConfig(Dictionary<string, object> config) { }
         internal abstract bool ShouldHandleModification(TRScriptedLevelEventArgs e);
         internal abstract void ProcessModification(TRScriptedLevelEventArgs e);
 
-        internal abstract void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor);
+        protected virtual void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor) { }
         
         /// <summary>
         /// Depending on wheter AllowSuccessiveEdits is set this will either return the current

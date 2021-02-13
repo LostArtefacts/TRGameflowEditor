@@ -13,10 +13,16 @@ namespace TRGE.Core
             _args = e;
         }
 
-        public void FireSaveStateChanged(int progress = 0, TRSaveCategory category = TRSaveCategory.None)
+        public void FireSaveStateBeginning(TRSaveCategory category = TRSaveCategory.None, string customDescription = null)
+        {
+            FireSaveStateChanged(0, category, customDescription);
+        }
+
+        public void FireSaveStateChanged(int progress = 0, TRSaveCategory category = TRSaveCategory.None, string customDescription = null)
         {
             _args.ProgressValue += progress;
             _args.Category = category;
+            _args.CustomDescription = customDescription;
             SaveStateChanged?.Invoke(this, _args);
         }
     }

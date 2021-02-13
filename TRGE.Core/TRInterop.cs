@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
+//[assembly: InternalsVisibleTo("TRGE.Plugin")]
 [assembly: InternalsVisibleTo("TRGE.Coord")]
 [assembly: InternalsVisibleTo("TRGE.Core.Test")]
 

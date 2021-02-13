@@ -2,7 +2,7 @@
 
 namespace TRGE.Core
 {
-    internal abstract class AbstractTROperationContainer
+    public abstract class AbstractTROperationContainer
     {
         protected readonly List<TROperation> _operations;
         internal IReadOnlyList<TROperation> Operations => _operations.AsReadOnly();

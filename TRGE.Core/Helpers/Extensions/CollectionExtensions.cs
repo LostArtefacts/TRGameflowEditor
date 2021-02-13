@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TRGE.Core
 {
@@ -87,6 +88,11 @@ namespace TRGE.Core
             {
                 dict.Add(key, val);
             }
+        }
+
+        internal static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dict)
+        {
+            return dict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace TRGE.Coord
 {
-    internal class Location
+    public class Location
     {
         public short Room { get; set; }
         public int X { get; set; }

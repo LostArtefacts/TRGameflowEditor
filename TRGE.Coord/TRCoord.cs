@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using TRGE.Core;
 
+[assembly: InternalsVisibleTo("TRGE.Core.Test")]
+//[assembly: InternalsVisibleTo("TRGE.Plugin")]
 namespace TRGE.Coord
 {
     public class TRCoord

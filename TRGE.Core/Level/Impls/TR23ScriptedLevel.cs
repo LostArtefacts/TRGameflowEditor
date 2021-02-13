@@ -11,22 +11,22 @@ namespace TRGE.Core
             CreateID("FLOATING"), CreateID("XIAN")//, CreateID("HOUSE")
         };
 
-        internal override ushort Sequence
+        public override ushort Sequence
         {
             get => GetOperation(TR23OpDefs.Level).Operand;
-            set => GetOperation(TR23OpDefs.Level).Operand = value;
+            internal set => GetOperation(TR23OpDefs.Level).Operand = value;
         }
 
-        internal override ushort TrackID
+        public override ushort TrackID
         {
             get => GetOperation(TR23OpDefs.Track).Operand;
-            set => GetOperation(TR23OpDefs.Track).Operand = value;
+            internal set => GetOperation(TR23OpDefs.Track).Operand = value;
         }
 
-        internal override bool HasFMV
+        public override bool HasFMV
         {
             get => HasActiveOperation(TR23OpDefs.FMV);
-            set
+            internal set
             {
                 SetOperationActive(TR23OpDefs.FMV, value);
                 SetOperationActive(TR23OpDefs.ListStart, value);
@@ -34,17 +34,17 @@ namespace TRGE.Core
             }
         }
 
-        internal override bool SupportsFMVs => HasOperation(TR23OpDefs.FMV);
+        public override bool SupportsFMVs => HasOperation(TR23OpDefs.FMV);
 
-        internal override bool HasStartAnimation
+        public override bool HasStartAnimation
         {
             get => HasActiveOperation(TR23OpDefs.StartAnimation);
-            set => SetOperationActive(TR23OpDefs.StartAnimation, value);
+            internal set => SetOperationActive(TR23OpDefs.StartAnimation, value);
         }
 
-        internal override bool SupportsStartAnimations => HasOperation(TR23OpDefs.StartAnimation);
+        public override bool SupportsStartAnimations => HasOperation(TR23OpDefs.StartAnimation);
 
-        internal override short StartAnimationID
+        public override short StartAnimationID
         {
             get
             {
@@ -54,7 +54,7 @@ namespace TRGE.Core
                 }
                 return -1;
             }
-            set
+            internal set
             {
                 if (value == -1)
                 {
@@ -71,22 +71,22 @@ namespace TRGE.Core
             }
         }
 
-        internal override bool HasCutScene
+        public override bool HasCutScene
         {
             get => HasActiveOperation(TR23OpDefs.Cinematic);
-            set
+            internal set
             {
                 SetOperationActive(TR23OpDefs.Cinematic, value);
                 SetOperationActive(TR23OpDefs.CutAngle, value);
             }
         }
 
-        internal override bool SupportsCutScenes => HasOperation(TR23OpDefs.Cinematic);
+        public override bool SupportsCutScenes => HasOperation(TR23OpDefs.Cinematic);
 
-        internal override bool HasSunset
+        public override bool HasSunset
         {
             get => HasActiveOperation(TR23OpDefs.Sunset);
-            set
+            internal set
             {
                 if (value)
                 {
@@ -99,16 +99,16 @@ namespace TRGE.Core
             }
         }
 
-        internal override bool HasDeadlyWater
+        public override bool HasDeadlyWater
         {
             get => HasActiveOperation(TR23OpDefs.DeadlyWater);
-            set => SetOperationActive(TR23OpDefs.DeadlyWater, value);
+            internal set => SetOperationActive(TR23OpDefs.DeadlyWater, value);
         }
 
-        internal override bool RemovesWeapons
+        public override bool RemovesWeapons
         {
             get => HasActiveOperation(TR23OpDefs.RemoveWeapons);
-            set
+            internal set
             {
                 if (value)
                 {
@@ -121,7 +121,7 @@ namespace TRGE.Core
             }
         }
 
-        internal bool RequiresPistolTextureInjection
+        public bool RequiresPistolTextureInjection
         {
             get
             {
@@ -129,10 +129,10 @@ namespace TRGE.Core
             }
         }
 
-        internal override bool RemovesAmmo
+        public override bool RemovesAmmo
         {
             get => HasActiveOperation(TR23OpDefs.RemoveAmmo);
-            set
+            internal set
             {
                 if (value)
                 {
@@ -149,10 +149,10 @@ namespace TRGE.Core
         /// In the script, the command is NOSECRETS to remove secrets so this needs to negate
         /// whether or not that command is present....so the script doesn't not have secrets!
         /// </summary>
-        internal override bool HasSecrets
+        public override bool HasSecrets
         {
             get => !HasActiveOperation(TR23OpDefs.Secrets);
-            set
+            internal set
             {
                 if (value)
                 {
@@ -165,12 +165,12 @@ namespace TRGE.Core
             }
         }
 
-        internal override bool KillToComplete => HasOperation(TR23OpDefs.KillToComplete);
+        public override bool KillToComplete => HasOperation(TR23OpDefs.KillToComplete);
 
-        internal override bool IsFinalLevel
+        public override bool IsFinalLevel
         {
             get => HasActiveOperation(TR23OpDefs.GameComplete);
-            set
+            internal set
             {
                 if (value)
                 {

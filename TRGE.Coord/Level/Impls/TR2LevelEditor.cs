@@ -10,11 +10,11 @@ using TRLevelReader.Model.Enums;
 
 namespace TRGE.Coord
 {
-    internal class TR2LevelEditor : AbstractTRLevelEditor
+    public class TR2LevelEditor : AbstractTRLevelEditor
     {
-        private readonly Dictionary<string, Location> _defaultWeaponLocations;
+        protected readonly Dictionary<string, Location> _defaultWeaponLocations;
 
-        internal TR2LevelEditor(TRDirectoryIOArgs io)
+        public TR2LevelEditor(TRDirectoryIOArgs io)
             : base(io)
         {
             _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, Location>>(File.ReadAllText(@"Resources\ualocations.json"));
@@ -47,7 +47,7 @@ namespace TRGE.Coord
             }
         }
 
-        private void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs e)
+        protected virtual void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs e)
         {
             string levelFile = GetReadLevelFilePath(e.LevelFileBaseName);
             if (!File.Exists(levelFile))
@@ -77,8 +77,8 @@ namespace TRGE.Coord
             }
             return null;
         }
-        
-        private bool SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
+
+        protected virtual bool SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
         {
             Location defaultLocation = GetLocationForLevel(scriptedLevel.LevelFileBaseName);
             if (defaultLocation == null)
@@ -133,7 +133,7 @@ namespace TRGE.Coord
             return changesMade;
         }
 
-        private void CheckHSHBackup()
+        protected virtual void CheckHSHBackup()
         {
             // HSH is a special case as we need to make sure all weapons, ammo,
             // and relevant animations are available in the level in case it no
@@ -189,7 +189,7 @@ namespace TRGE.Coord
             }
         }
 
-        private bool MaybeInjectPistolTexture(TR2Level level)
+        protected virtual bool MaybeInjectPistolTexture(TR2Level level)
         {
             int pistolIndex = level.SpriteSequences.ToList().FindIndex(e => e.SpriteID == (short)TR2Entities.Pistols_S_P);
             if (pistolIndex == -1)
@@ -205,7 +205,7 @@ namespace TRGE.Coord
         // for each vertex inthe room) will dim over 20 minutes in the game. We don't need to undo this as it 
         // will be ignored if the script flag isn't set.
         // https://opentomb.github.io/TRosettaStone3/trosettastone.html#_the_whole_room_structure
-        private void HandleSunsetStateChanged(TRScriptedLevelEventArgs e)
+        protected virtual void HandleSunsetStateChanged(TRScriptedLevelEventArgs e)
         {
             if (!e.LevelHasSunset)
             {
@@ -240,13 +240,6 @@ namespace TRGE.Coord
                 TR2LevelWriter writer = new TR2LevelWriter();
                 writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
             }
-        }
-
-        
-
-        internal override void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
-        {
-
         }
 
         internal override void Restore()

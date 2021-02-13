@@ -54,6 +54,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\Integration\Audio\TR2AudioIntegrationTests.cs" />
     <Compile Include="Tests\Integration\Audio\TR3AudioIntegrationTests.cs" />
+    <Compile Include="Tests\Integration\Extensions\AbstractTR2ExtensionTests.cs" />
+    <Compile Include="Tests\Integration\Extensions\TR2GExtensionTests.cs" />
+    <Compile Include="Tests\Integration\Extensions\TR2ExtensionTests.cs" />
     <Compile Include="Tests\Unit\Audio\AbstractTR23AudioTestCollection.cs" />
     <Compile Include="Tests\Unit\Audio\TR2GPCAudioTests.cs" />
     <Compile Include="Tests\Unit\Audio\TR2PCAudioTests.cs" />
@@ -159,6 +162,10 @@
     <ProjectReference Include="..\TRGE.Core\TRGE.Core.csproj">
       <Project>{d35a4948-923b-4ef7-87de-81c27d156d93}</Project>
       <Name>TRGE.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TRGE.Extension\TRGE.Extension.csproj">
+      <Project>{e047f181-93b9-4615-9f1b-6ae34bd2bca8}</Project>
+      <Name>TRGE.Extension</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

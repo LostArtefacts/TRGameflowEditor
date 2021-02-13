@@ -112,6 +112,11 @@ namespace TRGE.Core.Test
             RunTest(new TR2PCImportExportTests());
             #endregion
 
+            #region Plugins
+            RunTest(new TR2ExtensionTests());
+            RunTest(new TR2GExtensionTests());
+            #endregion
+
             WriteHeader("Test Results");
             Console.WriteLine("PASS: {0}", _pass);
             Console.WriteLine("FAIL: {0}", _fail);

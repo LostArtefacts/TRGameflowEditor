@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
-    internal class TROpDef
+    public class TROpDef
     {
-        internal TROpDef Next { get; private set; }
-        internal ushort OpCode { get; private set; }
-        internal bool HasOperand { get; private set; }
+        public TROpDef Next { get; private set; }
+        public ushort OpCode { get; private set; }
+        public bool HasOperand { get; private set; }
 
         internal TROpDef(ushort opCode, bool hasOperand, TROpDef next = null)
         {

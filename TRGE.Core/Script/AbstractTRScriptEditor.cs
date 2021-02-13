@@ -40,6 +40,8 @@ namespace TRGE.Core
         internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
         internal AbstractTRScript Script { get; private set; }
 
+        public IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
+
         protected TRScriptOpenOption _openOption;
 
         internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;

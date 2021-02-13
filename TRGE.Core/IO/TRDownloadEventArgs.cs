@@ -26,6 +26,6 @@ namespace TRGE.Core
 
     public enum TRDownloadStatus
     {
-        Initialising, Downloading, Completed, Failed, Cancelled, Undefined
+        Initialising, Downloading, Committing, Completed, Failed, Cancelled, Undefined
     }
 }

@@ -1,13 +1,13 @@
 ﻿namespace TRGE.Core
 {
-    internal class TROperation
+    public class TROperation
     {
-        internal TROpDef Definition { get; set; }
-        internal ushort Operand { get; set; }
-        internal bool IsActive { get; set; }
+        public TROpDef Definition { get; internal set; }
+        public ushort Operand { get; internal set; }
+        public bool IsActive { get; internal set; }
 
-        internal ushort OpCode => Definition.OpCode;
-        internal bool HasOperand => Definition.HasOperand;
+        public ushort OpCode => Definition.OpCode;
+        public bool HasOperand => Definition.HasOperand;
 
         internal TROperation(TROpDef opDef, ushort operand, bool isActive)
         {

@@ -53,6 +53,8 @@ namespace TRGE.Core
 
                 if (!args.IsCancelled)
                 {
+                    args.Status = TRDownloadStatus.Committing;
+                    ResourceDownloading?.Invoke(null, args);
                     if (isCompressed)
                     {
                         using (FileStream fs = File.OpenRead(tempFile))

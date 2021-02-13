@@ -1,31 +1,60 @@
-﻿using TRGE.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using TRGE.Core;
 
 namespace TRGE.Coord
 {
-    internal static class TRLevelEditorFactory
+    public static class TRLevelEditorFactory
     {
+        private static readonly IReadOnlyDictionary<TRVersion, Type> _defaultTypeMap = new Dictionary<TRVersion, Type>
+        {
+            [TRVersion.TR2] = typeof(TR2LevelEditor),
+            [TRVersion.TR2G] = typeof(TR2LevelEditor),
+        };
+
+        private static readonly Dictionary<TRVersion, Type> _typeMap = _defaultTypeMap.ToDictionary();
+
+        public static void RegisterEditor(TRVersion version, Type type)
+        {
+            if (_typeMap.ContainsKey(version))
+            {
+                _typeMap[version] = type;
+            }
+            else
+            {
+                _typeMap.Add(version, type);
+            }
+        }
+
+        public static void DeregisterEditor(TRVersion version, Type type)
+        {
+            if (_typeMap.ContainsKey(version) && _typeMap[version] == type && _defaultTypeMap.ContainsKey(version))
+            {
+                _typeMap[version] = _defaultTypeMap[version];
+            }
+        }
+
         internal static AbstractTRLevelEditor GetLevelEditor(TRDirectoryIOArgs io, TREdition edition)
         {
-            switch (edition.Version)
+            if (EditionSupportsLevelEditing(edition))
             {
-                case TRVersion.TR2:
-                case TRVersion.TR2G:
-                    return new TR2LevelEditor(io);
-                default:
-                    return null;
+                return (AbstractTRLevelEditor)Activator.CreateInstance
+                (
+                    _typeMap[edition.Version],
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, 
+                    null,
+                    new object[] { io },
+                    null
+                );
             }
+
+            return null;
         }
 
         internal static bool EditionSupportsLevelEditing(TREdition edition)
         {
-            switch (edition.Version)
-            {
-                case TRVersion.TR2:
-                case TRVersion.TR2G:
-                    return true;
-                default:
-                    return false;
-            }
+            return _typeMap.ContainsKey(edition.Version);
         }
     }
 }

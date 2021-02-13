@@ -1,50 +1,49 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace TRGE.Core
 {
-    internal abstract class AbstractTRScriptedLevel : AbstractTROperationContainer
+    public abstract class AbstractTRScriptedLevel : AbstractTROperationContainer
     {
-        internal string ID { get; private set; }
-        internal string Name;
+        public string ID { get; private set; }
+        public string Name { get; internal set; }
 
         protected string _levelFile;
-        internal string LevelFile
+        public string LevelFile
         {
             get => _levelFile;
-            set
+            internal set
             {
                 ID = CreateID(_levelFile = value);
             }
         }
 
-        internal string LevelFileBaseName => Path.GetFileName(LevelFile);
+        public string LevelFileBaseName => Path.GetFileName(LevelFile);
 
         protected List<string> _puzzles, _keys, _pickups;
-        internal IReadOnlyList<string> Puzzles => _puzzles;
-        internal IReadOnlyList<string> Keys => _keys;
-        internal IReadOnlyList<string> Pickups => _pickups;
+        public IReadOnlyList<string> Puzzles => _puzzles;
+        public IReadOnlyList<string> Keys => _keys;
+        public IReadOnlyList<string> Pickups => _pickups;
 
-        internal abstract ushort Sequence { get; set; }
-        internal abstract ushort TrackID { get; set; }
-        internal abstract bool HasFMV { get; set; }
-        internal abstract bool SupportsFMVs { get; }
-        internal abstract bool HasStartAnimation { get; set; }
-        internal abstract bool SupportsStartAnimations { get; }
-        internal abstract short StartAnimationID { get; set; }
-        internal abstract bool HasCutScene { get; set; }
-        internal abstract bool SupportsCutScenes { get; }
-        internal abstract bool HasSunset { get; set; }
-        internal abstract bool HasDeadlyWater { get; set; }
-        internal abstract bool RemovesWeapons { get; set; }
-        internal abstract bool RemovesAmmo { get; set; }
-        internal abstract bool HasSecrets { get; set; }
-        internal abstract bool KillToComplete { get; }
-        internal abstract bool IsFinalLevel { get; set; }
+        public abstract ushort Sequence { get; internal set; }
+        public abstract ushort TrackID { get; internal set; }
+        public abstract bool HasFMV { get; internal set; }
+        public abstract bool SupportsFMVs { get; }
+        public abstract bool HasStartAnimation { get; internal set; }
+        public abstract bool SupportsStartAnimations { get; }
+        public abstract short StartAnimationID { get; internal set; }
+        public abstract bool HasCutScene { get; internal set; }
+        public abstract bool SupportsCutScenes { get; }
+        public abstract bool HasSunset { get; internal set; }
+        public abstract bool HasDeadlyWater { get; internal set; }
+        public abstract bool RemovesWeapons { get; internal set; }
+        public abstract bool RemovesAmmo { get; internal set; }
+        public abstract bool HasSecrets { get; internal set; }
+        public abstract bool KillToComplete { get; }
+        public abstract bool IsFinalLevel { get; internal set; }
 
-        internal bool OptionallyRemovesWeapons => RemovesWeapons && !RemovesAmmo;
-        internal bool ForciblyRemovesWeapons => RemovesWeapons && RemovesAmmo;
+        public bool OptionallyRemovesWeapons => RemovesWeapons && !RemovesAmmo;
+        public bool ForciblyRemovesWeapons => RemovesWeapons && RemovesAmmo;
 
         internal AbstractTRScriptedLevel()
         {
@@ -83,7 +82,6 @@ namespace TRGE.Core
         internal static string CreateID(string identifier)
         {
             return Path.GetFileNameWithoutExtension(identifier).ToUpper().CreateMD5();
-            //return HashingExtensions.CreateMD5(Path.GetFileNameWithoutExtension(identifier).ToUpper(), Encoding.Default);
         }
 
         public override bool Equals(object obj)
