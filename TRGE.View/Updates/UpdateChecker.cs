@@ -39,7 +39,7 @@ namespace TRGE.View.Updates
         private UpdateChecker()
         {
             _initialDelay = new TimeSpan(0, 0, 20);
-            _periodicDelay = new TimeSpan(0, 1, 0);
+            _periodicDelay = new TimeSpan(0, 30, 0);
 
             _cancelSource = new CancellationTokenSource();
             _cancelToken = _cancelSource.Token;

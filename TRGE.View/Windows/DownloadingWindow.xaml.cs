@@ -99,6 +99,12 @@ namespace TRGE.View.Windows
                     LengthDescription = e.DownloadProgress.ToDescriptiveSize() + " / " + e.DownloadLength.ToDescriptiveSize();
                 }
             }
+            else if (e.Status == TRDownloadStatus.Committing)
+            {
+                ProgressDescription = "Storing resource file";
+                _cancelButton.IsEnabled = false;
+                WindowUtils.EnableCloseButton(this, false);
+            }
             else if (e.IsCancelled)
             {
                 WindowUtils.EnableCloseButton(this, true);

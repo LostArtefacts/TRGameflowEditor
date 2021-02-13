@@ -9,7 +9,7 @@
         ResizeMode="NoResize"
         Loaded="Window_Loaded"
         Icon="..\Resources\shuffle.ico"
-        Title="TRGE : Saving" Height="100" Width="300">
+        Title="TRGE : Saving" Height="100" Width="400">
     <Grid>
         <StackPanel Margin="10">
             <TextBlock Text="{Binding ProgressDescription}"/>

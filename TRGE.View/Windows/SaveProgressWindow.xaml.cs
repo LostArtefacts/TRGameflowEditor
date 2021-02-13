@@ -66,17 +66,24 @@ namespace TRGE.View.Windows
             {
                 ProgressTarget = e.ProgressTarget;
                 ProgressValue = e.ProgressValue;
-                switch (e.Category)
+                if (e.CustomDescription != null)
                 {
-                    case TRSaveCategory.Scripting:
-                        ProgressDescription = "Saving script data";
-                        break;
-                    case TRSaveCategory.LevelFile:
-                        ProgressDescription = "Saving level file modifications";
-                        break;
-                    case TRSaveCategory.Commit:
-                        ProgressDescription = "Committing changes";
-                        break;
+                    ProgressDescription = e.CustomDescription;
+                }
+                else
+                {
+                    switch (e.Category)
+                    {
+                        case TRSaveCategory.Scripting:
+                            ProgressDescription = "Saving script data";
+                            break;
+                        case TRSaveCategory.LevelFile:
+                            ProgressDescription = "Saving level file modifications";
+                            break;
+                        case TRSaveCategory.Commit:
+                            ProgressDescription = "Committing changes";
+                            break;
+                    }
                 }
             });
         }
