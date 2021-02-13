@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.IO;
 using TRGE.Coord;
 using TRGE.Extension;
@@ -64,6 +65,31 @@ namespace TRGE.Core.Test
             editor = TRCoord.Instance.Open(WorkingDirectory);
             Assert.IsTrue((editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool);
             Assert.IsTrue((editor.LevelEditor as TRLevelEditorExtensionExample).CustomInt == 300);
+        }
+
+        [TestMethod]
+        [TestSequence(3)]
+        protected void TestExtensionPostRando()
+        {
+            TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
+            List<string> initialLevels = new List<string>();
+            foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.LevelManager.Levels)
+            {
+                initialLevels.Add(level.ID);
+            }
+
+            editor.ScriptEditor.LevelSequencingOrganisation = Organisation.Random;
+            editor.ScriptEditor.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
+
+            editor.Save();
+
+            List<string> postLevels = new List<string>();
+            foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.Levels)
+            {
+                postLevels.Add(level.ID);
+            }
+
+            CollectionAssert.AreEqual(initialLevels, postLevels);
         }
 
         protected override void TearDown()

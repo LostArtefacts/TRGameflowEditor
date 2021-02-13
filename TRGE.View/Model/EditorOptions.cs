@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using TRGE.Coord;
 using TRGE.Core;
 using TRGE.View.Model.Audio;
 using TRGE.View.Model.Data;
@@ -17,7 +16,7 @@ namespace TRGE.View.Model
         private bool _demosEnabled, _trainingEnabled;
         private int _demoDelay;
         
-        private bool _useDefaultLevelSequence, _useManualLevelSequence;
+        private bool _useDefaultLevelSequence, _useManualLevelSequence, _useRandomLevelSequence;
         private List<Tuple<string, string>> _levelSequencing;
 
         private bool _useDefaultUnarmedLevels, _useManualUnarmedLevels;
@@ -184,6 +183,16 @@ namespace TRGE.View.Model
             set
             {
                 _useManualLevelSequence = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool UseRandomLevelSequence
+        {
+            get => _useRandomLevelSequence;
+            set
+            {
+                _useRandomLevelSequence = value;
                 OnPropertyChanged();
             }
         }
@@ -397,8 +406,9 @@ namespace TRGE.View.Model
             DemoDelay = (int)editor.DemoTime;
             TrainingEnabled = editor.GymEnabled;
 
-            UseManualLevelSequence = editor.LevelSequencingOrganisation == Organisation.Manual;
-            UseDefaultLevelSequence = !UseManualLevelSequence;
+            UseManualLevelSequence = false;// editor.LevelSequencingOrganisation == Organisation.Manual;
+            UseDefaultLevelSequence = false;// editor.LevelSequencingOrganisation == Organisation.Default;
+            UseRandomLevelSequence = true;// editor.LevelSequencingOrganisation == Organisation.Random;
             _levelSequencing = editor.LevelSequencing;
 
             UseManualUnarmed = editor.UnarmedLevelOrganisation == Organisation.Manual;
