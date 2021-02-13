@@ -15,5 +15,17 @@ namespace TRGE.Coord
                     return null;
             }
         }
+
+        internal static bool EditionSupportsLevelEditing(TREdition edition)
+        {
+            switch (edition.Version)
+            {
+                case TRVersion.TR2:
+                case TRVersion.TR2G:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

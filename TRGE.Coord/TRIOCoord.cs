@@ -46,9 +46,17 @@ namespace TRGE.Coord
             _mode = Directory.Exists(path) ? OperationMode.Directory : OperationMode.File;
             _orignalScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path) : path;
             _originalDirectory = _mode == OperationMode.Directory ? path : new FileInfo(_orignalScriptFile).DirectoryName;
+
+            // Verify that the script and level editors are compatible - this
+            // should be done before any backups are performed.
+            if (_mode == OperationMode.Directory)
+            {
+                TREditor.ValidateCompatibility(TRScriptFactory.OpenScript(_orignalScriptFile), _originalDirectory);
+            }
+
             _editDirectory = GetEditDirectory();
             CheckBackup();
-
+            
             AbstractTRScriptEditor scriptEditor = GetScriptEditor(openOption);
             AbstractTRLevelEditor levelEditor = GetLevelEditor(scriptEditor);
             return new TREditor(OutputDirectory, OriginalDirectory)
@@ -97,7 +105,7 @@ namespace TRGE.Coord
             FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path));
             if (fi == null)
             {
-                throw new MissingScriptException(string.Format("No valid script file (.dat) was found in {0}.", path));
+                throw new MissingScriptException(string.Format("No valid Tomb Raider script file (.dat) was found in {0}.", path));
             }
             return fi.FullName;
         }

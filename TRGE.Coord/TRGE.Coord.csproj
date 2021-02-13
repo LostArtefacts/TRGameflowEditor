@@ -50,6 +50,7 @@
     <Compile Include="Helpers\Location.cs" />
     <Compile Include="Helpers\SpriteDefinition.cs" />
     <Compile Include="Level\AbstractTRLevelEditor.cs" />
+    <Compile Include="Level\Exceptions\ScriptedLevelMismatchException.cs" />
     <Compile Include="Level\TRLevelEditorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TREditor.cs" />
@@ -73,7 +74,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\ualocations.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup />

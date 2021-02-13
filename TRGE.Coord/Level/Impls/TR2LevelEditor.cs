@@ -181,7 +181,7 @@ namespace TRGE.Coord
 
             string currentBackupFile = Path.Combine(_io.BackupDirectory.FullName, "house.tr2");
             string fullOriginalBackup = Path.Combine(_io.BackupDirectory.FullName, "house.tr2.bak");
-            if (!File.Exists(fullOriginalBackup))
+            if (File.Exists(currentBackupFile) && !File.Exists(fullOriginalBackup))
             {
                 File.Move(currentBackupFile, fullOriginalBackup);
                 File.Copy(@"Resources\house.tr2", currentBackupFile, true);

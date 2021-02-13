@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using TRGE.Core;
 
 namespace TRGE.Coord
@@ -97,6 +98,34 @@ namespace TRGE.Coord
         protected virtual string GetWriteLevelFilePath(string levelFileName)
         {
             return Path.Combine(_io.OutputDirectory.FullName, levelFileName);
+        }
+
+        /// <summary>
+        /// This performs a check that each level defined in the script file is available as a level
+        /// file in the specified directory. So, if a folder contains a TR2 script file but TR3 level
+        /// files, then an exception is thrown. Equally, if the folder contains only a subset of the
+        /// expected level files, an exception is thrown.
+        /// </summary>
+        internal static void ValidateCompatibility(List<AbstractTRScriptedLevel> levels, string folderPath)
+        {
+            List<AbstractTRScriptedLevel> faults = new List<AbstractTRScriptedLevel>();
+            foreach (AbstractTRScriptedLevel level in levels)
+            {
+                if (!File.Exists(Path.Combine(folderPath, level.LevelFileBaseName)))
+                {
+                    faults.Add(level);
+                }
+            }
+
+            if (faults.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder("The following level files were not found in ").Append(folderPath).Append(".").AppendLine();
+                foreach (AbstractTRScriptedLevel level in faults)
+                {
+                    sb.AppendLine().Append(level.Name).Append(" (").Append(level.LevelFileBaseName).Append(")");
+                }
+                throw new ScriptedLevelMismatchException(sb.ToString());
+            }
         }
     }
 }

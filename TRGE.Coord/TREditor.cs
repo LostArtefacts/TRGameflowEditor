@@ -47,11 +47,9 @@ namespace TRGE.Coord
             }
         }
 
+        public TREdition Edition => _scriptEditor.Edition;
         public string BackupDirectory => _scriptEditor.BackupFile.DirectoryName;
         public string TargetDirectory => _targetDirectory;
-
-        public TREdition Edition => _scriptEditor.Edition;
-
         private readonly string _outputDirectory;
         private readonly string _targetDirectory;
 
@@ -63,6 +61,14 @@ namespace TRGE.Coord
         {
             _outputDirectory = outputDirectory;
             _targetDirectory = targetDirectory;
+        }
+
+        internal static void ValidateCompatibility(AbstractTRScript script, string directoryPath)
+        {
+            if (TRLevelEditorFactory.EditionSupportsLevelEditing(script.Edition))
+            {
+                AbstractTRLevelEditor.ValidateCompatibility(script.Levels, directoryPath);
+            }
         }
 
         private void ScriptEditorLevelModified(object sender, TRScriptedLevelEventArgs e)
