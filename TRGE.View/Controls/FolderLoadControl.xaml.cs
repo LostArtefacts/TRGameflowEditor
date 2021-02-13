@@ -109,7 +109,7 @@ namespace TRGE.View.Controls
             }
             catch (Exception e)
             {
-                WindowUtils.ShowError(e.Message);
+                MessageWindow.ShowError(e.Message);
             }
         }
 
@@ -136,7 +136,7 @@ namespace TRGE.View.Controls
                 TRCoord.Instance.ConfigDirectory
             );
 
-            if (WindowUtils.ShowConfirm(msg))
+            if (MessageWindow.ShowConfirm(msg))
             {
                 try
                 {
@@ -144,7 +144,7 @@ namespace TRGE.View.Controls
                 }
                 catch (Exception e)
                 {
-                    WindowUtils.ShowError(e.Message);
+                    MessageWindow.ShowError(e.Message);
                 }
             }
         }

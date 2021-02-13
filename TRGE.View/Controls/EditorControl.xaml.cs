@@ -67,7 +67,7 @@ namespace TRGE.View.Controls
             EditorStateChanged?.Invoke(this, new EditorEventArgs
             { 
                 IsDirty = _dirty,
-                CanExport = Editor.IsExportPossible
+                CanExport = Editor != null && Editor.IsExportPossible
             });
         }
 
@@ -76,9 +76,12 @@ namespace TRGE.View.Controls
             Editor = e.Editor;
             Edition = Editor.Edition.Title;
             DataFolder = e.DataFolder;
+            Reload();
+        }
 
+        private void Reload()
+        {
             _options.Load(Editor.ScriptEditor as TR23ScriptEditor);
-
             _dirty = false;
             FireEditorStateChanged();
         }
@@ -96,6 +99,8 @@ namespace TRGE.View.Controls
         public void Unload()
         {
             Editor = null;
+            _dirty = false;
+            FireEditorStateChanged();
         }
 
         public void OpenBackupFolder()
@@ -105,9 +110,11 @@ namespace TRGE.View.Controls
 
         public void RestoreDefaults()
         {
-            if (WindowUtils.ShowConfirm("The files that were backed up when this folder was first opened will be copied back to the original directory.\n\nDo you wish to proceed?"))
+            if (MessageWindow.ShowConfirm("The files that were backed up when this folder was first opened will be copied back to the original directory.\n\nDo you wish to proceed?"))
             {
                 Editor.Restore();
+                Reload();
+                MessageWindow.ShowMessage("The restore completed successfully.");
             }
         }
 
@@ -126,7 +133,7 @@ namespace TRGE.View.Controls
                     }
                     catch (Exception e)
                     {
-                        WindowUtils.ShowError(e.Message);
+                        MessageWindow.ShowError(e.Message);
                     }
                 }
             }
@@ -149,7 +156,7 @@ namespace TRGE.View.Controls
                     }
                     catch (Exception e)
                     {
-                        WindowUtils.ShowError(e.Message);
+                        MessageWindow.ShowError(e.Message);
                     }
                 }
             }

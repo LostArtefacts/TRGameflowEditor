@@ -3,11 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using TRGE.Core;
-using TRGE.View.Model;
 using TRGE.View.Model.Audio;
 using TRGE.View.Model.Data;
 using TRGE.View.Utils;
@@ -91,7 +89,7 @@ namespace TRGE.View.Windows
         {
             if (trackData == null || trackData.Length == 0)
             {
-                WindowUtils.ShowError("Failed to load track data.");
+                //MessageWindow.ShowError("Failed to load track data.");
                 _audioPlayingArgs.Callback.AudioFinished(_audioPlayingArgs.Track);
                 return;
             }
@@ -131,16 +129,19 @@ namespace TRGE.View.Windows
 
         private void ExportAudio(PlayAudioEventArgs e, byte[] trackData)
         {
-            using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
+            if (trackData != null && trackData.Length > 0)
             {
-                dlg.DefaultFileName = e.Track.Name.ToSafeFileName() + ".wav";
-                dlg.DefaultExtension = ".wav";
-                dlg.Filters.Add(new CommonFileDialogFilter("WAV Files", "wav"));
-                dlg.OverwritePrompt = true;
-                dlg.Title = "TRGE : Save Audio Track";
-                if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
+                using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
                 {
-                    File.WriteAllBytes(dlg.FileName, trackData);
+                    dlg.DefaultFileName = e.Track.Name.ToSafeFileName() + ".wav";
+                    dlg.DefaultExtension = ".wav";
+                    dlg.Filters.Add(new CommonFileDialogFilter("WAV Files", "wav"));
+                    dlg.OverwritePrompt = true;
+                    dlg.Title = "TRGE : Save Audio Track";
+                    if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
+                    {
+                        File.WriteAllBytes(dlg.FileName, trackData);
+                    }
                 }
             }
 

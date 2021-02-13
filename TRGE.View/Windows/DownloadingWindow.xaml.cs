@@ -75,7 +75,7 @@ namespace TRGE.View.Windows
         {
             if (e.Status == TRDownloadStatus.Failed)
             {
-                WindowUtils.ShowError(e.Exception.Message);
+                MessageWindow.ShowError(e.Exception.Message);
                 WindowUtils.EnableCloseButton(this, true);
                 DialogResult = false;
             }

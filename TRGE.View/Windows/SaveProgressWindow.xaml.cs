@@ -112,7 +112,7 @@ namespace TRGE.View.Windows
                     WindowUtils.EnableCloseButton(this, true);
                     if (error != null)
                     {
-                        WindowUtils.ShowError(error.Message);
+                        MessageWindow.ShowError(error.Message);
                         DialogResult = false;
                     }
                     else

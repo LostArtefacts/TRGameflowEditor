@@ -83,7 +83,7 @@ namespace TRGE.View.Utils
         /// the most recently opened Application window will be returned. Additional checks are performed
         /// for VS Adorner Windows to exclude these.
         /// </summary>
-        public static Window GetActiveWindow()
+        public static Window GetActiveWindow(Window currentWindow = null)
         {
             Window w = Application.Current.Windows.OfType<Window>().SingleOrDefault(e => e.IsActive);
             if (w == null)
@@ -92,7 +92,7 @@ namespace TRGE.View.Utils
                 for (int i = wc.Count - 1; i >= 0; i--)
                 {
                     w = wc[i];
-                    if (!w.GetType().FullName.ToLower().Contains("adornerwindow"))
+                    if (w != currentWindow && !w.GetType().FullName.ToLower().Contains("adornerwindow"))
                     {
                         break;
                     }
@@ -102,7 +102,7 @@ namespace TRGE.View.Utils
         }
         #endregion
 
-        #region MessageBox
+        /*#region MessageBox
         public static void ShowMessage(string message)
         {
             ShowMessage(GetActiveWindow(), message);
@@ -152,7 +152,7 @@ namespace TRGE.View.Utils
         {
             return MessageBox.Show(window, message, "TRGE", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
         }
-        #endregion
+        #endregion*/
 
         #region SystemMenu
         /**

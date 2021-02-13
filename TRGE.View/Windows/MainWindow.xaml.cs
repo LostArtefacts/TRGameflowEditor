@@ -14,7 +14,7 @@ namespace TRGE.View.Windows
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IRecentFolderOpener
     {
         #region Dependency Properties
         public static readonly DependencyProperty IsEditorActiveProperty = DependencyProperty.Register
@@ -190,7 +190,15 @@ namespace TRGE.View.Windows
 
         private void RefreshHistoryMenu()
         {
-            RecentFolders = new RecentFolderList(_folderControl);
+            RecentFolders = new RecentFolderList(this);
+        }
+
+        public void OpenDataFolder(RecentFolder folder)
+        {
+            if (ConfirmEditorSaveState())
+            {
+                _folderControl.OpenDataFolder(folder);
+            }
         }
 
         private void EmptyRecentFoldersMenuItem_Click(object sender, RoutedEventArgs e)
@@ -288,12 +296,12 @@ namespace TRGE.View.Windows
                 }
                 else
                 {
-                    WindowUtils.ShowMessage("The current version of TRGE is up to date.");
+                    MessageWindow.ShowMessage("The current version of TRGE is up to date.");
                 }
             }
             catch (Exception ex)
             {
-                WindowUtils.ShowError(ex.Message);
+                MessageWindow.ShowError(ex.Message);
             }
         }
 
@@ -343,7 +351,7 @@ namespace TRGE.View.Windows
         {
             if (IsEditorDirty)
             {
-                switch (WindowUtils.ShowConfirmWithCancel("Do you want to save the changes you have made?"))
+                switch (MessageWindow.ShowConfirmCancel("Do you want to save the changes you have made?"))
                 {
                     case MessageBoxResult.Yes:
                         _editorControl.Save();

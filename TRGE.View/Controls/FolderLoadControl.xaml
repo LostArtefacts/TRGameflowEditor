@@ -3,9 +3,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:TRGE.View.Model"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="White" Margin="5">
+
+    <Control.Resources>
+        <DataTemplate DataType="{x:Type vm:RecentFolderList}">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding RecentFolders}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:RecentFolder}">
+            <Grid Margin="0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding DisplayIndex}"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"
+                           Margin="0,0,5,0"/>
+                
+                <Border Grid.Column="1" 
+                        BorderThickness="0,0,0,0" 
+                        BorderBrush="#999" 
+                        VerticalAlignment="Center">
+                    <TextBlock Text="{Binding FolderPath}"/>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </Control.Resources>
+
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
@@ -37,9 +68,8 @@
                            Width="18" 
                            Height="18"/>
                     
-                    <TextBlock Margin="2,0,0,0" 
-                               Text="Recent Folders"
-                               FontWeight="Bold"/>
+                    <TextBlock Margin="5,0,0,0" 
+                               Text="Recent Folders"/>
                 </StackPanel>
             </GroupBox.Header>
 
