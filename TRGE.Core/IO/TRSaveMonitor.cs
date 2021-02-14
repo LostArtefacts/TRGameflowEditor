@@ -8,6 +8,12 @@ namespace TRGE.Core
 
         private readonly TRSaveEventArgs _args;
 
+        public bool IsCancelled
+        {
+            get => _args.IsCancelled;
+            set => _args.IsCancelled = value;
+        }
+
         public TRSaveMonitor(TRSaveEventArgs e)
         {
             _args = e;

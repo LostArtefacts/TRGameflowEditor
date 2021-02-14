@@ -2,6 +2,6 @@
 {
     public enum TRSaveCategory
     {
-        None, Scripting, LevelFile, Custom, Commit
+        None, Scripting, LevelFile, Custom, Commit, Cancel
     }
 }

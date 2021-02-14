@@ -50,6 +50,7 @@ namespace TRGE.Coord
         public TREdition Edition => _scriptEditor.Edition;
         public string BackupDirectory => _scriptEditor.BackupFile.DirectoryName;
         public string TargetDirectory => _targetDirectory;
+        private readonly string _wipOutputDirectory;
         private readonly string _outputDirectory;
         private readonly string _targetDirectory;
 
@@ -57,8 +58,9 @@ namespace TRGE.Coord
 
         public bool IsExportPossible => ScriptEditor.IsExportPossible && (LevelEditor == null || LevelEditor.IsExportPossible);
 
-        internal TREditor(string outputDirectory, string targetDirectory)
+        internal TREditor(string wipOutputDirectory, string outputDirectory, string targetDirectory)
         {
+            _wipOutputDirectory = wipOutputDirectory;
             _outputDirectory = outputDirectory;
             _targetDirectory = targetDirectory;
         }
@@ -98,23 +100,37 @@ namespace TRGE.Coord
             });
             monitor.SaveStateChanged += Editor_SaveStateChanged;
 
-            ScriptEditor.Save(monitor);
+            DirectoryInfo wipDirectory = new DirectoryInfo(_wipOutputDirectory);
+            wipDirectory.Clear();
 
-            if (LevelEditor != null)
+            try
             {
-                LevelEditor.Save(ScriptEditor, monitor);
+                ScriptEditor.Save(monitor);
+
+                if (LevelEditor != null)
+                {
+                    LevelEditor.Save(ScriptEditor, monitor);
+                }
+
+                if (!monitor.IsCancelled)
+                {
+                    monitor.FireSaveStateChanged(0, TRSaveCategory.Commit);
+
+                    DirectoryInfo outputDirectory = new DirectoryInfo(_outputDirectory);
+                    DirectoryInfo targetDirectory = new DirectoryInfo(_targetDirectory);
+                    wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
+                    wipDirectory.Copy(targetDirectory, true, TargetFileExtensions);
+
+                    ScriptEditor.Initialise();
+                    if (LevelEditor != null)
+                    {
+                        LevelEditor.Initialise(ScriptEditor);
+                    }
+                }
             }
-
-            monitor.FireSaveStateChanged(0, TRSaveCategory.Commit);
-
-            DirectoryInfo outputDir = new DirectoryInfo(_outputDirectory);
-            DirectoryInfo targetDir = new DirectoryInfo(_targetDirectory);
-            outputDir.Copy(targetDir, true, TargetFileExtensions);
-
-            ScriptEditor.Initialise();
-            if (LevelEditor != null)
+            finally
             {
-                LevelEditor.Initialise(ScriptEditor);
+                wipDirectory.Clear();
             }
         }
 

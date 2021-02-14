@@ -12,7 +12,7 @@ namespace TRGE.Coord
         protected readonly TRDirectoryIOArgs _io;
         protected readonly Dictionary<string, ISet<TRScriptedLevelEventArgs>> _levelModifications;
 
-        internal AbstractTRLevelEditor(TRDirectoryIOArgs io)
+        public AbstractTRLevelEditor(TRDirectoryIOArgs io)
         {
             _io = io;
             _levelModifications = new Dictionary<string, ISet<TRScriptedLevelEventArgs>>();
@@ -25,7 +25,7 @@ namespace TRGE.Coord
             ReadConfig(_config);
         }
 
-        protected override void ReadConfig(Dictionary<string, object> config)
+        protected sealed override void ReadConfig(Dictionary<string, object> config)
         {
             if (config != null)
             {
@@ -34,13 +34,24 @@ namespace TRGE.Coord
             }
         }
 
-        internal override Dictionary<string, object> ExportConfig()
+        internal sealed override Dictionary<string, object> ExportConfig()
         {
             Dictionary<string, object> config = base.ExportConfig();
             SaveConfig(config);
             return config;
         }
 
+        /// <summary>
+        /// The supplied dictionary has been loaded from disk from the previous edit, so values
+        /// can be assigned locally as necessary.
+        /// </summary>
+        /// <param name="config">The configuration dictionary loaded from disk.</param>
+        protected override void ApplyConfig(Dictionary<string, object> config) { }
+
+        /// <summary>
+        /// Any custom values to be saved between edits should be added to the supplied dictionary.
+        /// </summary>
+        /// <param name="config">The current configuration dictionary.</param>
         protected virtual void SaveConfig(Dictionary<string, object> config) { }
 
         internal void Initialise(AbstractTRScriptEditor scriptEditor)
@@ -69,6 +80,10 @@ namespace TRGE.Coord
                 }
 
                 monitor.FireSaveStateChanged(1);
+                if (monitor.IsCancelled)
+                {
+                    return;
+                }
             }
 
             SaveImpl(scriptEditor, monitor);
@@ -86,34 +101,48 @@ namespace TRGE.Coord
             }
         }
 
-        public override int GetSaveTargetCount()
+        public sealed override int GetSaveTargetCount()
         {
             return _levelModifications.Count + GetSaveTarget(_levelModifications.Count);
         }
 
+        /// <summary>
+        /// Called when initialising a save. The returned value should represent the
+        /// number of steps that will be involved in the save progress for this class.
+        /// </summary>
+        /// <param name="numLevels">A count of the total number of levels for the current edit.</param>
+        /// <returns>The numer of save steps for this class.</returns>
         protected virtual int GetSaveTarget(int numLevels)
         {
             return 0;
         }
 
-        protected override void ApplyConfig(Dictionary<string, object> config) { }
         internal abstract bool ShouldHandleModification(TRScriptedLevelEventArgs e);
         internal abstract void ProcessModification(TRScriptedLevelEventArgs e);
 
+        /// <summary>
+        /// Called after any modifications have been actioned as received from AbstractTRScriptEditor edit events.
+        /// </summary>
+        /// <param name="scriptEditor">A reference to the current script editor.</param>
+        /// <param name="monitor">The save monitor for publishing save progress.</param>
         protected virtual void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor) { }
         
         /// <summary>
         /// Depending on wheter AllowSuccessiveEdits is set this will either return the current
-        /// file in the target directory or the file that was originally backed up.
+        /// file in the output directory or the file that was originally backed up.
         /// </summary>
         protected virtual string GetReadLevelFilePath(string levelFileName)
         {
             return Path.Combine(AllowSuccessiveEdits ?_io.OutputDirectory.FullName : _io.BackupDirectory.FullName, levelFileName);
         }
 
+        /// <summary>
+        /// All writes are sent to the temporary WIP directory and are only moved to the output
+        /// and target directories at the end of the save chain. See TREditor.
+        /// </summary>
         protected virtual string GetWriteLevelFilePath(string levelFileName)
         {
-            return Path.Combine(_io.OutputDirectory.FullName, levelFileName);
+            return Path.Combine(_io.WIPOutputDirectory.FullName, levelFileName);
         }
 
         /// <summary>

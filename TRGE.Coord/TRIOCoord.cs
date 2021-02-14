@@ -13,10 +13,30 @@ namespace TRGE.Coord
             File, Directory
         }
 
+        /// <summary>
+        /// The main folder name in the application settings folder that houses all edit information.
+        /// </summary>
         protected const string _editDirectoryName = "Edits";
+        /// <summary>
+        /// The folder name under a specific edit folder where backups are stored.
+        /// </summary>
         protected const string _backupDirectoryName = "Backup";
+        /// <summary>
+        /// The folder name under a specific edit folder where outputs are stored.
+        /// </summary>
         protected const string _outputDirectoryName = "Output";
+        /// <summary>
+        /// The folder name under the outputs folder where temporary files are written to. Handlers should
+        /// move these files to Output on successful completion of a save transaction.
+        /// </summary>
+        protected const string _wipDirectoryName = "WIP";
+        /// <summary>
+        /// The name of the config file that stores script editing information.
+        /// </summary>
         protected const string _scriptConfigFileName = "trge.csf";
+        /// <summary>
+        /// The name of the config file that stores level editing information.
+        /// </summary>
         protected const string _dirConfigFileName = "trle.csf";
 
         protected OperationMode _mode;
@@ -27,6 +47,7 @@ namespace TRGE.Coord
 
         internal string OriginalDirectory => _originalDirectory;
         internal string OutputDirectory => GetOutputDirectory();
+        internal string WIPOutputDirectory => GetWIPOutputDirectory();
 
         #region History Vars and Events
         protected readonly List<string> _history;
@@ -59,7 +80,7 @@ namespace TRGE.Coord
             
             AbstractTRScriptEditor scriptEditor = GetScriptEditor(openOption);
             AbstractTRLevelEditor levelEditor = GetLevelEditor(scriptEditor);
-            return new TREditor(OutputDirectory, OriginalDirectory)
+            return new TREditor(WIPOutputDirectory, OutputDirectory, OriginalDirectory)
             {
                 ScriptEditor = scriptEditor,
                 LevelEditor = levelEditor
@@ -73,6 +94,7 @@ namespace TRGE.Coord
                 OriginalFile = new FileInfo(_orignalScriptFile),
                 BackupFile = new FileInfo(_backupScriptFile),
                 ConfigFile = new FileInfo(_scriptConfigFile),
+                WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
                 OutputDirectory = new DirectoryInfo(GetOutputDirectory())
             };
             AbstractTRScriptEditor scriptMan = TRScriptFactory.GetScriptEditor(io, openOption);
@@ -94,6 +116,7 @@ namespace TRGE.Coord
                 OriginalDirectory = new DirectoryInfo(_originalDirectory),
                 BackupDirectory = new DirectoryInfo(GetBackupDirectory()),
                 ConfigFile = new FileInfo(_directoryConfigFile),
+                WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
                 OutputDirectory = new DirectoryInfo(GetOutputDirectory())
             };
 
@@ -146,6 +169,7 @@ namespace TRGE.Coord
             _directoryConfigFile = Path.Combine(_editDirectory, _dirConfigFileName);
         }
 
+        #region Directory Management
         internal string GetEditDirectory()
         {
             DirectoryInfo topLevelEditDirectory = Directory.CreateDirectory(Path.Combine(TRCoord.Instance.ConfigDirectory, _editDirectoryName));
@@ -158,6 +182,12 @@ namespace TRGE.Coord
             return editDirectory.CreateSubdirectory(_backupDirectoryName).FullName;
         }
 
+        internal string GetWIPOutputDirectory()
+        {
+            DirectoryInfo outputDirectory = new DirectoryInfo(GetOutputDirectory());
+            return outputDirectory.CreateSubdirectory(_wipDirectoryName).FullName;
+        }
+
         internal string GetOutputDirectory()
         {
             DirectoryInfo editDirectory = new DirectoryInfo(GetEditDirectory());
@@ -168,6 +198,7 @@ namespace TRGE.Coord
         {
             return _originalDirectory;
         }
+        #endregion
 
         #region History Methods
         protected void FireHistoryChanged()

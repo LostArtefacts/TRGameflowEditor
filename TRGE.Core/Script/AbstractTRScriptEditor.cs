@@ -28,6 +28,12 @@ namespace TRGE.Core
             set => _io.ConfigFile = value;
         }
 
+        internal DirectoryInfo WIPOutputDirectory
+        {
+            get => _io.WIPOutputDirectory;
+            set => _io.WIPOutputDirectory = value;
+        }
+
         internal DirectoryInfo OutputDirectory
         {
             get => _io.OutputDirectory;
@@ -272,7 +278,7 @@ namespace TRGE.Core
             SaveImpl();
             LevelManager.Save();
 
-            string outputPath = GetScriptOutputPath();
+            string outputPath = GetScriptWIPOutputPath();
             Script.Write(outputPath);
 
             _config["CheckSumOnSave"] = new FileInfo(outputPath).Checksum();
@@ -305,6 +311,11 @@ namespace TRGE.Core
             }
             ConfigFile = new FileInfo(ConfigFile.FullName);
             Initialise(Script);
+        }
+
+        protected string GetScriptWIPOutputPath()
+        {
+            return Path.Combine(WIPOutputDirectory.FullName, OriginalFile.Name);
         }
 
         protected string GetScriptOutputPath()
