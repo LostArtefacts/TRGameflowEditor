@@ -336,7 +336,10 @@ namespace TRGE.View.Windows
         #region Exiting
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            if (ConfirmEditorSaveState())
+            {
+                Application.Current.Shutdown();
+            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -354,8 +357,7 @@ namespace TRGE.View.Windows
                 switch (MessageWindow.ShowConfirmCancel("Do you want to save the changes you have made?"))
                 {
                     case MessageBoxResult.Yes:
-                        _editorControl.Save();
-                        break;
+                        return _editorControl.Save();
                     case MessageBoxResult.Cancel:
                         return false;
                 }

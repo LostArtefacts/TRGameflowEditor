@@ -128,14 +128,15 @@
                     <TextBlock FontWeight="Bold" Text="Level Sequencing"/>
                 </Label>
             </GroupBox.Header>
-            
+
             <c:DefaultManualControl 
                 Margin="5,2,5,5"
                 Text="Specify the order in which levels are played. Required pickups will be available in TR2 (e.g. the Seraph for Barkhang Monastry) regardless of when the level is reached."
                 IsDefault="{Binding UseDefaultLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                IsRandom="{Binding UseRandomLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                ManualConfigure="LevelSequencing_ManualConfigure"/>
+                IsViable="{Binding LevelSequencingViable, UpdateSourceTrigger=PropertyChanged}"
+                ManualConfigure="LevelSequencing_ManualConfigure"
+                ChangeViability="LevelSequencing_ChangeViability"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="1" Grid.Column="1">
@@ -150,7 +151,9 @@
                 Text="Specify the levels in which Lara loses her weapons. For TR2 and TR2G, the pistols will be added to the levels for Lara to find."
                 IsDefault="{Binding UseDefaultUnarmed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualUnarmed, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                ManualConfigure="UnarmedLevels_ManualConfigure"/>
+                IsViable="{Binding UnarmedLevelsViable, UpdateSourceTrigger=PropertyChanged}"
+                ManualConfigure="UnarmedLevels_ManualConfigure"
+                ChangeViability="UnarmedLevels_ChangeViability"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="1" Grid.Column="2">
@@ -165,11 +168,13 @@
                 Text="Specify the levels in which Lara loses her ammo, medi-kits and flares at the start. No extra items will be added to these levels."
                 IsDefault="{Binding UseDefaultAmmoless, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualAmmoless, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                ManualConfigure="AmmolessLevels_ManualConfigure"/>
+                IsViable="{Binding AmmolessLevelsViable, UpdateSourceTrigger=PropertyChanged}"
+                ManualConfigure="AmmolessLevels_ManualConfigure"
+                ChangeViability="AmmolessLevels_ChangeViability"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="2" 
-                  IsEnabled="{Binding SecretRewardsViable, UpdateSourceTrigger=PropertyChanged}">
+                  IsEnabled="{Binding SecretRewardsSupported, UpdateSourceTrigger=PropertyChanged}">
             <GroupBox.Header>
                 <Label Padding="0">
                     <TextBlock FontWeight="Bold" Text="Secret Rewards"/>
@@ -181,11 +186,13 @@
                 Text="Specify the items that are rewarded to Lara for collecting all secrets in each level."
                 IsDefault="{Binding UseDefaultBonuses, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualBonuses, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                ManualConfigure="SecretRewards_ManualConfigure"/>
+                IsViable="{Binding SecretRewardsViable, UpdateSourceTrigger=PropertyChanged}"
+                ManualConfigure="SecretRewards_ManualConfigure"
+                ChangeViability="SecretRewards_ChangeViability"/>
         </GroupBox>
 
         <GroupBox Margin="5" Grid.Row="2" Grid.Column="1"
-                  IsEnabled="{Binding SunsetsViable, UpdateSourceTrigger=PropertyChanged}">
+                  IsEnabled="{Binding SunsetsSupported, UpdateSourceTrigger=PropertyChanged}">
             <GroupBox.Header>
                 <Label Padding="0">
                     <TextBlock FontWeight="Bold" Text="Sunsets"/>
@@ -197,7 +204,9 @@
                 Text="Choose which levels have sunsets. The lighting will gradually fade over 20 minutes, similar to Bartoli's Hideout. Sunset state resets if the game is reloaded."
                 IsDefault="{Binding UseDefaultSunsets, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualSunsets, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                ManualConfigure="Sunsets_ManualConfigure"/>
+                IsViable="{Binding SunsetsViable, UpdateSourceTrigger=PropertyChanged}"
+                ManualConfigure="Sunsets_ManualConfigure"
+                ChangeViability="Sunsets_ChangeViability"/>
         </GroupBox>
         
         <GroupBox Margin="5" Grid.Row="2" Grid.Column="2">
@@ -212,7 +221,9 @@
                 Text="Choose the ambient tracks for each level, including the title screen, plus the sound to play when a secret is found (TR2 and TR2G only)."
                 IsDefault="{Binding UseDefaultAudio, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualAudio, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                ManualConfigure="Audio_ManualConfigure"/>
+                IsViable="{Binding AudioViable, UpdateSourceTrigger=PropertyChanged}"
+                ManualConfigure="Audio_ManualConfigure"
+                ChangeViability="Audio_ChangeViability"/>
         </GroupBox>
     </Grid>
 </UserControl>

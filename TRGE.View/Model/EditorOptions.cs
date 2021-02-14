@@ -11,28 +11,34 @@ namespace TRGE.View.Model
     public class EditorOptions : INotifyPropertyChanged, IAudioDataProvider
     {
         #region Properties
+        private TR23ScriptEditor _editor;
+
         private bool _titleEnabled, _levelSelectEnabled, _saveLoadEnabled, _optionRingEnabled;
         private bool _fmvsEnabled, _cutscenesEnabled, _startAnimationsEnabled, _cheatsEnabled, _dozyViable, _dozyEnabled;
         private bool _demosEnabled, _trainingEnabled;
         private int _demoDelay;
-        
-        private bool _useDefaultLevelSequence, _useManualLevelSequence, _useRandomLevelSequence;
+
+        private bool _levelSequencingViable;
+        private bool _useDefaultLevelSequence, _useManualLevelSequence;
         private List<Tuple<string, string>> _levelSequencing;
 
+        private bool _unarmedLevelsViable;
         private bool _useDefaultUnarmedLevels, _useManualUnarmedLevels;
         private List<MutableTuple<string, string, bool>> _unarmedLevelData;
 
+        private bool _ammolessLevelsViable;
         private bool _useDefaultAmmolessLevels, _useManualAmmolessLevels;
         private List<MutableTuple<string, string, bool>> _ammolessLevelData;
 
-        private bool _secretRewardsViable;
+        private bool _secretRewardsSupported, _secretRewardsViable;
         private bool _useDefaultSecretBonuses, _useManualSecretBonuses;
         private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> _secretBonusData;
 
-        private bool _sunsetsViable;
+        private bool _sunsetsSupported, _sunsetsViable;
         private bool _useDefaultSunsets, _useManualSunsets;
         private List<MutableTuple<string, string, bool>> _sunsetLevelData;
 
+        private bool _audioViable;
         private bool _useDefaultAudio, _useManualAudio;
         private List<MutableTuple<string, string, ushort>> _audioData;
         private IReadOnlyList<Tuple<ushort, string>> _allAudioTracks;
@@ -167,6 +173,16 @@ namespace TRGE.View.Model
             }
         }
 
+        public bool LevelSequencingViable
+        {
+            get => _levelSequencingViable;
+            private set
+            {
+                _levelSequencingViable = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool UseDefaultLevelSequence
         {
             get => _useDefaultLevelSequence;
@@ -187,22 +203,22 @@ namespace TRGE.View.Model
             }
         }
 
-        public bool UseRandomLevelSequence
-        {
-            get => _useRandomLevelSequence;
-            set
-            {
-                _useRandomLevelSequence = value;
-                OnPropertyChanged();
-            }
-        }
-
         public LevelSequencingData LevelSequencing
         {
             get => new LevelSequencingData(_levelSequencing);
             set
             {
                 _levelSequencing = value.ToTupleList();
+                OnPropertyChanged();
+            }
+        }
+
+        public bool UnarmedLevelsViable
+        {
+            get => _unarmedLevelsViable;
+            private set
+            {
+                _unarmedLevelsViable = value;
                 OnPropertyChanged();
             }
         }
@@ -237,6 +253,16 @@ namespace TRGE.View.Model
             }
         }
 
+        public bool AmmolessLevelsViable
+        {
+            get => _ammolessLevelsViable;
+            private set
+            {
+                _ammolessLevelsViable = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool UseDefaultAmmoless
         {
             get => _useDefaultAmmolessLevels;
@@ -263,6 +289,16 @@ namespace TRGE.View.Model
             set
             {
                 _ammolessLevelData = value.ToTupleList();
+                OnPropertyChanged();
+            }
+        }
+
+        public bool SecretRewardsSupported
+        {
+            get => _secretRewardsSupported;
+            private set
+            {
+                _secretRewardsSupported = value;
                 OnPropertyChanged();
             }
         }
@@ -307,6 +343,16 @@ namespace TRGE.View.Model
             }
         }
 
+        public bool SunsetsSupported
+        {
+            get => _sunsetsSupported;
+            private set
+            {
+                _sunsetsSupported = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool SunsetsViable
         {
             get => _sunsetsViable;
@@ -343,6 +389,16 @@ namespace TRGE.View.Model
             set
             {
                 _sunsetLevelData = value.ToTupleList();
+                OnPropertyChanged();
+            }
+        }
+
+        public bool AudioViable
+        {
+            get => _audioViable;
+            private set
+            {
+                _audioViable = value;
                 OnPropertyChanged();
             }
         }
@@ -385,8 +441,57 @@ namespace TRGE.View.Model
         }
         #endregion
 
-        private TR23ScriptEditor _editor;
+        #region Viability Changes
+        public void SetLevelSequencingViable()
+        {
+            LevelSequencingViable = true;
+            UseDefaultLevelSequence = true;
+            UseManualLevelSequence = false;
+        }
 
+        public void SetUnarmedLevelsViable()
+        {
+            UnarmedLevelsViable = true;
+            UseDefaultUnarmed = true;
+            UseManualUnarmed = false;
+        }
+
+        public void SetAmmolessLevelsViable()
+        {
+            AmmolessLevelsViable = true;
+            UseDefaultAmmoless = true;
+            UseManualAmmoless = false;
+        }
+
+        public void SetSecretRewardsViable()
+        {
+            if (SecretRewardsSupported)
+            {
+                SecretRewardsViable = true;
+                UseDefaultBonuses = true;
+                UseManualBonuses = false;
+            }
+        }
+
+        public void SetSunsetsViable()
+        {
+            if (SunsetsSupported)
+            {
+                SunsetsViable = true;
+                UseDefaultSunsets = true;
+                UseManualSunsets = false;
+            }
+        }
+
+        public void SetAudioViable()
+        {
+            AudioViable = true;
+            UseDefaultAudio = true;
+            UseManualAudio = false;
+        }
+        #endregion
+
+        #region IO
         public void Load(TR23ScriptEditor editor)
         {
             _editor = editor;
@@ -406,31 +511,36 @@ namespace TRGE.View.Model
             DemoDelay = (int)editor.DemoTime;
             TrainingEnabled = editor.GymEnabled;
 
-            UseManualLevelSequence = false;// editor.LevelSequencingOrganisation == Organisation.Manual;
-            UseDefaultLevelSequence = false;// editor.LevelSequencingOrganisation == Organisation.Default;
-            UseRandomLevelSequence = true;// editor.LevelSequencingOrganisation == Organisation.Random;
+            UseManualLevelSequence = editor.LevelSequencingOrganisation == Organisation.Manual;
+            UseDefaultLevelSequence = editor.LevelSequencingOrganisation == Organisation.Default;
+            LevelSequencingViable = UseManualLevelSequence || UseDefaultLevelSequence; //if rando, not supported in this UI
             _levelSequencing = editor.LevelSequencing;
 
             UseManualUnarmed = editor.UnarmedLevelOrganisation == Organisation.Manual;
-            UseDefaultUnarmed = !UseManualUnarmed;
+            UseDefaultUnarmed = editor.UnarmedLevelOrganisation == Organisation.Default;
+            UnarmedLevelsViable = UseManualUnarmed || UseDefaultUnarmed; //if rando, not supported in this UI
             _unarmedLevelData = editor.UnarmedLevelData;
 
             UseManualAmmoless = editor.AmmolessLevelOrganisation == Organisation.Manual;
-            UseDefaultAmmoless = !UseManualAmmoless;
+            UseDefaultAmmoless = editor.AmmolessLevelOrganisation == Organisation.Default;
+            AmmolessLevelsViable = UseManualAmmoless || UseDefaultAmmoless; //if rando, not supported in this UI
             _ammolessLevelData = editor.AmmolessLevelData;
 
-            SecretRewardsViable = editor.CanOrganiseBonuses;
+            SecretRewardsSupported = editor.CanOrganiseBonuses;
             UseManualBonuses = editor.SecretBonusOrganisation == Organisation.Manual;
-            UseDefaultBonuses = !UseManualBonuses;
+            UseDefaultBonuses = editor.SecretBonusOrganisation == Organisation.Default;
+            SecretRewardsViable = UseManualBonuses || UseDefaultBonuses; //if rando, not supported in this UI
             _secretBonusData = editor.LevelSecretBonusData;
 
-            SunsetsViable = editor.CanSetSunsets;
+            SunsetsSupported = editor.CanSetSunsets;
             UseManualSunsets = editor.LevelSunsetOrganisation == Organisation.Manual;
-            UseDefaultSunsets = !UseManualSunsets;
+            UseDefaultSunsets = editor.LevelSunsetOrganisation == Organisation.Default;
+            SunsetsViable = UseManualSunsets || UseDefaultSunsets; //if rando, not supported in this UI
             _sunsetLevelData = editor.LevelSunsetData;
 
             UseManualAudio = editor.GameTrackOrganisation == Organisation.Manual;
-            UseDefaultAudio = !UseManualAudio;
+            UseDefaultAudio = editor.GameTrackOrganisation == Organisation.Default;
+            AudioViable = UseManualAudio || UseDefaultAudio; //if rando, not supported in this UI
             _audioData = editor.GameTrackData;
 
             _allAudioTracks = editor.AllGameTracks;
@@ -453,25 +563,34 @@ namespace TRGE.View.Model
             _editor.DemoTime = (uint)DemoDelay;
             _editor.GymEnabled = TrainingEnabled;
 
-            _editor.LevelSequencingOrganisation = UseManualLevelSequence ? Organisation.Manual : Organisation.Default;
-            if (UseManualLevelSequence)
+            if (LevelSequencingViable)
             {
-                _editor.LevelSequencing = _levelSequencing;
+                _editor.LevelSequencingOrganisation = UseManualLevelSequence ? Organisation.Manual : Organisation.Default;
+                if (UseManualLevelSequence)
+                {
+                    _editor.LevelSequencing = _levelSequencing;
+                }
             }
 
-            _editor.UnarmedLevelOrganisation = UseManualUnarmed ? Organisation.Manual : Organisation.Default;
-            if (UseManualUnarmed)
+            if (UnarmedLevelsViable)
             {
-                _editor.UnarmedLevelData = _unarmedLevelData;
+                _editor.UnarmedLevelOrganisation = UseManualUnarmed ? Organisation.Manual : Organisation.Default;
+                if (UseManualUnarmed)
+                {
+                    _editor.UnarmedLevelData = _unarmedLevelData;
+                }
             }
 
-            _editor.AmmolessLevelOrganisation = UseManualAmmoless ? Organisation.Manual : Organisation.Default;
-            if (UseManualAmmoless)
+            if (AmmolessLevelsViable)
             {
-                _editor.AmmolessLevelData = _ammolessLevelData;
+                _editor.AmmolessLevelOrganisation = UseManualAmmoless ? Organisation.Manual : Organisation.Default;
+                if (UseManualAmmoless)
+                {
+                    _editor.AmmolessLevelData = _ammolessLevelData;
+                }
             }
 
-            if (SecretRewardsViable)
+            if (SecretRewardsSupported && SecretRewardsViable)
             {
                 _editor.SecretBonusOrganisation = UseManualBonuses ? Organisation.Manual : Organisation.Default;
                 if (UseManualBonuses)
@@ -480,7 +599,7 @@ namespace TRGE.View.Model
                 }
             }
 
-            if (SunsetsViable)
+            if (SunsetsSupported && SunsetsViable)
             {
                 _editor.LevelSunsetOrganisation = UseManualSunsets ? Organisation.Manual : Organisation.Default;
                 if (UseManualSunsets)
@@ -489,13 +608,18 @@ namespace TRGE.View.Model
                 }
             }
 
-            _editor.GameTrackOrganisation = UseManualAudio ? Organisation.Manual : Organisation.Default;
-            if (UseManualAudio)
+            if (AudioViable)
             {
-                _editor.GameTrackData = _audioData;
+                _editor.GameTrackOrganisation = UseManualAudio ? Organisation.Manual : Organisation.Default;
+                if (UseManualAudio)
+                {
+                    _editor.GameTrackData = _audioData;
+                }
             }
         }
+        #endregion
 
+        #region IAudioDataProvider
         public byte[] GetAudioTrackData(AudioTrack track)
         {
             return _editor.GetTrackData(track.ID);
@@ -505,5 +629,6 @@ namespace TRGE.View.Model
         {
             return GlobalAudioData;
         }
+        #endregion
     }
 }

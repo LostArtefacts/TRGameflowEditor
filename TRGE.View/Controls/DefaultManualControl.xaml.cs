@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -51,19 +53,14 @@ namespace TRGE.View.Controls
             "ManualButtonText", typeof(string), typeof(DefaultManualControl), new PropertyMetadata("Organise")
         );
 
-        public static readonly DependencyProperty IsRandomProperty = DependencyProperty.Register
+        public static readonly DependencyProperty IsViableProperty = DependencyProperty.Register
         (
-            "IsRandom", typeof(bool), typeof(DefaultManualControl), new PropertyMetadata(false)
+            "IsViable", typeof(bool), typeof(DefaultManualControl), new PropertyMetadata(true)
         );
 
-        public static readonly DependencyProperty ConfigurableVisibilityProperty = DependencyProperty.Register
+        public static readonly DependencyProperty WarningIconProperty = DependencyProperty.Register
         (
-            "ConfigurableVisibilityProperty", typeof(Visibility), typeof(DefaultManualControl), new PropertyMetadata(Visibility.Visible)
-        );
-
-        public static readonly DependencyProperty UnconfigurableVisibilityProperty = DependencyProperty.Register
-        (
-            "UnconfigurableVisibilityProperty", typeof(Visibility), typeof(DefaultManualControl), new PropertyMetadata(Visibility.Collapsed)
+            "WarningIcon", typeof(BitmapSource), typeof(DefaultManualControl)
         );
 
         public string Text
@@ -87,43 +84,25 @@ namespace TRGE.View.Controls
         public bool IsDefault
         {
             get => (bool)GetValue(IsDefaultProperty);
-            set
-            {
-                SetValue(IsDefaultProperty, value);
-                SetConfigurable();
-            }
+            set => SetValue(IsDefaultProperty, value);
         }
 
         public bool IsManual
         {
             get => (bool)GetValue(IsManualProperty);
-            set
-            {
-                SetValue(IsManualProperty, value);
-                SetConfigurable();
-            }
+            set => SetValue(IsManualProperty, value);
         }
 
-        public bool IsRandom
+        public bool IsViable
         {
-            get => (bool)GetValue(IsRandomProperty);
-            set
-            {
-                SetValue(IsRandomProperty, value);
-                SetConfigurable();
-            }
+            get => (bool)GetValue(IsViableProperty);
+            set => SetValue(IsViableProperty, value);
         }
 
-        public Visibility ConfigurableVisibility
+        public BitmapSource WarningIcon
         {
-            get => (Visibility)GetValue(ConfigurableVisibilityProperty);
-            set => SetValue(ConfigurableVisibilityProperty, value);
-        }
-
-        public Visibility UnconfigurableVisibility
-        {
-            get => (Visibility)GetValue(UnconfigurableVisibilityProperty);
-            set => SetValue(UnconfigurableVisibilityProperty, value);
+            get => (BitmapSource)GetValue(WarningIconProperty);
+            set => SetValue(WarningIconProperty, value);
         }
         #endregion
 
@@ -132,27 +111,38 @@ namespace TRGE.View.Controls
             "ManualConfigure", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(DefaultManualControl)
         );
 
+        public static readonly RoutedEvent ChangeViabilityEvent = EventManager.RegisterRoutedEvent
+        (
+            "ChangeViability", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(DefaultManualControl)
+        );
+
         public event RoutedEventHandler ManualConfigure
         {
             add => AddHandler(ManualConfigureEvent, value);
             remove => RemoveHandler(ManualConfigureEvent, value);
         }
 
+        public event RoutedEventHandler ChangeViability
+        {
+            add => AddHandler(ChangeViabilityEvent, value);
+            remove => RemoveHandler(ChangeViabilityEvent, value);
+        }
+
         public DefaultManualControl()
         {
             InitializeComponent();
             _content.DataContext = this;
-        }
-
-        private void SetConfigurable()
-        {
-            ConfigurableVisibility = (IsDefault || IsManual) ? Visibility.Visible : Visibility.Collapsed;
-            UnconfigurableVisibility = IsRandom ? Visibility.Visible : Visibility.Collapsed;
+            WarningIcon = Imaging.CreateBitmapSourceFromHIcon(SystemIcons.Warning.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         }
 
         private void ManualButton_Click(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(ManualConfigureEvent));
+        }
+
+        private void ViabilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(ChangeViabilityEvent));
         }
     }
 }

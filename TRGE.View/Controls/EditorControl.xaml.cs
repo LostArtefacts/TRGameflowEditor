@@ -86,14 +86,16 @@ namespace TRGE.View.Controls
             FireEditorStateChanged();
         }
 
-        public void Save()
+        public bool Save()
         {
             SaveProgressWindow spw = new SaveProgressWindow(Editor, _options);
             if (spw.ShowDialog() ?? false)
             {
                 _dirty = false;
                 FireEditorStateChanged();
+                return true;
             }
+            return false;
         }
 
         public void Unload()
@@ -213,6 +215,54 @@ namespace TRGE.View.Controls
             if (aw.ShowDialog() ?? false)
             {
                 _options.GlobalAudioData = aw.AudioData;
+            }
+        }
+
+        private void LevelSequencing_ChangeViability(object sender, RoutedEventArgs e)
+        {
+            if (MessageWindow.ShowConfirm("Any external level sequencing changes made to the current configuration will be lost during the next save.\n\nDo you wish to proceed?"))
+            {
+                _options.SetLevelSequencingViable();
+            }
+        }
+
+        private void UnarmedLevels_ChangeViability(object sender, RoutedEventArgs e)
+        {
+            if (MessageWindow.ShowConfirm("Any external unarmed level changes made to the current configuration will be lost during the next save.\n\nDo you wish to proceed?"))
+            {
+                _options.SetUnarmedLevelsViable();
+            }
+        }
+
+        private void AmmolessLevels_ChangeViability(object sender, RoutedEventArgs e)
+        {
+            if (MessageWindow.ShowConfirm("Any external ammoless level changes made to the current configuration will be lost during the next save.\n\nDo you wish to proceed?"))
+            {
+                _options.SetAmmolessLevelsViable();
+            }
+        }
+
+        private void SecretRewards_ChangeViability(object sender, RoutedEventArgs e)
+        {
+            if (MessageWindow.ShowConfirm("Any external secret reward changes made to the current configuration will be lost during the next save.\n\nDo you wish to proceed?"))
+            {
+                _options.SetSecretRewardsViable();
+            }
+        }
+
+        private void Sunsets_ChangeViability(object sender, RoutedEventArgs e)
+        {
+            if (MessageWindow.ShowConfirm("Any external sunsets changes made to the current configuration will be lost during the next save.\n\nDo you wish to proceed?"))
+            {
+                _options.SetSunsetsViable();
+            }
+        }
+
+        private void Audio_ChangeViability(object sender, RoutedEventArgs e)
+        {
+            if (MessageWindow.ShowConfirm("Any external audio changes made to the current configuration will be lost during the next save.\n\nDo you wish to proceed?"))
+            {
+                _options.SetAudioViable();
             }
         }
     }

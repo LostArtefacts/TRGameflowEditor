@@ -6,15 +6,40 @@
              mc:Ignorable="d" 
              FontSize="12"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="Grid" x:Key="BoolToVis">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsViable}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsViable}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Grid" x:Key="NotBoolToVis">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsViable}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsViable}" Value="False">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
     <StackPanel Orientation="Vertical"
                 x:Name="_content">
-        <StackPanel Visibility="{Binding ConfigurableVisibility}">
         <Label Padding="0" MinHeight="50">
             <TextBlock Text="{Binding Text}"
-                   TextWrapping="Wrap"/>
+                       TextWrapping="Wrap"/>
         </Label>
 
-        <Grid Margin="30,5,0,0">
+        <Grid Margin="30,5,0,0"
+              Style="{StaticResource BoolToVis}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="180"/>
                 <ColumnDefinition Width="*"/>
@@ -47,10 +72,33 @@
                     VerticalAlignment="Center"
                     Click="ManualButton_Click"/>
         </Grid>
-        </StackPanel>
 
-        <StackPanel Visibility="{Binding UnconfigurableVisibility}">
-            <TextBlock Text="Unconfigurable"/>
-        </StackPanel>
+        <Grid Margin="0,18,0,0"
+              Style="{StaticResource NotBoolToVis}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="75"/>
+            </Grid.ColumnDefinitions>
+
+            <Image Source="{Binding WarningIcon}"
+                   Width="18"
+                   Height="18"
+                   Margin="0,0,8,0"
+                   VerticalAlignment="Top"/>
+            
+            <TextBlock Text="This setting is controlled by an external editor. Clicking Edit will move control to this editor, but any external edits will be lost."
+                       FontStyle="Italic"
+                       TextWrapping="Wrap"
+                       Grid.Column="1"/>
+            
+            <Button Content="Edit"
+                    Grid.Column="2"
+                    Margin="5,0,0,0"
+                    Height="26"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Click="ViabilityButton_Click"/>
+        </Grid>
     </StackPanel>
 </UserControl>

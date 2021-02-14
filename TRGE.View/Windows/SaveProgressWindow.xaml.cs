@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using TRGE.Coord;
@@ -50,6 +51,7 @@ namespace TRGE.View.Windows
 
         private readonly TREditor _editor;
         private readonly EditorOptions _options;
+        private bool _cancelPending, _cancelled;
 
         public SaveProgressWindow(TREditor editor, EditorOptions options)
         {
@@ -58,31 +60,43 @@ namespace TRGE.View.Windows
             DataContext = this;
             _editor = editor;
             _options = options;
+            _cancelPending = _cancelled = false;
         }
 
         private void Editor_SaveProgressChanged(object sender, TRSaveEventArgs e)
         {
             Dispatcher.Invoke(delegate
             {
-                ProgressTarget = e.ProgressTarget;
-                ProgressValue = e.ProgressValue;
-                if (e.CustomDescription != null)
+                if (_cancelPending)
                 {
-                    ProgressDescription = e.CustomDescription;
+                    e.IsCancelled = true;
+                    _cancelPending = false;
+                    _cancelled = true;
                 }
                 else
                 {
-                    switch (e.Category)
+                    ProgressTarget = e.ProgressTarget;
+                    ProgressValue = e.ProgressValue;
+                    if (e.CustomDescription != null)
                     {
-                        case TRSaveCategory.Scripting:
-                            ProgressDescription = "Saving script data";
-                            break;
-                        case TRSaveCategory.LevelFile:
-                            ProgressDescription = "Saving level file modifications";
-                            break;
-                        case TRSaveCategory.Commit:
-                            ProgressDescription = "Committing changes";
-                            break;
+                        ProgressDescription = e.CustomDescription;
+                    }
+                    else
+                    {
+                        switch (e.Category)
+                        {
+                            case TRSaveCategory.Scripting:
+                                ProgressDescription = "Saving script data";
+                                break;
+                            case TRSaveCategory.LevelFile:
+                                ProgressDescription = "Saving level file modifications";
+                                break;
+                            case TRSaveCategory.Commit:
+                                _cancelButton.IsEnabled = false;
+                                WindowUtils.EnableCloseButton(this, false);
+                                ProgressDescription = "Committing changes";
+                                break;
+                        }
                     }
                 }
             });
@@ -90,9 +104,7 @@ namespace TRGE.View.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowUtils.EnableCloseButton(this, false);
             WindowUtils.TidyMenu(this);
-
             new Thread(Save).Start();
         }
 
@@ -124,9 +136,30 @@ namespace TRGE.View.Windows
                     }
                     else
                     {
-                        DialogResult = true;
+                        DialogResult = !_cancelled;
                     }
                 });
+            }
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Cancel();
+        }
+
+        private void Cancel()
+        {
+            _cancelPending = true;
+            _cancelButton.IsEnabled = false;
+            WindowUtils.EnableCloseButton(this, false);
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (!_cancelPending && DialogResult == null)
+            {
+                Cancel();
+                e.Cancel = true;
             }
         }
     }
