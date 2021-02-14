@@ -57,6 +57,7 @@
     <Compile Include="Tests\Integration\Extensions\AbstractTR2ExtensionTests.cs" />
     <Compile Include="Tests\Integration\Extensions\TR2GExtensionTests.cs" />
     <Compile Include="Tests\Integration\Extensions\TR2ExtensionTests.cs" />
+    <Compile Include="Tests\Integration\RandoLock\TR2RandoLockTestCollection.cs" />
     <Compile Include="Tests\Unit\Audio\AbstractTR23AudioTestCollection.cs" />
     <Compile Include="Tests\Unit\Audio\TR2GPCAudioTests.cs" />
     <Compile Include="Tests\Unit\Audio\TR2PCAudioTests.cs" />

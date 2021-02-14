@@ -112,9 +112,13 @@ namespace TRGE.Core.Test
             RunTest(new TR2PCImportExportTests());
             #endregion
 
-            #region Plugins
+            #region Extensions
             RunTest(new TR2ExtensionTests());
             RunTest(new TR2GExtensionTests());
+            #endregion
+
+            #region RandoLock
+            RunTest(new TR2RandoLockTestCollection());
             #endregion
 
             WriteHeader("Test Results");

@@ -116,40 +116,61 @@ namespace TRGE.Core
 
             List<AbstractTRScriptedLevel> backupLevels = backupScript.Levels;
             List<AbstractTRScriptedLevel> randoBaseLevels = randoBaseScript.Levels;
-
-            TR23LevelManager levelMan = LevelManager as TR23LevelManager;
+            TR23LevelManager originalLevelManager = TRScriptedLevelFactory.GetLevelManager(LoadScript(OriginalFile.FullName)) as TR23LevelManager; //#65
+            TR23LevelManager currentLevelManager = LevelManager as TR23LevelManager;
             
             if (AmmolessLevelOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseAmmolessLevels(randoBaseLevels);
+                if (TRInterop.RandomisationSupported)
+                {
+                    currentLevelManager.RandomiseAmmolessLevels(randoBaseLevels);
+                }
+                else
+                {
+                    currentLevelManager.SetAmmolessLevelData(originalLevelManager.GetAmmolessLevelData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                }
             }
             else if (AmmolessLevelOrganisation == Organisation.Default)
             {
-                levelMan.RestoreAmmolessLevels(backupLevels);
+                currentLevelManager.RestoreAmmolessLevels(backupLevels);
             }
 
             if (UnarmedLevelOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseUnarmedLevels(randoBaseLevels);
+                if (TRInterop.RandomisationSupported)
+                {
+                    currentLevelManager.RandomiseUnarmedLevels(randoBaseLevels);
+                }
+                else
+                {
+                    currentLevelManager.SetUnarmedLevelData(originalLevelManager.GetUnarmedLevelData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                }
             }
             else if (UnarmedLevelOrganisation == Organisation.Default)
             {
-                levelMan.RestoreUnarmedLevels(backupLevels);
+                currentLevelManager.RestoreUnarmedLevels(backupLevels);
             }
             else
             {
-                levelMan.SetUnarmedLevelData(UnarmedLevelData); //TODO: Fix this - it's in place to ensure the event is triggered for any listeners
+                currentLevelManager.SetUnarmedLevelData(UnarmedLevelData); //TODO: Fix this - it's in place to ensure the event is triggered for any listeners
             }
 
             //should occur after unarmed organisation and does not use any other script
             //as basis, as order of levels is essential
             if (SecretBonusOrganisation == Organisation.Random)
             {
-                levelMan.RandomiseBonuses();
+                if (TRInterop.RandomisationSupported)
+                {
+                    currentLevelManager.RandomiseBonuses();
+                }
+                else
+                {
+                    currentLevelManager.SetLevelBonusData(originalLevelManager.GetLevelBonusData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                }
             }
             else if (SecretBonusOrganisation == Organisation.Default)
             {
-                levelMan.RestoreBonuses(backupLevels);
+                currentLevelManager.RestoreBonuses(backupLevels);
             }
         }
 

@@ -210,10 +210,18 @@ namespace TRGE.Core
 
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
+            AbstractTRLevelManager originalLevelManager = TRScriptedLevelFactory.GetLevelManager(LoadScript(OriginalFile.FullName)); //#65
 
             if (LevelSequencingOrganisation == Organisation.Random)
             {
-                LevelManager.RandomiseSequencing(randoBaseScript.Levels);
+                if (TRInterop.RandomisationSupported)
+                {
+                    LevelManager.RandomiseSequencing(randoBaseScript.Levels);
+                }
+                else
+                {
+                    LevelManager.SetSequencing(originalLevelManager.GetSequencing()); //#65 lock to that of the original file
+                }
             }
             else if (LevelSequencingOrganisation == Organisation.Default)
             {
@@ -222,7 +230,14 @@ namespace TRGE.Core
 
             if (GameTrackOrganisation == Organisation.Random)
             {
-                LevelManager.RandomiseGameTracks(randoBaseScript.Levels);
+                if (TRInterop.RandomisationSupported)
+                {
+                    LevelManager.RandomiseGameTracks(randoBaseScript.Levels);
+                }
+                else
+                {
+                    LevelManager.SetTrackData(originalLevelManager.GetTrackData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                }
             }
             else if (GameTrackOrganisation == Organisation.Default)
             {
@@ -236,7 +251,14 @@ namespace TRGE.Core
 
             if (LevelSunsetOrganisation == Organisation.Random)
             {
-                LevelManager.RandomiseSunsets(randoBaseScript.Levels);
+                if (TRInterop.RandomisationSupported)
+                {
+                    LevelManager.RandomiseSunsets(randoBaseScript.Levels);
+                }
+                else
+                {
+                    LevelManager.SetSunsetData(originalLevelManager.GetSunsetData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                }
             }
             else if (LevelSunsetOrganisation == Organisation.Default)
             {
@@ -390,7 +412,7 @@ namespace TRGE.Core
             {
                 if (value == Organisation.Random)
                 {
-                    throw new ArgumentException("Randomisation of level secret support is not implemented.");
+                    throw new NotImplementedException("Randomisation of level secret support is not implemented.");
                 }
                 LevelManager.SecretSupportOrganisation = value;
             }
