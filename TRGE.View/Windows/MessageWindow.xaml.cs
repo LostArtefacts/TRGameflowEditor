@@ -103,9 +103,19 @@ namespace TRGE.View.Windows
             Show(message, SystemIcons.Information, MessageBoxButton.OK);
         }
 
+        public static bool ShowMessageWithCancel(string message)
+        {
+            return Show(message, SystemIcons.Information, MessageBoxButton.OKCancel) == MessageBoxResult.OK;
+        }
+
         public static void ShowWarning(string message)
         {
             Show(message, SystemIcons.Warning, MessageBoxButton.OK);
+        }
+
+        public static bool ShowWarningWithCancel(string message)
+        {
+            return Show(message, SystemIcons.Warning, MessageBoxButton.OKCancel) == MessageBoxResult.OK;
         }
 
         public static void ShowError(string message)

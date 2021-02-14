@@ -441,7 +441,19 @@ namespace TRGE.View.Model
         }
         #endregion
 
-        #region Viability Changes
+        #region Viability
+        public int GetUnviableCount()
+        {
+            int i = 0;
+            if (!LevelSequencingViable) i++;
+            if (!UnarmedLevelsViable) i++;
+            if (!AmmolessLevelsViable) i++;
+            if (SecretRewardsSupported && !SecretRewardsViable) i++;
+            if (SunsetsSupported && !SunsetsViable) i++;
+            if (!AudioViable) i++;
+            return i;
+        }
+
         public void SetLevelSequencingViable()
         {
             LevelSequencingViable = true;

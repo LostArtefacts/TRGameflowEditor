@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using TRGE.Coord;
@@ -143,6 +144,11 @@ namespace TRGE.View.Controls
 
         public void ExportSettings()
         {
+            if (!ConfirmExport())
+            {
+                return;
+            }
+
             using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
             {
                 dlg.DefaultFileName = Edition.ToSafeFileName() + ".trge";
@@ -162,6 +168,44 @@ namespace TRGE.View.Controls
                     }
                 }
             }
+        }
+
+        private bool ConfirmExport()
+        {
+            int unviableCount = _options.GetUnviableCount();
+            if (unviableCount > 0)
+            {
+                StringBuilder sb = new StringBuilder("As the following items have been edited externally, they will be reset to default in the exported file.");
+                sb.Append(Environment.NewLine);
+                if (!_options.LevelSequencingViable)
+                {
+                    sb.Append(Environment.NewLine).Append("Level Sequencing");
+                }
+                if (!_options.UnarmedLevelsViable)
+                {
+                    sb.Append(Environment.NewLine).Append("Unarmed Levels");
+                }
+                if (!_options.AmmolessLevelsViable)
+                {
+                    sb.Append(Environment.NewLine).Append("Ammoless Levels");
+                }
+                if (_options.SecretRewardsSupported && !_options.SecretRewardsViable)
+                {
+                    sb.Append(Environment.NewLine).Append("Secret Rewards");
+                }
+                if (_options.SunsetsSupported && !_options.SunsetsViable)
+                {
+                    sb.Append(Environment.NewLine).Append("Sunsets");
+                }
+                if (!_options.AudioViable)
+                {
+                    sb.Append(Environment.NewLine).Append("Audio");
+                }
+
+                return MessageWindow.ShowWarningWithCancel(sb.ToString());
+            }
+
+            return true;
         }
 
         private void LevelSequencing_ManualConfigure(object sender, RoutedEventArgs e)
