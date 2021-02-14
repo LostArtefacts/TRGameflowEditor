@@ -26,6 +26,7 @@ namespace TRGE.Core
 
         internal void Write(string filePath)
         {
+            Stamp();
             using (BinaryWriter bw = new BinaryWriter(new FileStream(filePath, FileMode.Create)))
             {
                 bw.Write(Serialise());
@@ -34,6 +35,7 @@ namespace TRGE.Core
 
         internal abstract void Read(BinaryReader br);
         internal abstract byte[] Serialise();
+        protected abstract void Stamp();
         protected abstract void CalculateEdition();
         internal abstract AbstractTRFrontEnd FrontEnd { get; }
         internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }

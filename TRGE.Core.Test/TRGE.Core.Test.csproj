@@ -116,6 +116,14 @@
     <Compile Include="Tests\Unit\BasicIO\TR3PSXScriptIOTests.cs" />
     <Compile Include="Tests\Unit\Flags\TR23FlagTests.cs" />
     <Compile Include="Tests\Unit\Misc\TR23MiscTests.cs" />
+    <Compile Include="Tests\Unit\Stamp\AbstractTR23StampTestCollection.cs" />
+    <Compile Include="Tests\Unit\Stamp\TR2PCGStampTests.cs" />
+    <Compile Include="Tests\Unit\Stamp\TR2PCStampTests.cs" />
+    <Compile Include="Tests\Unit\Stamp\TR2PSXBetaStampTests.cs" />
+    <Compile Include="Tests\Unit\Stamp\TR2PSXStampTests.cs" />
+    <Compile Include="Tests\Unit\Stamp\TR3GPCStampTests.cs" />
+    <Compile Include="Tests\Unit\Stamp\TR3PCStampTests.cs" />
+    <Compile Include="Tests\Unit\Stamp\TR3PSXStampTests.cs" />
     <Compile Include="Tests\Unit\Unarmed\AbstractTR23UnarmedTestCollection.cs" />
     <Compile Include="Tests\Unit\Unarmed\TR2GPCUnarmedTests.cs" />
     <Compile Include="Tests\Unit\Unarmed\TR2PCUnarmedTests.cs" />

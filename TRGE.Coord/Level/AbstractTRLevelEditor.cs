@@ -37,7 +37,7 @@ namespace TRGE.Coord
         internal sealed override Dictionary<string, object> ExportConfig()
         {
             Dictionary<string, object> config = base.ExportConfig();
-            SaveConfig(config);
+            StoreConfig(config);
             return config;
         }
 
@@ -52,7 +52,7 @@ namespace TRGE.Coord
         /// Any custom values to be saved between edits should be added to the supplied dictionary.
         /// </summary>
         /// <param name="config">The current configuration dictionary.</param>
-        protected virtual void SaveConfig(Dictionary<string, object> config) { }
+        protected virtual void StoreConfig(Dictionary<string, object> config) { }
 
         internal void Initialise(AbstractTRScriptEditor scriptEditor)
         {
@@ -88,8 +88,15 @@ namespace TRGE.Coord
 
             SaveImpl(scriptEditor, monitor);
 
-            SaveConfig(_config);
+            StoreConfig(_config);
+        }
 
+        /// <summary>
+        /// Called on a successful save transaction from TREditor, so it is safe to write the current config
+        /// to disk at this stage.
+        /// </summary>
+        internal sealed override void SaveComplete()
+        {
             _io.ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }
 

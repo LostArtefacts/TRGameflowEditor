@@ -91,6 +91,13 @@ namespace TRGE.Coord
             SaveProgressChanged?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// The ScriptEditor and LevelEditor will be directed to save all output to the temporary
+        /// WIP directory. Provided no errors occur, or the save transaction is not cancelled, the
+        /// contents of the WIP directory will be moved to the Output and Target directories. Both
+        /// editors will then be re-initialised. Any subscribers to SaveProgressChanged can monitor
+        /// save progress and optionally cancel the task before the Commit stage is reached.
+        /// </summary>
         public void Save()
         {
             TRSaveMonitor monitor = new TRSaveMonitor(new TRSaveEventArgs
@@ -101,12 +108,12 @@ namespace TRGE.Coord
             monitor.SaveStateChanged += Editor_SaveStateChanged;
 
             DirectoryInfo wipDirectory = new DirectoryInfo(_wipOutputDirectory);
+            wipDirectory.Create();
             wipDirectory.Clear();
 
             try
             {
                 ScriptEditor.Save(monitor);
-
                 if (LevelEditor != null)
                 {
                     LevelEditor.Save(ScriptEditor, monitor);
@@ -115,6 +122,12 @@ namespace TRGE.Coord
                 if (!monitor.IsCancelled)
                 {
                     monitor.FireSaveStateChanged(0, TRSaveCategory.Commit);
+
+                    ScriptEditor.SaveComplete();
+                    if (LevelEditor != null)
+                    {
+                        LevelEditor.SaveComplete();
+                    }
 
                     DirectoryInfo outputDirectory = new DirectoryInfo(_outputDirectory);
                     DirectoryInfo targetDirectory = new DirectoryInfo(_targetDirectory);

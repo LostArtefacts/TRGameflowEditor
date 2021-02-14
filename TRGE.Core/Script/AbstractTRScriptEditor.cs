@@ -281,11 +281,17 @@ namespace TRGE.Core
             string outputPath = GetScriptWIPOutputPath();
             Script.Write(outputPath);
 
-            _config["CheckSumOnSave"] = new FileInfo(outputPath).Checksum();
-
-            ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
-
             monitor.FireSaveStateChanged(1);
+        }
+
+        /// <summary>
+        /// Called on a successful save transaction from TREditor, so it is safe to write the current config
+        /// to disk at this stage.
+        /// </summary>
+        internal sealed override void SaveComplete()
+        {
+            _config["CheckSumOnSave"] = new FileInfo(GetScriptWIPOutputPath()).Checksum();
+            ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }
 
         internal override Dictionary<string, object> ExportConfig()

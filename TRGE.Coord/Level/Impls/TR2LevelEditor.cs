@@ -26,7 +26,8 @@ namespace TRGE.Coord
             switch (e.Modification)
             {
                 case TRScriptedLevelModification.WeaponlessStateChanged:
-                    return !e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE"));
+                    //return !e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE"));
+                    return true;
                 case TRScriptedLevelModification.SunsetChanged:
                     return true;
                 default:
@@ -55,17 +56,24 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
             }
 
-            TR2LevelReader reader = new TR2LevelReader();
-            TR2Level level = reader.ReadLevel(levelFile);
-
-            SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
-            if ((e.ScriptedLevel as TR23ScriptedLevel).RequiresPistolTextureInjection)
+            if (e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE")))
             {
-                MaybeInjectPistolTexture(level);
+                File.Copy(levelFile, GetWriteLevelFilePath(e.LevelFileBaseName));
             }
+            else
+            {
+                TR2LevelReader reader = new TR2LevelReader();
+                TR2Level level = reader.ReadLevel(levelFile);
 
-            TR2LevelWriter writer = new TR2LevelWriter();
-            writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+                SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
+                if ((e.ScriptedLevel as TR23ScriptedLevel).RequiresPistolTextureInjection)
+                {
+                    MaybeInjectPistolTexture(level);
+                }
+
+                TR2LevelWriter writer = new TR2LevelWriter();
+                writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+            }
         }
 
         internal Location GetLocationForLevel(string levelFileName)

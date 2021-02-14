@@ -178,13 +178,16 @@ namespace TRGE.Core.Test
 
         private void TestTitleScreenFlag(TR23Script script)
         {
+            string exitToTitle = script.GameStrings1[8];
             Assert.IsFalse(script.TitleDisabled);
             script.TitleDisabled = true;
             Assert.IsTrue(script.TitleDisabled);
-            Assert.IsTrue(script.GameStrings1[6].Equals("New Game"));
+            Assert.AreNotEqual(script.GameStrings1[8], exitToTitle);
             script = SaveAndReload(script);
             Assert.IsTrue(script.TitleDisabled);
-            Assert.IsTrue(script.GameStrings1[6].Equals("New Game"));
+            Assert.AreNotEqual(script.GameStrings1[8], exitToTitle);
+            script.TitleDisabled = false;
+            Assert.AreEqual(script.GameStrings1[8], exitToTitle);
         }
     }
 }

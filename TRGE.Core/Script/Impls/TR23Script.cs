@@ -223,6 +223,7 @@ namespace TRGE.Core
 
         #endregion
 
+        #region String Mods
         /**
          * If the title screen has been disabled, selecting "Exit to Title" from the passport during gameplay
          * will result in a new game starting. We store the "Exit to Title" text at the second to last position
@@ -235,7 +236,7 @@ namespace TRGE.Core
             if (!TitleDisabled)
             {
                 TitleReplace = -1;
-                if (_gameStrings1[_gameStrings2.Count - 2].StartsWith("TRGE:"))
+                if (_gameStrings2[_gameStrings2.Count - 2].StartsWith("TRGE:"))
                 {
                     _gameStrings1[8] = _gameStrings2[_gameStrings2.Count - 2].Substring(5); //exit to title
                     _gameStrings2[_gameStrings2.Count - 2] = _gameStrings2[_gameStrings2.Count - 3]; //spare
@@ -245,9 +246,15 @@ namespace TRGE.Core
             {
                 TitleReplace = 1;
                 _gameStrings2[_gameStrings2.Count - 2] = "TRGE:" + _gameStrings1[8]; //exit to title
-                _gameStrings1[8] = _gameStrings1[6]; //new game
+                _gameStrings1[8] = _gameStrings1[6] + TRInterop.ScriptModificationStamp; //new game + mod stamp
             }
         }
+
+        protected override void Stamp()
+        {
+            //store in _gameStrings2[_gameStrings2.Count - 3] to check that we haven't already stamped
+        }
+        #endregion
 
         #region TRLevel Interop
 
@@ -262,10 +269,6 @@ namespace TRGE.Core
                 }
                 return _frontEnd;
             }
-            /*set
-            {
-                _scriptData[0] = value.TranslateOperations();
-            }*/
         }
 
         internal override List<AbstractTRScriptedLevel> Levels

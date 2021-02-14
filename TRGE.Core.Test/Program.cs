@@ -44,6 +44,16 @@ namespace TRGE.Core.Test
             RunTest(new TR23MiscTests());
             #endregion
 
+            #region Stamps
+            RunTest(new TR2PCStampTests());
+            RunTest(new TR2PCGStampTests());
+            RunTest(new TR2PSXStampTests());
+            RunTest(new TR2PSXBetaStampTests());
+            RunTest(new TR3PCStampTests());
+            RunTest(new TR3GPCStampTests());
+            RunTest(new TR3PSXStampTests());
+            #endregion
+
             #region ScriptManagement
             RunTest(new TR23ScriptManagementTests());
             #endregion

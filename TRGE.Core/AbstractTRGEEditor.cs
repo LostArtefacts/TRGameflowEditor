@@ -34,5 +34,6 @@ namespace TRGE.Core
         protected abstract void ApplyConfig(Dictionary<string, object> config);
 
         internal abstract void Restore();
+        internal abstract void SaveComplete();
     }
 }

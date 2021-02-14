@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
 using TRGE.Coord;
 
 namespace TRGE.Core.Test
@@ -111,6 +113,35 @@ namespace TRGE.Core.Test
                         }
                     }
                 }
+            }
+        }
+
+        [TestMethod]
+        protected void OutputTest()
+        {
+            TRCoord.Instance.RootConfigDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            try
+            {
+                TREditor editor = TRCoord.Instance.Open(@"C:\Program Files (x86)\Steam\steamapps\common\Tomb Raider (II)\data");
+                TR23ScriptEditor scriptEditor = editor.ScriptEditor as TR23ScriptEditor;
+                scriptEditor.LevelSequencingOrganisation = Organisation.Random;
+                scriptEditor.LevelSunsetOrganisation = Organisation.Random; scriptEditor.RandomSunsetLevelCount = 4;
+                scriptEditor.GameTrackOrganisation = Organisation.Random;
+                scriptEditor.AmmolessLevelOrganisation = Organisation.Random; scriptEditor.RandomAmmolessLevelCount = 2;
+                scriptEditor.UnarmedLevelOrganisation = Organisation.Random; scriptEditor.RandomUnarmedLevelCount = 3;
+                scriptEditor.SecretBonusOrganisation = Organisation.Random;
+
+                scriptEditor.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                scriptEditor.LevelSunsetRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                scriptEditor.GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                scriptEditor.AmmolessLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                scriptEditor.UnarmedLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                scriptEditor.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                editor.Save();
+            }
+            finally
+            {
+                TRCoord.Instance.RootConfigDirectory = Directory.GetCurrentDirectory();
             }
         }
     }

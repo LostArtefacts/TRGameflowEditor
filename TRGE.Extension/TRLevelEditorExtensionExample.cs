@@ -19,7 +19,7 @@ namespace TRGE.Extension
             CustomBool = bool.Parse(config["CustomBool"].ToString());
         }
 
-        protected override void SaveConfig(Dictionary<string, object> config)
+        protected override void StoreConfig(Dictionary<string, object> config)
         {
             config["CustomInt"] = CustomInt;
             config["CustomBool"] = CustomBool;
