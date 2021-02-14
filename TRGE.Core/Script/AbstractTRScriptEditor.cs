@@ -132,13 +132,19 @@ namespace TRGE.Core
                 //note that even if the levels were randomised, this would have been done after saving the config file
                 //so reloading the sequencing will either just restore defaults or set it to a manual sequence if the user
                 //picked that at one point in the previous edit
-                LevelSequencing = JsonConvert.DeserializeObject<List<Tuple<string, string>>>(levelSeq["Data"].ToString());
+                if (levelSeq.ContainsKey("Data"))
+                {
+                    LevelSequencing = JsonConvert.DeserializeObject<List<Tuple<string, string>>>(levelSeq["Data"].ToString());
+                }
 
                 Dictionary<string, object> trackInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["GameTracks"].ToString());
                 GameTrackOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), trackInfo["Organisation"]);
                 GameTrackRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(trackInfo["RNG"].ToString()));
                 //see note above
-                GameTrackData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, ushort>>>(trackInfo["Data"].ToString());
+                if (trackInfo.ContainsKey("Data"))
+                {
+                    GameTrackData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, ushort>>>(trackInfo["Data"].ToString());
+                }
 
                 Dictionary<string, object> secretInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["SecretSupport"].ToString());
                 LevelSecretSupportOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), secretInfo["Organisation"]);
@@ -148,7 +154,10 @@ namespace TRGE.Core
                 LevelSunsetOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), sunsetInfo["Organisation"]);
                 LevelSunsetRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(sunsetInfo["RNG"].ToString()));
                 //see note above
-                LevelSunsetData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(sunsetInfo["Data"].ToString());
+                if (sunsetInfo.ContainsKey("Data"))
+                {
+                    LevelSunsetData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(sunsetInfo["Data"].ToString());
+                }
                 RandomSunsetLevelCount = uint.Parse(sunsetInfo["RandomCount"].ToString());
 
                 FrontEndHasFMV = bool.Parse(config["FrontEndFMVOn"].ToString());
@@ -182,7 +191,11 @@ namespace TRGE.Core
 
             _config = new Dictionary<string, object>
             {
-                ["Version"] = Assembly.GetExecutingAssembly().GetName().Version,
+                ["App"] = new Dictionary<string, object>
+                {
+                    ["Tag"] = TRInterop.TaggedVersion,
+                    ["Version"] = TRInterop.ExecutingVersion
+                },
                 ["Edition"] = Edition.ToJson(),
                 ["Original"] = OriginalFile.FullName,
                 ["CheckSumOnSave"] = string.Empty,
@@ -304,6 +317,37 @@ namespace TRGE.Core
             if (config.ContainsKey("Original"))
             {
                 config.Remove("Original");
+            }
+
+            if (!TRInterop.RandomisationSupported)
+            {
+                if (LevelSequencingOrganisation == Organisation.Random)
+                {
+                    config["LevelSequencing"] = new Dictionary<string, object>
+                    {
+                        ["Organisation"] = (int)Organisation.Default,
+                        ["RNG"] = LevelSequencingRNG.ToJson()
+                    };
+                }
+
+                if (GameTrackOrganisation == Organisation.Random)
+                {
+                    config["GameTracks"] = new Dictionary<string, object>
+                    {
+                        ["Organisation"] = (int)Organisation.Default,
+                        ["RNG"] = GameTrackRNG.ToJson()
+                    };
+                }
+
+                if (LevelSunsetOrganisation == Organisation.Random)
+                {
+                    config["Sunsets"] = new Dictionary<string, object>
+                    {
+                        ["Organisation"] = (int)Organisation.Default,
+                        ["RNG"] = LevelSunsetRNG.ToJson(),
+                        ["RandomCount"] = RandomSunsetLevelCount
+                    };
+                }
             }
             return config;
         }

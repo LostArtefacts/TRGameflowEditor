@@ -120,6 +120,7 @@ namespace TRGE.Core.Test
         protected void OutputTest()
         {
             TRCoord.Instance.RootConfigDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            TRInterop.ScriptModificationStamp = "Test Stamp";
             try
             {
                 TREditor editor = TRCoord.Instance.Open(@"C:\Program Files (x86)\Steam\steamapps\common\Tomb Raider (II)\data");

@@ -67,7 +67,11 @@ namespace TRGE.Coord
         {
             _config = new Dictionary<string, object>
             {
-                ["Version"] = Assembly.GetExecutingAssembly().GetName().Version,
+                ["App"] = new Dictionary<string, object>
+                {
+                    ["Tag"] = TRInterop.TaggedVersion,
+                    ["Version"] = TRInterop.ExecutingVersion
+                },
                 ["Successive"] = AllowSuccessiveEdits
             };
 

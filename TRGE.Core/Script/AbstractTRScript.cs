@@ -35,11 +35,28 @@ namespace TRGE.Core
 
         internal abstract void Read(BinaryReader br);
         internal abstract byte[] Serialise();
-        protected abstract void Stamp();
         protected abstract void CalculateEdition();
         internal abstract AbstractTRFrontEnd FrontEnd { get; }
         internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
         internal abstract ushort TitleSoundID { get; set; }
         internal abstract ushort SecretSoundID { get; set; }
+
+        protected abstract void Stamp();
+        protected string ApplyStamp(string gameString)
+        {
+            int i;
+            if ((i = gameString.IndexOf(" - ")) != -1)
+            {
+                gameString = gameString.Substring(0, i);
+            }
+
+            string stamp = TRInterop.ScriptModificationStamp ?? string.Empty;
+            if (stamp.Length > 0 && !stamp.Trim().StartsWith("-"))
+            {
+                stamp = " - " + stamp;
+            }
+
+            return gameString + stamp;
+        }
     }
 }

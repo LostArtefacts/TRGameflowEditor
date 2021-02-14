@@ -32,21 +32,30 @@ namespace TRGE.Core
             UnarmedLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(unarmedLevels["RNG"].ToString()));
             RandomUnarmedLevelCount = uint.Parse(unarmedLevels["RandomCount"].ToString());
             //see note in base.LoadConfig re restoring randomised - same applies for Unarmed
-            UnarmedLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(unarmedLevels["Data"].ToString());
+            if (unarmedLevels.ContainsKey("Data"))
+            {
+                UnarmedLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(unarmedLevels["Data"].ToString());
+            }
 
             Dictionary<string, object> ammolessLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["AmmolessLevels"].ToString());
             AmmolessLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), ammolessLevels["Organisation"]);
             AmmolessLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(ammolessLevels["RNG"].ToString()));
             RandomAmmolessLevelCount = uint.Parse(ammolessLevels["RandomCount"].ToString());
             //see note in base.LoadConfig re restoring randomised - same applies for Ammoless
-            AmmolessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(ammolessLevels["Data"].ToString());
+            if (ammolessLevels.ContainsKey("Data"))
+            {
+                AmmolessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(ammolessLevels["Data"].ToString());
+            }
 
             if (CanOrganiseBonuses)
             {
                 Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["BonusSetup"].ToString());
                 SecretBonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Organisation"]);
                 SecretBonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
-                LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses["Data"].ToString());
+                if (bonuses.ContainsKey("Data"))
+                {
+                    LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses["Data"].ToString());
+                }
             }
 
             LevelsHaveCutScenes = bool.Parse(config["LevelCutScenesOn"].ToString());
@@ -172,6 +181,43 @@ namespace TRGE.Core
             {
                 currentLevelManager.RestoreBonuses(backupLevels);
             }
+        }
+
+        internal override Dictionary<string, object> ExportConfig()
+        {
+            Dictionary<string, object> config = base.ExportConfig();
+            if (!TRInterop.RandomisationSupported)
+            {
+                if (UnarmedLevelOrganisation == Organisation.Random)
+                {
+                    config["UnarmedLevels"] = new Dictionary<string, object>
+                    {
+                        ["Organisation"] = (int)Organisation.Default,
+                        ["RNG"] = UnarmedLevelRNG.ToJson(),
+                        ["RandomCount"] = RandomUnarmedLevelCount
+                    };
+                }
+
+                if (AmmolessLevelOrganisation == Organisation.Random)
+                {
+                    config["AmmolessLevels"] = new Dictionary<string, object>
+                    {
+                        ["Organisation"] = (int)Organisation.Default,
+                        ["RNG"] = AmmolessLevelRNG.ToJson(),
+                        ["RandomCount"] = RandomAmmolessLevelCount
+                    };
+                }
+
+                if (CanOrganiseBonuses && SecretBonusOrganisation == Organisation.Random)
+                {
+                    config["BonusSetup"] = new Dictionary<string, object>
+                    {
+                        ["Organisation"] = (int)Organisation.Default,
+                        ["RNG"] = SecretBonusRNG.ToJson()
+                    };
+                }
+            }
+            return config;
         }
 
         internal override AbstractTRScript CreateScript()

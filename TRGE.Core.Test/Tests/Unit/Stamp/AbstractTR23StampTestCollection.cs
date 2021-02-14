@@ -13,13 +13,28 @@ namespace TRGE.Core.Test
         protected virtual void TestStampGame()
         {
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-            
+            TR23Script script = editor.ScriptEditor.Script as TR23Script;
+            Assert.AreEqual(script.GameStrings1[GameIndex], "Game");
+            editor.Save();
+            Assert.AreNotEqual(script.GameStrings1[GameIndex], "Game");
+
+            editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            script = editor.ScriptEditor.Script as TR23Script;
+            Assert.AreEqual(script.GameStrings1[GameIndex], "Game");
         }
 
         [TestMethod]
         protected virtual void TestStampInventory()
         {
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23Script script = editor.ScriptEditor.Script as TR23Script;
+            Assert.AreEqual(script.GameStrings1[InventoryIndex], "INVENTORY");
+            editor.Save();
+            Assert.AreNotEqual(script.GameStrings1[InventoryIndex], "INVENTORY");
 
+            editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            script = editor.ScriptEditor.Script as TR23Script;
+            Assert.AreEqual(script.GameStrings1[InventoryIndex], "INVENTORY");
         }
     }
 }

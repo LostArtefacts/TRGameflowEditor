@@ -246,13 +246,28 @@ namespace TRGE.Core
             {
                 TitleReplace = 1;
                 _gameStrings2[_gameStrings2.Count - 2] = "TRGE:" + _gameStrings1[8]; //exit to title
-                _gameStrings1[8] = _gameStrings1[6] + TRInterop.ScriptModificationStamp; //new game + mod stamp
+                _gameStrings1[8] = _gameStrings1[6]; //new game
             }
         }
 
         protected override void Stamp()
         {
-            //store in _gameStrings2[_gameStrings2.Count - 3] to check that we haven't already stamped
+            int gameIndex, inventoryIndex = 0;
+            if (Edition == TREdition.TR2PC || Edition == TREdition.TR2G || Edition == TREdition.TR2PSX)
+            {
+                gameIndex = 56;
+            }
+            else if (Edition == TREdition.TR2PSXBeta)
+            {
+                gameIndex = 53;
+            }
+            else
+            {
+                gameIndex = 58;
+            }
+
+            _gameStrings1[gameIndex] = ApplyStamp(_gameStrings1[gameIndex]);
+            _gameStrings1[inventoryIndex] = ApplyStamp(_gameStrings1[inventoryIndex]);
         }
         #endregion
 

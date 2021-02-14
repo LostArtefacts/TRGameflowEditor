@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("TRGE.Coord")]
 [assembly: InternalsVisibleTo("TRGE.Core.Test")]
@@ -9,6 +10,7 @@ namespace TRGE.Core
     {
         static TRInterop()
         {
+            ExecutingVersion = TaggedVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             RandomisationSupported = true;
             ScriptModificationStamp = "Modified by TRGE";
         }
