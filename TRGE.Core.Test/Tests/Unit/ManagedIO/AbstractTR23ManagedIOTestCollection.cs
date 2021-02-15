@@ -73,6 +73,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(3)]
         protected void TestManualLevelSequencing()
         {
             List<Tuple<string, string>> levelSequencingData;
@@ -90,6 +91,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(4)]
         protected void TestManualUnarmedLevels()
         {
             List<MutableTuple<string, string, bool>> unarmedData;
@@ -107,6 +109,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(5)]
         protected void TestManualAmmolessLevels()
         {
             List<MutableTuple<string, string, bool>> ammolessData;
@@ -124,6 +127,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(6)]
         protected void TestAmmolessRandomisation()
         {
             List<MutableTuple<string, string, bool>> ammolessData;
@@ -142,6 +146,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(7)]
         protected void TestUnarmedRandomisation()
         {
             List<MutableTuple<string, string, bool>> unarmedData;
@@ -160,6 +165,7 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        [TestSequence(8)]
         protected void TestAudioChange()
         {
             List<MutableTuple<string, string, ushort>> trackData;
@@ -173,6 +179,26 @@ namespace TRGE.Core.Test
 
             sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             CollectionAssert.AreEqual(trackData, sm.GameTrackData);
+        }
+
+        [TestMethod]
+        [TestSequence(9)]
+        protected void TestFileSystemWatcher()
+        {
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            int changeCount = 0;
+            editor.ConfigExternallyChanged += delegate (object sender, FileSystemEventArgs e)
+            {
+                changeCount++;
+            };
+
+            //should not trigger
+            editor.Save();
+
+            //should trigger
+            File.WriteAllBytes(editor.ScriptEditor.ConfigFilePath, File.ReadAllBytes(editor.ScriptEditor.ConfigFilePath));
+
+            Assert.AreEqual(1, changeCount);
         }
     }
 }

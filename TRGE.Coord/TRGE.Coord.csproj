@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ConfigFileWatcher.cs" />
     <Compile Include="Helpers\Location.cs" />
     <Compile Include="Helpers\SpriteDefinition.cs" />
     <Compile Include="Level\AbstractTRLevelEditor.cs" />

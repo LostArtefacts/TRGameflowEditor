@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using TRGE.Core;
 
@@ -11,6 +10,8 @@ namespace TRGE.Coord
     {
         protected readonly TRDirectoryIOArgs _io;
         protected readonly Dictionary<string, ISet<TRScriptedLevelEventArgs>> _levelModifications;
+
+        internal override string ConfigFilePath => _io.ConfigFile.FullName;
 
         public AbstractTRLevelEditor(TRDirectoryIOArgs io)
         {

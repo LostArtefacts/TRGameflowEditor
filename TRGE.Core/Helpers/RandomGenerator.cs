@@ -18,7 +18,13 @@ namespace TRGE.Core
 
         internal int CustomValue { get; private set; }
 
-        internal RandomGenerator(Type type)
+        public RandomGenerator(int value)
+        {
+            RNGType = Type.Custom;
+            CustomValue = value;
+        }
+
+        public RandomGenerator(Type type)
         {
             RNGType = type;
             CustomValue = -1;
@@ -45,7 +51,7 @@ namespace TRGE.Core
                         return CustomValue;
                 }
             }
-            internal set
+            set
             {
                 CustomValue = value;
             }

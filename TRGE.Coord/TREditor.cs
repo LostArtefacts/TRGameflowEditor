@@ -16,8 +16,11 @@ namespace TRGE.Coord
             get => _scriptEditor;
             internal set
             {
-                _scriptEditor = value;
-                _scriptEditor.LevelModified += ScriptEditorLevelModified;
+                if ((_scriptEditor = value) != null)
+                {
+                    _scriptEditor.LevelModified += ScriptEditorLevelModified;
+                    ConfigureWatcher();
+                }
             }
         }
 
@@ -30,6 +33,7 @@ namespace TRGE.Coord
                 if ((_levelEditor = value) != null)
                 {
                     _levelEditor.Initialise(ScriptEditor);
+                    ConfigureWatcher();
                 }
             }
         }
@@ -55,6 +59,9 @@ namespace TRGE.Coord
         private readonly string _targetDirectory;
 
         public event EventHandler<TRSaveEventArgs> SaveProgressChanged;
+
+        private ConfigFileWatcher _watcher;
+        public event EventHandler<FileSystemEventArgs> ConfigExternallyChanged;
 
         public bool IsExportPossible => ScriptEditor.IsExportPossible && (LevelEditor == null || LevelEditor.IsExportPossible);
 
@@ -111,6 +118,8 @@ namespace TRGE.Coord
             wipDirectory.Create();
             wipDirectory.Clear();
 
+            _watcher.Enabled = false;
+
             try
             {
                 ScriptEditor.Save(monitor);
@@ -143,6 +152,7 @@ namespace TRGE.Coord
             }
             finally
             {
+                _watcher.Enabled = true;
                 wipDirectory.Clear();
             }
         }
@@ -186,6 +196,32 @@ namespace TRGE.Coord
             {
                 LevelEditor.ImportConfig(JsonConvert.DeserializeObject<Dictionary<string, object>>(config["TRLE"].ToString()));
             }
+        }
+
+        private void ConfigureWatcher()
+        {
+            if (_watcher != null || ScriptEditor == null)
+            {
+                return;
+            }
+
+            _watcher = new ConfigFileWatcher(ScriptEditor.ConfigFilePath);
+            _watcher.Changed += delegate (object sender, FileSystemEventArgs e)
+            {
+                ConfigExternallyChanged?.Invoke(this, e);
+            };
+        }
+
+        public void Unload()
+        {
+            if (_watcher != null)
+            {
+                _watcher.Enabled = false;
+                _watcher = null;
+            }
+
+            ScriptEditor = null;
+            LevelEditor = null;
         }
     }
 }

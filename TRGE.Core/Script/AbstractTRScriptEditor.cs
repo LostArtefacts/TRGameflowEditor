@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace TRGE.Core
 {
@@ -27,6 +26,8 @@ namespace TRGE.Core
             get => _io.ConfigFile;
             set => _io.ConfigFile = value;
         }
+
+        internal override string ConfigFilePath => ConfigFile.FullName;
 
         internal DirectoryInfo WIPOutputDirectory
         {

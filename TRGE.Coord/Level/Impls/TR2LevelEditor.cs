@@ -108,10 +108,28 @@ namespace TRGE.Coord
             );
 
             bool changesMade = false;
-            
-            if (scriptedLevel.RemovesWeapons)
+
+            // #69 Offshore Rig - the Pistol item index is low in the list (#4), so if we remove it we'd need to change
+            // everything that references the items above it in the list. So, for simplicity's sake, we will just
+            // replace the pistols with something else if the level is now armed, or revert it to pistols.
+            if (scriptedLevel.ID == AbstractTRScriptedLevel.CreateID("RIG"))
             {
-                //only inject if it hasn't been done already i.e. no pistols or randomised weapon found in the default spot
+                TR2Entity cargoEntity = existingInjections.FirstOrDefault();
+                if (cargoEntity != null)
+                {
+                    if (scriptedLevel.RemovesWeapons)
+                    {
+                        cargoEntity.TypeID = (short)TR2Entities.Pistols_S_P;
+                    }
+                    else
+                    {
+                        cargoEntity.TypeID = (short)TR2Entities.UziAmmo_S_P; //need a way to be able to define this somewhere
+                    }
+                }
+            }
+            else if (scriptedLevel.RemovesWeapons)
+            {
+                //only inject if it hasn't been done already i.e. no pistols, other weapon or ammo found in the default spot
                 if (existingInjections.Count() == 0)
                 {
                     entities.Add(new TR2Entity

@@ -5,6 +5,7 @@ namespace TRGE.Core
     public abstract class AbstractTRGEEditor : ITRSaveProgressProvider
     {
         protected Dictionary<string, object> _config;
+        internal abstract string ConfigFilePath { get; }
 
         internal bool AllowSuccessiveEdits { get; set; }
         internal virtual bool IsExportPossible => _config != null;
