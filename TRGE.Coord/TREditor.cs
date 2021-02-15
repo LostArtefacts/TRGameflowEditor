@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using TRGE.Core;
 
@@ -173,7 +171,7 @@ namespace TRGE.Coord
                 throw new InvalidOperationException();
             }
 
-            Dictionary<string, object> config = new Dictionary<string, object>
+            Config config = new Config
             {
                 ["TRGE"] = ScriptEditor.ExportConfig()
             };
@@ -182,19 +180,21 @@ namespace TRGE.Coord
                 config["TRLE"] = LevelEditor.ExportConfig();
             }
 
-            new FileInfo(filePath).WriteCompressedText(JsonConvert.SerializeObject(config, Formatting.None));
+            config.Write(filePath);
+
+            //new FileInfo(filePath).WriteCompressedText(JsonConvert.SerializeObject(config, Formatting.None));
         }
 
         public void ImportSettings(string filePath)
         {
-            Dictionary<string, object> config = JsonConvert.DeserializeObject<Dictionary<string, object>>(new FileInfo(filePath).ReadCompressedText());
+            Config config = Config.Read(filePath);
             if (config.ContainsKey("TRGE"))
             {
-                ScriptEditor.ImportConfig(JsonConvert.DeserializeObject<Dictionary<string, object>>(config["TRGE"].ToString()));
+                ScriptEditor.ImportConfig(config.GetSubConfig("TRGE"));
             }
             if (config.ContainsKey("TRLE") && LevelEditor != null)
             {
-                LevelEditor.ImportConfig(JsonConvert.DeserializeObject<Dictionary<string, object>>(config["TRLE"].ToString()));
+                LevelEditor.ImportConfig(config.GetSubConfig("TRLE"));
             }
         }
 

@@ -198,7 +198,8 @@ namespace TRGE.Core.Test
             //should trigger
             File.WriteAllBytes(editor.ScriptEditor.ConfigFilePath, File.ReadAllBytes(editor.ScriptEditor.ConfigFilePath));
 
-            Assert.AreEqual(1, changeCount);
+            //FileSystemWatcher sometimes triggers more than once, and there doesn't seem to be a way around it
+            Assert.AreNotEqual(0, changeCount);
         }
     }
 }

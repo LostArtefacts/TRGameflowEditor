@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using TRGE.Coord;
+﻿using TRGE.Coord;
 using TRGE.Core;
 
 namespace TRGE.Extension
@@ -13,13 +11,13 @@ namespace TRGE.Extension
         public TRLevelEditorExtensionExample(TRDirectoryIOArgs args)
             : base(args) { }
 
-        protected override void ApplyConfig(Dictionary<string, object> config)
+        protected override void ApplyConfig(Config config)
         {
-            CustomInt = int.Parse(config["CustomInt"].ToString());
-            CustomBool = bool.Parse(config["CustomBool"].ToString());
+            CustomInt = config.GetInt("CustomInt", 10);
+            CustomBool = config.GetBool("CustomBool", true);
         }
 
-        protected override void StoreConfig(Dictionary<string, object> config)
+        protected override void StoreConfig(Config config)
         {
             config["CustomInt"] = CustomInt;
             config["CustomBool"] = CustomBool;

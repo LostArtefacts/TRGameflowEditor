@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     public abstract class AbstractTRGEEditor : ITRSaveProgressProvider
     {
-        protected Dictionary<string, object> _config;
+        protected Config _config;
         internal abstract string ConfigFilePath { get; }
 
         internal bool AllowSuccessiveEdits { get; set; }
@@ -12,12 +10,12 @@ namespace TRGE.Core
 
         public abstract int GetSaveTargetCount();
 
-        internal virtual Dictionary<string, object> ExportConfig()
+        internal virtual Config ExportConfig()
         {
-            return new Dictionary<string, object>(_config);
+            return new Config(_config);
         }
 
-        internal void ImportConfig(Dictionary<string, object> config)
+        internal void ImportConfig(Config config)
         {
             try
             {
@@ -31,8 +29,8 @@ namespace TRGE.Core
             }
         }
 
-        protected abstract void ReadConfig(Dictionary<string, object> config);
-        protected abstract void ApplyConfig(Dictionary<string, object> config);
+        protected abstract void ReadConfig(Config config);
+        protected abstract void ApplyConfig(Config config);
 
         internal abstract void Restore();
         internal abstract void SaveComplete();

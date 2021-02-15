@@ -17,27 +17,21 @@ namespace TRGE.Coord
         {
             _io = io;
             _levelModifications = new Dictionary<string, ISet<TRScriptedLevelEventArgs>>();
-            LoadConfig();
+            ReadConfig(_config = Config.Read(_io.ConfigFile.FullName));
         }
 
-        private void LoadConfig()
-        {
-            _config = File.Exists(_io.ConfigFile.FullName) ? JsonConvert.DeserializeObject<Dictionary<string, object>>(_io.ConfigFile.ReadCompressedText()) : null;
-            ReadConfig(_config);
-        }
-
-        protected sealed override void ReadConfig(Dictionary<string, object> config)
+        protected sealed override void ReadConfig(Config config)
         {
             if (config != null)
             {
-                AllowSuccessiveEdits = bool.Parse(config["Successive"].ToString());
+                AllowSuccessiveEdits = config.GetBool("Successive");
                 ApplyConfig(config);
             }
         }
 
-        internal sealed override Dictionary<string, object> ExportConfig()
+        internal sealed override Config ExportConfig()
         {
-            Dictionary<string, object> config = base.ExportConfig();
+            Config config = base.ExportConfig();
             StoreConfig(config);
             return config;
         }
@@ -47,13 +41,13 @@ namespace TRGE.Coord
         /// can be assigned locally as necessary.
         /// </summary>
         /// <param name="config">The configuration dictionary loaded from disk.</param>
-        protected override void ApplyConfig(Dictionary<string, object> config) { }
+        protected override void ApplyConfig(Config config) { }
 
         /// <summary>
         /// Any custom values to be saved between edits should be added to the supplied dictionary.
         /// </summary>
         /// <param name="config">The current configuration dictionary.</param>
-        protected virtual void StoreConfig(Dictionary<string, object> config) { }
+        protected virtual void StoreConfig(Config config) { }
 
         internal void Initialise(AbstractTRScriptEditor scriptEditor)
         {
@@ -66,9 +60,9 @@ namespace TRGE.Coord
 
         internal void Save(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
         {
-            _config = new Dictionary<string, object>
+            _config = new Config
             {
-                ["App"] = new Dictionary<string, object>
+                ["App"] = new Config
                 {
                     ["Tag"] = TRInterop.TaggedVersion,
                     ["Version"] = TRInterop.ExecutingVersion
@@ -102,7 +96,8 @@ namespace TRGE.Coord
         /// </summary>
         internal sealed override void SaveComplete()
         {
-            _io.ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
+            _config.Write(_io.ConfigFile.FullName);
+            //_io.ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }
 
         internal void ScriptedLevelModified(TRScriptedLevelEventArgs e)

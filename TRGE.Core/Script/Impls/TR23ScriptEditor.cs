@@ -9,7 +9,7 @@ namespace TRGE.Core
         internal TR23ScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
             : base(ioArgs, openOption) { }        
 
-        protected override void ApplyConfig(Dictionary<string, object> config)
+        protected override void ApplyConfig(Config config)
         {
             if (config == null)
             {
@@ -27,51 +27,51 @@ namespace TRGE.Core
                 return;
             }
 
-            Dictionary<string, object> unarmedLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["UnarmedLevels"].ToString());
-            UnarmedLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), unarmedLevels["Organisation"]);
-            UnarmedLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(unarmedLevels["RNG"].ToString()));
-            RandomUnarmedLevelCount = uint.Parse(unarmedLevels["RandomCount"].ToString());
+            Config unarmedLevels = config.GetSubConfig("UnarmedLevels");
+            UnarmedLevelOrganisation = unarmedLevels.GetOrganisation("Organisation");
+            UnarmedLevelRNG = new RandomGenerator(unarmedLevels.GetSubConfig("RNG"));
+            RandomUnarmedLevelCount = unarmedLevels.GetUInt("RandomCount");
             //see note in base.LoadConfig re restoring randomised - same applies for Unarmed
             if (unarmedLevels.ContainsKey("Data"))
             {
-                UnarmedLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(unarmedLevels["Data"].ToString());
+                UnarmedLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(unarmedLevels.GetString("Data"));
             }
 
-            Dictionary<string, object> ammolessLevels = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["AmmolessLevels"].ToString());
-            AmmolessLevelOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), ammolessLevels["Organisation"]);
-            AmmolessLevelRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(ammolessLevels["RNG"].ToString()));
-            RandomAmmolessLevelCount = uint.Parse(ammolessLevels["RandomCount"].ToString());
+            Config ammolessLevels = config.GetSubConfig("AmmolessLevels");
+            AmmolessLevelOrganisation = ammolessLevels.GetOrganisation("Organisation");
+            AmmolessLevelRNG = new RandomGenerator(ammolessLevels.GetSubConfig("RNG"));
+            RandomAmmolessLevelCount = ammolessLevels.GetUInt("RandomCount");
             //see note in base.LoadConfig re restoring randomised - same applies for Ammoless
             if (ammolessLevels.ContainsKey("Data"))
             {
-                AmmolessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(ammolessLevels["Data"].ToString());
+                AmmolessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(ammolessLevels.GetString("Data"));
             }
 
             if (CanOrganiseBonuses)
             {
-                Dictionary<string, object> bonuses = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["BonusSetup"].ToString());
-                SecretBonusOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), bonuses["Organisation"]);
-                SecretBonusRNG = new RandomGenerator(JsonConvert.DeserializeObject<Dictionary<string, object>>(bonuses["RNG"].ToString()));
+                Config bonuses = config.GetSubConfig("BonusSetup");
+                SecretBonusOrganisation = bonuses.GetOrganisation("Organisation");
+                SecretBonusRNG = new RandomGenerator(bonuses.GetSubConfig("RNG"));
                 if (bonuses.ContainsKey("Data"))
                 {
-                    LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses["Data"].ToString());
+                    LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses.GetString("Data"));
                 }
             }
 
-            LevelsHaveCutScenes = bool.Parse(config["LevelCutScenesOn"].ToString());
-            LevelsHaveFMV = bool.Parse(config["LevelFMVsOn"].ToString());
-            LevelsHaveStartAnimation = bool.Parse(config["LevelStartAnimsOn"].ToString());
-            CheatsEnabled = bool.Parse(config["CheatsOn"].ToString());
-            DemosEnabled = bool.Parse(config["DemosOn"].ToString());
-            DemoTime = uint.Parse(config["DemoTime"].ToString());
-            IsDemoVersion = bool.Parse(config["DemoVersion"].ToString());
-            DozyEnabled = bool.Parse(config["DozyOn"].ToString());
-            GymEnabled = bool.Parse(config["GymOn"].ToString());
-            LevelSelectEnabled = bool.Parse(config["LevelSelectOn"].ToString());
-            OptionRingEnabled = bool.Parse(config["OptionRingOn"].ToString());
-            SaveLoadEnabled = bool.Parse(config["SaveLoadOn"].ToString());
-            ScreensizingEnabled = bool.Parse(config["ScreensizeOn"].ToString());
-            TitleScreenEnabled = bool.Parse(config["TitlesOn"].ToString());
+            LevelsHaveCutScenes = config.GetBool("LevelCutScenesOn");
+            LevelsHaveFMV = config.GetBool("LevelFMVsOn");
+            LevelsHaveStartAnimation = config.GetBool("LevelStartAnimsOn");
+            CheatsEnabled = config.GetBool("CheatsOn");
+            DemosEnabled = config.GetBool("DemosOn");
+            DemoTime = config.GetUInt("DemoTime");
+            IsDemoVersion = config.GetBool("DemoVersion");
+            DozyEnabled = config.GetBool("DozyOn");
+            GymEnabled = config.GetBool("GymOn");
+            LevelSelectEnabled = config.GetBool("LevelSelectOn");
+            OptionRingEnabled = config.GetBool("OptionRingOn");
+            SaveLoadEnabled = config.GetBool("SaveLoadOn");
+            ScreensizingEnabled = config.GetBool("ScreensizeOn");
+            TitleScreenEnabled = config.GetBool("TitlesOn");
         }
 
         protected override void SaveImpl()
@@ -79,7 +79,7 @@ namespace TRGE.Core
             //for unarmed, ammoless and bonus data, save the config before
             //running any randomisation, otherwise when the script is
             //reloaded the random order will be available
-            _config["UnarmedLevels"] = new Dictionary<string, object>
+            _config["UnarmedLevels"] = new Config
             {
                 ["Organisation"] = (int)UnarmedLevelOrganisation,
                 ["RNG"] = UnarmedLevelRNG.ToJson(),
@@ -87,7 +87,7 @@ namespace TRGE.Core
                 ["Data"] = UnarmedLevelData
             };
 
-            _config["AmmolessLevels"] = new Dictionary<string, object>
+            _config["AmmolessLevels"] = new Config
             {
                 ["Organisation"] = (int)AmmolessLevelOrganisation,
                 ["RNG"] = AmmolessLevelRNG.ToJson(),
@@ -97,7 +97,7 @@ namespace TRGE.Core
 
             if (CanOrganiseBonuses)
             {
-                _config["BonusSetup"] = new Dictionary<string, object>
+                _config["BonusSetup"] = new Config
                 {
                     ["Organisation"] = (int)SecretBonusOrganisation,
                     ["RNG"] = SecretBonusRNG.ToJson(),
@@ -183,14 +183,14 @@ namespace TRGE.Core
             }
         }
 
-        internal override Dictionary<string, object> ExportConfig()
+        internal override Config ExportConfig()
         {
-            Dictionary<string, object> config = base.ExportConfig();
+            Config config = base.ExportConfig();
             if (!TRInterop.RandomisationSupported)
             {
                 if (UnarmedLevelOrganisation == Organisation.Random)
                 {
-                    config["UnarmedLevels"] = new Dictionary<string, object>
+                    config["UnarmedLevels"] = new Config
                     {
                         ["Organisation"] = (int)Organisation.Default,
                         ["RNG"] = UnarmedLevelRNG.ToJson(),
@@ -200,7 +200,7 @@ namespace TRGE.Core
 
                 if (AmmolessLevelOrganisation == Organisation.Random)
                 {
-                    config["AmmolessLevels"] = new Dictionary<string, object>
+                    config["AmmolessLevels"] = new Config
                     {
                         ["Organisation"] = (int)Organisation.Default,
                         ["RNG"] = AmmolessLevelRNG.ToJson(),
@@ -210,7 +210,7 @@ namespace TRGE.Core
 
                 if (CanOrganiseBonuses && SecretBonusOrganisation == Organisation.Random)
                 {
-                    config["BonusSetup"] = new Dictionary<string, object>
+                    config["BonusSetup"] = new Config
                     {
                         ["Organisation"] = (int)Organisation.Default,
                         ["RNG"] = SecretBonusRNG.ToJson()
