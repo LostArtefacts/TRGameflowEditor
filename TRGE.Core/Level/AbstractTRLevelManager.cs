@@ -16,6 +16,7 @@ namespace TRGE.Core
         internal RandomGenerator SequencingRNG { get; set; }
         internal Organisation GameTrackOrganisation { get; set; }
         internal RandomGenerator GameTrackRNG { get; set; }
+        internal bool RandomGameTracksIncludeBlank { get; set; }
         internal Organisation SecretSupportOrganisation { get; set; }
         internal Organisation SunsetOrganisation { get; set; }
         internal RandomGenerator SunsetRNG { get; set; }
@@ -259,17 +260,23 @@ namespace TRGE.Core
             IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
             Random rand = GameTrackRNG.Create();
 
+            HashSet<TRAudioTrack> exclusions = new HashSet<TRAudioTrack>();
+            if (!RandomGameTracksIncludeBlank)
+            {
+                exclusions.Add(AudioProvider.GetBlankTrack());
+            }
+
             if (tracks[TRAudioCategory.Title].Count > 0)
             {
-                TitleSoundID = tracks[TRAudioCategory.Title].RandomSelection(rand, 1)[0].ID;
+                TitleSoundID = tracks[TRAudioCategory.Title].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
             }
             if (tracks[TRAudioCategory.Secret].Count > 0)
             {
-                SecretSoundID = tracks[TRAudioCategory.Secret].RandomSelection(rand, 1)[0].ID;
+                SecretSoundID = tracks[TRAudioCategory.Secret].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
             }
             if (tracks[TRAudioCategory.Ambient].Count > 0)
             {
-                List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, Convert.ToUInt32(Levels.Count), true);
+                List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, Convert.ToUInt32(Levels.Count), true, exclusions);
                 for (int i = 0; i < originalLevels.Count; i++)
                 {
                     AbstractTRScriptedLevel level = GetLevel(originalLevels[i].ID);

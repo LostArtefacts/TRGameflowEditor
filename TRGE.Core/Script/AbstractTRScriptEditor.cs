@@ -146,6 +146,7 @@ namespace TRGE.Core
                 {
                     GameTrackData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, ushort>>>(trackInfo["Data"].ToString());
                 }
+                RandomGameTracksIncludeBlank = bool.Parse(trackInfo["IncludeBlank"].ToString());
 
                 Dictionary<string, object> secretInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(config["SecretSupport"].ToString());
                 LevelSecretSupportOrganisation = (Organisation)Enum.ToObject(typeof(Organisation), secretInfo["Organisation"]);
@@ -170,6 +171,7 @@ namespace TRGE.Core
                 LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 GameTrackOrganisation = Organisation.Default;
                 GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                RandomGameTracksIncludeBlank = true;
                 LevelSecretSupportOrganisation = Organisation.Default;
                 LevelSunsetOrganisation = Organisation.Default;
                 LevelSunsetRNG = new RandomGenerator(RandomGenerator.Type.Date);
@@ -212,7 +214,8 @@ namespace TRGE.Core
                 {
                     ["Organisation"] = (int)GameTrackOrganisation,
                     ["RNG"] = GameTrackRNG.ToJson(),
-                    ["Data"] = GameTrackData
+                    ["Data"] = GameTrackData,
+                    ["IncludeBlank"] = RandomGameTracksIncludeBlank
                 },
                 ["SecretSupport"] = new Dictionary<string, object>
                 {
@@ -444,6 +447,12 @@ namespace TRGE.Core
         {
             get => LevelManager.GameTrackRNG;
             set => LevelManager.GameTrackRNG = value;
+        }
+
+        public bool RandomGameTracksIncludeBlank
+        {
+            get => LevelManager.RandomGameTracksIncludeBlank;
+            set => LevelManager.RandomGameTracksIncludeBlank = value;
         }
 
         public virtual List<MutableTuple<string, string, ushort>> GameTrackData

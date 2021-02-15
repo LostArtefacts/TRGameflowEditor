@@ -91,6 +91,29 @@ namespace TRGE.Core.Test
 
         [TestMethod]
         [TestSequence(4)]
+        protected void TestRandomiseTracksExcludingBlank()
+        {
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+            List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
+
+            sm.GameTrackOrganisation = Organisation.Random;
+            sm.GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
+            sm.RandomGameTracksIncludeBlank = false;
+
+            sm.RandomiseGameTracks();
+
+            CollectionAssert.AreNotEqual(sm.GameTrackData, trackData);
+
+            ushort blankID = sm.LevelManager.AudioProvider.GetBlankTrack().ID;
+            foreach (AbstractTRScriptedLevel level in sm.LevelManager.Levels)
+            {
+                Assert.AreNotEqual(level.TrackID, blankID);
+            }
+        }
+
+        [TestMethod]
+        [TestSequence(5)]
         protected void TestRandomiseTracksReload()
         {
             TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);

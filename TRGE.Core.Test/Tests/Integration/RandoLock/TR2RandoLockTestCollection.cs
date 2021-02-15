@@ -128,6 +128,7 @@ namespace TRGE.Core.Test
                 scriptEditor.LevelSequencingOrganisation = Organisation.Random;
                 scriptEditor.LevelSunsetOrganisation = Organisation.Random; scriptEditor.RandomSunsetLevelCount = 4;
                 scriptEditor.GameTrackOrganisation = Organisation.Random;
+                scriptEditor.RandomGameTracksIncludeBlank = false;
                 scriptEditor.AmmolessLevelOrganisation = Organisation.Random; scriptEditor.RandomAmmolessLevelCount = 2;
                 scriptEditor.UnarmedLevelOrganisation = Organisation.Random; scriptEditor.RandomUnarmedLevelCount = 3;
                 scriptEditor.SecretBonusOrganisation = Organisation.Random;
