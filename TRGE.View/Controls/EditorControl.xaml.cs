@@ -2,7 +2,9 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using TRGE.Coord;
@@ -43,7 +45,8 @@ namespace TRGE.View.Controls
         #endregion
 
         private readonly EditorOptions _options;
-        private bool _dirty;
+        private bool _dirty, _reloadRequested;
+        private volatile bool _showExternalModPrompt;
 
         public event EventHandler<EditorEventArgs> EditorStateChanged;
 
@@ -55,6 +58,8 @@ namespace TRGE.View.Controls
             _editorGrid.DataContext = _options = new EditorOptions();
             _options.PropertyChanged += Editor_PropertyChanged;
             _dirty = false;
+            _showExternalModPrompt = true;
+            _reloadRequested = false;
         }
 
         private void Editor_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -66,9 +71,10 @@ namespace TRGE.View.Controls
         private void FireEditorStateChanged()
         {
             EditorStateChanged?.Invoke(this, new EditorEventArgs
-            { 
+            {
                 IsDirty = _dirty,
-                CanExport = Editor != null && Editor.IsExportPossible
+                CanExport = Editor != null && Editor.IsExportPossible,
+                ReloadRequested = _reloadRequested
             });
         }
 
@@ -77,7 +83,48 @@ namespace TRGE.View.Controls
             Editor = e.Editor;
             Edition = Editor.Edition.Title;
             DataFolder = e.DataFolder;
+
+            Editor.ConfigExternallyChanged += Editor_ConfigExternallyChanged;
+
             Reload();
+        }
+
+        private void Editor_ConfigExternallyChanged(object sender, FileSystemEventArgs e)
+        {
+            // Prevent several message boxes appearing i.e. in case the initial box is displayed and
+            // several external edits are carried out.
+            if (_showExternalModPrompt)
+            {
+                _showExternalModPrompt = false;
+                new Thread(() => Dispatcher.Invoke(() => HandleConfigExternallyChanged(e))).Start();
+            }
+        }
+
+        private void HandleConfigExternallyChanged(FileSystemEventArgs e)
+        {
+            string message = _dirty ? 
+                "The configuration file has been modified by an external program and you have unsaved changes.\n\nDo you want to reload the configuration and lose your changes?" :
+                "The configuration file has been modified by an external program. Do you want to reload the configuration?";
+
+            try
+            {
+                if (MessageWindow.ShowConfirm(message))
+                {
+                    _dirty = false;
+                    _reloadRequested = true;
+                    Editor.ConfigExternallyChanged -= Editor_ConfigExternallyChanged;
+                    FireEditorStateChanged();
+                }
+                else
+                {
+                    _dirty = true;
+                    FireEditorStateChanged();
+                }
+            }
+            finally
+            {
+                _showExternalModPrompt = true;
+            }
         }
 
         private void Reload()
@@ -101,8 +148,17 @@ namespace TRGE.View.Controls
 
         public void Unload()
         {
-            Editor = null;
+            if (Editor != null)
+            {
+                Editor.ConfigExternallyChanged -= Editor_ConfigExternallyChanged;
+                Editor.Unload();
+                Editor = null;
+            }
+
+            _options.Unload();
+
             _dirty = false;
+            _reloadRequested = false;
             FireEditorStateChanged();
         }
 

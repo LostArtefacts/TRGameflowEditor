@@ -87,7 +87,7 @@
                    Margin="0,0,8,0"
                    VerticalAlignment="Top"/>
             
-            <TextBlock Text="This setting is controlled by an external editor. Clicking Edit will move control to this editor, but any external edits will be lost."
+            <TextBlock Text="{Binding UnviableText}"
                        FontStyle="Italic"
                        TextWrapping="Wrap"
                        Grid.Column="1"/>

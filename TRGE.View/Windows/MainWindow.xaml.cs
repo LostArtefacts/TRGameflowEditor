@@ -241,6 +241,12 @@ namespace TRGE.View.Windows
         {
             IsEditorDirty = e.IsDirty;
             EditorCanExport = e.CanExport;
+            if (e.ReloadRequested)
+            {
+                _editorControl.Unload();
+                IsEditorActive = false;
+                _folderControl.OpenDataFolder(_editorControl.DataFolder);
+            }
         }
         #endregion
 

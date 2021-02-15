@@ -6,5 +6,6 @@ namespace TRGE.View.Model
     {
         public bool IsDirty { get; set; }
         public bool CanExport { get; set; }
+        public bool ReloadRequested { get; set; }
     }
 }

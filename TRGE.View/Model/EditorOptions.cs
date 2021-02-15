@@ -558,6 +558,11 @@ namespace TRGE.View.Model
             _allAudioTracks = editor.AllGameTracks;
         }
 
+        public void Unload()
+        {
+            _editor = null;
+        }
+
         public void Save()
         {
             _editor.TitleScreenEnabled = TitleEnabled;

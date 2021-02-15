@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TRGE.View.Controls
 {
@@ -63,6 +52,11 @@ namespace TRGE.View.Controls
             "WarningIcon", typeof(BitmapSource), typeof(DefaultManualControl)
         );
 
+        public static readonly DependencyProperty UnviableTextProperty = DependencyProperty.Register
+        (
+            "UnviableText", typeof(string), typeof(DefaultManualControl), new PropertyMetadata("This setting is controlled by an external editor. Clicking Edit will move control to this editor, but any external changes will be lost.")
+        ); 
+
         public string Text
         {
             get => (string)GetValue(TextProperty);
@@ -104,8 +98,15 @@ namespace TRGE.View.Controls
             get => (BitmapSource)GetValue(WarningIconProperty);
             set => SetValue(WarningIconProperty, value);
         }
+
+        public string UnviableText
+        {
+            get => (string)GetValue(UnviableTextProperty);
+            set => SetValue(UnviableTextProperty, value);
+        }
         #endregion
 
+        #region Events
         public static readonly RoutedEvent ManualConfigureEvent = EventManager.RegisterRoutedEvent
         (
             "ManualConfigure", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(DefaultManualControl)
@@ -127,6 +128,7 @@ namespace TRGE.View.Controls
             add => AddHandler(ChangeViabilityEvent, value);
             remove => RemoveHandler(ChangeViabilityEvent, value);
         }
+        #endregion
 
         public DefaultManualControl()
         {
