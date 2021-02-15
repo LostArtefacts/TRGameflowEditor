@@ -24,7 +24,7 @@ namespace TRGE.Coord
         }
 
         private const string _configDirectoryName = "TRGE";
-        private const string _globalConfigFileName = "config.json";
+        private const string _globalConfigFileName = "config_{0}.json";
 
         private string _rootConfigDirectory;
         private readonly TRIOCoord _trioCoord;
@@ -51,7 +51,7 @@ namespace TRGE.Coord
         public string RootConfigDirectory
         {
             get => _rootConfigDirectory;
-            set
+            internal set
             {
                 _rootConfigDirectory = value;
                 TRInterop.ConfigDirectory = Directory.CreateDirectory(ConfigDirectory).FullName;
@@ -66,7 +66,7 @@ namespace TRGE.Coord
         /// <summary>
         /// The path to the global configuration JSON file.
         /// </summary>
-        public string ConfigFilePath => Path.Combine(ConfigDirectory, _globalConfigFileName);
+        public string ConfigFilePath => Path.Combine(ConfigDirectory, string.Format(_globalConfigFileName, TRInterop.ExecutingVersionName));
 
         private Dictionary<string, object> LoadConfig()
         {

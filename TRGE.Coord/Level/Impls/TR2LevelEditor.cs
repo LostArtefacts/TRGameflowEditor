@@ -26,8 +26,6 @@ namespace TRGE.Coord
             switch (e.Modification)
             {
                 case TRScriptedLevelModification.WeaponlessStateChanged:
-                    //return !e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE"));
-                    return true;
                 case TRScriptedLevelModification.SunsetChanged:
                     return true;
                 default:
