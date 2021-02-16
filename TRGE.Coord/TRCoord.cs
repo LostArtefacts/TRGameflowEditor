@@ -124,9 +124,17 @@ namespace TRGE.Coord
             return Open(editFolderPath.FullName, openOption);
         }
 
-        public TREditor Open(string path, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
+        /// <summary>
+        /// Uses the specified script file or directory path to create a TREditor instance, making all necessary
+        /// backups and reloading previous configuration settings. If there is an issue with the previous configuration, 
+        /// errorOption can be specified to restore the last backup or to start afresh.
+        /// </summary>
+        /// <param name="path">The full path to the script file or directory containing a script file and level files.</param>
+        /// <param name="errorOption">The action to take if an error is detected with the previous configuration.</param>
+        /// <returns></returns>
+        public TREditor Open(string path, TRScriptOpenOption errorOption = TRScriptOpenOption.Default)
         {
-            return _trioCoord.Open(path, openOption);
+            return _trioCoord.Open(path, errorOption);
         }
 
         public void ClearHistory()

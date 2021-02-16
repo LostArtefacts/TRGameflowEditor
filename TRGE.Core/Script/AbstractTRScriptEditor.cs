@@ -47,7 +47,8 @@ namespace TRGE.Core
         internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
         internal AbstractTRScript Script { get; private set; }
 
-        public IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
+        internal IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
+        public IReadOnlyList<AbstractTRScriptedLevel> ScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels);
 
         protected TRScriptOpenOption _openOption;
 

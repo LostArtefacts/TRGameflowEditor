@@ -32,7 +32,7 @@ namespace TRGE.Extension
         {
             if (CustomBool)
             {
-                foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
+                foreach (AbstractTRScriptedLevel level in scriptEditor.ScriptedLevels)
                 {
                     monitor.FireSaveStateBeginning(TRSaveCategory.Custom, string.Format("Doing action X on {0}", level.Name));
                     //do some action

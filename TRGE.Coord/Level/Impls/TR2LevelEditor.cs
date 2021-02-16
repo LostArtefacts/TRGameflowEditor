@@ -56,7 +56,12 @@ namespace TRGE.Coord
 
             if (e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE")))
             {
-                File.Copy(levelFile, GetWriteLevelFilePath(e.LevelFileBaseName));
+                // We only need to copy house once to the WIP directory during this session
+                string wipHouseFile = GetWriteLevelFilePath(e.LevelFileBaseName);
+                if (!File.Exists(wipHouseFile))
+                {
+                    File.Copy(levelFile, wipHouseFile);
+                }
             }
             else
             {
@@ -266,9 +271,8 @@ namespace TRGE.Coord
             }
         }
 
-        internal override void Restore()
+        protected override void ApplyRestore()
         {
-            _io.BackupDirectory.Copy(_io.OriginalDirectory, true, new string[] { "*.dat", "*.tr2" });
             string hshBackup = Path.Combine(_io.BackupDirectory.FullName, "house.tr2.bak");
             if (File.Exists(hshBackup))
             {

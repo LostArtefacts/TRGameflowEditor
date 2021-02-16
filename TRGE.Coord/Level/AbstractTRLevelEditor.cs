@@ -97,8 +97,22 @@ namespace TRGE.Coord
         internal sealed override void SaveComplete()
         {
             _config.Write(_io.ConfigFile.FullName);
-            //_io.ConfigFile.WriteCompressedText(JsonConvert.SerializeObject(_config, Formatting.None)); //#48
         }
+
+        internal sealed override void Restore()
+        {
+            _io.BackupDirectory.Copy(_io.OriginalDirectory, true, new string[] { "*.dat", "*.tr2" });
+
+            ApplyRestore();
+
+            while (File.Exists(_io.ConfigFile.FullName))
+            {
+                _io.ConfigFile.Delete(); //issue #39
+            }
+            _io.ConfigFile = new FileInfo(_io.ConfigFile.FullName);
+        }
+
+        protected virtual void ApplyRestore() { }
 
         internal void ScriptedLevelModified(TRScriptedLevelEventArgs e)
         {

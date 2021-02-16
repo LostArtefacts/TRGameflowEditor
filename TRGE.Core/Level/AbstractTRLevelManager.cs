@@ -131,6 +131,21 @@ namespace TRGE.Core
             SetSequencing(GetLevelSequencing(originalLevels));
         }
 
+        internal List<AbstractTRScriptedLevel> GetOriginalSequencedLevels(List<AbstractTRScriptedLevel> originalLevels)
+        {
+            List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(Levels.Count);
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            {
+                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+                if (level == null)
+                {
+                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+                }
+                levels.Add(level);
+            }
+            return levels;
+        }
+
         protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TROpDef opDef)
         {
             FireLevelModificationEvent(level, OpDefToModification(opDef));
@@ -148,20 +163,16 @@ namespace TRGE.Core
             List<AbstractTRScriptedLevel> levelSet = basisLevels.RandomSelection(rng.Create(), levelCount);
             foreach (AbstractTRScriptedLevel level in Levels)
             {
-                bool modified;
                 if (levelSet.Contains(level))
                 {
-                    modified = level.EnsureOperation(operation);
+                    level.EnsureOperation(operation);
                 }
                 else
                 {
-                    modified = level.RemoveOperation(operation.Definition);
+                    level.RemoveOperation(operation.Definition);
                 }
 
-                if (modified)
-                {
-                    FireLevelModificationEvent(level, operation.Definition);
-                }
+                FireLevelModificationEvent(level, operation.Definition);
             }
         }
 
