@@ -22,11 +22,9 @@ namespace TRGE.Coord
 
         protected sealed override void ReadConfig(Config config)
         {
-            if (config != null)
-            {
-                AllowSuccessiveEdits = config.GetBool("Successive");
-                ApplyConfig(config);
-            }
+            config = config ?? new Config();
+            AllowSuccessiveEdits = config.GetBool("Successive");
+            ApplyConfig(config);
         }
 
         internal sealed override Config ExportConfig()
@@ -40,7 +38,7 @@ namespace TRGE.Coord
         /// The supplied dictionary has been loaded from disk from the previous edit, so values
         /// can be assigned locally as necessary.
         /// </summary>
-        /// <param name="config">The configuration dictionary loaded from disk.</param>
+        /// <param name="config">The configuration dictionary loaded from disk, or an empty config if no file currently exists.</param>
         protected override void ApplyConfig(Config config) { }
 
         /// <summary>
