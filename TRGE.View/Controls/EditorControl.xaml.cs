@@ -100,7 +100,7 @@ namespace TRGE.View.Controls
             }
         }
 
-        private void HandleConfigExternallyChanged(FileSystemEventArgs e)
+        private void HandleConfigExternallyChanged(FileSystemEventArgs _)
         {
             string message = _dirty ? 
                 "The configuration file has been modified by an external program and you have unsaved changes.\n\nDo you want to reload the configuration and lose your changes?" :

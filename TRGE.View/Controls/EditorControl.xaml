@@ -131,7 +131,7 @@
 
             <c:DefaultManualControl 
                 Margin="5,2,5,5"
-                Text="Specify the order in which levels are played. Required pickups will be available in TR2 (e.g. the Seraph for Barkhang Monastry) regardless of when the level is reached."
+                Text="Specify the order in which levels are played. Required pickups will be available in TR2 (e.g. the Seraph for Barkhang Monastery) regardless of when the level is reached."
                 IsDefault="{Binding UseDefaultLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsViable="{Binding LevelSequencingViable, UpdateSourceTrigger=PropertyChanged}"
