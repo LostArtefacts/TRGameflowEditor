@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TRGE.Core
 {
-    internal class TR23ScriptedLevel : AbstractTRScriptedLevel
+    public class TR23ScriptedLevel : AbstractTRScriptedLevel
     {
         private static readonly string[] PistolInjectionLevels = new string[]
         {

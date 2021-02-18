@@ -150,18 +150,28 @@ namespace TRGE.Coord
         /// Depending on wheter AllowSuccessiveEdits is set this will either return the current
         /// file in the output directory or the file that was originally backed up.
         /// </summary>
+        protected string GetReadBasePath()
+        {
+            return AllowSuccessiveEdits ? _io.OutputDirectory.FullName : _io.BackupDirectory.FullName;
+        }
+
         protected virtual string GetReadLevelFilePath(string levelFileName)
         {
-            return Path.Combine(AllowSuccessiveEdits ?_io.OutputDirectory.FullName : _io.BackupDirectory.FullName, levelFileName);
+            return Path.Combine(GetReadBasePath(), levelFileName);
         }
 
         /// <summary>
         /// All writes are sent to the temporary WIP directory and are only moved to the output
         /// and target directories at the end of the save chain. See TREditor.
         /// </summary>
+        protected string GetWriteBasePath()
+        {
+            return _io.WIPOutputDirectory.FullName;
+        }
+
         protected virtual string GetWriteLevelFilePath(string levelFileName)
         {
-            return Path.Combine(_io.WIPOutputDirectory.FullName, levelFileName);
+            return Path.Combine(GetWriteBasePath(), levelFileName);
         }
 
         /// <summary>

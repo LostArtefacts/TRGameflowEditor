@@ -84,6 +84,14 @@ namespace TRGE.Core
             return Path.GetFileNameWithoutExtension(identifier).ToUpper().CreateMD5();
         }
 
+        /// <summary>
+        /// Checks if the scripted level's file name matches the supplied argument.
+        /// </summary>
+        public bool Is(string levelFileName)
+        {
+            return CreateID(levelFileName).Equals(ID);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is AbstractTRScriptedLevel && (obj as AbstractTRScriptedLevel).ID == ID;
