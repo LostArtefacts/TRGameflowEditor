@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TRGE.Coord.Properties;
 using TRGE.Core;
 using TRLevelReader;
 using TRLevelReader.Helpers;
@@ -17,7 +18,7 @@ namespace TRGE.Coord
         public TR2LevelEditor(TRDirectoryIOArgs io)
             : base(io)
         {
-            _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, Location>>(File.ReadAllText(@"Resources\ualocations.json"));
+            _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, Location>>(File.ReadAllText(@"Resources\unarmed_locations.json"));
             CheckHSHBackup();
         }
 
@@ -168,8 +169,7 @@ namespace TRGE.Coord
             // and relevant animations are available in the level in case it no
             // longer removes weapons, but at the moment this isn't possible
             // natively. We rely on the pre-made level file (made in TRViewer)
-            // and only use this once so to allow for successive randomisations,
-            // if that mode is enabled.
+            // and only use this once.
             // To create this file, the following moveables/sprites were exported from 
             // The Great Wall level in .trmvb/.trspr format and and then imported into
             // a 'clean' HSH. The names are those found in TRViewer.
@@ -213,8 +213,9 @@ namespace TRGE.Coord
             if (File.Exists(currentBackupFile) && !File.Exists(fullOriginalBackup))
             {
                 File.Move(currentBackupFile, fullOriginalBackup);
-                File.Copy(@"Resources\house.tr2", currentBackupFile, true);
-                File.Copy(@"Resources\house.tr2", Path.Combine(_io.OutputDirectory.FullName, "house.tr2"), true);
+                byte[] houseData = ResourceHelper.Decompress(Resources.House);
+                File.WriteAllBytes(currentBackupFile, houseData);
+                File.WriteAllBytes(Path.Combine(_io.OutputDirectory.FullName, "house.tr2"), houseData);
             }
         }
 
@@ -223,7 +224,7 @@ namespace TRGE.Coord
             int pistolIndex = level.SpriteSequences.ToList().FindIndex(e => e.SpriteID == (short)TR2Entities.Pistols_S_P);
             if (pistolIndex == -1)
             {
-                SpriteDefinition.Load(@"Resources\pistols.json").AddToLevel(level);
+                SpriteDefinition.Load(Resources.Pistols).AddToLevel(level);
                 return true;
             }
 

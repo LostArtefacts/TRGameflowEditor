@@ -60,32 +60,6 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
-        protected void TestSuccessiveRandomiseLevels()
-        {
-            InitialiseLevels();
-
-            //randomise twice with the same seed - result should not match  
-            byte[][] results = new byte[2][];
-            for (int i = 0; i < 2; i++)
-            {
-                TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-                editor.AllowSuccessiveEdits = true;
-          
-                RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
-                _expectedLevels.Randomise(rng.Create());
-
-                TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
-                sm.LevelSequencingOrganisation = Organisation.Random;
-                sm.LevelSequencingRNG = rng;
-                editor.Save();
-
-                results[i] = File.ReadAllBytes(_validScripts[ScriptFileIndex]);
-            }
-
-            CollectionAssert.AreNotEqual(results[0], results[1]);
-        }
-
-        [TestMethod]
         protected void TestReorganiseLevels()
         {
             InitialiseLevels();

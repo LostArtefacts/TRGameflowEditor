@@ -25,7 +25,7 @@ namespace TRGE.Extension
 
         protected override int GetSaveTarget(int numLevels)
         {
-            return CustomBool ? numLevels : 0;
+            return base.GetSaveTarget(numLevels) + (CustomBool ? numLevels : 0);
         }
 
         protected override void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)

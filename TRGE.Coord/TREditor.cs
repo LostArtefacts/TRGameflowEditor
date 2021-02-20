@@ -36,19 +36,6 @@ namespace TRGE.Coord
             }
         }
 
-        public bool AllowSuccessiveEdits 
-        {
-            get => _scriptEditor.AllowSuccessiveEdits && (LevelEditor == null || LevelEditor.AllowSuccessiveEdits);
-            set
-            {
-                _scriptEditor.AllowSuccessiveEdits = value;
-                if (LevelEditor != null)
-                {
-                    LevelEditor.AllowSuccessiveEdits = value;
-                }
-            }
-        }
-
         public TREdition Edition => _scriptEditor.Edition;
         public string BackupDirectory => _scriptEditor.BackupFile.DirectoryName;
         public string TargetDirectory => _targetDirectory;
@@ -120,7 +107,13 @@ namespace TRGE.Coord
 
             try
             {
+                if (LevelEditor != null)
+                {
+                    LevelEditor.PreSave(ScriptEditor, monitor);
+                }
+
                 ScriptEditor.Save(monitor);
+
                 if (LevelEditor != null)
                 {
                     LevelEditor.Save(ScriptEditor, monitor);

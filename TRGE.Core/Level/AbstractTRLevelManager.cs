@@ -355,6 +355,26 @@ namespace TRGE.Core
             }
         }
 
+        internal bool GetAllLevelsHaveSecrets()
+        {
+            foreach (AbstractTRScriptedLevel level in Levels)
+            {
+                if (!level.HasSecrets)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        internal void SetAllLevelsHaveSecrets(bool secretSupport)
+        {
+            foreach (AbstractTRScriptedLevel level in Levels)
+            {
+                level.HasSecrets = secretSupport;
+            }
+        }
+
         internal List<MutableTuple<string, string, bool>> GetSunsetData(List<AbstractTRScriptedLevel> originalLevels)
         {
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();

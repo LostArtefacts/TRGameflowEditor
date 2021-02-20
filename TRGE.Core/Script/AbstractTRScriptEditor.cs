@@ -160,7 +160,6 @@ namespace TRGE.Core
                 RandomSunsetLevelCount = sunsetInfo.GetUInt("RandomCount");
 
                 FrontEndHasFMV = config.GetBool("FrontEndFMVOn");
-                AllowSuccessiveEdits = config.GetBool("Successive");
             }
             else
             {
@@ -173,8 +172,6 @@ namespace TRGE.Core
                 LevelSunsetOrganisation = Organisation.Default;
                 LevelSunsetRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 RandomSunsetLevelCount = LevelManager.GetSunsetLevelCount();
-
-                AllowSuccessiveEdits = false;
             }
 
             ApplyConfig(config);
@@ -200,7 +197,6 @@ namespace TRGE.Core
                 ["Original"] = OriginalFile.FullName,
                 ["CheckSumOnSave"] = string.Empty,
                 ["FrontEndFMVOn"] = FrontEndHasFMV,
-                ["Successive"] = AllowSuccessiveEdits,
                 ["LevelSequencing"] = new Config
                 {
                     ["Organisation"] = (int)LevelSequencingOrganisation,
@@ -380,7 +376,7 @@ namespace TRGE.Core
 
         internal AbstractTRScript LoadRandomisationBaseScript()
         {
-            return AllowSuccessiveEdits ? LoadOutputScript() : LoadBackupScript();
+            return LoadBackupScript();
         }
 
         internal AbstractTRScript LoadScript(string filePath)
@@ -484,6 +480,16 @@ namespace TRGE.Core
         {
             get => LevelManager.GetSecretSupport(LoadBackupScript().Levels);
             set => LevelManager.SetSecretSupport(value);
+        }
+
+        public bool AllLevelsHaveSecrets
+        {
+            get => LevelManager.GetAllLevelsHaveSecrets();
+            set
+            {
+                LevelManager.SetAllLevelsHaveSecrets(value);
+                LevelSecretSupportOrganisation = Organisation.Manual;
+            }
         }
 
         public bool CanSetSunsets => LevelManager.CanSetSunsets;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using TRGE.Core;
 using TRLevelReader.Model;
 using TRLevelReader.Model.Enums;
 
@@ -45,6 +47,12 @@ namespace TRGE.Coord
             return JsonConvert.DeserializeObject<SpriteDefinition>(File.ReadAllText(filePath));
         }
 
+        public static SpriteDefinition Load(byte[] compressedJson)
+        {
+
+            return JsonConvert.DeserializeObject<SpriteDefinition>(Encoding.Default.GetString(ResourceHelper.Decompress(compressedJson)));
+        }
+
         internal static void WritePistolsDefinition(TR2Level baseLevel, string filePath)
         {
             SpriteDefinition pistols = new SpriteDefinition
@@ -71,7 +79,7 @@ namespace TRGE.Coord
                 }
             };
 
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(pistols, Formatting.Indented));
+            new FileInfo(filePath).WriteCompressedText(JsonConvert.SerializeObject(pistols, Formatting.Indented));
         }
     }
 }

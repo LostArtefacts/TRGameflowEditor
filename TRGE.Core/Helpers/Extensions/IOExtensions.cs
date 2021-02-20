@@ -117,6 +117,32 @@ namespace TRGE.Core
             }
         }
 
+        /// <summary>
+        /// Reads a compressed file and returns its contents as a string.
+        /// </summary>
+        internal static byte[] ReadCompressedBinary(this FileInfo fileInfo)
+        {
+            using (FileStream fs = fileInfo.OpenRead())
+            using (GZipStream zs = new GZipStream(fs, CompressionMode.Decompress))
+            using (MemoryStream ms = new MemoryStream())
+            {
+                zs.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Writes text to a compressed file.
+        /// </summary>
+        internal static void WriteCompressedBinary(this FileInfo fileInfo, byte[] data)
+        {
+            using (FileStream fs = fileInfo.Create())
+            using (GZipStream zs = new GZipStream(fs, CompressionMode.Compress))
+            {
+                zs.Write(data, 0, data.Length);
+            }
+        }
+
         private static readonly string[] _sizeSuffixes =
         {
             "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"

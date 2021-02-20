@@ -146,8 +146,9 @@ namespace TRGE.Core
         }
 
         /// <summary>
-        /// In the script, the command is NOSECRETS to remove secrets so this needs to negate
-        /// whether or not that command is present....so the script doesn't not have secrets!
+        /// In the script, the operand is either 0 for no secrets, or any non-zero value
+        /// means secrets will be counted. If it's left out, the default is 3 - TODO: test
+        /// what happens with anything other than 3.
         /// </summary>
         public override bool HasSecrets
         {
@@ -160,7 +161,7 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    EnsureOperation(new TROperation(TR23OpDefs.Secrets, ushort.MaxValue, true));
+                    EnsureOperation(new TROperation(TR23OpDefs.Secrets, 0, true));
                 }
             }
         }

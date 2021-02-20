@@ -26,7 +26,6 @@ namespace TRGE.Core.Test
             PrepareDirectories();
 
             TREditor editor = TRCoord.Instance.Open(_dataDirectory);
-            editor.AllowSuccessiveEdits = true;
 
             Assert.IsTrue(editor.ScriptEditor.BackupFile.Exists);
             TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
@@ -60,7 +59,7 @@ namespace TRGE.Core.Test
             PrepareDirectories();
 
             TREditor editor = TRCoord.Instance.Open(_dataDirectory, TRScriptOpenOption.DiscardBackup);
-            editor.AllowSuccessiveEdits = true;
+            //editor.AllowSuccessiveEdits = true;
 
             Dictionary<string, string> originalChecksums = GetChecksums();
 

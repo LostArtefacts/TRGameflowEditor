@@ -139,16 +139,21 @@ namespace TRGE.Core
         }
 
         /// <summary>
-        /// Returns true if the operation was inserted, false if it was already in place.
+        /// If the provided operation exists but the operand and IsActive values, don't match, they
+        /// wiil be aligned. Otherwise, the operation will be inserted.
         /// </summary>
-        internal bool EnsureOperation(TROperation operation)
+        internal void EnsureOperation(TROperation operation)
         {
-            if (!HasOperation(operation.Definition))
+            TROperation currentOp = GetOperation(operation.Definition);
+            if (currentOp != null)
+            {
+                currentOp.Operand = operation.Operand;
+                currentOp.IsActive = operation.IsActive;
+            }
+            else
             {
                 InsertOperation(operation.Definition, operation.Operand, operation.Definition.Next, operation.IsActive);
-                return true;
             }
-            return false;
         }
 
         internal bool RemoveOperation(TROpDef opDef)

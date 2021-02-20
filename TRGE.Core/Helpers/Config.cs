@@ -11,7 +11,7 @@ namespace TRGE.Core
             : base() { }
 
         public Config(Config otherConfig)
-            : base(otherConfig) { }
+            : base(otherConfig ?? new Config()) { }
 
         public static Config Read(string filePath, bool isCompressed = true)
         {

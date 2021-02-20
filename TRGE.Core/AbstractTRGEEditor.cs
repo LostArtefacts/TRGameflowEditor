@@ -5,7 +5,6 @@
         protected Config _config;
         internal abstract string ConfigFilePath { get; }
 
-        internal bool AllowSuccessiveEdits { get; set; }
         internal virtual bool IsExportPossible => _config != null;
 
         public abstract int GetSaveTargetCount();

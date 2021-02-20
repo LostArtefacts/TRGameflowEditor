@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using TRGE.Core;
@@ -23,7 +22,6 @@ namespace TRGE.Coord
         protected sealed override void ReadConfig(Config config)
         {
             config = config ?? new Config();
-            AllowSuccessiveEdits = config.GetBool("Successive");
             ApplyConfig(config);
         }
 
@@ -56,16 +54,23 @@ namespace TRGE.Coord
             }
         }
 
+        /// <summary>
+        /// This is called before any scripting changes are saved and so it allows the level
+        /// editor to scan any level files beforehand to check if anything in the script needs
+        /// to be set. This allows changes to be sent to the script editor, whereas during the
+        /// save task, the script is locked at that stage.
+        /// </summary>
+        internal virtual void PreSave(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor) { }
+
         internal void Save(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
         {
-            _config = new Config
+            _config = new Config(_config)
             {
                 ["App"] = new Config
                 {
                     ["Tag"] = TRInterop.TaggedVersion,
                     ["Version"] = TRInterop.ExecutingVersion
-                },
-                ["Successive"] = AllowSuccessiveEdits
+                }
             };
 
             monitor.FireSaveStateChanged(0, TRSaveCategory.LevelFile);
@@ -108,6 +113,7 @@ namespace TRGE.Coord
                 _io.ConfigFile.Delete(); //issue #39
             }
             _io.ConfigFile = new FileInfo(_io.ConfigFile.FullName);
+            ReadConfig(_config = Config.Read(_io.ConfigFile.FullName));
         }
 
         protected virtual void ApplyRestore() { }
@@ -147,12 +153,11 @@ namespace TRGE.Coord
         protected virtual void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor) { }
         
         /// <summary>
-        /// Depending on wheter AllowSuccessiveEdits is set this will either return the current
-        /// file in the output directory or the file that was originally backed up.
+        /// All reads are done on the original backed up files in the backup directory.
         /// </summary>
         protected string GetReadBasePath()
         {
-            return AllowSuccessiveEdits ? _io.OutputDirectory.FullName : _io.BackupDirectory.FullName;
+            return _io.BackupDirectory.FullName;
         }
 
         protected virtual string GetReadLevelFilePath(string levelFileName)
