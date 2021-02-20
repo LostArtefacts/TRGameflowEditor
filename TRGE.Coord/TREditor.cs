@@ -174,8 +174,6 @@ namespace TRGE.Coord
             }
 
             config.Write(filePath);
-
-            //new FileInfo(filePath).WriteCompressedText(JsonConvert.SerializeObject(config, Formatting.None));
         }
 
         public void ImportSettings(string filePath)

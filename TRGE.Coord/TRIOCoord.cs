@@ -76,9 +76,11 @@ namespace TRGE.Coord
             }
 
             _editDirectory = GetEditDirectory();
-            CheckBackup();
+            CreateBackup();
             
             AbstractTRScriptEditor scriptEditor = GetScriptEditor(openOption);
+            TidyBackup(scriptEditor);
+
             AbstractTRLevelEditor levelEditor = GetLevelEditor(scriptEditor);
             return new TREditor(WIPOutputDirectory, OutputDirectory, OriginalDirectory)
             {
@@ -133,7 +135,7 @@ namespace TRGE.Coord
             return fi.FullName;
         }
 
-        protected void CheckBackup()
+        protected void CreateBackup()
         {
             string backupDirectory = GetBackupDirectory();
             string outputDirectory = GetOutputDirectory();
@@ -167,6 +169,23 @@ namespace TRGE.Coord
 
             _scriptConfigFile = Path.Combine(_editDirectory, _scriptConfigFileName);
             _directoryConfigFile = Path.Combine(_editDirectory, _dirConfigFileName);
+        }
+
+        protected void TidyBackup(AbstractTRScriptEditor scriptEditor)
+        {
+            DirectoryInfo backupDI = new DirectoryInfo(GetBackupDirectory());
+            DirectoryInfo outputDI = new DirectoryInfo(GetOutputDirectory());
+            List<string> expectedFiles = new List<string>
+            {
+                scriptEditor.BackupFile.Name
+            };
+            foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
+            {
+                expectedFiles.Add(level.LevelFileBaseName);
+            }
+
+            backupDI.ClearExcept(expectedFiles, TREditor.TargetFileExtensions);
+            outputDI.ClearExcept(expectedFiles, TREditor.TargetFileExtensions);
         }
 
         #region Directory Management

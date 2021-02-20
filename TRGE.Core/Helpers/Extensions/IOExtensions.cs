@@ -60,6 +60,26 @@ namespace TRGE.Core
             }
         }
 
+        internal static void ClearExcept(this DirectoryInfo directory, List<string> fileNames, string[] extensions)
+        {
+            List<string> compNames = new List<string>();
+            fileNames.ForEach(e => compNames.Add(e.ToLower()));
+
+            List<FileInfo> files = new List<FileInfo>();
+            foreach (string ext in extensions)
+            {
+                files.AddRange(directory.GetFiles(ext, SearchOption.TopDirectoryOnly));
+            }
+
+            foreach (FileInfo fi in files)
+            {
+                if (!compNames.Contains(fi.Name.ToLower()))
+                {
+                    fi.Delete();
+                }
+            }
+        }
+
         internal static void ClearExcept(this DirectoryInfo directory, string filepath)
         {
             ClearExcept(directory, new FileInfo(filepath));
