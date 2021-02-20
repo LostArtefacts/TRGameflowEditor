@@ -27,7 +27,7 @@ namespace TRGE.View.Windows
 
         public static readonly DependencyProperty ProgressDescriptionProperty = DependencyProperty.Register
         (
-            "ProgressDescription", typeof(string), typeof(SaveProgressWindow), new PropertyMetadata("Saving - please wait")
+            "ProgressDescription", typeof(string), typeof(SaveProgressWindow), new PropertyMetadata("Performing pre-save checks")
         );
 
         public int ProgressValue
