@@ -153,7 +153,8 @@ namespace TRGE.Coord
         protected virtual void SaveImpl(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor) { }
         
         /// <summary>
-        /// All reads are done on the original backed up files in the backup directory.
+        /// All reads are done on the original backed up files in the backup directory unless there is an existing
+        /// file in the WIP directory.
         /// </summary>
         protected string GetReadBasePath()
         {
@@ -162,6 +163,11 @@ namespace TRGE.Coord
 
         protected virtual string GetReadLevelFilePath(string levelFileName)
         {
+            string wipFile = GetWriteLevelFilePath(levelFileName);
+            if (File.Exists(wipFile))
+            {
+                return wipFile;
+            }
             return Path.Combine(GetReadBasePath(), levelFileName);
         }
 
