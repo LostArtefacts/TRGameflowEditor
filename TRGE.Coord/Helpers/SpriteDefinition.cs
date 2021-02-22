@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using TRGE.Coord.Properties;
 using TRGE.Core;
 using TRLevelReader.Model;
-using TRLevelReader.Model.Enums;
 
 namespace TRGE.Coord
 {
@@ -16,70 +16,135 @@ namespace TRGE.Coord
         public TRTexImage16 Tile16 { get; set; }
         public TRTexImage8 Tile8 { get; set; }
 
-        public void AddToLevel(TR2Level level)
+        public static void LoadWeaponsIntoLevel(TR2Level level)
         {
+            Dictionary<string, object> weaponDefinitions = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.Default.GetString(ResourceHelper.Decompress(Resources.Weapons)));
+            List<SpriteDefinition> loadedDefinitions = JsonConvert.DeserializeObject<List<SpriteDefinition>>(weaponDefinitions["Weapons"].ToString());
+
+            TRTexImage16 img16 = JsonConvert.DeserializeObject<TRTexImage16>(weaponDefinitions["Tile16"].ToString());
+            TRTexImage8 img8 = JsonConvert.DeserializeObject<TRTexImage8>(weaponDefinitions["Tile8"].ToString());
+                        
+            if (loadedDefinitions.Count == 0)
+            {
+                throw new IOException("Failed to load default weapon textures.");
+            }
+
             List<TRTexImage8> spriteTiles8 = level.Images8.ToList();
-            spriteTiles8.Add(Tile8);
+            spriteTiles8.Add(img8);
             level.Images8 = spriteTiles8.ToArray();
 
             List<TRTexImage16> spriteTiles16 = level.Images16.ToList();
-            spriteTiles16.Add(Tile16);
+            spriteTiles16.Add(img16);
             level.Images16 = spriteTiles16.ToArray();
             level.NumImages++;
 
-            Texture.Atlas = (ushort)(spriteTiles16.Count - 1);
-
             List<TRSpriteTexture> spriteTextures = level.SpriteTextures.ToList();
-            spriteTextures.Add(Texture);
-            level.SpriteTextures = spriteTextures.ToArray();
-            level.NumSpriteTextures++;
-
-            Sequence.Offset = (short)(spriteTextures.Count - 1);
-
             List<TRSpriteSequence> spriteSequences = level.SpriteSequences.ToList();
-            spriteSequences.Add(Sequence);
-            level.SpriteSequences = spriteSequences.ToArray();
-            level.NumSpriteSequences++;
-        }
-
-        public static SpriteDefinition Load(string filePath)
-        {
-            return JsonConvert.DeserializeObject<SpriteDefinition>(File.ReadAllText(filePath));
-        }
-
-        public static SpriteDefinition Load(byte[] compressedJson)
-        {
-
-            return JsonConvert.DeserializeObject<SpriteDefinition>(Encoding.Default.GetString(ResourceHelper.Decompress(compressedJson)));
-        }
-
-        internal static void WritePistolsDefinition(TR2Level baseLevel, string filePath)
-        {
-            SpriteDefinition pistols = new SpriteDefinition
+            foreach (SpriteDefinition def in loadedDefinitions)
             {
-                Tile8 = baseLevel.Images8[8],
-                Tile16 = baseLevel.Images16[8],
-                Texture = new TRSpriteTexture
+                def.Texture.Atlas = (ushort)(spriteTiles16.Count - 1);
+                spriteTextures.Add(def.Texture);
+                
+                def.Sequence.Offset = (short)(spriteTextures.Count - 1);
+                spriteSequences.Add(def.Sequence);
+            }
+
+            level.SpriteTextures = spriteTextures.ToArray();
+            level.NumSpriteTextures = (uint)spriteTextures.Count;
+            level.SpriteSequences = spriteSequences.ToArray();
+            level.NumSpriteSequences = (uint)spriteSequences.Count;
+        }
+
+        internal static void WriteWeaponDefinitions(TRTexImage8 img8, TRTexImage16 img16, string jsonPath)
+        {
+            Dictionary<string, object> output = new Dictionary<string, object>
+            {
+                ["Weapons"] = new List<SpriteDefinition>
                 {
-                    Atlas = 0,
-                    BottomSide = 11,
-                    Height = 12287,
-                    LeftSide = -93,
-                    RightSide = 96,
-                    TopSide = -102,
-                    Width = 20479,
-                    X = 0,
-                    Y = 200
+                    new SpriteDefinition
+                    {
+                        Sequence = new TRSpriteSequence { SpriteID = 135, NegativeLength = -1 },
+                        Texture = new TRSpriteTexture
+                        {
+                            X = 0, Y = 0,
+                            Width = 18943, Height = 9215,
+                            LeftSide = -93, RightSide = 96,
+                            TopSide = -102, BottomSide = 11
+                        }
+                    },
+                    new SpriteDefinition
+                    {
+                        Sequence = new TRSpriteSequence { SpriteID = 136, NegativeLength = -1 },
+                        Texture = new TRSpriteTexture
+                        {
+                            X = 0, Y = 35,
+                            Width = 26879, Height = 5631,
+                            LeftSide = -240, RightSide = 240,
+                            TopSide = -64, BottomSide = 32
+                        }
+                    },
+                    new SpriteDefinition
+                    {
+                        Sequence = new TRSpriteSequence { SpriteID = 137, NegativeLength = -1 },
+                        Texture = new TRSpriteTexture
+                        {
+                            X = 73, Y = 0,
+                            Width = 23551, Height = 9795,
+                            LeftSide = -100, RightSide = 100,
+                            TopSide = -76, BottomSide = 7
+                        }
+                    },
+                    new SpriteDefinition
+                    {
+                        Sequence = new TRSpriteSequence { SpriteID = 138, NegativeLength = -1 },
+                        Texture = new TRSpriteTexture
+                        {
+                            X = 124, Y = 36,
+                            Width = 17151, Height = 10239,
+                            LeftSide = -128, RightSide = 128,
+                            TopSide = -56, BottomSide = 56
+                        }
+                    },
+                    new SpriteDefinition
+                    {
+                        Sequence = new TRSpriteSequence { SpriteID = 139, NegativeLength = -1 },
+                        Texture = new TRSpriteTexture
+                        {
+                            X = 0, Y = 82,
+                            Width = 29183, Height = 7423,
+                            LeftSide = -154, RightSide = 156,
+                            TopSide = -76, BottomSide = 3
+                        }
+                    },
+                    new SpriteDefinition
+                    {
+                        Sequence = new TRSpriteSequence { SpriteID = 140, NegativeLength = -1 },
+                        Texture = new TRSpriteTexture
+                        {
+                            X = 0, Y = 56,
+                            Width = 31999, Height = 6911,
+                            LeftSide = -194, RightSide = 205,
+                            TopSide = -80, BottomSide = 3
+                        }
+                    },
+                    new SpriteDefinition
+                    {
+                        Sequence = new TRSpriteSequence { SpriteID = 141, NegativeLength = -1 },
+                        Texture = new TRSpriteTexture
+                        {
+                            X = 164, Y = 0,
+                            Width = 21503, Height = 8447,
+                            LeftSide = -89, RightSide = 92,
+                            TopSide = -67, BottomSide = 5
+                        }
+                    }
                 },
-                Sequence = new TRSpriteSequence
-                {
-                    SpriteID = (short)TR2Entities.Pistols_S_P,
-                    NegativeLength = -1,
-                    Offset = 0
-                }
+
+                ["Tile8"] = img8,
+                ["Tile16"] = img16
             };
 
-            new FileInfo(filePath).WriteCompressedText(JsonConvert.SerializeObject(pistols, Formatting.Indented));
+            new FileInfo(jsonPath).WriteCompressedText(JsonConvert.SerializeObject(output, Formatting.Indented));
         }
     }
 }

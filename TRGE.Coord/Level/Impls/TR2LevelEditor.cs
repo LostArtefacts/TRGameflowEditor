@@ -55,7 +55,7 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
             }
 
-            if (e.LevelID.Equals(AbstractTRScriptedLevel.CreateID("HOUSE")))
+            if (e.ScriptedLevel.Is("HOUSE"))
             {
                 // We only need to copy house once to the WIP directory during this session
                 string wipHouseFile = GetWriteLevelFilePath(e.LevelFileBaseName);
@@ -70,9 +70,9 @@ namespace TRGE.Coord
                 TR2Level level = reader.ReadLevel(levelFile);
 
                 SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
-                if ((e.ScriptedLevel as TR23ScriptedLevel).RequiresPistolTextureInjection)
+                if ((e.ScriptedLevel as TR23ScriptedLevel).RequiresWeaponTextureInjection)
                 {
-                    MaybeInjectPistolTexture(level);
+                    MaybeInjectWeaponTexture(level);
                 }
 
                 TR2LevelWriter writer = new TR2LevelWriter();
@@ -116,7 +116,7 @@ namespace TRGE.Coord
             // #69 Offshore Rig - the Pistol item index is low in the list (#4), so if we remove it we'd need to change
             // everything that references the items above it in the list. So, for simplicity's sake, we will just
             // replace the pistols with something else if the level is now armed, or revert it to pistols.
-            if (scriptedLevel.ID == AbstractTRScriptedLevel.CreateID("RIG"))
+            if (scriptedLevel.Is("RIG"))
             {
                 TR2Entity cargoEntity = existingInjections.FirstOrDefault();
                 if (cargoEntity != null)
@@ -219,12 +219,12 @@ namespace TRGE.Coord
             }
         }
 
-        protected virtual bool MaybeInjectPistolTexture(TR2Level level)
+        protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
         {
             int pistolIndex = level.SpriteSequences.ToList().FindIndex(e => e.SpriteID == (short)TR2Entities.Pistols_S_P);
             if (pistolIndex == -1)
             {
-                SpriteDefinition.Load(Resources.Pistols).AddToLevel(level);
+                SpriteDefinition.LoadWeaponsIntoLevel(level);
                 return true;
             }
 

@@ -121,7 +121,7 @@ namespace TRGE.Core
             }
         }
 
-        public bool RequiresPistolTextureInjection
+        public bool RequiresWeaponTextureInjection
         {
             get
             {
