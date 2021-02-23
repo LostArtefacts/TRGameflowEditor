@@ -299,4 +299,20 @@
     <Resource Include="Resources\shuffle.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir Lib
+move /Y Microsoft.WindowsAPICodePack.dll Lib
+move /Y Microsoft.WindowsAPICodePack.Sensors.dll Lib
+move /Y Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll Lib
+move /Y Microsoft.WindowsAPICodePack.Shell.dll Lib
+move /Y Microsoft.WindowsAPICodePack.ShellExtensions.dll Lib
+move /Y Newtonsoft.Json.dll Lib
+move /Y TRGE.Coord.dll Lib
+move /Y TRGE.Core.dll Lib
+move /Y TRLevelReader.dll Lib
+move /Y Newtonsoft.Json.xml Lib</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>rmdir /S /Q Lib</PreBuildEvent>
+  </PropertyGroup>
 </Project>
