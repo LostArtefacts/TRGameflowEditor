@@ -53,7 +53,7 @@ namespace TRGE.Core.Test
             editor.Save();
         }
 
-        //[TestMethod]
+        [TestMethod]
         protected void TestManagedRestore()
         {
             PrepareDirectories();
