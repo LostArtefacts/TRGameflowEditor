@@ -134,6 +134,9 @@
     <Compile Include="Windows\AudioWindow.xaml.cs">
       <DependentUpon>AudioWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\OpenProgressWindow.xaml.cs">
+      <DependentUpon>OpenProgressWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\BonusItemsWindow.xaml.cs">
       <DependentUpon>BonusItemsWindow.xaml</DependentUpon>
     </Compile>
@@ -149,6 +152,9 @@
     <Compile Include="Utils\WindowUtils.cs" />
     <Compile Include="Windows\MessageWindow.xaml.cs">
       <DependentUpon>MessageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\RestoreProgressWindow.xaml.cs">
+      <DependentUpon>RestoreProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SaveProgressWindow.xaml.cs">
       <DependentUpon>SaveProgressWindow.xaml</DependentUpon>
@@ -213,6 +219,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\OpenProgressWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\BonusItemsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -230,6 +240,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\MessageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\RestoreProgressWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -190,7 +190,14 @@ namespace TRGE.View.Windows
 
         private void RefreshHistoryMenu()
         {
-            RecentFolders = new RecentFolderList(this);
+            if (Dispatcher.CheckAccess())
+            {
+                RecentFolders = new RecentFolderList(this);
+            }
+            else
+            {
+                Dispatcher.Invoke(RefreshHistoryMenu);
+            }
         }
 
         public void OpenDataFolder(RecentFolder folder)

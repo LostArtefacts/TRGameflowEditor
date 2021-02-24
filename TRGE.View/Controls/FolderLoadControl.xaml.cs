@@ -93,16 +93,23 @@ namespace TRGE.View.Controls
 
         public void OpenDataFolder(string folderPath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
+            OpenProgressWindow opw = new OpenProgressWindow(folderPath, openOption);
             try
             {
-                TREditor editor = TRCoord.Instance.Open(folderPath, openOption);
-                DataFolderOpened?.Invoke(this, new DataFolderEventArgs(folderPath, editor));
+                if (opw.ShowDialog() ?? false)
+                {
+                    DataFolderOpened?.Invoke(this, new DataFolderEventArgs(folderPath, opw.OpenedEditor));
+                }
+                else if (opw.OpenException != null)
+                {
+                    throw opw.OpenException;
+                }
             }
             catch (ChecksumMismatchException)
             {
                 if (openOption != TRScriptOpenOption.Default)
                 {
-                    throw;
+                    throw opw.OpenException;
                 }
 
                 HandleChecksumMismatch(folderPath);
