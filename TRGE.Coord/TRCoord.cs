@@ -114,6 +114,12 @@ namespace TRGE.Coord
         }
         #endregion
 
+        public event EventHandler<TRBackupRestoreEventArgs> BackupProgressChanged
+        {
+            add => _trioCoord.BackupProgressChanged += value;
+            remove => _trioCoord.BackupProgressChanged -= value;
+        }
+
         public TREditor Open(FileInfo editFilePath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
             return Open(editFilePath.FullName, openOption);

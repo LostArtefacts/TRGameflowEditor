@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using TRGE.Core;
@@ -9,6 +10,8 @@ namespace TRGE.Coord
     {
         protected readonly TRDirectoryIOArgs _io;
         protected readonly Dictionary<string, ISet<TRScriptedLevelEventArgs>> _levelModifications;
+
+        internal event EventHandler RestoreProgressChanged;
 
         internal override string ConfigFilePath => _io.ConfigFile.FullName;
 
@@ -102,9 +105,14 @@ namespace TRGE.Coord
             _config.Write(_io.ConfigFile.FullName);
         }
 
+        internal int GetRestoreTarget()
+        {
+            return _io.BackupDirectory.GetFilteredFiles(new string[] { "*.dat", "*.tr2" }).Length;
+        }
+
         internal sealed override void Restore()
         {
-            _io.BackupDirectory.Copy(_io.OriginalDirectory, true, new string[] { "*.dat", "*.tr2" });
+            _io.BackupDirectory.Copy(_io.OriginalDirectory, true, new string[] { "*.dat", "*.tr2" }, new Action<FileInfo>(fi => RestoreProgressChanged?.Invoke(this, EventArgs.Empty)));
 
             ApplyRestore();
 

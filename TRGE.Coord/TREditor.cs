@@ -48,6 +48,9 @@ namespace TRGE.Coord
         private ConfigFileWatcher _watcher;
         public event EventHandler<FileSystemEventArgs> ConfigExternallyChanged;
 
+        public event EventHandler<TRBackupRestoreEventArgs> RestoreProgressChanged;
+        private TRBackupRestoreEventArgs _restoreArgs;
+
         public bool IsExportPossible => ScriptEditor.IsExportPossible && (LevelEditor == null || LevelEditor.IsExportPossible);
 
         internal TREditor(string wipOutputDirectory, string outputDirectory, string targetDirectory)
@@ -150,11 +153,42 @@ namespace TRGE.Coord
 
         public void Restore()
         {
-            ScriptEditor.Restore();
+            _restoreArgs = new TRBackupRestoreEventArgs
+            {
+                ProgressValue = 0,
+                ProgressTarget = 1
+            };
+
             if (LevelEditor != null)
             {
-                LevelEditor.Restore();
+                _restoreArgs.ProgressTarget += LevelEditor.GetRestoreTarget();
+                LevelEditor.RestoreProgressChanged += LevelEditor_RestoreProgressChanged;
             }
+
+            FireRestoreProgressChanged();
+
+            try
+            {
+                ScriptEditor.Restore();
+                FireRestoreProgressChanged(1);
+
+                if (LevelEditor != null) LevelEditor.Restore();
+            }
+            finally
+            {
+                if (LevelEditor != null) LevelEditor.RestoreProgressChanged -= LevelEditor_RestoreProgressChanged;
+            }
+        }
+
+        private void LevelEditor_RestoreProgressChanged(object sender, EventArgs e)
+        {
+            FireRestoreProgressChanged(1);
+        }
+
+        private void FireRestoreProgressChanged(int progress = 0)
+        {
+            _restoreArgs.ProgressValue += progress;
+            RestoreProgressChanged?.Invoke(this, _restoreArgs);
         }
 
         public void ExportSettings(string filePath)

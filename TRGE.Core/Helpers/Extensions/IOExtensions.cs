@@ -14,6 +14,11 @@ namespace TRGE.Core
         /// </summary>
         internal static void Copy(this DirectoryInfo directory, DirectoryInfo targetDirectory, bool overwrite = true, string[] extensions = null, Action<FileInfo> callback = null)
         {
+            targetDirectory.CopyInto(directory.GetFilteredFiles(extensions), overwrite, callback);
+        }
+
+        internal static FileInfo[] GetFilteredFiles(this DirectoryInfo directory, string[] extensions = null)
+        {
             FileInfo[] farr;
             if (extensions == null)
             {
@@ -28,9 +33,13 @@ namespace TRGE.Core
                 }
                 farr = files.ToArray();
             }
+            return farr;
+        }
 
+        internal static void CopyInto(this DirectoryInfo targetDirectory, FileInfo[] files, bool overwrite = false, Action<FileInfo> callback = null)
+        {
             targetDirectory.Create();
-            foreach (FileInfo fi in farr)
+            foreach (FileInfo fi in files)
             {
                 FileInfo targetFile = new FileInfo(Path.Combine(targetDirectory.FullName, fi.Name));
                 if (overwrite || !targetFile.Exists)

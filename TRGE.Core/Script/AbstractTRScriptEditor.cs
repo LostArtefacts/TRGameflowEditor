@@ -167,7 +167,7 @@ namespace TRGE.Core
                 LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 GameTrackOrganisation = Organisation.Default;
                 GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
-                RandomGameTracksIncludeBlank = true;
+                RandomGameTracksIncludeBlank = false;
                 LevelSecretSupportOrganisation = Organisation.Default;
                 LevelSunsetOrganisation = Organisation.Default;
                 LevelSunsetRNG = new RandomGenerator(RandomGenerator.Type.Date);

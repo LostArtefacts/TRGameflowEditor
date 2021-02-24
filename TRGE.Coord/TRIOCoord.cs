@@ -57,6 +57,9 @@ namespace TRGE.Coord
         internal event EventHandler HistoryChanged;
         #endregion
 
+        internal event EventHandler<TRBackupRestoreEventArgs> BackupProgressChanged;
+        private TRBackupRestoreEventArgs _backupArgs;
+
         internal TRIOCoord()
         {
             _history = new List<string>();
@@ -76,12 +79,21 @@ namespace TRGE.Coord
             }
 
             _editDirectory = GetEditDirectory();
+
+            _backupArgs = new TRBackupRestoreEventArgs()
+            {
+                ProgressValue = 0,
+                ProgressTarget = 1
+            };
             CreateBackup();
             
             AbstractTRScriptEditor scriptEditor = GetScriptEditor(openOption);
             TidyBackup(scriptEditor);
 
             AbstractTRLevelEditor levelEditor = GetLevelEditor(scriptEditor);
+
+            FireBackupProgressChanged(1);
+
             return new TREditor(WIPOutputDirectory, OutputDirectory, OriginalDirectory)
             {
                 ScriptEditor = scriptEditor,
@@ -145,9 +157,18 @@ namespace TRGE.Coord
                 DirectoryInfo outputDI = new DirectoryInfo(outputDirectory);
 
                 DirectoryInfo originalDI = new DirectoryInfo(_originalDirectory);
-                originalDI.Copy(backupDI, false, TREditor.TargetFileExtensions);
-                backupDI.ClearExcept(_orignalScriptFile);
-                backupDI.Copy(outputDI, false);
+
+                FileInfo[] files = originalDI.GetFilteredFiles(TREditor.TargetFileExtensions);
+                _backupArgs.ProgressTarget += files.Length * 2;
+                FireBackupProgressChanged();
+
+                Action<FileInfo> progressAction = new Action<FileInfo>
+                (
+                    fi => FireBackupProgressChanged(1)
+                );
+
+                backupDI.CopyInto(files, false, progressAction);
+                outputDI.CopyInto(files, false, progressAction);
 
                 _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
             }
@@ -169,6 +190,12 @@ namespace TRGE.Coord
 
             _scriptConfigFile = Path.Combine(_editDirectory, _scriptConfigFileName);
             _directoryConfigFile = Path.Combine(_editDirectory, _dirConfigFileName);
+        }
+
+        private void FireBackupProgressChanged(int progress = 0)
+        {
+            _backupArgs.ProgressValue += progress;
+            BackupProgressChanged?.Invoke(this, _backupArgs);
         }
 
         protected void TidyBackup(AbstractTRScriptEditor scriptEditor)

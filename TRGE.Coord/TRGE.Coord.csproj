@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\TRBackupRestoreEventArgs.cs" />
     <Compile Include="Helpers\ConfigFileWatcher.cs" />
     <Compile Include="Helpers\Location.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
