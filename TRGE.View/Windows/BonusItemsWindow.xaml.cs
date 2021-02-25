@@ -62,7 +62,7 @@ namespace TRGE.View.Windows
         public BonusItemsWindow(GlobalSecretBonusData bonusData)
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
 
             SecretBonusData = bonusData;

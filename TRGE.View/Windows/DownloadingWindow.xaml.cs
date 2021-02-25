@@ -61,7 +61,7 @@ namespace TRGE.View.Windows
         public DownloadingWindow()
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
             _cancelPending = false;
         }

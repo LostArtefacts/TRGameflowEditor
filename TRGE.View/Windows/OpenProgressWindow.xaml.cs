@@ -58,7 +58,7 @@ namespace TRGE.View.Windows
         public OpenProgressWindow(string folderPath, TRScriptOpenOption openOption)
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
             _complete = false;
             _folderPath = folderPath;

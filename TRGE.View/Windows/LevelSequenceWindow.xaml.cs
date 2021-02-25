@@ -41,7 +41,7 @@ namespace TRGE.View.Windows
         public LevelSequenceWindow(LevelSequencingData levelSequencing)
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
 
             _levels = new ObservableCollection<SequencedLevel>(LevelSequencingData = levelSequencing);

@@ -55,7 +55,7 @@ namespace TRGE.View.Windows
         public RestoreProgressWindow(TREditor editor)
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
             _complete = false;
             _editor = editor;

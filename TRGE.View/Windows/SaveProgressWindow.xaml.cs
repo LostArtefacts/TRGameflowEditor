@@ -56,7 +56,7 @@ namespace TRGE.View.Windows
         public SaveProgressWindow(TREditor editor, EditorOptions options)
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
             _editor = editor;
             _options = options;

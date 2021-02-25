@@ -26,7 +26,7 @@ namespace TRGE.View.Windows
         public ScriptOptionWindow()
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             Option = TRScriptOpenOption.DiscardBackup;
         }
 

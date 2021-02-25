@@ -25,7 +25,7 @@ namespace TRGE.View.Windows
         public AmmolessLevelsWindow(FlaggedLevelData levelData)
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
 
             LevelData = levelData;

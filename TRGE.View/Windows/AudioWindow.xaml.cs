@@ -48,7 +48,7 @@ namespace TRGE.View.Windows
         public AudioWindow(IAudioDataProvider dataProvider)
         {
             InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow();
+            Owner = WindowUtils.GetActiveWindow(this);
             DataContext = this;
 
             _dataProvider = dataProvider;
