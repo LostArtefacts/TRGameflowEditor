@@ -13,5 +13,34 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- NumericUpDown -->
+        <Style TargetType="{x:Type RepeatButton}" x:Key="FlatRepeatButton">
+            <Setter Property="Background" Value="#1E1E1E"/>
+            <Setter Property="Foreground" Value="#FFF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border 
+                            Background="{TemplateBinding Background}"
+                            Padding="0,2"
+                            BorderThickness="1,0,0,0"
+                            BorderBrush="#666">
+                            <Image 
+                                Source="{Binding Content, RelativeSource={RelativeSource AncestorType=RepeatButton}}"
+                                Height="6"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#333"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCC"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

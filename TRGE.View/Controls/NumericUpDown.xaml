@@ -31,10 +31,9 @@
                      Grid.RowSpan="3" />
 
             <RepeatButton Click="RepeatUpButton_Click" 
-                          Padding="0" 
-                          FontSize="7" 
-                          Content="&#9650;" 
-                          BorderThickness="1,0,0,0" 
+                          Content="..\Resources\up.png"
+                          ToolTip="Increase value"
+                          Style="{StaticResource FlatRepeatButton}"
                           Grid.Column="1"/>
 
             <Border Background="#666" 
@@ -42,10 +41,9 @@
                     Grid.Column="1"/>
 
             <RepeatButton Click="RepeatDownButton_Click" 
-                          Padding="0" 
-                          FontSize="7" 
-                          Content="&#9660;" 
-                          BorderThickness="1,0,0,0" 
+                          Content="..\Resources\down.png"
+                          ToolTip="Increase value"
+                          Style="{StaticResource FlatRepeatButton}"
                           Grid.Column="1" 
                           Grid.Row="2"/>
         </Grid>
