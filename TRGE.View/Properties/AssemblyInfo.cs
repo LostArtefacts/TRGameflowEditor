@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyDescription("Edit the gameflow for Tomb Raider II and Tomb Raider III games.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tomp Community")]
-[assembly: AssemblyProduct("TRGE v0.9.1-beta")]
+[assembly: AssemblyProduct("TRGE v0.9.2-beta")]
 [assembly: AssemblyCopyright("Copyright © Tomp Community 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
