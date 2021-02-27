@@ -64,11 +64,11 @@ You can manually choose which levels Lara starts with all ammo, medi-packs and f
 
 ## Secret Rewards
 
-For TR2 and TR2G, you can manually allocate the items rewarded to Lara for collecting all secrets. Note that while you can select flares to be rewarded, the sprite does not show on screen because the scripting allocates a single flare rather than a box. The flare does get added to inventory regardles. This issue is being investigated further.
+For TR2 and TR2G, you can manually allocate the items rewarded to Lara for collecting all secrets. Note that while you can select flares to be rewarded, the sprite does not show on screen because the scripting allocates a single flare rather than a box. The flare does get added to inventory regardless. This issue is being investigated further.
 
 ## Sunsets
 
-For TR2 and TR2G, you can choose to have the lighting dim in particular rooms over a period of 20 minutes. This happens by default in Bartoli's Hideout. It only applied to specific rooms per level.
+For TR2 and TR2G, you can choose to have the lighting dim in particular rooms over a period of 20 minutes. This happens by default in Bartoli's Hideout. It only applies to specific rooms per level.
 
 ## Audio Tracks
 
