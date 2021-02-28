@@ -186,9 +186,11 @@ namespace TRGE.Core
         internal void RandomiseBonuses()
         {
             TRItem shotgun = (ItemProvider as TR2ItemProvider).Shotgun;
+            TRItem flare = (ItemProvider as TR2ItemProvider).Flare;
             Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>
             {
-                { TRItemCategory.Weapon, new HashSet<TRItem> { shotgun } }
+                { TRItemCategory.Weapon, new HashSet<TRItem> { shotgun } },
+                { TRItemCategory.Misc, new HashSet<TRItem> { flare } }
             };
             Random rand = BonusRNG.Create();
 

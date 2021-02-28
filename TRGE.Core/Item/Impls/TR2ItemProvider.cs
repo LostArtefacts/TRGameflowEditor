@@ -126,14 +126,14 @@ namespace TRGE.Core
                     MaxAmmoCount = rand.Next(1, 3),
                     MiscTypeCount = 1,
                     MaxMiscCount = rand.Next(1, 3),
-                    Weight = 30
+                    Weight = 12
                 },
                 //default...ish?
                 new BaseTRItemBroker
                 {
                     WeaponCount = rand.Next(0, 2),
                     AmmoTypeCount = 1,
-                    MaxAmmoCount = 2 * rand.Next(1, 4), //2, 4, 8
+                    MaxAmmoCount = 2 * rand.Next(2, 5), //4, 6, 8
                     MiscTypeCount = rand.Next(0, 2),
                     MaxMiscCount = rand.Next(2, 4),
                     Weight = 50
@@ -146,7 +146,7 @@ namespace TRGE.Core
                     MaxAmmoCount = rand.Next(0, 9),
                     MiscTypeCount = rand.Next(1, 5),
                     MaxMiscCount = rand.Next(0, 9),
-                    Weight = 12
+                    Weight = 22
                 },
                 //generous++
                 new BaseTRItemBroker

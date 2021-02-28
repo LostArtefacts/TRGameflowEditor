@@ -116,7 +116,7 @@ namespace TRGE.Core
             {
                 for (int i = 0; i < numItems; i++)
                 {
-                    int qty = rand.Next(1, maxItems);
+                    int qty = maxItems;// rand.Next(1, maxItems);
                     for (int j = 0; j < qty; j++)
                     {
                         TRItem item = itemList[rand.Next(0, itemList.Count)];
