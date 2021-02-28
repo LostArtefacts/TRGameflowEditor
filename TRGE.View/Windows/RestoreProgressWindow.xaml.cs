@@ -84,15 +84,15 @@ namespace TRGE.View.Windows
             {
                 _editor.RestoreProgressChanged -= Editor_RestoreProgressChanged;
 
-                Dispatcher.Invoke(delegate
-                {
+                //Dispatcher.Invoke(delegate
+                //{
                     Dispatcher.Invoke(delegate
                     {
                         _complete = true;
                         WindowUtils.EnableCloseButton(this, true);
                         DialogResult = RestoreException == null;
                     });
-                });
+                //});
             }
         }
 
