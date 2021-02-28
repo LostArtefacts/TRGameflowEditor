@@ -116,6 +116,7 @@ namespace TRGE.Core
             {
                 for (int i = 0; i < numItems; i++)
                 {
+                    // #73 removed random max qty, instead use the broker definitions.
                     int qty = maxItems;// rand.Next(1, maxItems);
                     for (int j = 0; j < qty; j++)
                     {
