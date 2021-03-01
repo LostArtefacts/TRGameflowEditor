@@ -38,6 +38,12 @@ namespace TRGE.Core
         protected abstract void CalculateEdition();
         internal abstract AbstractTRFrontEnd FrontEnd { get; }
         internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
+        internal abstract byte Language { get; set; }
+        internal TRLanguage TRLanguage
+        {
+            get => (TRLanguage)(Language);
+            set => Language = (byte)value;
+        }
         internal abstract ushort TitleSoundID { get; set; }
         internal abstract ushort SecretSoundID { get; set; }
 
@@ -50,7 +56,7 @@ namespace TRGE.Core
                 gameString = gameString.Substring(0, i);
             }
 
-            string stamp = TRInterop.ScriptModificationStamp ?? string.Empty;
+            string stamp = TRInterop.ScriptModificationStamp[TRLanguage];
             if (stamp.Length > 0 && !stamp.Trim().StartsWith("-"))
             {
                 stamp = " - " + stamp;

@@ -36,5 +36,38 @@ namespace TRGE.Core.Test
             script = editor.ScriptEditor.Script as TR23Script;
             Assert.AreEqual(script.GameStrings1[InventoryIndex], "INVENTORY");
         }
+
+        [TestMethod]
+        protected virtual void TestStampLanguages()
+        {
+            TRInterop.ScriptModificationStamp[TRLanguage.French] = "Essai";
+            TRInterop.ScriptModificationStamp[TRLanguage.German] = "Prüfung";
+            TRInterop.ScriptModificationStamp[TRLanguage.American] = "Test US";
+            TRInterop.ScriptModificationStamp[TRLanguage.Japanese] = "テスト";
+
+            TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            TR23Script script = editor.ScriptEditor.Script as TR23Script;
+
+            SaveAndTestLanguage(editor, script, TRLanguage.French);
+
+            editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            script = editor.ScriptEditor.Script as TR23Script;
+            SaveAndTestLanguage(editor, script, TRLanguage.German);
+
+            editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            script = editor.ScriptEditor.Script as TR23Script;
+            SaveAndTestLanguage(editor, script, TRLanguage.American);
+
+            editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
+            script = editor.ScriptEditor.Script as TR23Script;
+            SaveAndTestLanguage(editor, script, TRLanguage.Japanese);
+        }
+
+        private void SaveAndTestLanguage(TREditor editor, TR23Script script, TRLanguage lang)
+        {
+            script.TRLanguage = lang;
+            editor.Save();
+            Assert.IsTrue(script.GameStrings1[InventoryIndex].EndsWith(TRInterop.ScriptModificationStamp[lang]));
+        }
     }
 }

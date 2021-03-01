@@ -48,7 +48,7 @@ namespace TRGE.Core
         internal ushort SingleLevel { get; private set; }        
         internal ushort Flags { get; private set; }        
         internal byte Xor { get; private set; }
-        internal byte Language { get; private set; }
+        internal override byte Language { get; set; }
         internal byte SecretSound { get; private set; }
         internal override ushort SecretSoundID
         {

@@ -13,7 +13,12 @@ namespace TRGE.Core
             ExecutingVersionName = "TRGE";
             ExecutingVersion = TaggedVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             RandomisationSupported = true;
-            ScriptModificationStamp = "Modified by TRGE";
+            ScriptModificationStamp = new GameStamp
+            {
+                [TRLanguage.English] = "Modified by TRGE",
+                [TRLanguage.French] = "Modifi)e par TRGE",
+                [TRLanguage.German] = "Ge~andert von TRGE"
+            };
         }
 
         public static string ExecutingVersionName { get; set; }
@@ -21,6 +26,7 @@ namespace TRGE.Core
         public static string TaggedVersion { get; set; }
         public static string ConfigDirectory { get; set; }
         public static bool RandomisationSupported { get; set; }
-        public static string ScriptModificationStamp { get; set; }
+        //public static string ScriptModificationStamp { get; set; }
+        public static GameStamp ScriptModificationStamp { get; }
     }
 }
