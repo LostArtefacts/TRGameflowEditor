@@ -76,7 +76,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\House.gz" />
-    <None Include="Resources\Pistols.gz" />
     <None Include="Resources\unarmed_locations.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

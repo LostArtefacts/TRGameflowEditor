@@ -73,16 +73,6 @@ namespace TRGE.Coord.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] Pistols {
-            get {
-                object obj = ResourceManager.GetObject("Pistols", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] Weapons {
             get {
                 object obj = ResourceManager.GetObject("Weapons", resourceCulture);

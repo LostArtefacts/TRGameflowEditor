@@ -13,6 +13,8 @@ namespace TRGE.Coord
 {
     public class TR2LevelEditor : AbstractTRLevelEditor
     {
+        private static readonly string _hshChecksum = "108c8d374e4b064eec332b16a93095c0"; // #75
+
         protected readonly Dictionary<string, Location> _defaultWeaponLocations;
 
         public TR2LevelEditor(TRDirectoryIOArgs io)
@@ -212,11 +214,20 @@ namespace TRGE.Coord
             string fullOriginalBackup = Path.Combine(_io.BackupDirectory.FullName, "house.tr2.bak");
             if (File.Exists(currentBackupFile) && !File.Exists(fullOriginalBackup))
             {
-                File.Move(currentBackupFile, fullOriginalBackup);
+                File.Copy(currentBackupFile, fullOriginalBackup, true);
+            }
+            if (!new FileInfo(currentBackupFile).Checksum().Equals(_hshChecksum)) // #75
+            {
                 byte[] houseData = ResourceHelper.Decompress(Resources.House);
                 File.WriteAllBytes(currentBackupFile, houseData);
                 File.WriteAllBytes(Path.Combine(_io.OutputDirectory.FullName, "house.tr2"), houseData);
             }
+        }
+
+        // #75 Check that the HSH backup integrity is still in place i.e. it hasn't been overwritten manually externally
+        internal override void PreSave(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
+        {
+            CheckHSHBackup();
         }
 
         protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
