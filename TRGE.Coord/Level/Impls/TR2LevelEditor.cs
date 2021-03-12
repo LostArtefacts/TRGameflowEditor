@@ -212,15 +212,18 @@ namespace TRGE.Coord
 
             string currentBackupFile = Path.Combine(_io.BackupDirectory.FullName, "house.tr2");
             string fullOriginalBackup = Path.Combine(_io.BackupDirectory.FullName, "house.tr2.bak");
-            if (File.Exists(currentBackupFile) && !File.Exists(fullOriginalBackup))
+            if (File.Exists(currentBackupFile))
             {
-                File.Copy(currentBackupFile, fullOriginalBackup, true);
-            }
-            if (!new FileInfo(currentBackupFile).Checksum().Equals(_hshChecksum)) // #75
-            {
-                byte[] houseData = ResourceHelper.Decompress(Resources.House);
-                File.WriteAllBytes(currentBackupFile, houseData);
-                File.WriteAllBytes(Path.Combine(_io.OutputDirectory.FullName, "house.tr2"), houseData);
+                if (!File.Exists(fullOriginalBackup))
+                {
+                    File.Copy(currentBackupFile, fullOriginalBackup, true);
+                }
+                if (!new FileInfo(currentBackupFile).Checksum().Equals(_hshChecksum)) // #75
+                {
+                    byte[] houseData = ResourceHelper.Decompress(Resources.House);
+                    File.WriteAllBytes(currentBackupFile, houseData);
+                    File.WriteAllBytes(Path.Combine(_io.OutputDirectory.FullName, "house.tr2"), houseData);
+                }
             }
         }
 
