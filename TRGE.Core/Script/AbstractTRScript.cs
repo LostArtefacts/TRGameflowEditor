@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    internal abstract class AbstractTRScript
+    public abstract class AbstractTRScript
     {
         public TREdition Edition { get; protected set; }
 
-        internal void Read(FileInfo file)
+        public void Read(FileInfo file)
         {
             Read(file.FullName);
         }
 
-        internal void Read(string filePath)
+        public void Read(string filePath)
         {
             //All we can go on to begin with is the file name to determine a generic edition.
             //Subclasses should implement CalculateEdition and call it as appropriate while reading the data.
@@ -24,7 +24,7 @@ namespace TRGE.Core
             }
         }
 
-        internal void Write(string filePath)
+        public void Write(string filePath)
         {
             Stamp();
             using (BinaryWriter bw = new BinaryWriter(new FileStream(filePath, FileMode.Create)))
@@ -33,19 +33,19 @@ namespace TRGE.Core
             }
         }
 
-        internal abstract void Read(BinaryReader br);
-        internal abstract byte[] Serialise();
+        public abstract void Read(BinaryReader br);
+        public abstract byte[] Serialise();
         protected abstract void CalculateEdition();
-        internal abstract AbstractTRFrontEnd FrontEnd { get; }
-        internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
-        internal abstract byte Language { get; set; }
-        internal TRLanguage TRLanguage
+        public abstract AbstractTRFrontEnd FrontEnd { get; }
+        public abstract List<AbstractTRScriptedLevel> Levels { get; set; }
+        public abstract byte Language { get; set; }
+        public TRLanguage TRLanguage
         {
             get => (TRLanguage)(Language);
             set => Language = (byte)value;
         }
-        internal abstract ushort TitleSoundID { get; set; }
-        internal abstract ushort SecretSoundID { get; set; }
+        public abstract ushort TitleSoundID { get; set; }
+        public abstract ushort SecretSoundID { get; set; }
 
         protected abstract void Stamp();
         protected string ApplyStamp(string gameString)

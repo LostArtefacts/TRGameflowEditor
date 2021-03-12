@@ -1,8 +1,8 @@
 ﻿namespace TRGE.Core
 {
-    internal class TR23FrontEnd : AbstractTRFrontEnd
+    public class TR23FrontEnd : AbstractTRFrontEnd
     {
-        internal override bool HasFMV
+        public override bool HasFMV
         {
             get => HasActiveOperation(TR23OpDefs.FMV);
             set => SetOperationActive(TR23OpDefs.FMV, value);

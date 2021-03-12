@@ -14,19 +14,19 @@ namespace TRGE.Core
         public override ushort Sequence
         {
             get => GetOperation(TR23OpDefs.Level).Operand;
-            internal set => GetOperation(TR23OpDefs.Level).Operand = value;
+            set => GetOperation(TR23OpDefs.Level).Operand = value;
         }
 
         public override ushort TrackID
         {
             get => GetOperation(TR23OpDefs.Track).Operand;
-            internal set => GetOperation(TR23OpDefs.Track).Operand = value;
+            set => GetOperation(TR23OpDefs.Track).Operand = value;
         }
 
         public override bool HasFMV
         {
             get => HasActiveOperation(TR23OpDefs.FMV);
-            internal set
+            set
             {
                 SetOperationActive(TR23OpDefs.FMV, value);
                 SetOperationActive(TR23OpDefs.ListStart, value);
@@ -39,7 +39,7 @@ namespace TRGE.Core
         public override bool HasStartAnimation
         {
             get => HasActiveOperation(TR23OpDefs.StartAnimation);
-            internal set => SetOperationActive(TR23OpDefs.StartAnimation, value);
+            set => SetOperationActive(TR23OpDefs.StartAnimation, value);
         }
 
         public override bool SupportsStartAnimations => HasOperation(TR23OpDefs.StartAnimation);
@@ -54,7 +54,7 @@ namespace TRGE.Core
                 }
                 return -1;
             }
-            internal set
+            set
             {
                 if (value == -1)
                 {
@@ -74,7 +74,7 @@ namespace TRGE.Core
         public override bool HasCutScene
         {
             get => HasActiveOperation(TR23OpDefs.Cinematic);
-            internal set
+            set
             {
                 SetOperationActive(TR23OpDefs.Cinematic, value);
                 SetOperationActive(TR23OpDefs.CutAngle, value);
@@ -86,7 +86,7 @@ namespace TRGE.Core
         public override bool HasSunset
         {
             get => HasActiveOperation(TR23OpDefs.Sunset);
-            internal set
+            set
             {
                 if (value)
                 {
@@ -102,13 +102,13 @@ namespace TRGE.Core
         public override bool HasDeadlyWater
         {
             get => HasActiveOperation(TR23OpDefs.DeadlyWater);
-            internal set => SetOperationActive(TR23OpDefs.DeadlyWater, value);
+            set => SetOperationActive(TR23OpDefs.DeadlyWater, value);
         }
 
         public override bool RemovesWeapons
         {
             get => HasActiveOperation(TR23OpDefs.RemoveWeapons);
-            internal set
+            set
             {
                 if (value)
                 {
@@ -132,7 +132,7 @@ namespace TRGE.Core
         public override bool RemovesAmmo
         {
             get => HasActiveOperation(TR23OpDefs.RemoveAmmo);
-            internal set
+            set
             {
                 if (value)
                 {
@@ -153,7 +153,7 @@ namespace TRGE.Core
         public override bool HasSecrets
         {
             get => !HasActiveOperation(TR23OpDefs.Secrets);
-            internal set
+            set
             {
                 if (value)
                 {
@@ -171,7 +171,7 @@ namespace TRGE.Core
         public override bool IsFinalLevel
         {
             get => HasActiveOperation(TR23OpDefs.GameComplete);
-            internal set
+            set
             {
                 if (value)
                 {

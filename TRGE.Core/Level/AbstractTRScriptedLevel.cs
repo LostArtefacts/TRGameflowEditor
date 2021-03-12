@@ -6,7 +6,7 @@ namespace TRGE.Core
     public abstract class AbstractTRScriptedLevel : AbstractTROperationContainer
     {
         public string ID { get; private set; }
-        public string Name { get; internal set; }
+        public string Name { get; set; }
 
         protected string _levelFile;
         public string LevelFile
@@ -25,22 +25,22 @@ namespace TRGE.Core
         public IReadOnlyList<string> Keys => _keys;
         public IReadOnlyList<string> Pickups => _pickups;
 
-        public abstract ushort Sequence { get; internal set; }
-        public abstract ushort TrackID { get; internal set; }
-        public abstract bool HasFMV { get; internal set; }
+        public abstract ushort Sequence { get; set; }
+        public abstract ushort TrackID { get; set; }
+        public abstract bool HasFMV { get; set; }
         public abstract bool SupportsFMVs { get; }
-        public abstract bool HasStartAnimation { get; internal set; }
+        public abstract bool HasStartAnimation { get; set; }
         public abstract bool SupportsStartAnimations { get; }
-        public abstract short StartAnimationID { get; internal set; }
-        public abstract bool HasCutScene { get; internal set; }
+        public abstract short StartAnimationID { get; set; }
+        public abstract bool HasCutScene { get; set; }
         public abstract bool SupportsCutScenes { get; }
-        public abstract bool HasSunset { get; internal set; }
-        public abstract bool HasDeadlyWater { get; internal set; }
-        public abstract bool RemovesWeapons { get; internal set; }
-        public abstract bool RemovesAmmo { get; internal set; }
-        public abstract bool HasSecrets { get; internal set; }
+        public abstract bool HasSunset { get; set; }
+        public abstract bool HasDeadlyWater { get; set; }
+        public abstract bool RemovesWeapons { get; set; }
+        public abstract bool RemovesAmmo { get; set; }
+        public abstract bool HasSecrets { get; set; }
         public abstract bool KillToComplete { get; }
-        public abstract bool IsFinalLevel { get; internal set; }
+        public abstract bool IsFinalLevel { get; set; }
 
         public bool OptionallyRemovesWeapons => RemovesWeapons && !RemovesAmmo;
         public bool ForciblyRemovesWeapons => RemovesWeapons && RemovesAmmo;

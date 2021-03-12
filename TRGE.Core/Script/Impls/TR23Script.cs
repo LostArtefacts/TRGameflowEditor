@@ -5,13 +5,13 @@ using System.Text;
 
 namespace TRGE.Core
 {
-    internal class TR23Script : AbstractTRScript
+    public class TR23Script : AbstractTRScript
     {
-        internal const uint Version = 3;
+        public const uint Version = 3;
 
         #region Script Variables
         private string _description;
-        internal string Description
+        public string Description
         {
             get => _description;
             set
@@ -24,52 +24,52 @@ namespace TRGE.Core
             }
         }
 
-        internal ushort GameflowSize { get; private set; }
-        internal uint FirstOption { get; private set; }
-        internal int TitleReplace { get; private set; }
-        internal uint DeathDemoMode { get; private set; }
-        internal uint DeathInGame { get; private set; }
-        internal uint DemoTime { get; private set; }
-        internal uint DemoTimeSeconds
+        public ushort GameflowSize { get; private set; }
+        public uint FirstOption { get; private set; }
+        public int TitleReplace { get; private set; }
+        public uint DeathDemoMode { get; private set; }
+        public uint DeathInGame { get; private set; }
+        public uint DemoTime { get; private set; }
+        public uint DemoTimeSeconds
         {
             get => DemoTime / 30;
             set => DemoTime = value * 30;
         }
-        internal uint DemoInterrupt { get; private set; }
-        internal uint DemoEnd { get; private set; }       
-        internal ushort NumLevels { get; private set; }
-        internal ushort NumPlayableLevels => (ushort)(NumLevels - NumDemoLevels);
-        internal ushort NumPictures { get; private set; }
-        internal ushort NumTitles { get; private set; }
-        internal ushort NumRPLs { get; private set; }
-        internal ushort NumCutScenes { get; private set; }
-        internal ushort NumDemoLevels { get; private set; }
-        internal override ushort TitleSoundID { get; set; }
-        internal ushort SingleLevel { get; private set; }        
-        internal ushort Flags { get; private set; }        
-        internal byte Xor { get; private set; }
-        internal override byte Language { get; set; }
-        internal byte SecretSound { get; private set; }
-        internal override ushort SecretSoundID
+        public uint DemoInterrupt { get; private set; }
+        public uint DemoEnd { get; private set; }
+        public ushort NumLevels { get; private set; }
+        public ushort NumPlayableLevels => (ushort)(NumLevels - NumDemoLevels);
+        public ushort NumPictures { get; private set; }
+        public ushort NumTitles { get; private set; }
+        public ushort NumRPLs { get; private set; }
+        public ushort NumCutScenes { get; private set; }
+        public ushort NumDemoLevels { get; private set; }
+        public override ushort TitleSoundID { get; set; }
+        public ushort SingleLevel { get; private set; }
+        public ushort Flags { get; private set; }
+        public byte Xor { get; private set; }
+        public override byte Language { get; set; }
+        public byte SecretSound { get; private set; }
+        public override ushort SecretSoundID
         {
             get => Convert.ToUInt16(SecretSound);
             set => SecretSound = Convert.ToByte(value);
         }
 
         private List<string> _levelNames, _pictureNames, _titleFileNames, _rplFileNames, _levelFileNames, _cutSceneFileNames;
-        internal IReadOnlyList<string> LevelNames => _levelNames;
-        internal IReadOnlyList<string> PictureNames => _pictureNames;
-        internal IReadOnlyList<string> TitleFileNames => _titleFileNames;
-        internal IReadOnlyList<string> RPLFileNames => _rplFileNames;
-        internal IReadOnlyList<string> LevelFileNames => _levelFileNames;
-        internal IReadOnlyList<string> CutSceneFileNames => _cutSceneFileNames;
+        public IReadOnlyList<string> LevelNames => _levelNames;
+        public IReadOnlyList<string> PictureNames => _pictureNames;
+        public IReadOnlyList<string> TitleFileNames => _titleFileNames;
+        public IReadOnlyList<string> RPLFileNames => _rplFileNames;
+        public IReadOnlyList<string> LevelFileNames => _levelFileNames;
+        public IReadOnlyList<string> CutSceneFileNames => _cutSceneFileNames;
 
         private List<ushort[]> _scriptData;
         private List<ushort> _demoData;
         private List<uint[]> _psxFMVData;
-        internal IReadOnlyList<ushort[]> ScriptData => _scriptData;
-        internal IReadOnlyList<ushort> DemoData => _demoData;
-        internal IReadOnlyList<uint[]> PSXFMVData => _psxFMVData;
+        public IReadOnlyList<ushort[]> ScriptData => _scriptData;
+        public IReadOnlyList<ushort> DemoData => _demoData;
+        public IReadOnlyList<uint[]> PSXFMVData => _psxFMVData;
 
         private List<string> _gameStrings1, _gameStrings2;
         private List<string> _puzzleNames1, _puzzleNames2, _puzzleNames3, _puzzleNames4;
@@ -78,31 +78,31 @@ namespace TRGE.Core
         private List<string> _pickupNames1, _pickupNames2;
         private List<string> _keyNames1, _keyNames2, _keyNames3, _keyNames4;
 
-        internal ushort NumGameStrings1 { get; private set; }
-        internal ushort NumGameStrings2 { get; private set; }
-        internal IReadOnlyList<string> GameStrings1 => _gameStrings1;
-        internal IReadOnlyList<string> GameStrings2 => _gameStrings2;
-                
-        internal IReadOnlyList<string> PuzzleNames1 => _puzzleNames1;
-        internal IReadOnlyList<string> PuzzleNames2 => _puzzleNames2;
-        internal IReadOnlyList<string> PuzzleNames3 => _puzzleNames3;
-        internal IReadOnlyList<string> PuzzleNames4 => _puzzleNames4;
+        public ushort NumGameStrings1 { get; private set; }
+        public ushort NumGameStrings2 { get; private set; }
+        public IReadOnlyList<string> GameStrings1 => _gameStrings1;
+        public IReadOnlyList<string> GameStrings2 => _gameStrings2;
 
-        internal IReadOnlyList<string> SecretNames1 => _secretNames1;
-        internal IReadOnlyList<string> SecretNames2 => _secretNames2;
-        internal IReadOnlyList<string> SecretNames3 => _secretNames3;
-        internal IReadOnlyList<string> SecretNames4 => _secretNames4;
+        public IReadOnlyList<string> PuzzleNames1 => _puzzleNames1;
+        public IReadOnlyList<string> PuzzleNames2 => _puzzleNames2;
+        public IReadOnlyList<string> PuzzleNames3 => _puzzleNames3;
+        public IReadOnlyList<string> PuzzleNames4 => _puzzleNames4;
 
-        internal IReadOnlyList<string> SpecialNames1 => _specialNames1;
-        internal IReadOnlyList<string> SpecialNames2 => _specialNames2;
+        public IReadOnlyList<string> SecretNames1 => _secretNames1;
+        public IReadOnlyList<string> SecretNames2 => _secretNames2;
+        public IReadOnlyList<string> SecretNames3 => _secretNames3;
+        public IReadOnlyList<string> SecretNames4 => _secretNames4;
 
-        internal IReadOnlyList<string> PickupNames1 => _pickupNames1;
-        internal IReadOnlyList<string> PickupNames2 => _pickupNames2;
-                
-        internal IReadOnlyList<string> KeyNames1 => _keyNames1;
-        internal IReadOnlyList<string> KeyNames2 => _keyNames2;
-        internal IReadOnlyList<string> KeyNames3 => _keyNames3;
-        internal IReadOnlyList<string> KeyNames4 => _keyNames4;
+        public IReadOnlyList<string> SpecialNames1 => _specialNames1;
+        public IReadOnlyList<string> SpecialNames2 => _specialNames2;
+
+        public IReadOnlyList<string> PickupNames1 => _pickupNames1;
+        public IReadOnlyList<string> PickupNames2 => _pickupNames2;
+
+        public IReadOnlyList<string> KeyNames1 => _keyNames1;
+        public IReadOnlyList<string> KeyNames2 => _keyNames2;
+        public IReadOnlyList<string> KeyNames3 => _keyNames3;
+        public IReadOnlyList<string> KeyNames4 => _keyNames4;
 
         private byte[] _padding1;
         private byte[] _padding2;
@@ -111,7 +111,7 @@ namespace TRGE.Core
         #endregion
 
         #region Flags
-        internal enum Flag
+        public enum Flag
         {
             DemoVersion = 0,
             TitleDisabled = 1,
@@ -127,7 +127,7 @@ namespace TRGE.Core
             EnableCheatCode = 11 //has no effect, see 2 instead
         }
 
-        internal bool IsFlagSet(Flag flag)
+        public bool IsFlagSet(Flag flag)
         {
             int f = 1 << (int)flag;
             return (Flags & f) == f;
@@ -145,51 +145,51 @@ namespace TRGE.Core
             }
         }
 
-        internal bool CheatsIgnored
+        public bool CheatsIgnored
         {
             get => IsFlagSet(Flag.CheatsIgnored);
             set => SetFlag(Flag.CheatsIgnored, value);
         }
 
-        internal bool DemosDisabled
+        public bool DemosDisabled
         {
             get => IsFlagSet(Flag.NoInputIgnored);
             set => SetFlag(Flag.NoInputIgnored, value);
         }
 
-        internal bool DemoVersion
+        public bool DemoVersion
         {
             get => IsFlagSet(Flag.DemoVersion);
             set => SetFlag(Flag.DemoVersion, value);
         }
 
-        internal bool DozyEnabled
+        public bool DozyEnabled
         {
             get => DozyViable && IsFlagSet(Flag.DozyEnabled);
             set => SetFlag(Flag.DozyEnabled, DozyViable && value);
         }
 
-        internal bool DozyViable => Edition == TREdition.TR2PSXBeta;
+        public bool DozyViable => Edition == TREdition.TR2PSXBeta;
 
-        internal bool GymEnabled
+        public bool GymEnabled
         {
             get => IsFlagSet(Flag.GymEnabled);
             set => SetFlag(Flag.GymEnabled, value);
         }
 
-        internal bool LevelSelectEnabled
+        public bool LevelSelectEnabled
         {
             get => IsFlagSet(Flag.LevelSelect);
             set => SetFlag(Flag.LevelSelect, value);
         }
 
-        internal bool OptionRingDisabled
+        public bool OptionRingDisabled
         {
             get => IsFlagSet(Flag.OptionRingDisabled);
             set => SetFlag(Flag.OptionRingDisabled, value);
         }
 
-        internal bool SaveLoadDisabled
+        public bool SaveLoadDisabled
         {
             get => IsFlagSet(Flag.SaveLoadDisabled);
             set
@@ -199,13 +199,13 @@ namespace TRGE.Core
             }
         }
 
-        internal bool ScreensizingDisabled
+        public bool ScreensizingDisabled
         {
             get => IsFlagSet(Flag.ScreensizingDisabled);
             set => SetFlag(Flag.ScreensizingDisabled, value);
         }
 
-        internal bool TitleDisabled
+        public bool TitleDisabled
         {
             get => IsFlagSet(Flag.TitleDisabled);
             set
@@ -215,7 +215,7 @@ namespace TRGE.Core
             }
         }
 
-        internal bool UseScriptCypher
+        public bool UseScriptCypher
         {
             get => IsFlagSet(Flag.UseScriptCypher);
             set => SetFlag(Flag.UseScriptCypher, value);
@@ -274,7 +274,7 @@ namespace TRGE.Core
         #region TRLevel Interop
 
         private AbstractTRFrontEnd _frontEnd;
-        internal override AbstractTRFrontEnd FrontEnd
+        public override AbstractTRFrontEnd FrontEnd
         {
             get
             {
@@ -286,7 +286,7 @@ namespace TRGE.Core
             }
         }
 
-        internal override List<AbstractTRScriptedLevel> Levels
+        public override List<AbstractTRScriptedLevel> Levels
         {
             get
             {
@@ -388,7 +388,7 @@ namespace TRGE.Core
             }
         }
 
-        internal override void Read(BinaryReader br)
+        public override void Read(BinaryReader br)
         {
             if (br.ReadUInt32() != Version)
             {
@@ -567,7 +567,7 @@ namespace TRGE.Core
             return fmvData;
         }
 
-        internal override byte[] Serialise()
+        public override byte[] Serialise()
         {
             using (MemoryStream ms = new MemoryStream())
             using (BinaryWriter bw = new BinaryWriter(ms))

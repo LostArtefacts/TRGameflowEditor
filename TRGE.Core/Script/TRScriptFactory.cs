@@ -32,12 +32,12 @@ namespace TRGE.Core
             return null;
         }
 
-        internal static AbstractTRScript OpenScript(FileInfo file)
+        public static AbstractTRScript OpenScript(FileInfo file)
         {
             return OpenScript(file.FullName);
         }
 
-        internal static AbstractTRScript OpenScript(string filePath)
+        public static AbstractTRScript OpenScript(string filePath)
         {
             AbstractTRScript script;
             switch (GetDatFileVersion(filePath))
