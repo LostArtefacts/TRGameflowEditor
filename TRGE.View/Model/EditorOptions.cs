@@ -15,7 +15,7 @@ namespace TRGE.View.Model
 
         private bool _titleEnabled, _levelSelectEnabled, _saveLoadEnabled, _optionRingEnabled;
         private bool _fmvsEnabled, _cutscenesEnabled, _startAnimationsEnabled, _cheatsEnabled, _dozyViable, _dozyEnabled;
-        private bool _demosEnabled, _trainingEnabled;
+        private bool _demosViable, _demosEnabled, _trainingEnabled;
         private int _demoDelay;
 
         private bool _levelSequencingViable;
@@ -139,6 +139,16 @@ namespace TRGE.View.Model
             set
             {
                 _dozyEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool DemosViable
+        {
+            get => _demosViable;
+            private set
+            {
+                _demosViable = value;
                 OnPropertyChanged();
             }
         }
@@ -519,6 +529,7 @@ namespace TRGE.View.Model
             DozyViable = editor.DozySupported;
             DozyEnabled = editor.DozyEnabled;
 
+            DemosViable = editor.DemosSupported;
             DemosEnabled = editor.DemosEnabled;
             DemoDelay = (int)editor.DemoTime;
             TrainingEnabled = editor.GymEnabled;

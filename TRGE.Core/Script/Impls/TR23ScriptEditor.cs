@@ -372,10 +372,17 @@ namespace TRGE.Core
             set => (Script as TR23Script).CheatsIgnored = !value;
         }
 
+        public int DefaultDemoCount
+        {
+            get => (LoadBackupScript() as TR23Script).NumDemoLevels;
+        }
+
+        public bool DemosSupported => DefaultDemoCount > 0;
+
         public bool DemosEnabled
         {
-            get => !(Script as TR23Script).DemosDisabled;
-            set => (Script as TR23Script).DemosDisabled = !value;
+            get => DemosSupported && (Script as TR23Script).NumDemoLevels > 0;
+            set => (Script as TR23Script).DemoLevels = value ? (LoadBackupScript() as TR23Script).DemoLevels : null;
         }
 
         public uint DemoTime

@@ -286,6 +286,8 @@ namespace TRGE.Core
             }
         }
 
+        public AbstractTRScriptedLevel AssaultLevel => CreateLevel(0);
+
         public override List<AbstractTRScriptedLevel> Levels
         {
             get
@@ -294,29 +296,8 @@ namespace TRGE.Core
                 List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(count);
                 for (ushort i = 1; i < count; i++) //skip assault and however many demos there are
                 {
-                    TR23ScriptedLevel level = new TR23ScriptedLevel
-                    {
-                        Name = _levelNames[i],
-                        LevelFile = _levelFileNames[i]
-                    };
-                    levels.Add(level);
-
-                    level.AddPuzzle(_puzzleNames1[i]);
-                    level.AddPuzzle(_puzzleNames2[i]);
-                    level.AddPuzzle(_puzzleNames3[i]);
-                    level.AddPuzzle(_puzzleNames4[i]);
-
-                    level.AddKey(_keyNames1[i]);
-                    level.AddKey(_keyNames2[i]);
-                    level.AddKey(_keyNames3[i]);
-                    level.AddKey(_keyNames4[i]);
-
-                    level.AddPickup(_pickupNames1[i]);
-                    level.AddPickup(_pickupNames2[i]);
-
-                    level.BuildOperations(_scriptData[i + 1]);
+                    levels.Add(CreateLevel(i));
                 }
-
                 return levels;
             }
             set
@@ -348,6 +329,109 @@ namespace TRGE.Core
                 }
             }
         }
+
+        public List<AbstractTRScriptedLevel> DemoLevels
+        {
+            get
+            {
+                List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(NumDemoLevels);
+                for (ushort i = NumPlayableLevels; i < NumPlayableLevels + NumDemoLevels; i++) //skip assault and main levels
+                {
+                    levels.Add(CreateLevel(i));
+                }
+                return levels;
+            }
+            set
+            {
+                int i = NumLevels - 1;
+                int j = NumPlayableLevels;
+                for (int k = i; k >= j; k--)
+                {
+                    RemoveLevel(k);
+                    NumLevels--;
+                }
+
+                if (value != null)
+                {
+                    foreach (AbstractTRScriptedLevel level in value)
+                    {
+                        InsertLevel(level);
+                        NumLevels++;
+                    }
+                }
+
+                NumDemoLevels = (ushort)(value == null ? 0 : value.Count);
+            }
+        }
+
+        private void RemoveLevel(int index)
+        {
+            _levelNames.RemoveAt(index);
+            _levelFileNames.RemoveAt(index);
+
+            _puzzleNames1.RemoveAt(index);
+            _puzzleNames2.RemoveAt(index);
+            _puzzleNames3.RemoveAt(index);
+            _puzzleNames4.RemoveAt(index);
+
+            _keyNames1.RemoveAt(index);
+            _keyNames2.RemoveAt(index);
+            _keyNames3.RemoveAt(index);
+            _keyNames4.RemoveAt(index);
+
+            _pickupNames1.RemoveAt(index);
+            _pickupNames2.RemoveAt(index);
+
+            _scriptData.RemoveAt(index + 1);
+        }
+
+        private void InsertLevel(AbstractTRScriptedLevel level)
+        {
+            _levelNames.Add(level.Name);
+            _levelFileNames.Add(level.LevelFile);
+
+            _puzzleNames1.Add(level.Puzzles[0]);
+            _puzzleNames2.Add(level.Puzzles[1]);
+            _puzzleNames3.Add(level.Puzzles[2]);
+            _puzzleNames4.Add(level.Puzzles[3]);
+
+            _keyNames1.Add(level.Keys[0]);
+            _keyNames2.Add(level.Keys[1]);
+            _keyNames3.Add(level.Keys[2]);
+            _keyNames4.Add(level.Keys[3]);
+
+            _pickupNames1.Add(level.Pickups[0]);
+            _pickupNames2.Add(level.Pickups[1]);
+
+            _scriptData.Add(level.TranslateOperations());
+        }
+
+        private AbstractTRScriptedLevel CreateLevel(int index)
+        {
+            TR23ScriptedLevel level = new TR23ScriptedLevel
+            {
+                Name = _levelNames[index],
+                LevelFile = _levelFileNames[index]
+            };
+
+            level.AddPuzzle(_puzzleNames1[index]);
+            level.AddPuzzle(_puzzleNames2[index]);
+            level.AddPuzzle(_puzzleNames3[index]);
+            level.AddPuzzle(_puzzleNames4[index]);
+
+            level.AddKey(_keyNames1[index]);
+            level.AddKey(_keyNames2[index]);
+            level.AddKey(_keyNames3[index]);
+            level.AddKey(_keyNames4[index]);
+
+            level.AddPickup(_pickupNames1[index]);
+            level.AddPickup(_pickupNames2[index]);
+
+            level.BuildOperations(_scriptData[index + 1]);
+
+            return level;
+        }
+
         #endregion
 
         #region IO

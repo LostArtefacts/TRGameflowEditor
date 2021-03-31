@@ -105,6 +105,7 @@
 
             <StackPanel Margin="0,10,0,0">
                 <c:BoolNumericOptionControl 
+                    IsEnabled="{Binding DemosViable, UpdateSourceTrigger=PropertyChanged}"
                     IsActive="{Binding DemosEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Title="Enable demos"
                     Text="If enabled, demos are shown in the title screen after the game receives no user input for a specified period of time. Otherwise, the title screen shows indefinitely."
