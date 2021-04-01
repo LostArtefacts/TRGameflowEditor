@@ -16,8 +16,8 @@ namespace TRGE.Core
             ScriptModificationStamp = new GameStamp
             {
                 [TRLanguage.English] = "Modified by TRGE",
-                [TRLanguage.French] = "Modifi)e par TRGE",
-                [TRLanguage.German] = "Ge~andert von TRGE"
+                [TRLanguage.French] = "Modifié par TRGE",
+                [TRLanguage.German] = "Geändert von TRGE"
             };
         }
 

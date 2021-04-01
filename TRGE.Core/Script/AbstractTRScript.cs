@@ -56,7 +56,7 @@ namespace TRGE.Core
                 gameString = gameString.Substring(0, i);
             }
 
-            string stamp = TRInterop.ScriptModificationStamp[TRLanguage];
+            string stamp = TRInterop.ScriptModificationStamp.Encode(TRLanguage);
             if (stamp.Length > 0 && !stamp.Trim().StartsWith("-"))
             {
                 stamp = " - " + stamp;

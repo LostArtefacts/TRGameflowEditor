@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 
 namespace TRGE.Core
 {
@@ -28,6 +30,69 @@ namespace TRGE.Core
         {
             _langMap = new Dictionary<TRLanguage, string>();
             this[TRLanguage.English] = string.Empty;
+        }
+
+        public string Encode(TRLanguage language)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in this[language])
+            {
+                char d = char.ToUpper(c);
+                switch (d)
+                {
+                    case 'À':
+                    case 'È':
+                    case 'Ì':
+                    case 'Ò':
+                    case 'Ù':
+                        sb.Append("$").Append(Normalise(c));
+                        break;
+                    case 'Á':
+                    case 'É':
+                    case 'Í':
+                    case 'Ó':
+                    case 'Ú':
+                    case 'Ý':
+                        sb.Append(")").Append(Normalise(c));
+                        break;
+                    case 'Â':
+                    case 'Ê':
+                    case 'Î':
+                    case 'Ô':
+                    case 'Û':
+                        sb.Append("(").Append(Normalise(c));
+                        break;
+                    case 'Ä':
+                    case 'Ë':
+                    case 'Ï':
+                    case 'Ö':
+                    case 'Ü':
+                    case 'Ÿ':
+                        sb.Append("~").Append(Normalise(c));
+                        break;
+                    case 'ß':
+                        sb.Append('=');
+                        break;
+                    default:
+                        sb.Append(c);
+                        break;
+                }
+            }
+            return sb.ToString();
+        }
+
+        private string Normalise(char c)
+        {
+            StringBuilder sb = new StringBuilder();
+            string data = c.ToString().Normalize(NormalizationForm.FormD);
+            foreach (char d in data)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(d) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(d);
+                }
+            }
+            return sb.ToString();
         }
     }
 }
