@@ -121,6 +121,17 @@ namespace TRGE.Core.Test
         }
 
         [TestMethod]
+        protected void TestItemEnum()
+        {
+            TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+            foreach (TR23ScriptedLevel level in sm.LevelManager.Levels)
+            {
+                level.GetBonusItemIDs();
+                level.GetStartInventoryItemIDs();
+            }
+        }
+
+        [TestMethod]
         protected void TestReorganiseItems()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;

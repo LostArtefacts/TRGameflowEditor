@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TRGE.Core.Item.Enums;
 
 namespace TRGE.Core
 {
@@ -260,6 +261,40 @@ namespace TRGE.Core
                 }
             }
             return ret;
+        }
+
+        public List<TRItems> GetBonusItemIDs()
+        {
+            ISet<TRItems> items = new SortedSet<TRItems>();
+            foreach (TROperation opcmd in _operations)
+            {
+                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+                {
+                    ushort itemID = opcmd.Operand;
+                    if (itemID < 1000)
+                    {
+                        items.Add((TRItems)itemID);
+                    }
+                }
+            }
+            return items.ToList();
+        }
+
+        public List<TRItems> GetStartInventoryItemIDs()
+        {
+            ISet<TRItems> items = new SortedSet<TRItems>();
+            foreach (TROperation opcmd in _operations)
+            {
+                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+                {
+                    ushort itemID = opcmd.Operand;
+                    if (itemID > 999)
+                    {
+                        items.Add((TRItems)(itemID - 1000));
+                    }
+                }
+            }
+            return items.ToList();
         }
     }
 }

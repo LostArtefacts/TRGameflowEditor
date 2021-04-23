@@ -55,7 +55,7 @@ namespace TRGE.Coord
             level.NumSpriteSequences = (uint)spriteSequences.Count;
         }
 
-        internal static void WriteWeaponDefinitions(TRTexImage8 img8, TRTexImage16 img16, string jsonPath)
+        public static void WriteWeaponDefinitions(TRTexImage8 img8, TRTexImage16 img16, string jsonPath)
         {
             Dictionary<string, object> output = new Dictionary<string, object>
             {
@@ -66,8 +66,8 @@ namespace TRGE.Coord
                         Sequence = new TRSpriteSequence { SpriteID = 135, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
-                            X = 0, Y = 0,
-                            Width = 18943, Height = 9215,
+                            X = 104, Y = 28,
+                            Width = 18687, Height = 8959,
                             LeftSide = -93, RightSide = 96,
                             TopSide = -102, BottomSide = 11
                         }
@@ -77,8 +77,8 @@ namespace TRGE.Coord
                         Sequence = new TRSpriteSequence { SpriteID = 136, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
-                            X = 0, Y = 35,
-                            Width = 26879, Height = 5631,
+                            X = 0, Y = 26,
+                            Width = 26623, Height = 5375,
                             LeftSide = -240, RightSide = 240,
                             TopSide = -64, BottomSide = 32
                         }
@@ -88,8 +88,8 @@ namespace TRGE.Coord
                         Sequence = new TRSpriteSequence { SpriteID = 137, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
-                            X = 73, Y = 0,
-                            Width = 23551, Height = 9795,
+                            X = 0, Y = 47,
+                            Width = 23295, Height = 9215,
                             LeftSide = -100, RightSide = 100,
                             TopSide = -76, BottomSide = 7
                         }
@@ -99,8 +99,8 @@ namespace TRGE.Coord
                         Sequence = new TRSpriteSequence { SpriteID = 138, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
-                            X = 124, Y = 36,
-                            Width = 17151, Height = 10239,
+                            X = 177, Y = 28,
+                            Width = 16897, Height = 9985,
                             LeftSide = -128, RightSide = 128,
                             TopSide = -56, BottomSide = 56
                         }
@@ -110,8 +110,8 @@ namespace TRGE.Coord
                         Sequence = new TRSpriteSequence { SpriteID = 139, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
-                            X = 0, Y = 82,
-                            Width = 29183, Height = 7423,
+                            X = 124, Y = 0,
+                            Width = 28929, Height = 7169,
                             LeftSide = -154, RightSide = 156,
                             TopSide = -76, BottomSide = 3
                         }
@@ -121,8 +121,8 @@ namespace TRGE.Coord
                         Sequence = new TRSpriteSequence { SpriteID = 140, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
-                            X = 0, Y = 56,
-                            Width = 31999, Height = 6911,
+                            X = 0, Y = 0,
+                            Width = 31745, Height = 6657,
                             LeftSide = -194, RightSide = 205,
                             TopSide = -80, BottomSide = 3
                         }
@@ -132,8 +132,8 @@ namespace TRGE.Coord
                         Sequence = new TRSpriteSequence { SpriteID = 141, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
-                            X = 164, Y = 0,
-                            Width = 21503, Height = 8447,
+                            X = 91, Y = 63,
+                            Width = 21249, Height = 8193,
                             LeftSide = -89, RightSide = 92,
                             TopSide = -67, BottomSide = 5
                         }
