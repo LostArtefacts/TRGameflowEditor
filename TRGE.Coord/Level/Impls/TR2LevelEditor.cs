@@ -13,7 +13,7 @@ namespace TRGE.Coord
 {
     public class TR2LevelEditor : AbstractTRLevelEditor
     {
-        private static readonly string _hshChecksum = "108c8d374e4b064eec332b16a93095c0"; // #75
+        private static readonly string _hshChecksum = "8a5fdb4fef02395840eb2b8d0a2623e1"; // #75
 
         protected readonly Dictionary<string, Location> _defaultWeaponLocations;
 
