@@ -18,7 +18,7 @@ _Prerequisites_
 
 _Install Steps_
 * Download the latest release from https://github.com/lahm86/TRGameflowEditor/releases
-  * You only need to download the main TRGE zip file (e.g. TRGE_0.9.5-beta.zip) to be able to run the application normally.
+  * You only need to download the main TRGE zip file (i.e. TRGE_0.9.6-beta.zip) to be able to run the application normally.
   * The .wad files shown on the release page are downloaded from within the software if they are required (see the note in [Audio Tracks](#audio-tracks) below).
   * Feel free to download the source files and build the solution in Visual Studio. Use package manager to resolve missing dependencies.
 * Extract the zip file to any location on your PC.
