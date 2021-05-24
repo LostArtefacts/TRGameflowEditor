@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,12 +16,14 @@ namespace TRGE.Coord
     {
         private static readonly string _hshChecksum = "8a5fdb4fef02395840eb2b8d0a2623e1"; // #75
 
-        protected readonly Dictionary<string, Location> _defaultWeaponLocations;
+        protected readonly Dictionary<string, List<Location>> _defaultWeaponLocations;
+        private bool _randomiseUnarmedLocations;
+        private Random _unarmedRng;
 
         public TR2LevelEditor(TRDirectoryIOArgs io)
             : base(io)
         {
-            _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, Location>>(File.ReadAllText(@"Resources\unarmed_locations.json"));
+            _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(File.ReadAllText(@"Resources\unarmed_locations.json"));
             CheckHSHBackup();
         }
 
@@ -87,7 +90,15 @@ namespace TRGE.Coord
             levelFileName = levelFileName.ToUpper();
             if (_defaultWeaponLocations.ContainsKey(levelFileName))
             {
-                return _defaultWeaponLocations[levelFileName];
+                List<Location> locations = _defaultWeaponLocations[levelFileName];
+                if (locations.Count > 0)
+                {
+                    if (_randomiseUnarmedLocations)
+                    {
+                        return locations[_unarmedRng.Next(0, locations.Count)];
+                    }
+                    return locations[0];
+                }
             }
             return null;
         }
@@ -227,10 +238,17 @@ namespace TRGE.Coord
             }
         }
 
-        // #75 Check that the HSH backup integrity is still in place i.e. it hasn't been overwritten manually externally
         internal override void PreSave(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
         {
+            // #75 Check that the HSH backup integrity is still in place i.e. it hasn't been overwritten manually externally
             CheckHSHBackup();
+
+            // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
+            TR23ScriptEditor editor = scriptEditor as TR23ScriptEditor;
+            if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
+            {
+                _unarmedRng = editor.UnarmedLevelRNG.Create();
+            }
         }
 
         protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
