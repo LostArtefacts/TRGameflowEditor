@@ -15,6 +15,8 @@ namespace TRGE.Coord
     public class TR2LevelEditor : AbstractTRLevelEditor
     {
         private static readonly string _hshChecksum = "8a5fdb4fef02395840eb2b8d0a2623e1"; // #75
+        private static readonly string _flUKChecksum = "b8fc5d8444b15527cec447bc0387c41a"; // #83
+        private static readonly string _flMPChecksum = "1e7d0d88ff9d569e22982af761bb006b"; // #83
 
         protected readonly Dictionary<string, List<Location>> _defaultWeaponLocations;
         private bool _randomiseUnarmedLocations;
@@ -24,6 +26,7 @@ namespace TRGE.Coord
             : base(io)
         {
             _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(File.ReadAllText(@"Resources\unarmed_locations.json"));
+            CheckFloaterBackup();
             CheckHSHBackup();
         }
 
@@ -176,6 +179,31 @@ namespace TRGE.Coord
             return changesMade;
         }
 
+        protected virtual void CheckFloaterBackup()
+        {
+            // #83 If the version swapping tool has been used after having already
+            // backed-up the level files, TRGE will always used the file that was
+            // originally backed-up. The swapper tool replaces floating.tr2, so
+            // we need to check if this happens and replace the backed up file.
+
+            string gameFile = Path.Combine(_io.OriginalDirectory.FullName, "floating.tr2");
+            string backupFile = Path.Combine(_io.BackupDirectory.FullName, "floating.tr2");
+            if (File.Exists(gameFile) && File.Exists(backupFile))
+            {
+                string gameFileChecksum = new FileInfo(gameFile).Checksum();
+                if (gameFileChecksum == _flUKChecksum || gameFileChecksum == _flMPChecksum)
+                {
+                    // The swapper tool has either been used or we have not saved anything yet
+                    // but in this instance the backup should match the game file
+                    string backupFileChecksum = new FileInfo(backupFile).Checksum();
+                    if (backupFileChecksum != gameFileChecksum)
+                    {
+                        File.Copy(gameFile, backupFile, true);
+                    }
+                }
+            }
+        }
+
         protected virtual void CheckHSHBackup()
         {
             // HSH is a special case as we need to make sure all weapons, ammo,
@@ -240,6 +268,9 @@ namespace TRGE.Coord
 
         internal override void PreSave(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
         {
+            // #83 Check in case the version swapping tool has been used since the last edit
+            CheckFloaterBackup();
+
             // #75 Check that the HSH backup integrity is still in place i.e. it hasn't been overwritten manually externally
             CheckHSHBackup();
 
