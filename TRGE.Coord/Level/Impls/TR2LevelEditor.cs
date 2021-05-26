@@ -88,9 +88,9 @@ namespace TRGE.Coord
             }
         }
 
-        internal Location GetLocationForLevel(string levelFileName)
+        internal Location GetLocationForLevel(AbstractTRScriptedLevel level)
         {
-            levelFileName = levelFileName.ToUpper();
+            string levelFileName = level.LevelFileBaseName.ToUpper();
             if (_defaultWeaponLocations.ContainsKey(levelFileName))
             {
                 List<Location> locations = _defaultWeaponLocations[levelFileName];
@@ -98,7 +98,13 @@ namespace TRGE.Coord
                 {
                     if (_randomiseUnarmedLocations)
                     {
-                        return locations[_unarmedRng.Next(0, locations.Count)];
+                        int index = 0;
+                        // This avoids getting the same location index for each level
+                        for (int i = 0; i < level.Sequence; i++)
+                        {
+                            index = _unarmedRng.Next(0, locations.Count);
+                        }
+                        return locations[index];
                     }
                     return locations[0];
                 }
@@ -108,7 +114,7 @@ namespace TRGE.Coord
 
         protected virtual bool SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
         {
-            Location defaultLocation = GetLocationForLevel(scriptedLevel.LevelFileBaseName);
+            Location defaultLocation = GetLocationForLevel(scriptedLevel);
             if (defaultLocation == null)
             {
                 throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
