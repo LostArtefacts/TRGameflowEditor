@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyDescription("Edit the gameflow for Tomb Raider II and Tomb Raider III games.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tomp Community")]
-[assembly: AssemblyProduct("TRGE v0.9.6-beta")]
+[assembly: AssemblyProduct("TRGE v0.9.7-beta")]
 [assembly: AssemblyCopyright("Copyright © Tomp Community 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -51,5 +51,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.6.0")]
-[assembly: AssemblyFileVersion("0.9.6.0")]
+[assembly: AssemblyVersion("0.9.7.0")]
+[assembly: AssemblyFileVersion("0.9.7.0")]
