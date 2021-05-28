@@ -152,6 +152,14 @@ namespace TRGE.Coord
                         cargoEntity.TypeID = (short)TR2Entities.UziAmmo_S_P; //need a way to be able to define this somewhere
                     }
                 }
+                else if (!scriptedLevel.RemovesWeapons)
+                {
+                    cargoEntity = entities.Find(e => e.Room == 1 && e.TypeID == (short)TR2Entities.Pistols_S_P);
+                    if (cargoEntity != null)
+                    {
+                        cargoEntity.TypeID = (short)TR2Entities.UziAmmo_S_P;
+                    }
+                }
             }
             else if (scriptedLevel.RemovesWeapons)
             {
