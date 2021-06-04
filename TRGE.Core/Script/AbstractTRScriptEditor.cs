@@ -226,7 +226,7 @@ namespace TRGE.Core
 
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
-            AbstractTRLevelManager originalLevelManager = TRScriptedLevelFactory.GetLevelManager(LoadScript(OriginalFile.FullName)); //#65
+            AbstractTRLevelManager backupLevelManager = TRScriptedLevelFactory.GetLevelManager(backupScript); //#65, #86
 
             if (LevelSequencingOrganisation == Organisation.Random)
             {
@@ -236,12 +236,12 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    LevelManager.SetSequencing(originalLevelManager.GetSequencing()); //#65 lock to that of the original file
+                    LevelManager.SetSequencing(backupLevelManager.GetSequencing()); //#65 lock to that of the original file; #86 ensure backup script is used and not what's in the original folder
                 }
             }
             else if (LevelSequencingOrganisation == Organisation.Default)
             {
-                LevelManager.RestoreSequencing(backupScript.Levels);
+                LevelManager.SetSequencing(backupLevelManager.GetSequencing());
             }
 
             if (GameTrackOrganisation == Organisation.Random)
@@ -252,12 +252,12 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    LevelManager.SetTrackData(originalLevelManager.GetTrackData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                    LevelManager.SetTrackData(backupLevelManager.GetTrackData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86 ensure backup script is used and not what's in the original folder
                 }
             }
             else if (GameTrackOrganisation == Organisation.Default)
             {
-                LevelManager.RestoreGameTracks(backupScript);
+                LevelManager.SetTrackData(backupLevelManager.GetTrackData(backupLevelManager.Levels));
             }
 
             if (LevelSecretSupportOrganisation == Organisation.Default)
@@ -273,12 +273,12 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    LevelManager.SetSunsetData(originalLevelManager.GetSunsetData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                    LevelManager.SetSunsetData(backupLevelManager.GetSunsetData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86 ensure backup script is used and not what's in the original folder
                 }
             }
             else if (LevelSunsetOrganisation == Organisation.Default)
             {
-                LevelManager.RestoreSunsetData(backupScript.Levels);
+                LevelManager.SetSunsetData(backupLevelManager.GetSunsetData(backupLevelManager.Levels));
             }
             else
             {

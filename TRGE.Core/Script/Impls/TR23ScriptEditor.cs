@@ -123,9 +123,8 @@ namespace TRGE.Core
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
 
-            List<AbstractTRScriptedLevel> backupLevels = backupScript.Levels;
             List<AbstractTRScriptedLevel> randoBaseLevels = randoBaseScript.Levels;
-            TR23LevelManager originalLevelManager = TRScriptedLevelFactory.GetLevelManager(LoadScript(OriginalFile.FullName)) as TR23LevelManager; //#65
+            TR23LevelManager backupLevelManager = TRScriptedLevelFactory.GetLevelManager(backupScript) as TR23LevelManager; //#65, #86
             TR23LevelManager currentLevelManager = LevelManager as TR23LevelManager;
             
             if (AmmolessLevelOrganisation == Organisation.Random)
@@ -136,12 +135,12 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    currentLevelManager.SetAmmolessLevelData(originalLevelManager.GetAmmolessLevelData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                    currentLevelManager.SetAmmolessLevelData(backupLevelManager.GetAmmolessLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
                 }
             }
             else if (AmmolessLevelOrganisation == Organisation.Default)
             {
-                currentLevelManager.RestoreAmmolessLevels(backupLevels);
+                currentLevelManager.SetAmmolessLevelData(backupLevelManager.GetAmmolessLevelData(backupLevelManager.Levels));
             }
 
             if (UnarmedLevelOrganisation == Organisation.Random)
@@ -152,12 +151,12 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    currentLevelManager.SetUnarmedLevelData(originalLevelManager.GetUnarmedLevelData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                    currentLevelManager.SetUnarmedLevelData(backupLevelManager.GetUnarmedLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
                 }
             }
             else if (UnarmedLevelOrganisation == Organisation.Default)
             {
-                currentLevelManager.RestoreUnarmedLevels(backupLevels);
+                currentLevelManager.SetUnarmedLevelData(backupLevelManager.GetUnarmedLevelData(backupLevelManager.Levels));
             }
             else
             {
@@ -174,12 +173,13 @@ namespace TRGE.Core
                 }
                 else
                 {
-                    currentLevelManager.SetLevelBonusData(originalLevelManager.GetLevelBonusData(originalLevelManager.Levels)); //#65 lock to that of the original file
+                    currentLevelManager.SetLevelBonusData(backupLevelManager.GetLevelBonusData(backupLevelManager.Levels)); //#65 lock to that of the original file
                 }
             }
             else if (SecretBonusOrganisation == Organisation.Default)
             {
-                currentLevelManager.RestoreBonuses(backupLevels);
+                //currentLevelManager.RestoreBonuses(backupLevels);
+                currentLevelManager.SetLevelBonusData(backupLevelManager.GetLevelBonusData(backupLevelManager.Levels));
             }
         }
 
