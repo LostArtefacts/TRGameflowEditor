@@ -30,7 +30,7 @@ namespace TRGE.Core
             Config unarmedLevels = config.GetSubConfig("UnarmedLevels");
             UnarmedLevelOrganisation = unarmedLevels.GetOrganisation("Organisation");
             UnarmedLevelRNG = new RandomGenerator(unarmedLevels.GetSubConfig("RNG"));
-            RandomUnarmedLevelCount = Math.Min(unarmedLevels.GetUInt("RandomCount"), (LevelManager as TR23LevelManager).GetUnarmedLevelCount());
+            RandomUnarmedLevelCount = Math.Min(unarmedLevels.GetUInt("RandomCount"), (uint)LevelManager.LevelCount);
             //see note in base.LoadConfig re restoring randomised - same applies for Unarmed
             if (unarmedLevels.ContainsKey("Data"))
             {
@@ -40,7 +40,7 @@ namespace TRGE.Core
             Config ammolessLevels = config.GetSubConfig("AmmolessLevels");
             AmmolessLevelOrganisation = ammolessLevels.GetOrganisation("Organisation");
             AmmolessLevelRNG = new RandomGenerator(ammolessLevels.GetSubConfig("RNG"));
-            RandomAmmolessLevelCount = Math.Min(ammolessLevels.GetUInt("RandomCount"), (LevelManager as TR23LevelManager).GetAmmolessLevelCount());
+            RandomAmmolessLevelCount = Math.Min(ammolessLevels.GetUInt("RandomCount"), (uint)LevelManager.LevelCount);
             //see note in base.LoadConfig re restoring randomised - same applies for Ammoless
             if (ammolessLevels.ContainsKey("Data"))
             {
