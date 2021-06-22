@@ -9,6 +9,7 @@ namespace TRGE.Core
         protected abstract ushort TitleSoundID { get; set; }
         protected abstract ushort SecretSoundID { get; set; }
         internal abstract AbstractTRItemProvider ItemProvider { get; }
+        internal abstract AbstractTRScriptedLevel AssaultLevel { get; }
         internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
         internal abstract int LevelCount { get; }
 
@@ -216,6 +217,11 @@ namespace TRGE.Core
                 ret.Add(new MutableTuple<string, string, ushort>("TITLE", "Title Screen", TitleSoundID));
             }
 
+            if (Edition.AssaultCourseSupported)
+            {
+                ret.Add(new MutableTuple<string, string, ushort>("ASSAULT", AssaultLevel.Name, AssaultLevel.TrackID));
+            }
+
             if (Edition.SecretSoundSupported)
             {
                 track = AudioProvider.GetTrack(SecretSoundID);
@@ -245,6 +251,13 @@ namespace TRGE.Core
                 if (item.Item1.Equals("TITLE"))
                 {
                     TitleSoundID = item.Item3;
+                }
+                else if (item.Item1.Equals("ASSAULT"))
+                {
+                    if (Edition.AssaultCourseSupported)
+                    {
+                        AssaultLevel.TrackID = item.Item3;
+                    }
                 }
                 else if (item.Item1.Equals("SECRET"))
                 {
@@ -287,7 +300,13 @@ namespace TRGE.Core
             }
             if (tracks[TRAudioCategory.Ambient].Count > 0)
             {
-                List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, Convert.ToUInt32(Levels.Count), true, exclusions);
+                uint count = Convert.ToUInt32(Levels.Count);
+                if (Edition.AssaultCourseSupported)
+                {
+                    count++;
+                }
+
+                List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, count, true, exclusions);
                 for (int i = 0; i < originalLevels.Count; i++)
                 {
                     AbstractTRScriptedLevel level = GetLevel(originalLevels[i].ID);
@@ -298,6 +317,11 @@ namespace TRGE.Core
 
                     level.TrackID = levelTracks[i].ID;
                 }
+
+                if (Edition.AssaultCourseSupported)
+                {
+                    AssaultLevel.TrackID = levelTracks[levelTracks.Count - 1].ID;
+                }
             }
         }
 
@@ -305,6 +329,10 @@ namespace TRGE.Core
         {
             TitleSoundID = originalScript.TitleSoundID;
             SecretSoundID = originalScript.SecretSoundID;
+            if (Edition.AssaultCourseSupported)
+            {
+                AssaultLevel.TrackID = originalScript.AssaultLevel.TrackID;
+            }
 
             foreach (AbstractTRScriptedLevel originalLevel in originalScript.Levels)
             {

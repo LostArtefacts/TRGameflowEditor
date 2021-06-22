@@ -6,6 +6,8 @@ namespace TRGE.Core
 {
     public class TR23ScriptEditor : AbstractTRScriptEditor
     {
+        private bool _addGymWeapons, _addGymSkidoo;
+
         internal TR23ScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
             : base(ioArgs, openOption) { }        
 
@@ -23,6 +25,8 @@ namespace TRGE.Core
 
                 SecretBonusOrganisation = Organisation.Default;
                 SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+
+                AddGymWeapons = AddGymSkidoo = false;
 
                 return;
             }
@@ -67,6 +71,8 @@ namespace TRGE.Core
             IsDemoVersion = config.GetBool("DemoVersion");
             DozyEnabled = config.GetBool("DozyOn");
             GymEnabled = config.GetBool("GymOn");
+            AddGymWeapons = config.GetBool("GymWeapons");
+            AddGymSkidoo = config.GetBool("GymSkidoo");
             LevelSelectEnabled = config.GetBool("LevelSelectOn");
             OptionRingEnabled = config.GetBool("OptionRingOn");
             SaveLoadEnabled = config.GetBool("SaveLoadOn");
@@ -114,6 +120,8 @@ namespace TRGE.Core
             _config["DemoVersion"] = IsDemoVersion;
             _config["DozyOn"] = DozyEnabled;
             _config["GymOn"] = GymEnabled;
+            _config["GymWeapons"] = AddGymWeapons;
+            _config["GymSkidoo"] = AddGymSkidoo;
             _config["LevelSelectOn"] = LevelSelectEnabled;
             _config["OptionRingOn"] = OptionRingEnabled;
             _config["SaveLoadOn"] = SaveLoadEnabled;
@@ -181,6 +189,10 @@ namespace TRGE.Core
                 //currentLevelManager.RestoreBonuses(backupLevels);
                 currentLevelManager.SetLevelBonusData(backupLevelManager.GetLevelBonusData(backupLevelManager.Levels));
             }
+
+            TR23ScriptedLevel gym = currentLevelManager.AssaultLevel as TR23ScriptedLevel;
+            currentLevelManager.MakeStartingWeaponsAvailable(gym, AddGymWeapons);
+            currentLevelManager.MakeSkidooAvailable(gym, AddGymSkidoo);
         }
 
         internal override Config ExportConfig()
@@ -409,6 +421,20 @@ namespace TRGE.Core
         {
             get => (Script as TR23Script).GymEnabled;
             set => (Script as TR23Script).GymEnabled = value;
+        }
+
+        public bool SkidooAvailable => Edition.Version == TRVersion.TR2;
+
+        public bool AddGymWeapons
+        {
+            get => _addGymWeapons;
+            set => _addGymWeapons = GymAvailable && value;
+        }
+
+        public bool AddGymSkidoo
+        {
+            get => _addGymSkidoo;
+            set => _addGymSkidoo = GymAvailable && SkidooAvailable && value;
         }
 
         public bool LevelSelectEnabled

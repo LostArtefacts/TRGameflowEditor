@@ -296,5 +296,25 @@ namespace TRGE.Core
             }
             return items.ToList();
         }
+
+        public void SetStartInventoryItems(Dictionary<TRItems, int> items)
+        {
+            for (int i = _operations.Count - 1; i >= 0; i--)
+            {
+                TROperation op = _operations[i];
+                if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand > 999)
+                {
+                    _operations.RemoveAt(i);
+                }
+            }
+
+            foreach (TRItems item in items.Keys)
+            {
+                for (int i = 0; i < items[item]; i++)
+                {
+                    _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, (ushort)((ushort)item + 1000), true));
+                }
+            }
+        }
     }
 }

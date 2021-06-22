@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TRGE.Core.Item.Enums;
 
 namespace TRGE.Core
 {
@@ -9,6 +10,7 @@ namespace TRGE.Core
         private readonly AbstractTR23AudioProvider _audioProvider;
         private readonly AbstractTR23ItemProvider _itemProvider;
         private readonly TR23Script _script;
+        private readonly TR23ScriptedLevel _assaultLevel;
         private List<TR23ScriptedLevel> _levels;
 
         internal override int LevelCount => _levels.Count;
@@ -16,6 +18,7 @@ namespace TRGE.Core
         internal override AbstractTRItemProvider ItemProvider => _itemProvider;
         internal bool CanOrganiseBonuses => Edition.SecretBonusesSupported;
 
+        internal override AbstractTRScriptedLevel AssaultLevel => _assaultLevel;
         internal override List<AbstractTRScriptedLevel> Levels
         {
             get => _levels.Cast<AbstractTRScriptedLevel>().ToList();
@@ -52,6 +55,7 @@ namespace TRGE.Core
             : base(script.Edition)
         {
             Levels = (_script = script).Levels;
+            _assaultLevel = _script.AssaultLevel as TR23ScriptedLevel;
             _audioProvider = TRAudioFactory.GetAudioProvider(script.Edition) as AbstractTR23AudioProvider;
             _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
         }
@@ -393,8 +397,54 @@ namespace TRGE.Core
             }
         }
 
+        internal void MakeStartingWeaponsAvailable(TR23ScriptedLevel level, bool available)
+        {
+            if (available)
+            {
+                Dictionary<TRItems, int> weapons = null;
+                switch (Edition.Version)
+                {
+                    case TRVersion.TR2:
+                        weapons = new Dictionary<TRItems, int>
+                        {
+                            [TRItems.Pistols] = 1,
+                            [TRItems.Shotgun] = 1,
+                            [TRItems.ShotgunShells] = 4,
+                            [TRItems.AutoPistols] = 1,
+                            [TRItems.AutoClips] = 4,
+                            [TRItems.Uzis] = 1,
+                            [TRItems.UziClips] = 4,
+                            [TRItems.HarpoonGun] = 1,
+                            [TRItems.Harpoons] = 4,
+                            [TRItems.M16] = 1,
+                            [TRItems.M16Clips] = 4,
+                        };
+                        break;
+                }
+
+                if (weapons != null)
+                {
+                    level.SetStartInventoryItems(weapons);
+                    FireLevelModificationEvent(level, TRScriptedLevelModification.StartingWeaponsAdded);
+                }
+            }
+            else
+            {
+                FireLevelModificationEvent(level, TRScriptedLevelModification.StartingWeaponsRemoved);
+            }
+        }
+
+        internal void MakeSkidooAvailable(TR23ScriptedLevel level, bool available)
+        {
+            FireLevelModificationEvent(level, available ? TRScriptedLevelModification.SkidooAdded : TRScriptedLevelModification.SkidooRemoved);
+        }
+
         internal override void Save()
         {
+            if (Edition.AssaultCourseSupported)
+            {
+                _script.AssaultLevel = AssaultLevel;
+            }
             _script.Levels = Levels;
         }
     }

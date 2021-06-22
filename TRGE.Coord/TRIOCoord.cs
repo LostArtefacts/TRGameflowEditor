@@ -206,6 +206,10 @@ namespace TRGE.Coord
             {
                 scriptEditor.BackupFile.Name
             };
+            if (scriptEditor.Edition.AssaultCourseSupported)
+            {
+                expectedFiles.Add(scriptEditor.LevelManager.AssaultLevel.LevelFileBaseName);
+            }
             foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
             {
                 expectedFiles.Add(level.LevelFileBaseName);

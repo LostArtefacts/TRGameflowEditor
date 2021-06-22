@@ -51,6 +51,10 @@ namespace TRGE.Coord
         internal void Initialise(AbstractTRScriptEditor scriptEditor)
         {
             _levelModifications.Clear();
+            if (scriptEditor.GymAvailable)
+            {
+                _levelModifications.Add(scriptEditor.LevelManager.AssaultLevel.ID, new HashSet<TRScriptedLevelEventArgs>());
+            }
             foreach (AbstractTRScriptedLevel level in scriptEditor.LevelManager.Levels)
             {
                 _levelModifications.Add(level.ID, new HashSet<TRScriptedLevelEventArgs>());

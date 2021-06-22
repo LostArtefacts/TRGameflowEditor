@@ -286,7 +286,11 @@ namespace TRGE.Core
             }
         }
 
-        public AbstractTRScriptedLevel AssaultLevel => CreateLevel(0);
+        public override AbstractTRScriptedLevel AssaultLevel
+        {
+            get => CreateLevel(0);
+            set => SetLevelData(0, value);
+        }
 
         public override List<AbstractTRScriptedLevel> Levels
         {
@@ -309,25 +313,30 @@ namespace TRGE.Core
 
                 for (int i = 0, j = 1; i < value.Count; i++, j++)
                 {
-                    _levelNames[j] = value[i].Name;
-                    _levelFileNames[j] = value[i].LevelFile;
-
-                    _puzzleNames1[j] = value[i].Puzzles[0];
-                    _puzzleNames2[j] = value[i].Puzzles[1];
-                    _puzzleNames3[j] = value[i].Puzzles[2];
-                    _puzzleNames4[j] = value[i].Puzzles[3];
-
-                    _keyNames1[j] = value[i].Keys[0];
-                    _keyNames2[j] = value[i].Keys[1];
-                    _keyNames3[j] = value[i].Keys[2];
-                    _keyNames4[j] = value[i].Keys[3];
-
-                    _pickupNames1[j] = value[i].Pickups[0];
-                    _pickupNames2[j] = value[i].Pickups[1];
-
-                    _scriptData[j + 1] = value[i].TranslateOperations();
+                    SetLevelData(j, value[i]);
                 }
             }
+        }
+
+        private void SetLevelData(int levelIndex, AbstractTRScriptedLevel level)
+        {
+            _levelNames[levelIndex] = level.Name;
+            _levelFileNames[levelIndex] = level.LevelFile;
+
+            _puzzleNames1[levelIndex] = level.Puzzles[0];
+            _puzzleNames2[levelIndex] = level.Puzzles[1];
+            _puzzleNames3[levelIndex] = level.Puzzles[2];
+            _puzzleNames4[levelIndex] = level.Puzzles[3];
+
+            _keyNames1[levelIndex] = level.Keys[0];
+            _keyNames2[levelIndex] = level.Keys[1];
+            _keyNames3[levelIndex] = level.Keys[2];
+            _keyNames4[levelIndex] = level.Keys[3];
+
+            _pickupNames1[levelIndex] = level.Pickups[0];
+            _pickupNames2[levelIndex] = level.Pickups[1];
+
+            _scriptData[levelIndex + 1] = level.TranslateOperations();
         }
 
         public List<AbstractTRScriptedLevel> DemoLevels

@@ -9,16 +9,19 @@ using TRLevelReader;
 using TRLevelReader.Helpers;
 using TRLevelReader.Model;
 using TRLevelReader.Model.Enums;
+using TRModelTransporter.Transport;
 
 namespace TRGE.Coord
 {
     public class TR2LevelEditor : AbstractTRLevelEditor
     {
-        private static readonly string _hshChecksum = "8a5fdb4fef02395840eb2b8d0a2623e1"; // #75
+        //private static readonly string _hshChecksum = "8a5fdb4fef02395840eb2b8d0a2623e1"; // #75
+        private static readonly string _hshChecksum = "422969d461ebb57739d1a3b775f7f88d"; // #75
         private static readonly string _flUKChecksum = "b8fc5d8444b15527cec447bc0387c41a"; // #83
         private static readonly string _flMPChecksum = "1e7d0d88ff9d569e22982af761bb006b"; // #83
 
         protected readonly Dictionary<string, List<Location>> _defaultWeaponLocations;
+        protected readonly Dictionary<string, Dictionary<TR2Entities, List<Location>>> _defaultVehicleLocations;
         private bool _randomiseUnarmedLocations;
         private Random _unarmedRng;
 
@@ -26,6 +29,7 @@ namespace TRGE.Coord
             : base(io)
         {
             _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(File.ReadAllText(@"Resources\unarmed_locations.json"));
+            _defaultVehicleLocations = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<TR2Entities, List<Location>>>>(File.ReadAllText(@"Resources\vehicle_locations.json"));
             CheckFloaterBackup();
             CheckHSHBackup();
         }
@@ -36,6 +40,10 @@ namespace TRGE.Coord
             {
                 case TRScriptedLevelModification.WeaponlessStateChanged:
                 case TRScriptedLevelModification.SunsetChanged:
+                case TRScriptedLevelModification.StartingWeaponsAdded:
+                case TRScriptedLevelModification.StartingWeaponsRemoved:
+                case TRScriptedLevelModification.SkidooAdded:
+                case TRScriptedLevelModification.SkidooRemoved:
                     return true;
                 default:
                     return false;
@@ -51,6 +59,18 @@ namespace TRGE.Coord
                     break;
                 case TRScriptedLevelModification.SunsetChanged:
                     HandleSunsetStateChanged(e);
+                    break;
+                case TRScriptedLevelModification.StartingWeaponsAdded:
+                    HandleStartingWeaponsChanged(e, true);
+                    break;
+                case TRScriptedLevelModification.StartingWeaponsRemoved:
+                    HandleStartingWeaponsChanged(e, false);
+                    break;
+                case TRScriptedLevelModification.SkidooAdded:
+                    HandleSkidooPresenceChanged(e, true);
+                    break;
+                case TRScriptedLevelModification.SkidooRemoved:
+                    HandleSkidooPresenceChanged(e, false);
                     break;
             }
         }
@@ -347,6 +367,86 @@ namespace TRGE.Coord
                 TR2LevelWriter writer = new TR2LevelWriter();
                 writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
             }
+        }
+
+        protected virtual void HandleStartingWeaponsChanged(TRScriptedLevelEventArgs e, bool weaponsAvailable)
+        {
+            string levelFile = GetReadLevelFilePath(e.LevelFileBaseName);
+            if (!File.Exists(levelFile))
+            {
+                throw new IOException(string.Format("Missing level file {0}", levelFile));
+            }
+
+            TR2LevelReader reader = new TR2LevelReader();
+            TR2Level level = reader.ReadLevel(levelFile);
+
+            if (weaponsAvailable)
+            {
+                ImportModels(level, e.LevelFileBaseName, new List<TR2Entities>
+                {
+                    TR2Entities.Pistols_M_H, TR2Entities.Shotgun_M_H, TR2Entities.Autos_M_H, TR2Entities.Uzi_M_H,
+                    TR2Entities.Harpoon_M_H, TR2Entities.M16_M_H, TR2Entities.GrenadeLauncher_M_H
+                });
+            }
+
+            TR2LevelWriter writer = new TR2LevelWriter();
+            writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+        }
+
+        protected virtual void HandleSkidooPresenceChanged(TRScriptedLevelEventArgs e, bool skidooAvailable)
+        {
+            string levelFile = GetReadLevelFilePath(e.LevelFileBaseName);
+            if (!File.Exists(levelFile))
+            {
+                throw new IOException(string.Format("Missing level file {0}", levelFile));
+            }
+
+            TR2LevelReader reader = new TR2LevelReader();
+            TR2Level level = reader.ReadLevel(levelFile);
+
+            string levelName = e.LevelFileBaseName.ToUpper();
+            if
+            (
+                skidooAvailable && 
+                _defaultVehicleLocations.ContainsKey(levelName) && 
+                _defaultVehicleLocations[levelName].ContainsKey(TR2Entities.RedSnowmobile) && 
+                _defaultVehicleLocations[levelName][TR2Entities.RedSnowmobile].Count > 0
+            )
+            {
+                ImportModels(level, e.LevelFileBaseName, new List<TR2Entities> { TR2Entities.RedSnowmobile });
+
+                List<TR2Entity> entities = level.Entities.ToList();
+                Location location = _defaultVehicleLocations[levelName][TR2Entities.RedSnowmobile][0];
+                entities.Add(new TR2Entity
+                {
+                    TypeID = (short)TR2Entities.RedSnowmobile,
+                    Room = location.Room,
+                    X = location.X,
+                    Y = location.Y,
+                    Z = location.Z,
+                    Angle = 16384,
+                    Flags = 0,
+                    Intensity1 = -1,
+                    Intensity2 = -1
+                });
+                level.Entities = entities.ToArray();
+                level.NumEntities++;
+            }
+
+            TR2LevelWriter writer = new TR2LevelWriter();
+            writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+        }
+
+        private void ImportModels(TR2Level level, string lvlName, List<TR2Entities> entities)
+        {
+            TRModelImporter importer = new TRModelImporter
+            {
+                Level = level,
+                LevelName = lvlName,
+                EntitiesToImport = entities
+            };
+
+            importer.Import();
         }
 
         protected override void ApplyRestore()

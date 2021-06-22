@@ -116,9 +116,24 @@
                     Margin="5"/>
 
                 <c:BoolOptionControl 
+                    IsEnabled="{Binding TrainingLevelViable, UpdateSourceTrigger=PropertyChanged}"
                     IsActive="{Binding TrainingEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Title="Enable the training level" 
                     Text="Toggle whether to have the option to visit Lara's Home visible on the title screen"
+                    Margin="5"/>
+
+                <c:BoolOptionControl 
+                    IsEnabled="{Binding TrainingLevelViable, UpdateSourceTrigger=PropertyChanged}"
+                    IsActive="{Binding TrainingWeaponsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Title="Add weapons to the training level" 
+                    Text="Toggle whether to have Lara's inventory populated with all weapons in the training level."
+                    Margin="5"/>
+
+                <c:BoolOptionControl 
+                    IsEnabled="{Binding TrainingSkidooViable, UpdateSourceTrigger=PropertyChanged}"
+                    IsActive="{Binding TrainingSkidooEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    Title="Add skidoo to the training level" 
+                    Text="Toggle whether to have the red skidoo available in the training level"
                     Margin="5"/>
             </StackPanel>
         </GroupBox>

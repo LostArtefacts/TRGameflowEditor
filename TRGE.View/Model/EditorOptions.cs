@@ -15,7 +15,7 @@ namespace TRGE.View.Model
 
         private bool _titleEnabled, _levelSelectEnabled, _saveLoadEnabled, _optionRingEnabled;
         private bool _fmvsEnabled, _cutscenesEnabled, _startAnimationsEnabled, _cheatsEnabled, _dozyViable, _dozyEnabled;
-        private bool _demosViable, _demosEnabled, _trainingEnabled;
+        private bool _demosViable, _demosEnabled, _trainingViable, _trainingEnabled, _trainingWeaponsEnabled, _trainingSkidooViable, _trainingSkidooEnabled;
         private int _demoDelay;
 
         private bool _levelSequencingViable;
@@ -173,12 +173,52 @@ namespace TRGE.View.Model
             }
         }
 
+        public bool TrainingLevelViable
+        {
+            get => _trainingViable;
+            set
+            {
+                _trainingViable = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool TrainingEnabled
         {
             get => _trainingEnabled;
             set
             {
                 _trainingEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool TrainingWeaponsEnabled
+        {
+            get => _trainingWeaponsEnabled;
+            set
+            {
+                _trainingWeaponsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool TrainingSkidooViable
+        {
+            get => _trainingSkidooViable;
+            set
+            {
+                _trainingSkidooViable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool TrainingSkidooEnabled
+        {
+            get => _trainingSkidooEnabled;
+            set
+            {
+                _trainingSkidooEnabled = value;
                 OnPropertyChanged();
             }
         }
@@ -533,6 +573,10 @@ namespace TRGE.View.Model
             DemosEnabled = editor.DemosEnabled;
             DemoDelay = (int)editor.DemoTime;
             TrainingEnabled = editor.GymEnabled;
+            TrainingLevelViable = editor.GymAvailable;
+            TrainingWeaponsEnabled = editor.AddGymWeapons;
+            TrainingSkidooViable = editor.SkidooAvailable;
+            TrainingSkidooEnabled = editor.AddGymSkidoo;
 
             UseManualLevelSequence = editor.LevelSequencingOrganisation == Organisation.Manual;
             UseDefaultLevelSequence = editor.LevelSequencingOrganisation == Organisation.Default;
@@ -590,6 +634,8 @@ namespace TRGE.View.Model
             _editor.DemosEnabled = DemosEnabled;
             _editor.DemoTime = (uint)DemoDelay;
             _editor.GymEnabled = TrainingEnabled;
+            _editor.AddGymWeapons = TrainingWeaponsEnabled;
+            _editor.AddGymSkidoo = TrainingSkidooEnabled;
 
             if (LevelSequencingViable)
             {

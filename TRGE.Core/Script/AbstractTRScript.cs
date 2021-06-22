@@ -37,6 +37,7 @@ namespace TRGE.Core
         public abstract byte[] Serialise();
         protected abstract void CalculateEdition();
         public abstract AbstractTRFrontEnd FrontEnd { get; }
+        public abstract AbstractTRScriptedLevel AssaultLevel { get; set; }
         public abstract List<AbstractTRScriptedLevel> Levels { get; set; }
         public abstract byte Language { get; set; }
         public TRLanguage TRLanguage

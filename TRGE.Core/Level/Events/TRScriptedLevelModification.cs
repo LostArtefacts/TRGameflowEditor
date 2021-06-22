@@ -6,6 +6,10 @@
         SequenceChanged, 
         AmmolessStateChanged, 
         WeaponlessStateChanged, 
-        SunsetChanged
+        SunsetChanged,
+        StartingWeaponsAdded,
+        StartingWeaponsRemoved,
+        SkidooAdded,
+        SkidooRemoved
     }
 }

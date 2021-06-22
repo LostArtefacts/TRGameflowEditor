@@ -45,6 +45,7 @@ namespace TRGE.Core
 
         internal AbstractTRLevelManager LevelManager { get; private set; }
         internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
+        public AbstractTRScriptedLevel AssaultLevel => LevelManager.AssaultLevel;
         internal AbstractTRScript Script { get; private set; }
 
         internal IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
@@ -394,6 +395,8 @@ namespace TRGE.Core
         internal abstract AbstractTRScript CreateScript();
 
         protected abstract void SaveImpl();
+
+        public bool GymAvailable => Edition.AssaultCourseSupported;
 
         public Organisation LevelSequencingOrganisation
         {
