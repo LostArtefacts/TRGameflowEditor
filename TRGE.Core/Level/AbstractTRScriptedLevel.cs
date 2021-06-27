@@ -6,6 +6,7 @@ namespace TRGE.Core
     public abstract class AbstractTRScriptedLevel : AbstractTROperationContainer
     {
         public string ID { get; private set; }
+        public bool Enabled { get; set; }
         public string Name { get; set; }
 
         protected string _levelFile;
@@ -50,6 +51,7 @@ namespace TRGE.Core
             _puzzles = new List<string>();
             _keys = new List<string>();
             _pickups = new List<string>();
+            Enabled = true;
         }
 
         internal void AddPuzzle(string puzzle)

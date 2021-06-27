@@ -7,7 +7,7 @@ namespace TRGE.Core.Test
 {
     public class TR2RandoLockTestCollection : BaseTestCollection
     {
-        [TestMethod]
+        //[TestMethod]
         protected void TestRandoLock()
         {
             Assert.IsTrue(TRInterop.RandomisationSupported);

@@ -92,6 +92,29 @@ namespace TRGE.Core.Test
             CollectionAssert.AreEqual(initialLevels, postLevels);
         }
 
+        [TestMethod]
+        [TestSequence(4)]
+        protected void TestExtensionSavingLevelCount()
+        {
+            TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
+            (editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool = true;
+
+            var levels = editor.ScriptEditor.EnabledLevelStatus;
+            levels[0].Item3 = false;
+            editor.ScriptEditor.EnabledLevelOrganisation = Organisation.Manual;
+            editor.ScriptEditor.EnabledLevelStatus = levels;
+
+            int expectedTarget = editor.ScriptEditor.GetSaveTargetCount() + editor.LevelEditor.GetSaveTargetCount();
+            int progress = 0;
+            editor.SaveProgressChanged += delegate (object sender, TRSaveEventArgs e)
+            {
+                progress = e.ProgressValue;
+            };
+            editor.Save();
+
+            Assert.AreEqual(expectedTarget, progress);
+        }
+
         protected override void TearDown()
         {
             if (Directory.Exists(WorkingDirectory))

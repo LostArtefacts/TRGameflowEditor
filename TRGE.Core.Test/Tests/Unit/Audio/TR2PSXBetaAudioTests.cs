@@ -10,6 +10,7 @@ namespace TRGE.Core.Test
         internal override Dictionary<string, ushort> ExpectedLevelTracks => new Dictionary<string, ushort>
         {
             //["TITLE"] = 2,
+            ["ASSAULT"] = 33,
             ["SECRET"] = 47,
             [AbstractTRScriptedLevel.CreateID(@"data\wall.PSX")] = 33,
             [AbstractTRScriptedLevel.CreateID(@"data\boat.PSX")] = 0,

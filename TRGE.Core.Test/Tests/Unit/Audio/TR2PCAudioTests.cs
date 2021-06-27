@@ -11,6 +11,7 @@ namespace TRGE.Core.Test
         {
             ["TITLE"] = 64,
             ["SECRET"] = 47,
+            ["ASSAULT"] = 0,
             [AbstractTRScriptedLevel.CreateID(@"data\wall.TR2")] = 33, 
             [AbstractTRScriptedLevel.CreateID(@"data\boat.TR2")] = 0, 
             [AbstractTRScriptedLevel.CreateID(@"data\venice.TR2")] = 0,

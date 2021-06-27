@@ -181,7 +181,7 @@ namespace TRGE.Core.Test
             CollectionAssert.AreEqual(trackData, sm.GameTrackData);
         }
 
-        [TestMethod]
+        //[TestMethod]
         [TestSequence(9)]
         protected void TestFileSystemWatcher()
         {

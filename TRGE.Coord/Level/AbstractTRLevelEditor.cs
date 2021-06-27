@@ -15,6 +15,8 @@ namespace TRGE.Coord
 
         internal override string ConfigFilePath => _io.ConfigFile.FullName;
 
+        private AbstractTRScriptEditor _scriptEditor;
+
         public AbstractTRLevelEditor(TRDirectoryIOArgs io)
         {
             _io = io;
@@ -50,6 +52,7 @@ namespace TRGE.Coord
 
         internal void Initialise(AbstractTRScriptEditor scriptEditor)
         {
+            _scriptEditor = scriptEditor;
             _levelModifications.Clear();
             if (scriptEditor.GymAvailable)
             {
@@ -88,7 +91,11 @@ namespace TRGE.Coord
                     ProcessModification(mod);
                 }
 
-                monitor.FireSaveStateChanged(1);
+                if (_levelModifications[levelID].Count > 0)
+                {
+                    monitor.FireSaveStateChanged(1);
+                }
+
                 if (monitor.IsCancelled)
                 {
                     return;
@@ -132,7 +139,7 @@ namespace TRGE.Coord
 
         internal void ScriptedLevelModified(TRScriptedLevelEventArgs e)
         {
-            if (ShouldHandleModification(e))
+            if (e.ScriptedLevel.Enabled && ShouldHandleModification(e))
             {
                 _levelModifications[e.LevelID].Add(e);
             }
@@ -140,15 +147,21 @@ namespace TRGE.Coord
 
         public sealed override int GetSaveTargetCount()
         {
-            return _levelModifications.Count + GetSaveTarget(_levelModifications.Count);
+            int levelCount = _scriptEditor.EnabledScriptedLevels.Count;
+            if (_scriptEditor.GymAvailable)
+            {
+                levelCount++;
+            }
+            return levelCount + GetSaveTarget(levelCount);
+            //return _levelModifications.Count + GetSaveTarget(_levelModifications.Count);
         }
 
         /// <summary>
         /// Called when initialising a save. The returned value should represent the
         /// number of steps that will be involved in the save progress for this class.
         /// </summary>
-        /// <param name="numLevels">A count of the total number of levels for the current edit.</param>
-        /// <returns>The numer of save steps for this class.</returns>
+        /// <param name="numLevels">A count of the total number of enabled levels for the current edit.</param>
+        /// <returns>The number of save steps for this class.</returns>
         protected virtual int GetSaveTarget(int numLevels)
         {
             return 0;

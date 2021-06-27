@@ -50,6 +50,7 @@ namespace TRGE.Core
 
         internal IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
         public IReadOnlyList<AbstractTRScriptedLevel> ScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels);
+        public IReadOnlyList<AbstractTRScriptedLevel> EnabledScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels, true);
 
         protected TRScriptOpenOption _openOption;
 
@@ -136,6 +137,25 @@ namespace TRGE.Core
                     LevelSequencing = JsonConvert.DeserializeObject<List<Tuple<string, string>>>(levelSeq.GetString("Data"));
                 }
 
+                if (config.ContainsKey("EnabledLevelStatus"))
+                {
+                    Config enabledLevels = config.GetSubConfig("EnabledLevelStatus");
+                    EnabledLevelOrganisation = enabledLevels.GetOrganisation("Organisation");
+                    EnabledLevelRNG = new RandomGenerator(enabledLevels.GetSubConfig("RNG"));
+                    //see note above
+                    if (enabledLevels.ContainsKey("Data"))
+                    {
+                        EnabledLevelStatus = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(enabledLevels.GetString("Data"));
+                    }
+                    RandomEnabledLevelCount = Math.Min(enabledLevels.GetUInt("RandomCount"), (uint)LevelManager.LevelCount);
+                }
+                else
+                {
+                    EnabledLevelOrganisation = Organisation.Default;
+                    EnabledLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                    RandomEnabledLevelCount = (uint)LevelManager.LevelCount;
+                }
+
                 Config trackInfo = config.GetSubConfig("GameTracks");
                 GameTrackOrganisation = trackInfo.GetOrganisation("Organisation");
                 GameTrackRNG = new RandomGenerator(trackInfo.GetSubConfig("RNG"));
@@ -158,7 +178,7 @@ namespace TRGE.Core
                 {
                     LevelSunsetData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(sunsetInfo.GetString("Data"));
                 }
-                RandomSunsetLevelCount = sunsetInfo.GetUInt("RandomCount");
+                RandomSunsetLevelCount = Math.Min(sunsetInfo.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
 
                 FrontEndHasFMV = config.GetBool("FrontEndFMVOn");
             }
@@ -166,6 +186,9 @@ namespace TRGE.Core
             {
                 LevelSequencingOrganisation = Organisation.Default;
                 LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                EnabledLevelOrganisation = Organisation.Default;
+                EnabledLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                RandomEnabledLevelCount = (uint)LevelManager.LevelCount;
                 GameTrackOrganisation = Organisation.Default;
                 GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 RandomGameTracksIncludeBlank = false;
@@ -203,6 +226,13 @@ namespace TRGE.Core
                     ["Organisation"] = (int)LevelSequencingOrganisation,
                     ["RNG"] = LevelSequencingRNG.ToJson(),
                     ["Data"] = LevelSequencing
+                },
+                ["EnabledLevelStatus"] = new Config
+                {
+                    ["Organisation"] = (int)EnabledLevelOrganisation,
+                    ["RNG"] = EnabledLevelRNG.ToJson(),
+                    ["Data"] = EnabledLevelStatus,
+                    ["RandomCount"] = RandomEnabledLevelCount
                 },
                 ["GameTracks"] = new Config
                 {
@@ -243,6 +273,26 @@ namespace TRGE.Core
             else if (LevelSequencingOrganisation == Organisation.Default)
             {
                 LevelManager.SetSequencing(backupLevelManager.GetSequencing());
+            }
+
+            if (EnabledLevelOrganisation == Organisation.Random)
+            {
+                if (TRInterop.RandomisationSupported)
+                {
+                    LevelManager.RandomiseEnabledLevels();
+                }
+                else
+                {
+                    LevelManager.SetEnabledLevelStatus(backupLevelManager.GetEnabledLevelStatus());
+                }
+            }
+            else if (EnabledLevelOrganisation == Organisation.Default)
+            {
+                LevelManager.SetEnabledLevelStatus(backupLevelManager.GetEnabledLevelStatus());
+            }
+            else if (EnabledLevelOrganisation == Organisation.Manual)
+            {
+                LevelManager.SetEnabledLevelStatus(EnabledLevelStatus);
             }
 
             if (GameTrackOrganisation == Organisation.Random)
@@ -419,6 +469,35 @@ namespace TRGE.Core
         internal void RandomiseLevels()
         {
             LevelManager.RandomiseSequencing(LoadBackupScript().Levels);
+        }
+
+        public Organisation EnabledLevelOrganisation
+        {
+            get => LevelManager.EnabledOrganisation;
+            set => LevelManager.EnabledOrganisation = value;
+        }
+
+        public RandomGenerator EnabledLevelRNG
+        {
+            get => LevelManager.EnabledRNG;
+            set => LevelManager.EnabledRNG = value;
+        }
+
+        public List<MutableTuple<string, string, bool>> EnabledLevelStatus
+        {
+            get => LevelManager.GetEnabledLevelStatus();
+            set => LevelManager.SetEnabledLevelStatus(value);
+        }
+
+        public uint RandomEnabledLevelCount
+        {
+            get => LevelManager.RandomEnabledCount;
+            set => LevelManager.RandomEnabledCount = value;
+        }
+
+        internal void RandomiseEnabledLevels()
+        {
+            LevelManager.RandomiseEnabledLevels();
         }
 
         public bool FrontEndHasFMV

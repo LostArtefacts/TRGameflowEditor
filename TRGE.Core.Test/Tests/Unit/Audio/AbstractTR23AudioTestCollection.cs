@@ -26,7 +26,14 @@ namespace TRGE.Core.Test
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
-            CompareTrackData(trackData, ExpectedLevelTracks);
+            try
+            {
+                CompareTrackData(trackData, ExpectedLevelTracks);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         //[TestMethod]
