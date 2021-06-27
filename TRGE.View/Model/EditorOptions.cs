@@ -21,6 +21,7 @@ namespace TRGE.View.Model
         private bool _levelSequencingViable;
         private bool _useDefaultLevelSequence, _useManualLevelSequence;
         private List<Tuple<string, string>> _levelSequencing;
+        private List<MutableTuple<string, string, bool>> _enabledLevelStatus;
 
         private bool _unarmedLevelsViable;
         private bool _useDefaultUnarmedLevels, _useManualUnarmedLevels;
@@ -255,10 +256,11 @@ namespace TRGE.View.Model
 
         public LevelSequencingData LevelSequencing
         {
-            get => new LevelSequencingData(_levelSequencing);
+            get => new LevelSequencingData(_levelSequencing, _enabledLevelStatus);
             set
             {
-                _levelSequencing = value.ToTupleList();
+                _levelSequencing = value.ToSequenceTupleList();
+                _enabledLevelStatus = value.ToEnabledTupleList();
                 OnPropertyChanged();
             }
         }
@@ -582,6 +584,7 @@ namespace TRGE.View.Model
             UseDefaultLevelSequence = editor.LevelSequencingOrganisation == Organisation.Default;
             LevelSequencingViable = UseManualLevelSequence || UseDefaultLevelSequence; //if rando, not supported in this UI
             _levelSequencing = editor.LevelSequencing;
+            _enabledLevelStatus = editor.EnabledLevelStatus;
 
             UseManualUnarmed = editor.UnarmedLevelOrganisation == Organisation.Manual;
             UseDefaultUnarmed = editor.UnarmedLevelOrganisation == Organisation.Default;
@@ -639,10 +642,11 @@ namespace TRGE.View.Model
 
             if (LevelSequencingViable)
             {
-                _editor.LevelSequencingOrganisation = UseManualLevelSequence ? Organisation.Manual : Organisation.Default;
+                _editor.LevelSequencingOrganisation = _editor.EnabledLevelOrganisation = UseManualLevelSequence ? Organisation.Manual : Organisation.Default;
                 if (UseManualLevelSequence)
                 {
                     _editor.LevelSequencing = _levelSequencing;
+                    _editor.EnabledLevelStatus = _enabledLevelStatus;
                 }
             }
 

@@ -300,7 +300,7 @@ namespace TRGE.Coord
             }
         }
 
-        internal override void PreSave(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
+        internal override void PreSave(AbstractTRScriptEditor scriptEditor)
         {
             // #83 Check in case the version swapping tool has been used since the last edit
             CheckFloaterBackup();

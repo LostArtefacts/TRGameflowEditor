@@ -28,10 +28,10 @@ namespace TRGE.View.Model.Data
     {
         public bool Flag { get; set; }
 
-        public FlaggedLevel(string levelID, string levelName, bool unarmed)
+        public FlaggedLevel(string levelID, string levelName, bool flag)
             :base(levelID, levelName)
         {
-            Flag = unarmed;
+            Flag = flag;
         }
 
         public MutableTuple<string, string, bool> ToTuple()

@@ -53,7 +53,7 @@
     </Window.InputBindings>
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" Background="#FFFFFF">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" 
                           Command="Open"

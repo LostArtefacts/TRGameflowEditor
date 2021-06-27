@@ -9,7 +9,7 @@
         ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterOwner"
         Loaded="Window_Loaded"
-        Title="TRGE : Level Sequencing" Height="480" Width="430">
+        Title="TRGE : Available Levels and Sequencing" Height="520" Width="430">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -17,14 +17,23 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="_listView"
-                  Margin="10"
-                  SelectionMode="Single"
-                  SelectionChanged="ListView_SelectionChanged">
+        <TextBlock 
+            Grid.ColumnSpan="2"
+            Margin="10,10,10,0"
+            TextWrapping="Wrap"
+            Text="Use the buttons to change the order levels are played in. Use the checkboxes to enable/disable levels."/>
+
+        <ListView 
+            x:Name="_listView"
+            Grid.Row="1"
+            Margin="10"
+            SelectionMode="Single"
+            SelectionChanged="ListView_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -33,52 +42,64 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{Binding DisplaySequence}"
-                                   HorizontalAlignment="Right"
-                                   FontWeight="Bold"
-                                   Margin="0,0,5,0"/>
+                        <TextBlock 
+                            Text="{Binding DisplaySequence}"
+                            HorizontalAlignment="Right"
+                            FontWeight="Bold"
+                            Margin="0,0,5,0"/>
 
-                        <TextBlock Text="{Binding LevelName}"
-                                   Grid.Column="1"/>
+                        <CheckBox
+                            IsChecked="{Binding Flag}"
+                            Grid.Column="1"
+                            HorizontalAlignment="Stretch"
+                            Content="{Binding LevelName}"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Column="1"
-                    Margin="0,10,10,10">
-            <Button Content="Move _Up"
-                    Margin="0,0,0,10"
-                    IsEnabled="{Binding CanMoveUp}"
-                    Click="MoveUpButton_Click"/>
+        <StackPanel 
+            Orientation="Vertical"
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="0,10,10,10">
+            <Button 
+                Content="Move _Up"
+                Margin="0,0,0,10"
+                IsEnabled="{Binding CanMoveUp}"
+                Click="MoveUpButton_Click"/>
             
-            <Button Content="Move _Down"
-                    IsEnabled="{Binding CanMoveDown}"
-                    Click="MoveDownButton_Click"/>
+            <Button
+                Content="Move _Down"
+                IsEnabled="{Binding CanMoveDown}"
+                Click="MoveDownButton_Click"/>
         </StackPanel>
 
-        <Border BorderThickness="0 1 0 0"
-                BorderBrush="#ccc"
-                Background="#eee"
-                Grid.Row="1"
-                Grid.ColumnSpan="2">
-            <StackPanel Width="160" 
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-                <Button Content="_OK"
-                        IsDefault="True"
-                        Width="70"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"
-                        Margin="0,0,10,0"
-                        Click="OkButton_Click"/>
+        <Border
+            BorderThickness="0 1 0 0"
+            BorderBrush="#ccc"
+            Background="#eee"
+            Grid.Row="2"
+            Grid.ColumnSpan="2">
+            <StackPanel 
+                Width="160" 
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+                <Button
+                    Content="_OK"
+                    IsDefault="True"
+                    Width="70"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,10,0"
+                    Click="OkButton_Click"/>
                 
-                <Button Content="_Cancel"
-                        IsCancel="True"
-                        Width="70"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Right"/>
+                <Button
+                    Content="_Cancel"
+                    IsCancel="True"
+                    Width="70"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"/>
             </StackPanel>
         </Border>
     </Grid>

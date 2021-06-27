@@ -126,14 +126,14 @@
                     IsEnabled="{Binding TrainingLevelViable, UpdateSourceTrigger=PropertyChanged}"
                     IsActive="{Binding TrainingWeaponsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Title="Add weapons to the training level" 
-                    Text="Toggle whether to have Lara's inventory populated with all weapons in the training level."
+                    Text="Populate Lara's inventory with all weapons."
                     Margin="5"/>
 
                 <c:BoolOptionControl 
                     IsEnabled="{Binding TrainingSkidooViable, UpdateSourceTrigger=PropertyChanged}"
                     IsActive="{Binding TrainingSkidooEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Title="Add skidoo to the training level" 
-                    Text="Toggle whether to have the red skidoo available in the training level"
+                    Text="Make the red skidoo available in the training level."
                     Margin="5"/>
             </StackPanel>
         </GroupBox>
@@ -141,13 +141,13 @@
         <GroupBox Margin="5" Grid.Row="1">
             <GroupBox.Header>
                 <Label Padding="0">
-                    <TextBlock FontWeight="Bold" Text="Level Sequencing"/>
+                    <TextBlock FontWeight="Bold" Text="Available Levels and Sequencing"/>
                 </Label>
             </GroupBox.Header>
 
             <c:DefaultManualControl 
                 Margin="5,2,5,5"
-                Text="Specify the order in which levels are played. Required pickups will be available in TR2 (e.g. the Seraph for Barkhang Monastery) regardless of when the level is reached."
+                Text="Specify the available levels and the order in which levels are played. Required pickups will be available in TR2 (e.g. the Seraph for Barkhang Monastery) regardless of when the level is reached."
                 IsDefault="{Binding UseDefaultLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsManual="{Binding UseManualLevelSequence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                 IsViable="{Binding LevelSequencingViable, UpdateSourceTrigger=PropertyChanged}"

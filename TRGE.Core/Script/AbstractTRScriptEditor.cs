@@ -206,9 +206,9 @@ namespace TRGE.Core
             return 1;
         }
 
-        internal void Save(TRSaveMonitor monitor)
+        internal void Save(/*TRSaveMonitor monitor*/)
         {
-            monitor.FireSaveStateChanged(0, TRSaveCategory.Scripting);
+            //monitor.FireSaveStateChanged(0, TRSaveCategory.Scripting);
 
             _config = new Config
             {
@@ -342,7 +342,7 @@ namespace TRGE.Core
             string outputPath = GetScriptWIPOutputPath();
             Script.Write(outputPath);
 
-            monitor.FireSaveStateChanged(1);
+            //monitor.FireSaveStateChanged(0);// 1);
         }
 
         /// <summary>

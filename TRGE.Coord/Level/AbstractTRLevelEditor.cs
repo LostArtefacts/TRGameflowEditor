@@ -70,7 +70,7 @@ namespace TRGE.Coord
         /// to be set. This allows changes to be sent to the script editor, whereas during the
         /// save task, the script is locked at that stage.
         /// </summary>
-        internal virtual void PreSave(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor) { }
+        internal virtual void PreSave(AbstractTRScriptEditor scriptEditor) { }
 
         internal void Save(AbstractTRScriptEditor scriptEditor, TRSaveMonitor monitor)
         {
