@@ -30,7 +30,7 @@ C:\Program Files (x86)\Steam\steamapps\common\Tomb Raider (II)\data
 
 TRGE will backup the files when you open the folder and so you can restore at any point by choosing **Edit** > **Restore To Default**. TRGE also keeps a history of the folders you open, so the next time you launch it, you can re-select previous folders easily from the displayed list and menu items.
 
-![TRGE Main Window](https://github.com/lahm86/TRGameflowEditor/blob/main/Resources/TRGE.png)
+![TRGE Main Window](https://github.com/lahm86/TRGameflowEditor/blob/main/Resources/TRGE_0.9.9.png)
 
 ## Title Screen & Passport Options
 
