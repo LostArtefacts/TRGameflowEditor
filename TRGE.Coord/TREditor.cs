@@ -145,16 +145,17 @@ namespace TRGE.Coord
                     DirectoryInfo targetDirectory = new DirectoryInfo(_targetDirectory);
                     wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
                     wipDirectory.Copy(targetDirectory, true, TargetFileExtensions);
-
-                    ScriptEditor.Initialise();
-                    if (LevelEditor != null)
-                    {
-                        LevelEditor.Initialise(ScriptEditor);
-                    }
                 }
             }
             finally
             {
+                // Reinitialise regardless of whether the process completed or not
+                ScriptEditor.Initialise();
+                if (LevelEditor != null)
+                {
+                    LevelEditor.Initialise(ScriptEditor);
+                }
+
                 _watcher.Enabled = true;
                 wipDirectory.Clear();
             }

@@ -306,12 +306,12 @@ namespace TRGE.Core
             }
             set
             {
-                if (value.Count != NumLevels - NumDemoLevels - 1)
-                {
-                    throw new ArgumentException("Invalid number of levels.");
-                }
+                //if (value.Count != NumLevels - NumDemoLevels - 1)
+                //{
+                //    throw new ArgumentException("Invalid number of levels.");
+                //}
 
-                List<AbstractTRScriptedLevel> currentLevels = Levels;
+                //List<AbstractTRScriptedLevel> currentLevels = Levels;
                 List<int> disabledIndices = new List<int>();
 
                 int enabledLevelCount = 0;
@@ -335,25 +335,6 @@ namespace TRGE.Core
                 }
 
                 NumLevels = (ushort)(enabledLevelCount + NumDemoLevels + 1);
-
-                //foreach (AbstractTRScriptedLevel level in value)
-                //{
-                //    if (level.Enabled)
-                //    {
-                //        enabledLevels.Add(level);
-                //    }
-                //    else
-                //    {
-                //        RemoveLevel(currentLevels.FindIndex(l => l.ID == level.ID) + 1); //+1 for assault
-                //    }
-                //}
-
-                //NumLevels = (ushort)(enabledLevels.Count + NumDemoLevels + 1);
-
-                //for (int i = 0, j = 1; i < enabledLevels.Count; i++, j++)
-                //{
-                //    SetLevelData(j, enabledLevels[i]);
-                //}
             }
         }
 
