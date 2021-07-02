@@ -18,7 +18,7 @@ _Prerequisites_
 
 _Install Steps_
 * Download the latest release from https://github.com/lahm86/TRGameflowEditor/releases
-  * You only need to download the main TRGE zip file (i.e. TRGE_0.9.8-beta.zip) to be able to run the application normally.
+  * You only need to download the main TRGE zip file (i.e. TRGE_0.9.9-beta.zip) to be able to run the application normally.
   * The .wad files shown on the release page are downloaded from within the software if they are required (see the note in [Audio Tracks](#audio-tracks) below).
   * Feel free to download the source files and build the solution in Visual Studio. Use package manager to resolve missing dependencies.
 * Extract the zip file to any location on your PC.
@@ -38,9 +38,6 @@ TRGE will backup the files when you open the folder and so you can restore at an
 * You can choose to have the list of levels displayed in the passport on the **New Game** page. Note that by default this will also list any demo levels.
 * You can choose to disable saving and loading, both via the passport and F5/F6.
 * You can choose to disable the option ring, so it will not be possible to reach the sound and controls options other than from the title screen (if that's enabled).
-* You can choose to disable the demo levels that show normally in the title screen.
-* You can change the length of time the title screen waits before showing the demo levels.
-* You can choose to remove Lara's Home from the title screen.
 
 ## Interruptions & Cheats
 
@@ -49,6 +46,13 @@ TRGE will backup the files when you open the folder and so you can restore at an
 * You can disable start animations across all levels - so for example, in Offshore Rig, you don't need to wait for Lara to wake up.
 * You can have the game ignore any cheat inputs.
 * For the PSX Beta version, you can turn on DOZY.
+
+## Demos and Training
+* You can choose to disable the demo levels that show normally in the title screen.
+* You can change the length of time the title screen waits before showing the demo levels.
+* You can choose to remove Lara's Home from the title screen.
+* You can choose to add weapons to Lara's inventory for the assault course.
+* You can add the skidoo to the assault course (TR2).
 
 ## Level Sequencing
 
