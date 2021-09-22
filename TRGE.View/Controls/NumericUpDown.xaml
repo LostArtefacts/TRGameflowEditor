@@ -42,7 +42,7 @@
 
             <RepeatButton Click="RepeatDownButton_Click" 
                           Content="..\Resources\down.png"
-                          ToolTip="Increase value"
+                          ToolTip="Decrease value"
                           Style="{StaticResource FlatRepeatButton}"
                           Grid.Column="1" 
                           Grid.Row="2"/>
