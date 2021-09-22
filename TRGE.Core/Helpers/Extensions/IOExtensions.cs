@@ -44,7 +44,9 @@ namespace TRGE.Core
                 FileInfo targetFile = new FileInfo(Path.Combine(targetDirectory.FullName, fi.Name));
                 if (overwrite || !targetFile.Exists)
                 {
+                    targetFile.EnsureWritable(); // Make sure we can replace the target file first
                     File.Copy(fi.FullName, targetFile.FullName, true);
+                    new FileInfo(Path.Combine(targetDirectory.FullName, fi.Name)).EnsureWritable(); // Make sure the new file isn't read-only
                 }
                 callback?.Invoke(fi);
             }
@@ -64,6 +66,7 @@ namespace TRGE.Core
             {
                 if (!fi.Name.ToLower().Equals(file.Name.ToLower()))
                 {
+                    fi.EnsureWritable();
                     fi.Delete();
                 }
             }
@@ -84,6 +87,7 @@ namespace TRGE.Core
             {
                 if (!compNames.Contains(fi.Name.ToLower()))
                 {
+                    fi.EnsureWritable();
                     fi.Delete();
                 }
             }
@@ -101,11 +105,21 @@ namespace TRGE.Core
         {
             foreach (FileInfo file in directory.EnumerateFiles())
             {
+                file.EnsureWritable();
                 file.Delete();
             }
             foreach (DirectoryInfo dir in directory.EnumerateDirectories())
             {
                 dir.Delete(true);
+            }
+        }
+
+        internal static void EnsureWritable(this FileInfo file)
+        {
+            FileAttributes attrs = File.GetAttributes(file.FullName);
+            if (attrs.HasFlag(FileAttributes.ReadOnly))
+            {
+                File.SetAttributes(file.FullName, attrs & ~FileAttributes.ReadOnly);
             }
         }
 
