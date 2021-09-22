@@ -44,9 +44,8 @@ namespace TRGE.Core
                 FileInfo targetFile = new FileInfo(Path.Combine(targetDirectory.FullName, fi.Name));
                 if (overwrite || !targetFile.Exists)
                 {
-                    targetFile.EnsureWritable(); // Make sure we can replace the target file first
                     File.Copy(fi.FullName, targetFile.FullName, true);
-                    new FileInfo(Path.Combine(targetDirectory.FullName, fi.Name)).EnsureWritable(); // Make sure the new file isn't read-only
+                    targetFile.EnsureWritable();
                 }
                 callback?.Invoke(fi);
             }
