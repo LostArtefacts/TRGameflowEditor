@@ -78,11 +78,6 @@ namespace TRGE.Core
         private List<string> _pickupNames1, _pickupNames2;
         private List<string> _keyNames1, _keyNames2, _keyNames3, _keyNames4;
 
-        public ushort NumGameStrings1 { get; private set; }
-        public ushort NumGameStrings2 { get; private set; }
-        public IReadOnlyList<string> GameStrings1 => _gameStrings1;
-        public IReadOnlyList<string> GameStrings2 => _gameStrings2;
-
         public IReadOnlyList<string> PuzzleNames1 => _puzzleNames1;
         public IReadOnlyList<string> PuzzleNames2 => _puzzleNames2;
         public IReadOnlyList<string> PuzzleNames3 => _puzzleNames3;
@@ -224,6 +219,28 @@ namespace TRGE.Core
         #endregion
 
         #region String Mods
+        public ushort NumGameStrings1 { get; private set; }
+        public ushort NumGameStrings2 { get; private set; }
+        public override string[] GameStrings1
+        {
+            get => _gameStrings1.ToArray();
+            set
+            {
+                _gameStrings1 = new List<string>(value);
+                NumGameStrings1 = (ushort)_gameStrings1.Count;
+            }
+        }
+
+        public override string[] GameStrings2
+        {
+            get => _gameStrings2.ToArray();
+            set
+            {
+                _gameStrings2 = new List<string>(value);
+                NumGameStrings2 = (ushort)_gameStrings2.Count;
+            }
+        }
+
         /**
          * If the title screen has been disabled, selecting "Exit to Title" from the passport during gameplay
          * will result in a new game starting. We store the "Exit to Title" text at the second to last position
@@ -458,6 +475,16 @@ namespace TRGE.Core
 
             level.BuildOperations(_scriptData[index + 1]);
 
+            if (level.HasOperation(TR23OpDefs.Cinematic))
+            {
+                string cutSceneFile = CutSceneFileNames[level.GetOperation(TR23OpDefs.Cinematic).Operand];
+                level.CutSceneLevel = new TR23ScriptedLevel
+                {
+                    Name = cutSceneFile,
+                    LevelFile = cutSceneFile
+                };
+            }
+
             return level;
         }
 
@@ -559,7 +586,7 @@ namespace TRGE.Core
             _psxFMVData = ReadPSXFMVData(br);
 
             NumGameStrings1 = br.ReadUInt16();
-            _gameStrings1 = ReadStringData(br, NumGameStrings1);            
+            _gameStrings1 = ReadStringData(br, NumGameStrings1);
 
             if (Edition == TREdition.TR2PSXBeta)
             {
@@ -741,13 +768,13 @@ namespace TRGE.Core
 
                 if (Edition == TREdition.TR2PSXBeta)
                 {
-                     WriteStringData(bw, _secretNames1);
-                     WriteStringData(bw, _secretNames2);
-                     WriteStringData(bw, _secretNames3);
-                     WriteStringData(bw, _secretNames4);
+                    WriteStringData(bw, _secretNames1);
+                    WriteStringData(bw, _secretNames2);
+                    WriteStringData(bw, _secretNames3);
+                    WriteStringData(bw, _secretNames4);
 
-                     WriteStringData(bw, _specialNames1);
-                     WriteStringData(bw, _specialNames2);
+                    WriteStringData(bw, _specialNames1);
+                    WriteStringData(bw, _specialNames2);
                 }
 
                 WriteStringData(bw, _pickupNames1);
@@ -779,7 +806,7 @@ namespace TRGE.Core
                 char[] chars = stringData[i].ToCharArray();
                 runningOffset += Convert.ToUInt16(chars.Length + 1); //xor
                 bw.Write(runningOffset);
-                
+
                 foreach (int j in chars)
                 {
                     encodedStringData.Add((byte)(j ^ Xor));

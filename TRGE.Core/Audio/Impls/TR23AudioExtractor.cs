@@ -6,17 +6,17 @@ using System.Text;
 
 namespace TRGE.Core
 {
-    internal class TR23AudioExtractor
+    public class TR23AudioExtractor
     {
         //set to wherever the local copy of the wav files should be put if building the WAD files
         private readonly string _localWavFolder;
 
-        internal TR23AudioExtractor(string localWavFolder)
+        public TR23AudioExtractor(string localWavFolder)
         {
             _localWavFolder = localWavFolder;
         }
 
-        internal void BuildTR2AudioJson()
+        public void BuildTR2AudioJson()
         {
             Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>> mp3Map = GetTR2Map();
             string dir = Path.Combine(_localWavFolder, "TR2Audio");
@@ -49,7 +49,7 @@ namespace TRGE.Core
             File.WriteAllText(Path.Combine(dir, "tr2audio.json"), JsonConvert.SerializeObject(output, Formatting.Indented));
         }
 
-        internal void BuildTR2AudioWad()
+        public void BuildTR2AudioWad()
         {
             Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>> mp3Map = GetTR2Map();
             string dir = Path.Combine(_localWavFolder, "TR2Audio");
@@ -62,7 +62,7 @@ namespace TRGE.Core
             }
         }
 
-        internal void ExtractTR3Audio(string originalWadPath)
+        public void ExtractTR3Audio(string originalWadPath)
         {
             List<TRAudioTrack> tracks = new List<TRAudioTrack>();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");
@@ -96,7 +96,7 @@ namespace TRGE.Core
             //ffmpeg.exe -i 2_.wav -ac 1 -ar 14000 -acodec pcm_s16le 2.wav
         }
 
-        internal void BuildTR3AudioJson()
+        public void BuildTR3AudioJson()
         {
             Dictionary<ushort, Tuple<string, TRAudioCategory[]>> tr3Map = GetTR3Map();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");
@@ -129,7 +129,7 @@ namespace TRGE.Core
             File.WriteAllText(Path.Combine(dir, "tr3audio.json"), JsonConvert.SerializeObject(output, Formatting.Indented));
         }
 
-        internal void BuildTR3AudioWad()
+        public void BuildTR3AudioWad()
         {
             Dictionary<ushort, Tuple<string, TRAudioCategory[]>> tr3Map = GetTR3Map();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");

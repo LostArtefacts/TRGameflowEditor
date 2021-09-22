@@ -5,7 +5,7 @@ namespace TRGE.Core
 {
     internal abstract class AbstractTRLevelManager
     {
-        internal abstract AbstractTRAudioProvider AudioProvider { get; }
+        public abstract AbstractTRAudioProvider AudioProvider { get; }
         protected abstract ushort TitleSoundID { get; set; }
         protected abstract ushort SecretSoundID { get; set; }
         internal abstract AbstractTRItemProvider ItemProvider { get; }

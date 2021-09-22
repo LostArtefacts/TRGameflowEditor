@@ -84,6 +84,13 @@ namespace TRGE.Core
 
         public override bool SupportsCutScenes => HasOperation(TR23OpDefs.Cinematic);
 
+        private TR23ScriptedLevel _cutSceneLevel;
+        public override AbstractTRScriptedLevel CutSceneLevel
+        {
+            get => _cutSceneLevel;
+            set => _cutSceneLevel = value as TR23ScriptedLevel;
+        }
+
         public override bool HasSunset
         {
             get => HasActiveOperation(TR23OpDefs.Sunset);

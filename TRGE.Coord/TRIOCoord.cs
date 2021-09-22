@@ -86,7 +86,7 @@ namespace TRGE.Coord
                 ProgressTarget = 1
             };
             CreateBackup();
-            
+
             AbstractTRScriptEditor scriptEditor = GetScriptEditor(openOption);
             TidyBackup(scriptEditor);
 
@@ -213,6 +213,10 @@ namespace TRGE.Coord
             foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
             {
                 expectedFiles.Add(level.LevelFileBaseName);
+                if (level.SupportsCutScenes)
+                {
+                    expectedFiles.Add(level.CutSceneLevel.LevelFileBaseName);
+                }
             }
 
             backupDI.ClearExcept(expectedFiles, TREditor.TargetFileExtensions);

@@ -39,6 +39,8 @@ namespace TRGE.Core
         public abstract AbstractTRFrontEnd FrontEnd { get; }
         public abstract AbstractTRScriptedLevel AssaultLevel { get; set; }
         public abstract List<AbstractTRScriptedLevel> Levels { get; set; }
+        public abstract string[] GameStrings1 { get; set; }
+        public abstract string[] GameStrings2 { get; set; }
         public abstract byte Language { get; set; }
         public TRLanguage TRLanguage
         {

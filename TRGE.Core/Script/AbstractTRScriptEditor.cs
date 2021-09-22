@@ -43,10 +43,11 @@ namespace TRGE.Core
 
         public TREdition Edition => Script.Edition;
 
+        public AbstractTRAudioProvider AudioProvider => LevelManager.AudioProvider;
         internal AbstractTRLevelManager LevelManager { get; private set; }
         internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
         public AbstractTRScriptedLevel AssaultLevel => LevelManager.AssaultLevel;
-        internal AbstractTRScript Script { get; private set; }
+        public AbstractTRScript Script { get; private set; }
 
         internal IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
         public IReadOnlyList<AbstractTRScriptedLevel> ScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels);

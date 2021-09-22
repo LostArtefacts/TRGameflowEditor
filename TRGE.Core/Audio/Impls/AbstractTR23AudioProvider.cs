@@ -5,7 +5,7 @@ using System.IO;
 
 namespace TRGE.Core
 {
-    internal abstract class AbstractTR23AudioProvider : AbstractTRAudioProvider
+    public abstract class AbstractTR23AudioProvider : AbstractTRAudioProvider
     {
         protected static readonly TRAudioTrack _emptyTrack = new TRAudioTrack
         {
@@ -14,16 +14,16 @@ namespace TRGE.Core
         };
 
         protected string _wadFileName;
-        internal override TRAudioType AudioType => TRAudioType.WAV;
+        public override TRAudioType AudioType => TRAudioType.WAV;
 
-        internal AbstractTR23AudioProvider(string jsonFilePath)
+        public AbstractTR23AudioProvider(string jsonFilePath)
         {
             Dictionary<string, object> data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(jsonFilePath));
             _wadFileName = data["WAD"].ToString();
             _tracks.AddRange(JsonConvert.DeserializeObject<TRAudioTrack[]>(data["Tracks"].ToString()));
         }
 
-        internal override byte[] GetTrackData(TRAudioTrack track)
+        public override byte[] GetTrackData(TRAudioTrack track)
         {
             if (track == null)
             {
@@ -43,7 +43,7 @@ namespace TRGE.Core
             }
         }
 
-        internal override TRAudioTrack GetBlankTrack()
+        public override TRAudioTrack GetBlankTrack()
         {
             return _emptyTrack;
         }

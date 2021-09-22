@@ -22,9 +22,9 @@ namespace TRGE.Core
         public string LevelFileBaseName => Path.GetFileName(LevelFile);
 
         protected List<string> _puzzles, _keys, _pickups;
-        public IReadOnlyList<string> Puzzles => _puzzles;
-        public IReadOnlyList<string> Keys => _keys;
-        public IReadOnlyList<string> Pickups => _pickups;
+        public List<string> Puzzles => _puzzles;
+        public List<string> Keys => _keys;
+        public List<string> Pickups => _pickups;
 
         public abstract ushort Sequence { get; set; }
         public abstract ushort TrackID { get; set; }
@@ -35,6 +35,7 @@ namespace TRGE.Core
         public abstract short StartAnimationID { get; set; }
         public abstract bool HasCutScene { get; set; }
         public abstract bool SupportsCutScenes { get; }
+        public abstract AbstractTRScriptedLevel CutSceneLevel { get; set; }
         public abstract bool HasSunset { get; set; }
         public abstract bool HasDeadlyWater { get; set; }
         public abstract bool RemovesWeapons { get; set; }

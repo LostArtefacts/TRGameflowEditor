@@ -300,7 +300,7 @@ namespace TRGE.Coord
             }
         }
 
-        internal override void PreSave(AbstractTRScriptEditor scriptEditor)
+        internal sealed override void PreSave(AbstractTRScriptEditor scriptEditor)
         {
             // #83 Check in case the version swapping tool has been used since the last edit
             CheckFloaterBackup();
@@ -314,7 +314,20 @@ namespace TRGE.Coord
             {
                 _unarmedRng = editor.UnarmedLevelRNG.Create();
             }
+
+            //Ensure cutscene files are copied initially
+            foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
+            {
+                if (level.SupportsCutScenes)
+                {
+                    File.Copy(GetReadLevelFilePath(level.CutSceneLevel.LevelFileBaseName), GetWriteLevelFilePath(level.CutSceneLevel.LevelFileBaseName));
+                }
+            }
+
+            PreSaveImpl(scriptEditor);
         }
+
+        protected virtual void PreSaveImpl(AbstractTRScriptEditor scriptEditor) { }
 
         protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
         {
@@ -407,9 +420,9 @@ namespace TRGE.Coord
             string levelName = e.LevelFileBaseName.ToUpper();
             if
             (
-                skidooAvailable && 
-                _defaultVehicleLocations.ContainsKey(levelName) && 
-                _defaultVehicleLocations[levelName].ContainsKey(TR2Entities.RedSnowmobile) && 
+                skidooAvailable &&
+                _defaultVehicleLocations.ContainsKey(levelName) &&
+                _defaultVehicleLocations[levelName].ContainsKey(TR2Entities.RedSnowmobile) &&
                 _defaultVehicleLocations[levelName][TR2Entities.RedSnowmobile].Count > 0
             )
             {

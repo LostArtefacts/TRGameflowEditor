@@ -3,22 +3,22 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    internal abstract class AbstractTRAudioProvider
+    public abstract class AbstractTRAudioProvider
     {
         protected readonly List<TRAudioTrack> _tracks;
-        internal IReadOnlyList<TRAudioTrack> Tracks => _tracks;
+        public IReadOnlyList<TRAudioTrack> Tracks => _tracks;
 
-        internal abstract TRAudioType AudioType { get; }
+        public abstract TRAudioType AudioType { get; }
 
-        internal AbstractTRAudioProvider()
+        public AbstractTRAudioProvider()
         {
             _tracks = new List<TRAudioTrack>();
         }
 
-        internal abstract TRAudioTrack GetBlankTrack();
-        internal abstract byte[] GetTrackData(TRAudioTrack track);
+        public abstract TRAudioTrack GetBlankTrack();
+        public abstract byte[] GetTrackData(TRAudioTrack track);
 
-        internal byte[] GetTrackData(uint id)
+        public byte[] GetTrackData(uint id)
         {
             TRAudioTrack track = GetTrack(id);
             if (track != null)
@@ -29,7 +29,7 @@ namespace TRGE.Core
             return null;
         }
 
-        internal TRAudioTrack GetTrack(uint id)
+        public TRAudioTrack GetTrack(uint id)
         {
             foreach (TRAudioTrack track in _tracks)
             {
@@ -47,7 +47,7 @@ namespace TRGE.Core
             return null;
         }
 
-        internal IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> GetCategorisedTracks()
+        public IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> GetCategorisedTracks()
         {
             Dictionary<TRAudioCategory, List<TRAudioTrack>> data = new Dictionary<TRAudioCategory, List<TRAudioTrack>>();
             foreach (TRAudioCategory category in (TRAudioCategory[])Enum.GetValues(typeof(TRAudioCategory)))

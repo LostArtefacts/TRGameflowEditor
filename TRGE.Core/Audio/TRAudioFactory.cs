@@ -1,13 +1,13 @@
 ﻿namespace TRGE.Core
 {
-    internal static class TRAudioFactory
+    public static class TRAudioFactory
     {
-        internal static AbstractTRAudioProvider GetAudioProvider(TREdition edition)
+        public static AbstractTRAudioProvider GetAudioProvider(TREdition edition)
         {
             return GetAudioProvider(edition.Version);
         }
 
-        internal static AbstractTRAudioProvider GetAudioProvider(TRVersion version)
+        public static AbstractTRAudioProvider GetAudioProvider(TRVersion version)
         {
             switch (version)
             {

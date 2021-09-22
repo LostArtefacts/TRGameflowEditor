@@ -3,22 +3,25 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    internal class TRAudioTrack
+    public class TRAudioTrack
     {
         [JsonProperty]
-        internal ushort ID;
+        public ushort ID;
         [JsonProperty]
-        internal string Name;
+        public string Name;
         [JsonProperty]
-        internal uint Offset;
+        public uint Offset;
         [JsonProperty]
-        internal uint Length;
+        public uint Length;
         [JsonProperty]
-        internal List<TRAudioCategory> Categories;
+        public List<TRAudioCategory> Categories;
+        [JsonProperty]
+        public TRAudioCategory PrimaryCategory;
 
-        internal TRAudioTrack()
+        public TRAudioTrack()
         {
             Categories = new List<TRAudioCategory>();
+            PrimaryCategory = TRAudioCategory.General;
         }
 
         public override bool Equals(object obj)

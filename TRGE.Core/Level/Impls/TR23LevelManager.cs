@@ -14,7 +14,7 @@ namespace TRGE.Core
         private List<TR23ScriptedLevel> _levels;
 
         internal override int LevelCount => _levels.Count;
-        internal override AbstractTRAudioProvider AudioProvider => _audioProvider;
+        public override AbstractTRAudioProvider AudioProvider => _audioProvider;
         internal override AbstractTRItemProvider ItemProvider => _itemProvider;
         internal bool CanOrganiseBonuses => Edition.SecretBonusesSupported;
 
