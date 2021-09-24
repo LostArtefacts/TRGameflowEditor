@@ -16,7 +16,8 @@ namespace TRGE.Coord
     public class TR2LevelEditor : AbstractTRLevelEditor
     {
         //private static readonly string _hshChecksum = "8a5fdb4fef02395840eb2b8d0a2623e1"; // #75
-        private static readonly string _hshChecksum = "422969d461ebb57739d1a3b775f7f88d"; // #75
+        //private static readonly string _hshChecksum = "422969d461ebb57739d1a3b775f7f88d"; // #75
+        private static readonly string _hshChecksum = "00f94fc839f1701218f52dc97e249030"; // #75
         private static readonly string _flUKChecksum = "b8fc5d8444b15527cec447bc0387c41a"; // #83
         private static readonly string _flMPChecksum = "1e7d0d88ff9d569e22982af761bb006b"; // #83
 
