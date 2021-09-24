@@ -20,9 +20,9 @@ namespace TRGE.Core
                 null;
         }
 
-        public void Write(string filePath, bool isCompressed = true)
+        public void Write(string filePath, bool isCompressed = true, Formatting formatting = Formatting.None)
         {
-            string json = JsonConvert.SerializeObject(this, Formatting.None);
+            string json = JsonConvert.SerializeObject(this, formatting);
             if (isCompressed)
             {
                 new FileInfo(filePath).WriteCompressedText(json); //#48

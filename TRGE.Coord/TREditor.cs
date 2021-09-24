@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.ExceptionServices;
 using TRGE.Core;
 
 namespace TRGE.Coord
@@ -38,6 +41,7 @@ namespace TRGE.Coord
 
         public TREdition Edition => _scriptEditor.Edition;
         public string BackupDirectory => _scriptEditor.BackupFile.DirectoryName;
+        public string ErrorDirectory => Path.GetFullPath(Path.Combine(BackupDirectory, @"..\Errors"));
         public string TargetDirectory => _targetDirectory;
         private readonly string _wipOutputDirectory;
         private readonly string _outputDirectory;
@@ -147,6 +151,11 @@ namespace TRGE.Coord
                     wipDirectory.Copy(targetDirectory, true, TargetFileExtensions);
                 }
             }
+            catch (Exception e)
+            {
+                LogException(e);
+                ExceptionDispatchInfo.Capture(e).Throw();
+            }
             finally
             {
                 // Reinitialise regardless of whether the process completed or not
@@ -159,6 +168,29 @@ namespace TRGE.Coord
                 _watcher.Enabled = true;
                 wipDirectory.Clear();
             }
+        }
+
+        private void LogException(Exception e)
+        {
+            Config config = new Config
+            {
+                ["Trace"] = e.ToString(),
+                ["TRGE"] = ScriptEditor.ExportConfig()
+            };
+            if (LevelEditor != null)
+            {
+                config["TRLE"] = LevelEditor.ExportConfig();
+            }
+
+            Dictionary<string, string> checksums = new Dictionary<string, string>();
+            foreach (FileInfo fi in new DirectoryInfo(BackupDirectory).GetFiles())
+            {
+                checksums[fi.Name] = fi.Checksum();
+            }
+            config["BackupChecksums"] = checksums;
+
+            Directory.CreateDirectory(ErrorDirectory);
+            config.Write(Path.Combine(ErrorDirectory, DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".err"), true, Formatting.Indented);
         }
 
         public void Restore()
