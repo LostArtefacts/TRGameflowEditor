@@ -174,7 +174,26 @@ namespace TRGE.Core
             }
         }
 
-        public override bool KillToComplete => HasOperation(TR23OpDefs.KillToComplete);
+        /// <summary>
+        /// This is set in HSH, although the game is hard-coded to complete after killing
+        /// all enemies so this flag actually has no purpose. Remains untested in other
+        /// levels.
+        /// </summary>
+        public override bool KillToComplete
+        {
+            get => HasOperation(TR23OpDefs.KillToComplete);
+            set
+            {
+                if (value)
+                {
+                    EnsureOperation(new TROperation(TR23OpDefs.KillToComplete, ushort.MaxValue, true));
+                }
+                else
+                {
+                    SetOperationActive(TR23OpDefs.KillToComplete, value);
+                }
+            }
+        }
 
         public override bool IsFinalLevel
         {
@@ -221,7 +240,7 @@ namespace TRGE.Core
             }
         }
 
-        internal void SetBonuses(List<TRItem> items)
+        public void SetBonuses(List<TRItem> items)
         {
             RemoveBonuses();
             foreach (TRItem item in items)
@@ -230,7 +249,7 @@ namespace TRGE.Core
             }
         }
 
-        private void AddBonusItem(ushort itemID)
+        public void AddBonusItem(ushort itemID)
         {
             _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
         }
@@ -304,7 +323,81 @@ namespace TRGE.Core
             return items.ToList();
         }
 
+        public int GetStartInventoryItemCount()
+        {
+            int count = 0;
+            foreach (TROperation op in _operations)
+            {
+                if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand > 999)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public Dictionary<TRItems, int> GetStartInventoryItems()
+        {
+            Dictionary<TRItems, int> items = new Dictionary<TRItems, int>();
+
+            foreach (TROperation opcmd in _operations)
+            {
+                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+                {
+                    ushort itemID = opcmd.Operand;
+                    if (itemID > 999)
+                    {
+                        TRItems itemType = (TRItems)(itemID - 1000);
+                        if (!items.ContainsKey(itemType))
+                        {
+                            items[itemType] = 0;
+                        }
+                        items[itemType]++;
+                    }
+                }
+            }
+
+            return items;
+        }
+
         public void SetStartInventoryItems(Dictionary<TRItems, int> items)
+        {
+            ClearStartInventoryItems();
+
+            foreach (TRItems item in items.Keys)
+            {
+                AddStartInventoryItem(item, (uint)items[item]);
+            }
+        }
+
+        public void AddStartInventoryItem(TRItems item, uint count = 1)
+        {
+            ushort itemID = (ushort)(1000 + item);
+            for (int i = 0; i < count; i++)
+            {
+                _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
+            }
+        }
+
+        public void RemoveStartInventoryItem(TRItems item, bool removeAll = false)
+        {
+            ushort itemID = (ushort)(1000 + item);
+            for (int i = _operations.Count - 1; i >= 0; i--)
+            {
+                TROperation op = _operations[i];
+                if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand == itemID)
+                {
+                    _operations.RemoveAt(i);
+
+                    if (!removeAll)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void ClearStartInventoryItems()
         {
             for (int i = _operations.Count - 1; i >= 0; i--)
             {
@@ -312,14 +405,6 @@ namespace TRGE.Core
                 if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand > 999)
                 {
                     _operations.RemoveAt(i);
-                }
-            }
-
-            foreach (TRItems item in items.Keys)
-            {
-                for (int i = 0; i < items[item]; i++)
-                {
-                    _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, (ushort)((ushort)item + 1000), true));
                 }
             }
         }

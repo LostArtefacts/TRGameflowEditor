@@ -2,11 +2,11 @@
 
 namespace TRGE.Core
 {
-    internal class TRItem : IComparable<TRItem>
+    public class TRItem : IComparable<TRItem>
     {
-        internal ushort ID { get; }
-        internal TRItemCategory Category { get; }
-        internal string Name { get; }
+        public ushort ID { get; set; }
+        public TRItemCategory Category { get; set; }
+        public string Name { get; set; }
 
         internal TRItem(ushort id, TRItemCategory category, string name)
         {
