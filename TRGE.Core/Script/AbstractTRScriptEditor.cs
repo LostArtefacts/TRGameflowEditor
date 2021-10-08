@@ -338,16 +338,17 @@ namespace TRGE.Core
             }
 
             SaveImpl();
-            
-            SaveScript();
 
-            //monitor.FireSaveStateChanged(0);// 1);
+            LevelManager.Save();
+
+            string outputPath = GetScriptWIPOutputPath();
+            Script.Write(outputPath);
         }
 
         public void SaveScript()
         {
             // Commit level specifics
-            LevelManager.Save();
+            LevelManager.UpdateScript();
 
             string outputPath = GetScriptWIPOutputPath();
             Script.Write(outputPath);

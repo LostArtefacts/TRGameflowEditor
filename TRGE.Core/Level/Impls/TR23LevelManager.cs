@@ -447,5 +447,18 @@ namespace TRGE.Core
             }
             _script.Levels = Levels;
         }
+
+        internal override void UpdateScript()
+        {
+            if (Edition.AssaultCourseSupported)
+            {
+                _script.AssaultLevel = AssaultLevel;
+            }
+
+            // This is called specifically between main ScriptEditor save/loads so 
+            // we have to be careful only to update the active levels, otherwise the
+            // script will try to re-delete disabled levels.
+            _script.Levels = Levels.FindAll(l => l.Enabled);
+        }
     }
 }

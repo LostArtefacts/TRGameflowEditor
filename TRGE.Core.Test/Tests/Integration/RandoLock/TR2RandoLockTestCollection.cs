@@ -122,7 +122,7 @@ namespace TRGE.Core.Test
             TRCoord.Instance.RootConfigDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             try
             {
-                TREditor editor = TRCoord.Instance.Open(@"C:\Program Files (x86)\Steam\steamapps\common\Tomb Raider (II)\data");
+                TREditor editor = TRCoord.Instance.Open(@"RandoLock");
                 TR23ScriptEditor scriptEditor = editor.ScriptEditor as TR23ScriptEditor;
                 scriptEditor.LevelSequencingOrganisation = Organisation.Random;
                 scriptEditor.LevelSunsetOrganisation = Organisation.Random; scriptEditor.RandomSunsetLevelCount = 4;

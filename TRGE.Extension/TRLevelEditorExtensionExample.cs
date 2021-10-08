@@ -46,6 +46,9 @@ namespace TRGE.Extension
                     monitor.FireSaveStateChanged(1);
                 }
             }
+
+            // Simulate re-saving the script
+            scriptEditor.SaveScript();
         }
     }
 }

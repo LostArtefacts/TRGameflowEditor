@@ -39,6 +39,7 @@ namespace TRGE.Core
         }
 
         internal abstract void Save();
+        internal abstract void UpdateScript();
 
         internal virtual AbstractTRScriptedLevel GetLevel(string id)
         {
