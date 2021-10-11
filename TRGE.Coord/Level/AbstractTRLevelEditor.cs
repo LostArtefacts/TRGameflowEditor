@@ -9,17 +9,19 @@ namespace TRGE.Coord
     public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
     {
         protected readonly TRDirectoryIOArgs _io;
+        protected readonly TREdition _edition;
         protected readonly Dictionary<string, ISet<TRScriptedLevelEventArgs>> _levelModifications;
 
         internal event EventHandler RestoreProgressChanged;
 
         internal override string ConfigFilePath => _io.ConfigFile.FullName;
 
-        private AbstractTRScriptEditor _scriptEditor;
+        protected AbstractTRScriptEditor _scriptEditor;
 
-        public AbstractTRLevelEditor(TRDirectoryIOArgs io)
+        public AbstractTRLevelEditor(TRDirectoryIOArgs io, TREdition edition)
         {
             _io = io;
+            _edition = edition;
             _levelModifications = new Dictionary<string, ISet<TRScriptedLevelEventArgs>>();
             ReadConfig(_config = Config.Read(_io.ConfigFile.FullName));
         }
@@ -236,6 +238,16 @@ namespace TRGE.Coord
                 }
                 throw new ScriptedLevelMismatchException(sb.ToString());
             }
+        }
+
+        protected string GetResource(string filePath)
+        {
+            return Path.Combine("Resources", _edition.Version.ToString(), filePath);
+        }
+
+        protected string ReadResource(string filePath)
+        {
+            return File.ReadAllText(GetResource(filePath));
         }
     }
 }

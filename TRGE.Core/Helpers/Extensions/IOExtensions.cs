@@ -113,12 +113,36 @@ namespace TRGE.Core
             }
         }
 
+        public static void CopyFile(string originalFile, DirectoryInfo targetDirectory, bool overwrite = false)
+        {
+            string targetFile = Path.Combine(targetDirectory.FullName, Path.GetFileName(originalFile));
+            CopyFile(originalFile, targetFile, overwrite);
+        }
+
+        public static void CopyFile(string originalFile, string targetFile, bool overwrite = false)
+        {
+            if (overwrite || !File.Exists(targetFile))
+            {
+                if (File.Exists(targetFile))
+                {
+                    EnsureWritable(targetFile);
+                }
+                File.Copy(originalFile, targetFile, true);
+                EnsureWritable(targetFile);
+            }
+        }
+
         internal static void EnsureWritable(this FileInfo file)
         {
-            FileAttributes attrs = File.GetAttributes(file.FullName);
+            EnsureWritable(file.FullName);
+        }
+
+        internal static void EnsureWritable(string file)
+        {
+            FileAttributes attrs = File.GetAttributes(file);
             if (attrs.HasFlag(FileAttributes.ReadOnly))
             {
-                File.SetAttributes(file.FullName, attrs & ~FileAttributes.ReadOnly);
+                File.SetAttributes(file, attrs & ~FileAttributes.ReadOnly);
             }
         }
 

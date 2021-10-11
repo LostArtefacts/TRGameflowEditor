@@ -15,7 +15,10 @@ namespace TRGE.Core
             SecretBonusesSupported = false,
             SunsetsSupported = false,
             SecretSoundSupported = false,
-            AssaultCourseSupported = false
+            AssaultCourseSupported = false,
+            UnarmedLevelCount = 0,
+            AmmolessLevelCount = 0,
+            SunsetLevelCount = 0
         };
 
         internal static readonly TREdition GenericPSX = new TREdition
@@ -27,7 +30,10 @@ namespace TRGE.Core
             SecretBonusesSupported = false,
             SunsetsSupported = false,
             SecretSoundSupported = false,
-            AssaultCourseSupported = false
+            AssaultCourseSupported = false,
+            UnarmedLevelCount = 0,
+            AmmolessLevelCount = 0,
+            SunsetLevelCount = 0
         };
 
         internal static readonly TREdition TR2PC = new TREdition
@@ -40,7 +46,10 @@ namespace TRGE.Core
             SecretBonusesSupported = true,
             SunsetsSupported = true,
             SecretSoundSupported = true,
-            AssaultCourseSupported = true
+            AssaultCourseSupported = true,
+            UnarmedLevelCount = 2,
+            AmmolessLevelCount = 1,
+            SunsetLevelCount = 1
         };
 
         internal static readonly TREdition TR2PSX = new TREdition
@@ -53,7 +62,10 @@ namespace TRGE.Core
             SecretBonusesSupported = true,
             SunsetsSupported = true,
             SecretSoundSupported = true,
-            AssaultCourseSupported = true
+            AssaultCourseSupported = true,
+            UnarmedLevelCount = 2,
+            AmmolessLevelCount = 1,
+            SunsetLevelCount = 1
         };
 
         internal static readonly TREdition TR2PSXBeta = new TREdition
@@ -66,7 +78,10 @@ namespace TRGE.Core
             SecretBonusesSupported = true,
             SunsetsSupported = true,
             SecretSoundSupported = true,
-            AssaultCourseSupported = true
+            AssaultCourseSupported = true,
+            UnarmedLevelCount = 2,
+            AmmolessLevelCount = 1,
+            SunsetLevelCount = 1
         };
 
         internal static readonly TREdition TR2G = new TREdition
@@ -79,7 +94,10 @@ namespace TRGE.Core
             SecretBonusesSupported = true,
             SunsetsSupported = true,
             SecretSoundSupported = true,
-            AssaultCourseSupported = true
+            AssaultCourseSupported = true,
+            UnarmedLevelCount = 0,
+            AmmolessLevelCount = 0,
+            SunsetLevelCount = 0
         };
 
         internal static readonly TREdition TR3PC = new TREdition
@@ -92,7 +110,10 @@ namespace TRGE.Core
             SecretBonusesSupported = false,
             SunsetsSupported = false,
             SecretSoundSupported = false,
-            AssaultCourseSupported = true
+            AssaultCourseSupported = true,
+            UnarmedLevelCount = 1,
+            AmmolessLevelCount = 1,
+            SunsetLevelCount = 0
         };
 
         internal static readonly TREdition TR3PSX = new TREdition
@@ -105,7 +126,10 @@ namespace TRGE.Core
             SecretBonusesSupported = false,
             SunsetsSupported = false,
             SecretSoundSupported = false,
-            AssaultCourseSupported = true
+            AssaultCourseSupported = true,
+            UnarmedLevelCount = 1,
+            AmmolessLevelCount = 1,
+            SunsetLevelCount = 0
         };
 
         internal static readonly TREdition TR3G = new TREdition
@@ -118,7 +142,10 @@ namespace TRGE.Core
             SecretBonusesSupported = false,
             SunsetsSupported = false,
             SecretSoundSupported = false,
-            AssaultCourseSupported = false
+            AssaultCourseSupported = false,
+            UnarmedLevelCount = 0,
+            AmmolessLevelCount = 0,
+            SunsetLevelCount = 0
         };
 
         internal static readonly IReadOnlyList<TREdition> All = new List<TREdition>
@@ -156,6 +183,18 @@ namespace TRGE.Core
         /// Whether or not the game has an assault course level
         /// </summary>
         public bool AssaultCourseSupported { get; private set; }
+        /// <summary>
+        /// The default number of levels in which Lara loses her weapons.
+        /// </summary>
+        public int UnarmedLevelCount { get; private set; }
+        /// <summary>
+        /// The default number of levels in which Lara loses her ammo.
+        /// </summary>
+        public int AmmolessLevelCount { get; private set; }
+        /// <summary>
+        /// The default number of levels with the sunset flag enabled.
+        /// </summary>
+        public int SunsetLevelCount { get; private set; }
 
         private TREdition() { }
 

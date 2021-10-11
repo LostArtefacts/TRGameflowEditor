@@ -54,11 +54,19 @@ namespace TRGE.Core
             if (CanOrganiseBonuses)
             {
                 Config bonuses = config.GetSubConfig("BonusSetup");
-                SecretBonusOrganisation = bonuses.GetOrganisation("Organisation");
-                SecretBonusRNG = new RandomGenerator(bonuses.GetSubConfig("RNG"));
-                if (bonuses.ContainsKey("Data"))
+                if (bonuses == null) // Can be configured on the fly via TRInterop, but TRGE may reset this
                 {
-                    LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses.GetString("Data"));
+                    SecretBonusOrganisation = Organisation.Default;
+                    SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                }
+                else
+                {
+                    SecretBonusOrganisation = bonuses.GetOrganisation("Organisation");
+                    SecretBonusRNG = new RandomGenerator(bonuses.GetSubConfig("RNG"));
+                    if (bonuses.ContainsKey("Data"))
+                    {
+                        LevelSecretBonusData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>>(bonuses.GetString("Data"));
+                    }
                 }
             }
 
@@ -317,7 +325,7 @@ namespace TRGE.Core
             return (LevelManager as TR23LevelManager).GetAmmolessLevels();
         }
 
-        public bool CanOrganiseBonuses => (LevelManager as TR23LevelManager).CanOrganiseBonuses;
+        public bool CanOrganiseBonuses => (LevelManager as TR23LevelManager).CanOrganiseBonuses || TRInterop.SecretRewardsSupported;
         public Organisation SecretBonusOrganisation
         {
             get => (LevelManager as TR23LevelManager).BonusOrganisation;

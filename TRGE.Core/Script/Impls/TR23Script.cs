@@ -323,12 +323,6 @@ namespace TRGE.Core
             }
             set
             {
-                //if (value.Count != NumLevels - NumDemoLevels - 1)
-                //{
-                //    throw new ArgumentException("Invalid number of levels.");
-                //}
-
-                //List<AbstractTRScriptedLevel> currentLevels = Levels;
                 List<int> disabledIndices = new List<int>();
 
                 int enabledLevelCount = 0;

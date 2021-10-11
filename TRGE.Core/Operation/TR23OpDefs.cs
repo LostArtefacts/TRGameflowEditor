@@ -43,5 +43,60 @@
             }
             return null;
         }
+
+        internal static string GetName(TROpDef def)
+        {
+            switch (def.OpCode)
+            {
+                case 0:
+                    return nameof(Picture);
+                case 1:
+                    return nameof(ListStart);
+                case 2:
+                    return nameof(ListEnd);
+                case 3:
+                    return nameof(FMV);
+                case 4:
+                    return nameof(Level);
+                case 5:
+                    return nameof(Cinematic);
+                case 6:
+                    return nameof(Complete);
+                case 7:
+                    return nameof(Demo);
+                case 8:
+                    return nameof(JumpToSequence);
+                case 9:
+                    return nameof(End);
+                case 10:
+                    return nameof(Track);
+                case 11:
+                    return nameof(Sunset);
+                case 12:
+                    return nameof(LoadPic);
+                case 13:
+                    return nameof(DeadlyWater);
+                case 14:
+                    return nameof(RemoveWeapons);
+                case 15:
+                    return nameof(GameComplete);
+                case 16:
+                    return nameof(CutAngle);
+                case 17:
+                    return nameof(NoFloor);
+                case 18:
+                    return nameof(StartInvBonus);
+                case 19:
+                    return nameof(StartAnimation);
+                case 20:
+                    return nameof(Secrets);
+                case 21:
+                    return nameof(KillToComplete);
+                case 22:
+                    return nameof(RemoveAmmo);
+                default:
+                    return "Unknown";
+            }
+        }
     }
 }

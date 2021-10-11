@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,24 +12,18 @@ using TRModelTransporter.Transport;
 
 namespace TRGE.Coord
 {
-    public class TR2LevelEditor : AbstractTRLevelEditor
+    public class TR2LevelEditor : BaseTRLevelEditor
     {
-        //private static readonly string _hshChecksum = "8a5fdb4fef02395840eb2b8d0a2623e1"; // #75
-        //private static readonly string _hshChecksum = "422969d461ebb57739d1a3b775f7f88d"; // #75
         private static readonly string _hshChecksum = "00f94fc839f1701218f52dc97e249030"; // #75
         private static readonly string _flUKChecksum = "b8fc5d8444b15527cec447bc0387c41a"; // #83
         private static readonly string _flMPChecksum = "1e7d0d88ff9d569e22982af761bb006b"; // #83
 
-        protected readonly Dictionary<string, List<Location>> _defaultWeaponLocations;
         protected readonly Dictionary<string, Dictionary<TR2Entities, List<Location>>> _defaultVehicleLocations;
-        private bool _randomiseUnarmedLocations;
-        private Random _unarmedRng;
 
-        public TR2LevelEditor(TRDirectoryIOArgs io)
-            : base(io)
+        public TR2LevelEditor(TRDirectoryIOArgs io, TREdition edition)
+            : base(io, edition)
         {
-            _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(File.ReadAllText(@"Resources\unarmed_locations.json"));
-            _defaultVehicleLocations = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<TR2Entities, List<Location>>>>(File.ReadAllText(@"Resources\vehicle_locations.json"));
+            _defaultVehicleLocations = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<TR2Entities, List<Location>>>>(ReadResource(@"Locations\vehicle_locations.json"));
             CheckFloaterBackup();
             CheckHSHBackup();
         }
@@ -39,7 +32,6 @@ namespace TRGE.Coord
         {
             switch (e.Modification)
             {
-                case TRScriptedLevelModification.WeaponlessStateChanged:
                 case TRScriptedLevelModification.SunsetChanged:
                 case TRScriptedLevelModification.StartingWeaponsAdded:
                 case TRScriptedLevelModification.StartingWeaponsRemoved:
@@ -47,7 +39,7 @@ namespace TRGE.Coord
                 case TRScriptedLevelModification.SkidooRemoved:
                     return true;
                 default:
-                    return false;
+                    return base.ShouldHandleModification(e);
             }
         }
 
@@ -55,9 +47,6 @@ namespace TRGE.Coord
         {
             switch (e.Modification)
             {
-                case TRScriptedLevelModification.WeaponlessStateChanged:
-                    HandleWeaponlessStateChanged(e);
-                    break;
                 case TRScriptedLevelModification.SunsetChanged:
                     HandleSunsetStateChanged(e);
                     break;
@@ -73,10 +62,13 @@ namespace TRGE.Coord
                 case TRScriptedLevelModification.SkidooRemoved:
                     HandleSkidooPresenceChanged(e, false);
                     break;
+                default:
+                    base.ProcessModification(e);
+                    break;
             }
         }
 
-        protected virtual void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs e)
+        protected override void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs e)
         {
             string levelFile = GetReadLevelFilePath(e.LevelFileBaseName);
             if (!File.Exists(levelFile))
@@ -109,33 +101,9 @@ namespace TRGE.Coord
             }
         }
 
-        internal Location GetLocationForLevel(AbstractTRScriptedLevel level)
+        protected virtual void SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
         {
-            string levelFileName = level.LevelFileBaseName.ToUpper();
-            if (_defaultWeaponLocations.ContainsKey(levelFileName))
-            {
-                List<Location> locations = _defaultWeaponLocations[levelFileName];
-                if (locations.Count > 0)
-                {
-                    if (_randomiseUnarmedLocations)
-                    {
-                        int index = 0;
-                        // This avoids getting the same location index for each level
-                        for (int i = 0; i < level.Sequence; i++)
-                        {
-                            index = _unarmedRng.Next(0, locations.Count);
-                        }
-                        return locations[index];
-                    }
-                    return locations[0];
-                }
-            }
-            return null;
-        }
-
-        protected virtual bool SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
-        {
-            Location defaultLocation = GetLocationForLevel(scriptedLevel);
+            Location defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
             if (defaultLocation == null)
             {
                 throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
@@ -153,8 +121,6 @@ namespace TRGE.Coord
                         e.TypeID == (short)TR2Entities.Pistols_S_P || TR2EntityUtilities.IsGunType((TR2Entities)e.TypeID) || TR2EntityUtilities.IsAmmoType((TR2Entities)e.TypeID)
                     )
             );
-
-            bool changesMade = false;
 
             // #69 Offshore Rig - the Pistol item index is low in the list (#4), so if we remove it we'd need to change
             // everything that references the items above it in the list. So, for simplicity's sake, we will just
@@ -200,18 +166,15 @@ namespace TRGE.Coord
                         Flags = 0
                     });
                     level.NumEntities++;
-                    changesMade = true;
                 }
             }
             else if (existingInjections.Count() > 0)
             {
                 entities.RemoveAll(e => existingInjections.Contains(e));
                 level.NumEntities = (uint)entities.Count();
-                changesMade = true;
             }
 
             level.Entities = entities.ToArray();
-            return changesMade;
         }
 
         protected virtual void CheckFloaterBackup()
@@ -301,34 +264,16 @@ namespace TRGE.Coord
             }
         }
 
-        internal sealed override void PreSave(AbstractTRScriptEditor scriptEditor)
+        protected override void PreSaveImpl(AbstractTRScriptEditor scriptEditor)
         {
+            base.PreSaveImpl(scriptEditor);
+
             // #83 Check in case the version swapping tool has been used since the last edit
             CheckFloaterBackup();
 
             // #75 Check that the HSH backup integrity is still in place i.e. it hasn't been overwritten manually externally
             CheckHSHBackup();
-
-            // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
-            TR23ScriptEditor editor = scriptEditor as TR23ScriptEditor;
-            if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
-            {
-                _unarmedRng = editor.UnarmedLevelRNG.Create();
-            }
-
-            //Ensure cutscene files are copied initially
-            foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
-            {
-                if (level.SupportsCutScenes)
-                {
-                    File.Copy(GetReadLevelFilePath(level.CutSceneLevel.LevelFileBaseName), GetWriteLevelFilePath(level.CutSceneLevel.LevelFileBaseName));
-                }
-            }
-
-            PreSaveImpl(scriptEditor);
         }
-
-        protected virtual void PreSaveImpl(AbstractTRScriptEditor scriptEditor) { }
 
         protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
         {
@@ -455,6 +400,7 @@ namespace TRGE.Coord
         {
             TRModelImporter importer = new TRModelImporter
             {
+                DataFolder = @"Resources\TR2\Models",
                 Level = level,
                 LevelName = lvlName,
                 EntitiesToImport = entities

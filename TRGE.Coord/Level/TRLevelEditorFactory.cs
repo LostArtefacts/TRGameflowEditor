@@ -11,6 +11,8 @@ namespace TRGE.Coord
         {
             [TRVersion.TR2] = typeof(TR2LevelEditor),
             [TRVersion.TR2G] = typeof(TR2LevelEditor),
+            [TRVersion.TR3] = typeof(TR3LevelEditor),
+            [TRVersion.TR3G] = typeof(TR3LevelEditor)
         };
 
         private static readonly Dictionary<TRVersion, Type> _typeMap = _defaultTypeMap.ToDictionary();
@@ -44,7 +46,7 @@ namespace TRGE.Coord
                     _typeMap[edition.Version],
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, 
                     null,
-                    new object[] { io },
+                    new object[] { io, edition },
                     null
                 );
             }

@@ -113,10 +113,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\tr2audio.json">
+    <None Include="Resources\TR2\Audio\audio_tracks.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\tr3audio.json">
+    <None Include="Resources\TR3\Audio\audio_tracks.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

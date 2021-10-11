@@ -15,5 +15,10 @@
             Operand = operand;
             IsActive = isActive;
         }
+
+        public override string ToString()
+        {
+            return "Opcode: " + Definition.ToString() + ", Operand: " + Operand + ", Enabled: " + IsActive;
+        }
     }
 }

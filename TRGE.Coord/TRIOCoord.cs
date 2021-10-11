@@ -156,19 +156,40 @@ namespace TRGE.Coord
                 DirectoryInfo backupDI = new DirectoryInfo(backupDirectory);
                 DirectoryInfo outputDI = new DirectoryInfo(outputDirectory);
 
-                DirectoryInfo originalDI = new DirectoryInfo(_originalDirectory);
+                List<string> filesToBackup = new List<string>
+                {
+                    _orignalScriptFile
+                };
 
-                FileInfo[] files = originalDI.GetFilteredFiles(TREditor.TargetFileExtensions);
-                _backupArgs.ProgressTarget += files.Length * 2;
+                // Open the original script and determine which files we need to copy. Merge the level files
+                // with the original paths as some may not be in the current directory (e.g. TR3 cutscene files).
+                AbstractTRScript script = TRScriptFactory.OpenScript(_orignalScriptFile);
+                foreach (AbstractTRScriptedLevel level in script.Levels)
+                {
+                    filesToBackup.Add(GetOriginalFilePath(level.LevelFile));
+                    if (level.HasCutScene)
+                    {
+                        filesToBackup.Add(GetOriginalFilePath(level.CutSceneLevel.LevelFile));
+                    }
+                }
+
+                AbstractTRScriptedLevel assaultLevel = script.AssaultLevel;
+                if (assaultLevel != null)
+                {
+                    filesToBackup.Add(GetOriginalFilePath(assaultLevel.LevelFile));
+                }
+
+                _backupArgs.ProgressTarget += filesToBackup.Count * 2;
                 FireBackupProgressChanged();
 
-                Action<FileInfo> progressAction = new Action<FileInfo>
-                (
-                    fi => FireBackupProgressChanged(1)
-                );
+                foreach (string file in filesToBackup)
+                {
+                    IOExtensions.CopyFile(file, backupDI, false);
+                    FireBackupProgressChanged(1);
 
-                backupDI.CopyInto(files, false, progressAction);
-                outputDI.CopyInto(files, false, progressAction);
+                    IOExtensions.CopyFile(file, outputDI, false);
+                    FireBackupProgressChanged(1);
+                }
 
                 _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
             }
@@ -190,6 +211,11 @@ namespace TRGE.Coord
 
             _scriptConfigFile = Path.Combine(_editDirectory, _scriptConfigFileName);
             _directoryConfigFile = Path.Combine(_editDirectory, _dirConfigFileName);
+        }
+
+        private string GetOriginalFilePath(string fileName)
+        {
+            return Path.GetFullPath(Path.Combine(_originalDirectory, @"..\", fileName));
         }
 
         private void FireBackupProgressChanged(int progress = 0)

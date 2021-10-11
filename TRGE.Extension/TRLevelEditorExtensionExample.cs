@@ -8,8 +8,8 @@ namespace TRGE.Extension
         public int CustomInt { get; set; }
         public bool CustomBool { get; set; }
 
-        public TRLevelEditorExtensionExample(TRDirectoryIOArgs args)
-            : base(args) { }
+        public TRLevelEditorExtensionExample(TRDirectoryIOArgs args, TREdition edition)
+            : base(args, edition) { }
 
         protected override void ApplyConfig(Config config)
         {

@@ -12,5 +12,10 @@
             OpCode = opCode;
             HasOperand = hasOperand;
         }
+
+        public override string ToString()
+        {
+            return TR23OpDefs.GetName(this);
+        }
     }
 }

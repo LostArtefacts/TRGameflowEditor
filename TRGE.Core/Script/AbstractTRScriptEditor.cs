@@ -9,19 +9,19 @@ namespace TRGE.Core
     {
         protected TRScriptIOArgs _io;
 
-        internal FileInfo OriginalFile
+        public FileInfo OriginalFile
         {
             get => _io.OriginalFile;
             set => _io.OriginalFile = value;
         }
 
-        internal FileInfo BackupFile
+        public FileInfo BackupFile
         {
             get => _io.BackupFile;
             set => _io.BackupFile = value;
         }
 
-        internal FileInfo ConfigFile
+        public FileInfo ConfigFile
         {
             get => _io.ConfigFile;
             set => _io.ConfigFile = value;
@@ -29,13 +29,13 @@ namespace TRGE.Core
 
         internal override string ConfigFilePath => ConfigFile.FullName;
 
-        internal DirectoryInfo WIPOutputDirectory
+        public DirectoryInfo WIPOutputDirectory
         {
             get => _io.WIPOutputDirectory;
             set => _io.WIPOutputDirectory = value;
         }
 
-        internal DirectoryInfo OutputDirectory
+        public DirectoryInfo OutputDirectory
         {
             get => _io.OutputDirectory;
             set => _io.OutputDirectory = value;
@@ -44,12 +44,12 @@ namespace TRGE.Core
         public TREdition Edition => Script.Edition;
 
         public AbstractTRAudioProvider AudioProvider => LevelManager.AudioProvider;
-        internal AbstractTRLevelManager LevelManager { get; private set; }
-        internal AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
+        public AbstractTRLevelManager LevelManager { get; private set; }
+        public AbstractTRFrontEnd FrontEnd => Script.FrontEnd;
         public AbstractTRScriptedLevel AssaultLevel => LevelManager.AssaultLevel;
         public AbstractTRScript Script { get; private set; }
 
-        internal IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
+        public IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
         public IReadOnlyList<AbstractTRScriptedLevel> ScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels);
         public IReadOnlyList<AbstractTRScriptedLevel> EnabledScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels, true);
 
@@ -419,7 +419,7 @@ namespace TRGE.Core
             return Path.Combine(WIPOutputDirectory.FullName, OriginalFile.Name);
         }
 
-        protected string GetScriptOutputPath()
+        internal string GetScriptOutputPath()
         {
             return Path.Combine(OutputDirectory.FullName, OriginalFile.Name);
         }

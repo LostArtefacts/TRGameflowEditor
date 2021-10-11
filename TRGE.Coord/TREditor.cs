@@ -42,6 +42,7 @@ namespace TRGE.Coord
         public TREdition Edition => _scriptEditor.Edition;
         public string BackupDirectory => _scriptEditor.BackupFile.DirectoryName;
         public string ErrorDirectory => Path.GetFullPath(Path.Combine(BackupDirectory, @"..\Errors"));
+        public string OutputDirectory => _outputDirectory;
         public string TargetDirectory => _targetDirectory;
         private readonly string _wipOutputDirectory;
         private readonly string _outputDirectory;
@@ -145,10 +146,12 @@ namespace TRGE.Coord
                         LevelEditor.SaveComplete();
                     }
 
+                    // Copy everything from WIP into the Output folder.
                     DirectoryInfo outputDirectory = new DirectoryInfo(_outputDirectory);
-                    DirectoryInfo targetDirectory = new DirectoryInfo(_targetDirectory);
                     wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
-                    wipDirectory.Copy(targetDirectory, true, TargetFileExtensions);
+
+                    // Finally, copy everything to the target folder.
+                    CopyOutputToTarget();
                 }
             }
             catch (Exception e)
@@ -191,6 +194,40 @@ namespace TRGE.Coord
 
             Directory.CreateDirectory(ErrorDirectory);
             config.Write(Path.Combine(ErrorDirectory, DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".err"), true, Formatting.Indented);
+        }
+
+        private void CopyOutputToTarget()
+        {
+            DirectoryInfo targetDataDirectory = new DirectoryInfo(_targetDirectory);
+            string outputScript = ScriptEditor.GetScriptOutputPath();
+            IOExtensions.CopyFile(outputScript, targetDataDirectory, true);
+
+            List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(ScriptEditor.Levels);
+            if (ScriptEditor.Edition.AssaultCourseSupported)
+            {
+                levels.Add(ScriptEditor.AssaultLevel);
+            }
+
+            foreach (AbstractTRScriptedLevel level in levels)
+            {
+                // Check if it's been generated in the output folder
+                // If so, move it to its target directory
+                CopyLevelToTarget(level);
+                if (level.HasCutScene)
+                {
+                    CopyLevelToTarget(level.CutSceneLevel);
+                }
+            }
+        }
+
+        private void CopyLevelToTarget(AbstractTRScriptedLevel level)
+        {
+            string outputLevel = Path.Combine(_outputDirectory, level.LevelFileBaseName);
+            if (File.Exists(outputLevel))
+            {
+                string targetFile = Path.GetFullPath(Path.Combine(_targetDirectory, @"..\", level.LevelFile));
+                IOExtensions.CopyFile(outputLevel, targetFile, true);
+            }
         }
 
         public void Restore()

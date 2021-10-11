@@ -26,6 +26,7 @@ namespace TRGE.Core
         public static string TaggedVersion { get; set; }
         public static string ConfigDirectory { get; set; }
         public static bool RandomisationSupported { get; set; }
+        public static bool SecretRewardsSupported { get; set; }
         //public static string ScriptModificationStamp { get; set; }
         public static GameStamp ScriptModificationStamp { get; }
     }

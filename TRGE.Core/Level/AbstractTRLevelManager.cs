@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    internal abstract class AbstractTRLevelManager
+    public abstract class AbstractTRLevelManager
     {
         public abstract AbstractTRAudioProvider AudioProvider { get; }
         protected abstract ushort TitleSoundID { get; set; }
@@ -184,7 +184,11 @@ namespace TRGE.Core
 
             if (modified)
             {
-                FireLevelModificationEvent(level, TRScriptedLevelModification.SequenceChanged);
+                // Inform all levels that the overall sequencing has changed.
+                foreach (AbstractTRScriptedLevel lvl in Levels)
+                {
+                    FireLevelModificationEvent(lvl, TRScriptedLevelModification.SequenceChanged);
+                }
             }
         }
 
