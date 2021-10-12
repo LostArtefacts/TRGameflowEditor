@@ -19,7 +19,7 @@ namespace TRGE.Core.Test
             _expectedLevels = new List<AbstractTRScriptedLevel>();
             for (int i = 0; i < LevelNames.Length; i++)
             {
-                _expectedLevels.Add(new TR23ScriptedLevel
+                _expectedLevels.Add(new TR2ScriptedLevel
                 {
                     Name = LevelNames[i],
                     LevelFile = LevelFileNames[i]

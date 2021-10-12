@@ -83,7 +83,7 @@ namespace TRGE.Core.Test
             for (int i = 0; i < sm.LevelManager.Levels.Count; i++)
             {
                 AbstractTRScriptedLevel level = sm.LevelManager.Levels[i];
-                if ((level as TR23ScriptedLevel).GetBonusItems(sm.LevelManager.ItemProvider as TR2ItemProvider).Contains(shotgun))
+                if ((level as TR2ScriptedLevel).GetBonusItems(sm.LevelManager.ItemProvider as TR2ItemProvider).Contains(shotgun))
                 {
                     //should only appear if this level or a previous level removes weapons
                     bool weaponsRemoved = false;

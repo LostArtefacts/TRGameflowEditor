@@ -17,7 +17,7 @@ namespace TRGE.Core.Test
             _expectedLevels = new List<AbstractTRScriptedLevel>();
             for (int i = 0; i < LevelNames.Length; i++)
             {
-                _expectedLevels.Add(new TR23ScriptedLevel
+                _expectedLevels.Add(new TR2ScriptedLevel
                 {
                     Name = LevelNames[i],
                     LevelFile = LevelFileNames[i]
@@ -37,7 +37,7 @@ namespace TRGE.Core.Test
             sm.AmmolessLevelRNG = rng;
             sm.RandomAmmolessLevelCount = 2;
             sm.RandomiseAmmolessLevels();
-            List<TR23ScriptedLevel> levels = sm.GetAmmolessLevels();
+            List<TR2ScriptedLevel> levels = sm.GetAmmolessLevels();
             CollectionAssert.AreEquivalent(levels, expectedLevels);
         }
 
@@ -53,7 +53,7 @@ namespace TRGE.Core.Test
             sm.UnarmedLevelRNG = rng;
             sm.RandomUnarmedLevelCount = 2;
             sm.RandomiseUnarmedLevels();
-            List<TR23ScriptedLevel> levels = sm.GetUnarmedLevels();
+            List<TR2ScriptedLevel> levels = sm.GetUnarmedLevels();
             CollectionAssert.AreEquivalent(levels, expectedLevels);
         }
 

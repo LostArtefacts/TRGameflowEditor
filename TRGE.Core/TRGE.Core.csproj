@@ -68,6 +68,7 @@
     <Compile Include="Language\TRLanguage.cs" />
     <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
     <Compile Include="Level\Events\TRScriptedLevelModification.cs" />
+    <Compile Include="Level\Impls\TR3ScriptedLevel.cs" />
     <Compile Include="Script\Exceptions\ChecksumMismatchException.cs" />
     <Compile Include="Script\Exceptions\EditionMismatchException.cs" />
     <Compile Include="Script\TRScriptOpenOption.cs" />
@@ -92,7 +93,7 @@
     <Compile Include="FrontEnd\AbstractTRFrontEnd.cs" />
     <Compile Include="Level\AbstractTRScriptedLevel.cs" />
     <Compile Include="Level\AbstractTRLevelManager.cs" />
-    <Compile Include="Level\Impls\TR23ScriptedLevel.cs" />
+    <Compile Include="Level\Impls\TR2ScriptedLevel.cs" />
     <Compile Include="Level\Impls\TR23LevelManager.cs" />
     <Compile Include="Level\TRScriptedLevelFactory.cs" />
     <Compile Include="Operation\TR23OpDefs.cs" />

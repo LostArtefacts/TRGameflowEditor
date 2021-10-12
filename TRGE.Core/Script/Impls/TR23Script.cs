@@ -448,11 +448,7 @@ namespace TRGE.Core
 
         private AbstractTRScriptedLevel CreateLevel(int index)
         {
-            TR23ScriptedLevel level = new TR23ScriptedLevel
-            {
-                Name = _levelNames[index],
-                LevelFile = _levelFileNames[index]
-            };
+            AbstractTRScriptedLevel level = CreateLevelType(_levelNames[index], _levelFileNames[index]);
 
             level.AddPuzzle(_puzzleNames1[index]);
             level.AddPuzzle(_puzzleNames2[index]);
@@ -472,14 +468,33 @@ namespace TRGE.Core
             if (level.HasOperation(TR23OpDefs.Cinematic))
             {
                 string cutSceneFile = CutSceneFileNames[level.GetOperation(TR23OpDefs.Cinematic).Operand];
-                level.CutSceneLevel = new TR23ScriptedLevel
-                {
-                    Name = cutSceneFile,
-                    LevelFile = cutSceneFile
-                };
+                level.CutSceneLevel = CreateLevelType(cutSceneFile, cutSceneFile);
             }
 
             return level;
+        }
+
+        private AbstractTRScriptedLevel CreateLevelType(string name, string dataFile)
+        {
+            switch (Edition.Version)
+            {
+                case TRVersion.TR2:
+                case TRVersion.TR2G:
+                    return new TR2ScriptedLevel
+                    {
+                        Name = name,
+                        LevelFile = dataFile
+                    };
+                case TRVersion.TR3:
+                case TRVersion.TR3G:
+                    return new TR3ScriptedLevel
+                    {
+                        Name = name,
+                        LevelFile = dataFile
+                    };
+                default:
+                    throw new ArgumentException();
+            }
         }
 
         #endregion

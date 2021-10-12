@@ -5,11 +5,11 @@ using TRGE.Core.Item.Enums;
 
 namespace TRGE.Core
 {
-    public class TR23ScriptedLevel : AbstractTRScriptedLevel
+    public class TR2ScriptedLevel : AbstractTRScriptedLevel
     {
-        private static readonly string[] PistolInjectionLevels = new string[]
+        private static readonly string[] _pistolInjectionLevels = new string[]
         {
-            CreateID("FLOATING"), CreateID("XIAN")//, CreateID("HOUSE")
+            CreateID("FLOATING"), CreateID("XIAN")
         };
 
         public override ushort Sequence
@@ -84,11 +84,11 @@ namespace TRGE.Core
 
         public override bool SupportsCutScenes => HasOperation(TR23OpDefs.Cinematic);
 
-        private TR23ScriptedLevel _cutSceneLevel;
+        private TR2ScriptedLevel _cutSceneLevel;
         public override AbstractTRScriptedLevel CutSceneLevel
         {
             get => _cutSceneLevel;
-            set => _cutSceneLevel = value as TR23ScriptedLevel;
+            set => _cutSceneLevel = value as TR2ScriptedLevel;
         }
 
         public override bool HasSunset
@@ -133,7 +133,7 @@ namespace TRGE.Core
         {
             get
             {
-                return PistolInjectionLevels.Contains(ID);
+                return _pistolInjectionLevels.Contains(ID);
             }
         }
 
@@ -173,6 +173,12 @@ namespace TRGE.Core
                 }
             }
         }
+
+        /// <summary>
+        /// Although the script is defined to specify the number of secrets, it's all hard-coded in the game.
+        /// TR2 can have a maximum of 3 per level.
+        /// </summary>
+        public override ushort NumSecrets => (ushort)(HasSecrets ? 3 : 0);
 
         /// <summary>
         /// This is set in HSH, although the game is hard-coded to complete after killing

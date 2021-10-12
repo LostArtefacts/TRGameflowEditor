@@ -86,6 +86,12 @@ namespace TRGE.Coord
                 }
             }
 
+            // And assault if supported
+            if (scriptEditor.GymAvailable)
+            {
+                File.Copy(GetReadLevelFilePath(scriptEditor.AssaultLevel.LevelFileBaseName), GetWriteLevelFilePath(scriptEditor.AssaultLevel.LevelFileBaseName));
+            }
+
             PreSaveImpl(scriptEditor);
         }
 

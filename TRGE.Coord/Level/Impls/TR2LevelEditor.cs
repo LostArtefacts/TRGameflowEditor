@@ -91,7 +91,7 @@ namespace TRGE.Coord
                 TR2Level level = reader.ReadLevel(levelFile);
 
                 SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
-                if ((e.ScriptedLevel as TR23ScriptedLevel).RequiresWeaponTextureInjection)
+                if ((e.ScriptedLevel as TR2ScriptedLevel).RequiresWeaponTextureInjection)
                 {
                     MaybeInjectWeaponTexture(level);
                 }

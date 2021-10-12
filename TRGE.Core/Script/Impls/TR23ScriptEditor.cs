@@ -198,7 +198,7 @@ namespace TRGE.Core
                 currentLevelManager.SetLevelBonusData(backupLevelManager.GetLevelBonusData(backupLevelManager.Levels));
             }
 
-            TR23ScriptedLevel gym = currentLevelManager.AssaultLevel as TR23ScriptedLevel;
+            TR2ScriptedLevel gym = currentLevelManager.AssaultLevel as TR2ScriptedLevel;
             currentLevelManager.MakeStartingWeaponsAvailable(gym, AddGymWeapons);
             currentLevelManager.MakeSkidooAvailable(gym, AddGymSkidoo);
         }
@@ -280,7 +280,7 @@ namespace TRGE.Core
             (LevelManager as TR23LevelManager).RandomiseUnarmedLevels(LoadRandomisationBaseScript().Levels);
         }
 
-        internal List<TR23ScriptedLevel> GetUnarmedLevels()
+        internal List<TR2ScriptedLevel> GetUnarmedLevels()
         {
             return (LevelManager as TR23LevelManager).GetUnarmedLevels();
         }
@@ -320,7 +320,7 @@ namespace TRGE.Core
             (LevelManager as TR23LevelManager).RandomiseAmmolessLevels(LoadRandomisationBaseScript().Levels);
         }
 
-        internal List<TR23ScriptedLevel> GetAmmolessLevels()
+        internal List<TR2ScriptedLevel> GetAmmolessLevels()
         {
             return (LevelManager as TR23LevelManager).GetAmmolessLevels();
         }

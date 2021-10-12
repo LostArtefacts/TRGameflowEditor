@@ -10,8 +10,8 @@ namespace TRGE.Core
         private readonly AbstractTR23AudioProvider _audioProvider;
         private readonly AbstractTR23ItemProvider _itemProvider;
         private readonly TR23Script _script;
-        private readonly TR23ScriptedLevel _assaultLevel;
-        private List<TR23ScriptedLevel> _levels;
+        private readonly TR2ScriptedLevel _assaultLevel;
+        private List<TR2ScriptedLevel> _levels;
 
         internal override int LevelCount => _levels.Count;
         public override AbstractTRAudioProvider AudioProvider => _audioProvider;
@@ -24,7 +24,7 @@ namespace TRGE.Core
             get => _levels.Cast<AbstractTRScriptedLevel>().ToList();
             set
             {
-                _levels = value.Cast<TR23ScriptedLevel>().ToList();
+                _levels = value.Cast<TR2ScriptedLevel>().ToList();
             }
         }
 
@@ -55,7 +55,7 @@ namespace TRGE.Core
             : base(script.Edition)
         {
             Levels = (_script = script).Levels;
-            _assaultLevel = _script.AssaultLevel as TR23ScriptedLevel;
+            _assaultLevel = _script.AssaultLevel as TR2ScriptedLevel;
             _audioProvider = TRAudioFactory.GetAudioProvider(script.Edition) as AbstractTR23AudioProvider;
             _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
         }
@@ -77,9 +77,9 @@ namespace TRGE.Core
             return TRScriptedLevelModification.Generic;
         }
 
-        internal List<TR23ScriptedLevel> GetAmmolessLevels()
+        internal List<TR2ScriptedLevel> GetAmmolessLevels()
         {
-            return GetLevelsWithOperation(TR23OpDefs.RemoveAmmo, true).Cast<TR23ScriptedLevel>().ToList();
+            return GetLevelsWithOperation(TR23OpDefs.RemoveAmmo, true).Cast<TR2ScriptedLevel>().ToList();
         }
 
         internal uint GetAmmolessLevelCount()
@@ -97,7 +97,7 @@ namespace TRGE.Core
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
-                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
+                TR2ScriptedLevel level = GetLevel(originalLevel.ID) as TR2ScriptedLevel;
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesAmmo));
             }
             return data;
@@ -107,7 +107,7 @@ namespace TRGE.Core
         {
             foreach (MutableTuple<string, string, bool> item in data)
             {
-                TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(item.Item1);
+                TR2ScriptedLevel level = (TR2ScriptedLevel)GetLevel(item.Item1);
                 if (level != null && level.RemovesAmmo != item.Item3)
                 {
                     level.RemovesAmmo = item.Item3;
@@ -143,9 +143,9 @@ namespace TRGE.Core
             );
         }
 
-        internal List<TR23ScriptedLevel> GetUnarmedLevels()
+        internal List<TR2ScriptedLevel> GetUnarmedLevels()
         {
-            return GetLevelsWithOperation(TR23OpDefs.RemoveWeapons, true).Cast<TR23ScriptedLevel>().ToList();
+            return GetLevelsWithOperation(TR23OpDefs.RemoveWeapons, true).Cast<TR2ScriptedLevel>().ToList();
         }
 
         internal uint GetUnarmedLevelCount()
@@ -163,7 +163,7 @@ namespace TRGE.Core
             List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
-                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
+                TR2ScriptedLevel level = GetLevel(originalLevel.ID) as TR2ScriptedLevel;
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesWeapons));
             }
             return data;
@@ -173,7 +173,7 @@ namespace TRGE.Core
         {
             foreach (MutableTuple<string, string, bool> item in data)
             {
-                TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(item.Item1);
+                TR2ScriptedLevel level = (TR2ScriptedLevel)GetLevel(item.Item1);
                 if (level != null)
                 {
                     level.RemovesWeapons = item.Item3;
@@ -199,7 +199,7 @@ namespace TRGE.Core
             Random rand = BonusRNG.Create();
 
             string hshID = AbstractTRScriptedLevel.CreateID("HOUSE");
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.HasSecrets)
                 {
@@ -236,7 +236,7 @@ namespace TRGE.Core
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
-                TR23ScriptedLevel level = GetLevel(originalLevel.ID) as TR23ScriptedLevel;
+                TR2ScriptedLevel level = GetLevel(originalLevel.ID) as TR2ScriptedLevel;
                 if (level.HasSecrets)
                 {
                     List<MutableTuple<ushort, TRItemCategory, string, int>> items = new List<MutableTuple<ushort, TRItemCategory, string, int>>();
@@ -261,7 +261,7 @@ namespace TRGE.Core
         {
             foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelData in data)
             {
-                TR23ScriptedLevel level = (TR23ScriptedLevel)GetLevel(levelData.Item1);
+                TR2ScriptedLevel level = (TR2ScriptedLevel)GetLevel(levelData.Item1);
                 if (level != null)
                 {
                     List<TRItem> bonuses = new List<TRItem>();
@@ -282,7 +282,7 @@ namespace TRGE.Core
         internal Dictionary<string, List<TRItem>> GetLevelBonusItems()
         {
             Dictionary<string, List<TRItem>> ret = new Dictionary<string, List<TRItem>>();
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.HasSecrets)
                 {
@@ -303,7 +303,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsHaveStartAnimation()
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.HasStartAnimation)
                 {
@@ -315,7 +315,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsSupportStartAnimations()
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.SupportsStartAnimations)
                 {
@@ -327,7 +327,7 @@ namespace TRGE.Core
 
         internal void SetLevelsHaveStartAnimation(bool haveStartAnimations)
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 level.HasStartAnimation = haveStartAnimations;
             }
@@ -335,7 +335,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsHaveCutScenes()
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.HasCutScene)
                 {
@@ -347,7 +347,7 @@ namespace TRGE.Core
 
         internal void SetLevelsHaveCutScenes(bool haveCutScenes)
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 level.HasCutScene = haveCutScenes;
             }
@@ -355,7 +355,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsSupportCutScenes()
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.SupportsCutScenes)
                 {
@@ -367,7 +367,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsHaveFMV()
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.HasFMV)
                 {
@@ -379,7 +379,7 @@ namespace TRGE.Core
 
         internal bool GetLevelsSupportFMVs()
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.SupportsFMVs)
                 {
@@ -391,13 +391,13 @@ namespace TRGE.Core
 
         internal void SetLevelsHaveFMV(bool haveFMVs)
         {
-            foreach (TR23ScriptedLevel level in _levels)
+            foreach (TR2ScriptedLevel level in _levels)
             {
                 level.HasFMV = haveFMVs;
             }
         }
 
-        internal void MakeStartingWeaponsAvailable(TR23ScriptedLevel level, bool available)
+        internal void MakeStartingWeaponsAvailable(TR2ScriptedLevel level, bool available)
         {
             if (available)
             {
@@ -434,7 +434,7 @@ namespace TRGE.Core
             }
         }
 
-        internal void MakeSkidooAvailable(TR23ScriptedLevel level, bool available)
+        internal void MakeSkidooAvailable(TR2ScriptedLevel level, bool available)
         {
             FireLevelModificationEvent(level, available ? TRScriptedLevelModification.SkidooAdded : TRScriptedLevelModification.SkidooRemoved);
         }
