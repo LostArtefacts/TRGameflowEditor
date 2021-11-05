@@ -295,9 +295,9 @@ namespace TRGE.Core
             return ret;
         }
 
-        public List<TRItems> GetBonusItemIDs()
+        public List<ushort> GetBonusItemIDs()
         {
-            ISet<TRItems> items = new SortedSet<TRItems>();
+            ISet<ushort> items = new SortedSet<ushort>();
             foreach (TROperation opcmd in _operations)
             {
                 if (opcmd.Definition == TR23OpDefs.StartInvBonus)
@@ -305,16 +305,16 @@ namespace TRGE.Core
                     ushort itemID = opcmd.Operand;
                     if (itemID < 1000)
                     {
-                        items.Add((TRItems)itemID);
+                        items.Add(itemID);
                     }
                 }
             }
             return items.ToList();
         }
 
-        public List<TRItems> GetStartInventoryItemIDs()
+        public List<ushort> GetStartInventoryItemIDs()
         {
-            ISet<TRItems> items = new SortedSet<TRItems>();
+            ISet<ushort> items = new SortedSet<ushort>();
             foreach (TROperation opcmd in _operations)
             {
                 if (opcmd.Definition == TR23OpDefs.StartInvBonus)
@@ -322,7 +322,7 @@ namespace TRGE.Core
                     ushort itemID = opcmd.Operand;
                     if (itemID > 999)
                     {
-                        items.Add((TRItems)(itemID - 1000));
+                        items.Add((ushort)(itemID - 1000));
                     }
                 }
             }
@@ -342,9 +342,9 @@ namespace TRGE.Core
             return count;
         }
 
-        public Dictionary<TRItems, int> GetStartInventoryItems()
+        public Dictionary<ushort, int> GetStartInventoryItems()
         {
-            Dictionary<TRItems, int> items = new Dictionary<TRItems, int>();
+            Dictionary<ushort, int> items = new Dictionary<ushort, int>();
 
             foreach (TROperation opcmd in _operations)
             {
@@ -353,7 +353,7 @@ namespace TRGE.Core
                     ushort itemID = opcmd.Operand;
                     if (itemID > 999)
                     {
-                        TRItems itemType = (TRItems)(itemID - 1000);
+                        ushort itemType = (ushort)(itemID - 1000);
                         if (!items.ContainsKey(itemType))
                         {
                             items[itemType] = 0;
@@ -366,17 +366,32 @@ namespace TRGE.Core
             return items;
         }
 
-        public void SetStartInventoryItems(Dictionary<TRItems, int> items)
+        public void SetStartInventoryItems(Dictionary<TR2Items, int> items)
+        {
+            SetStartInventoryItems(items.ToDictionary(item => (ushort)item.Key, item => item.Value));
+        }
+
+        public void SetStartInventoryItems(Dictionary<ushort, int> items)
         {
             ClearStartInventoryItems();
 
-            foreach (TRItems item in items.Keys)
+            foreach (ushort item in items.Keys)
             {
                 AddStartInventoryItem(item, (uint)items[item]);
             }
         }
 
-        public void AddStartInventoryItem(TRItems item, uint count = 1)
+        public void AddStartInventoryItem(TR2Items item, uint count = 1)
+        {
+            AddStartInventoryItem((ushort)item, count);
+        }
+
+        public void RemoveStartInventoryItem(TR2Items item, bool removeAll = false)
+        {
+            RemoveStartInventoryItem((ushort)item, removeAll);
+        }
+
+        public void AddStartInventoryItem(ushort item, uint count = 1)
         {
             ushort itemID = (ushort)(1000 + item);
             for (int i = 0; i < count; i++)
@@ -385,7 +400,7 @@ namespace TRGE.Core
             }
         }
 
-        public void RemoveStartInventoryItem(TRItems item, bool removeAll = false)
+        public void RemoveStartInventoryItem(ushort item, bool removeAll = false)
         {
             ushort itemID = (ushort)(1000 + item);
             for (int i = _operations.Count - 1; i >= 0; i--)

@@ -1,4 +1,8 @@
-﻿namespace TRGE.Core
+﻿using System.Collections.Generic;
+using System.Linq;
+using TRGE.Core.Item.Enums;
+
+namespace TRGE.Core
 {
     public class TR3ScriptedLevel : TR2ScriptedLevel
     {
@@ -16,5 +20,20 @@
         }
 
         public override ushort NumSecrets => _levelSecrets[Sequence];
+
+        public void AddStartInventoryItem(TR3Items item, uint count = 1)
+        {
+            AddStartInventoryItem((ushort)item, count);
+        }
+
+        public void RemoveStartInventoryItem(TR3Items item, bool removeAll = false)
+        {
+            RemoveStartInventoryItem((ushort)item, removeAll);
+        }
+
+        public void SetStartInventoryItems(Dictionary<TR3Items, int> items)
+        {
+            SetStartInventoryItems(items.ToDictionary(item => (ushort)item.Key, item => item.Value));
+        }
     }
 }

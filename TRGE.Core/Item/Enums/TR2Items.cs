@@ -1,6 +1,6 @@
 ﻿namespace TRGE.Core.Item.Enums
 {
-    public enum TRItems
+    public enum TR2Items
     {
         Pistols,
         Shotgun,

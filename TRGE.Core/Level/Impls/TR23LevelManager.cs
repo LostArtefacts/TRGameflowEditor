@@ -401,23 +401,23 @@ namespace TRGE.Core
         {
             if (available)
             {
-                Dictionary<TRItems, int> weapons = null;
+                Dictionary<TR2Items, int> weapons = null;
                 switch (Edition.Version)
                 {
                     case TRVersion.TR2:
-                        weapons = new Dictionary<TRItems, int>
+                        weapons = new Dictionary<TR2Items, int>
                         {
-                            [TRItems.Pistols] = 1,
-                            [TRItems.Shotgun] = 1,
-                            [TRItems.ShotgunShells] = 4,
-                            [TRItems.AutoPistols] = 1,
-                            [TRItems.AutoClips] = 4,
-                            [TRItems.Uzis] = 1,
-                            [TRItems.UziClips] = 4,
-                            [TRItems.HarpoonGun] = 1,
-                            [TRItems.Harpoons] = 4,
-                            [TRItems.M16] = 1,
-                            [TRItems.M16Clips] = 4,
+                            [TR2Items.Pistols] = 1,
+                            [TR2Items.Shotgun] = 1,
+                            [TR2Items.ShotgunShells] = 4,
+                            [TR2Items.AutoPistols] = 1,
+                            [TR2Items.AutoClips] = 4,
+                            [TR2Items.Uzis] = 1,
+                            [TR2Items.UziClips] = 4,
+                            [TR2Items.HarpoonGun] = 1,
+                            [TR2Items.Harpoons] = 4,
+                            [TR2Items.M16] = 1,
+                            [TR2Items.M16Clips] = 4,
                         };
                         break;
                 }

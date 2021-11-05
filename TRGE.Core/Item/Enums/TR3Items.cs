@@ -1,0 +1,36 @@
+﻿namespace TRGE.Core.Item.Enums
+{
+    public enum TR3Items
+    {
+        Pistols,
+        Shotgun,
+        DEagle,
+        Uzis,
+        HarpoonGun,
+        MP5,
+        RocketLauncher,
+        GrenadeLauncher,
+        PistolClips,
+        ShotgunShells,
+        DEagleClips,
+        UziClips,
+        Harpoons,
+        MP5Clips,
+        Rocket,
+        Grenades,
+        Flare,
+        SmallMedi,
+        LargeMedi,
+        Pickup1,
+        Pickup2,
+        Puzzle1,
+        Puzzle2,
+        Puzzle3,
+        Puzzle4,
+        Key1,
+        Key2,
+        Key3,
+        Key4,
+        SaveCrystal
+    }
+}
