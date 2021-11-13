@@ -4,7 +4,7 @@ TRGE lets you edit the script file for Tomb Raider II, Tomb Raider II Gold, Tomb
 # Thanks
 First things first, big thanks to:
 
-* DanzaG - for [TR2LevelReader](https://github.com/DanzaG/TR2-Rando), an invaluable tool for reading and editing TR2 level files. Check out TR2-Rando - a fantastic randomizer for TR2.
+* DanzaG - for [TRLevelReader](https://github.com/DanzaG/TR2-Rando), an invaluable tool for reading and editing TR level files. Check out TR-Rando - a fantastic randomizer for TR.
 * chreden - for [TRView](https://github.com/chreden/trview), another invaluable tool which was used to pick default pistol locations for unarmed levels.
 * Paolone, Popov - for [TRViewer](https://www.aspidetr.com/en/tools/tr-viewer/trviewer/), which was used to amend Home Sweet Home to support all weapons, weapon animations, moveables and sprites.
 
