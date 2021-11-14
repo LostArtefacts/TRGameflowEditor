@@ -189,6 +189,11 @@ namespace TRGE.Core
 
         internal void RandomiseBonuses()
         {
+            if (_script.Edition.Version > TRVersion.TR2G)
+            {
+                return;
+            }
+
             TRItem shotgun = (ItemProvider as TR2ItemProvider).Shotgun;
             TRItem flare = (ItemProvider as TR2ItemProvider).Flare;
             Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>
