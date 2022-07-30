@@ -46,6 +46,7 @@ namespace TRGE.View
             TRInterop.ExecutingVersion = Version;
             TRInterop.TaggedVersion = TaggedVersion;
             TRInterop.RandomisationSupported = false;
+            TRInterop.UsingTRMain = false;
         }
 
         private void TRCoord_ResourceDownloading(object sender, TRDownloadEventArgs e)

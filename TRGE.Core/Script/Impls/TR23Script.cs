@@ -305,7 +305,7 @@ namespace TRGE.Core
 
         public override AbstractTRScriptedLevel AssaultLevel
         {
-            get => CreateLevel(0);
+            get => CreateLevel(0, false);
             set => SetLevelData(0, value);
         }
 
@@ -317,7 +317,7 @@ namespace TRGE.Core
                 List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(count);
                 for (ushort i = 1; i < count; i++) //skip assault and however many demos there are
                 {
-                    levels.Add(CreateLevel(i));
+                    levels.Add(CreateLevel(i, true));
                 }
                 return levels;
             }
@@ -377,7 +377,7 @@ namespace TRGE.Core
                 List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(NumDemoLevels);
                 for (ushort i = NumPlayableLevels; i < NumPlayableLevels + NumDemoLevels; i++) //skip assault and main levels
                 {
-                    levels.Add(CreateLevel(i));
+                    levels.Add(CreateLevel(i, true));
                 }
                 return levels;
             }
@@ -446,7 +446,7 @@ namespace TRGE.Core
             _scriptData.Add(level.TranslateOperations());
         }
 
-        private AbstractTRScriptedLevel CreateLevel(int index)
+        private AbstractTRScriptedLevel CreateLevel(int index, bool demo)
         {
             AbstractTRScriptedLevel level = CreateLevelType(_levelNames[index], _levelFileNames[index]);
 
@@ -465,11 +465,15 @@ namespace TRGE.Core
 
             level.BuildOperations(_scriptData[index + 1]);
 
+            level.OriginalSequence = demo ? ushort.MaxValue : level.Sequence;
+
             if (level.HasOperation(TR23OpDefs.Cinematic))
             {
                 string cutSceneFile = CutSceneFileNames[level.GetOperation(TR23OpDefs.Cinematic).Operand];
                 level.CutSceneLevel = CreateLevelType(cutSceneFile, cutSceneFile);
             }
+
+            level.SetDefaults();
 
             return level;
         }

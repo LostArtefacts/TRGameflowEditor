@@ -132,7 +132,12 @@ namespace TRGE.Coord
             }
 
             // Fish for some reason cause the game to crash if any level is out of its original sequence.
-            // So we just move the fish to 0,0,0 and remove their triggers.
+            // So we just move the fish to 0,0,0 and remove their triggers, unless TR3Main is being used.
+            if (TRInterop.UsingTRMain)
+            {
+                return;
+            }
+
             TR3Level level = ReadLevel(args.LevelFileBaseName);
 
             List<TR2Entity> entities = level.Entities.ToList();

@@ -362,6 +362,20 @@ namespace TRGE.Core
         {
             _config["CheckSumOnSave"] = new FileInfo(GetScriptWIPOutputPath()).Checksum();
             _config.Write(ConfigFile.FullName);
+
+            // Store sequencing data for third-party tools to access/compare differences
+            string sequenceData = Path.Combine(Path.GetDirectoryName(OriginalFile.FullName), "../", "LEVELINFO.DAT");
+            using (BinaryWriter bw = new BinaryWriter(new FileStream(sequenceData, FileMode.Create)))
+            {
+                bw.Write((byte)LevelManager.EnabledLevelCount);
+                foreach (AbstractTRScriptedLevel level in LevelManager.Levels)
+                {
+                    if (level.Enabled)
+                    {
+                        level.SerializeToMain(bw);
+                    }
+                }
+            }
         }
 
         internal override Config ExportConfig()

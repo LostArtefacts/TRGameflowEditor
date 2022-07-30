@@ -27,6 +27,7 @@ namespace TRGE.Core
         public List<string> Pickups => _pickups;
 
         public abstract ushort Sequence { get; set; }
+        public ushort OriginalSequence { get; internal set; }
         public abstract ushort TrackID { get; set; }
         public abstract bool HasFMV { get; set; }
         public abstract bool SupportsFMVs { get; }
@@ -55,6 +56,8 @@ namespace TRGE.Core
             _pickups = new List<string>();
             Enabled = true;
         }
+
+        public virtual void SetDefaults() { }
 
         internal void AddPuzzle(string puzzle)
         {
@@ -104,6 +107,12 @@ namespace TRGE.Core
         public override int GetHashCode()
         {
             return 1213502048 + EqualityComparer<string>.Default.GetHashCode(ID);
+        }
+
+        public virtual void SerializeToMain(BinaryWriter writer)
+        {
+            writer.Write((byte)OriginalSequence);
+            writer.Write((byte)Sequence);
         }
     }
 }

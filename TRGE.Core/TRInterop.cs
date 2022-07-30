@@ -29,5 +29,6 @@ namespace TRGE.Core
         public static bool SecretRewardsSupported { get; set; }
         //public static string ScriptModificationStamp { get; set; }
         public static GameStamp ScriptModificationStamp { get; }
+        public static bool UsingTRMain { get; set; }
     }
 }

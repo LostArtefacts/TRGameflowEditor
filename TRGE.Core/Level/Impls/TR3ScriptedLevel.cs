@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TRGE.Core.Item.Enums;
 
@@ -34,6 +35,48 @@ namespace TRGE.Core
         public void SetStartInventoryItems(Dictionary<TR3Items, int> items)
         {
             SetStartInventoryItems(items.ToDictionary(item => (ushort)item.Key, item => item.Value));
+        }
+
+        public bool HasRain { get; set; }
+        public bool HasSnow { get; set; }
+        public bool HasColdWater { get; set; }
+
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+
+            HasRain = HasSnow = HasColdWater = false;
+
+            switch (OriginalSequence)
+            {
+                case 1:
+                case 9:
+                    // Jungle & Thames
+                    HasRain = true;
+                    break;
+                case 16:
+                    // Antarctica
+                    HasSnow = true;
+                    HasColdWater = true;
+                    break;
+                case 17:
+                    // Antarctica & RX-Tech
+                    HasColdWater = true;
+                    break;
+                case 19:
+                    // Willie
+                    HasSnow = true;
+                    break;
+            }
+        }
+
+        public override void SerializeToMain(BinaryWriter writer)
+        {
+            base.SerializeToMain(writer);
+
+            writer.Write((byte)(HasRain ? 1 : 0));
+            writer.Write((byte)(HasSnow ? 1 : 0));
+            writer.Write((byte)(HasColdWater ? 1 : 0));
         }
     }
 }

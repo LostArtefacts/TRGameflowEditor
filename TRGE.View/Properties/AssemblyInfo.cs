@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tomp Community")]
 [assembly: AssemblyProduct("TRGE v1.1.0")]
-[assembly: AssemblyCopyright("Copyright © Tomp Community 2021")]
+[assembly: AssemblyCopyright("Copyright © Tomp Community 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
