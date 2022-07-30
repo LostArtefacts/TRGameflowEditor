@@ -15,7 +15,7 @@ namespace TRGE.View.Model
 
         private bool _titleEnabled, _levelSelectEnabled, _saveLoadEnabled, _optionRingEnabled;
         private bool _fmvsEnabled, _cutscenesEnabled, _startAnimationsEnabled, _cheatsEnabled, _dozyViable, _dozyEnabled;
-        private bool _demosViable, _demosEnabled, _trainingViable, _trainingEnabled, _trainingWeaponsEnabled, _trainingSkidooViable, _trainingSkidooEnabled;
+        private bool _demosViable, _demosEnabled, _trainingViable, _trainingEnabled, _trainingWeaponsViable, _trainingWeaponsEnabled, _trainingSkidooViable, _trainingSkidooEnabled;
         private int _demoDelay;
 
         private bool _levelSequencingViable;
@@ -190,6 +190,16 @@ namespace TRGE.View.Model
             set
             {
                 _trainingEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool TrainingWeaponsViable
+        {
+            get => _trainingWeaponsViable;
+            set
+            {
+                _trainingWeaponsViable = value;
                 OnPropertyChanged();
             }
         }
@@ -576,6 +586,7 @@ namespace TRGE.View.Model
             DemoDelay = (int)editor.DemoTime;
             TrainingEnabled = editor.GymEnabled;
             TrainingLevelViable = editor.GymAvailable;
+            TrainingWeaponsViable = editor.GymWeaponsAvailable;
             TrainingWeaponsEnabled = editor.AddGymWeapons;
             TrainingSkidooViable = editor.SkidooAvailable;
             TrainingSkidooEnabled = editor.AddGymSkidoo;

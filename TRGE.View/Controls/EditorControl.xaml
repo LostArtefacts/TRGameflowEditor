@@ -123,7 +123,7 @@
                     Margin="5"/>
 
                 <c:BoolOptionControl 
-                    IsEnabled="{Binding TrainingLevelViable, UpdateSourceTrigger=PropertyChanged}"
+                    IsEnabled="{Binding TrainingWeaponsViable, UpdateSourceTrigger=PropertyChanged}"
                     IsActive="{Binding TrainingWeaponsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                     Title="Add weapons to the training level" 
                     Text="Populate Lara's inventory with all weapons."

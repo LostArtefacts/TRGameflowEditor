@@ -433,6 +433,8 @@ namespace TRGE.Core
 
         public bool SkidooAvailable => Edition.Version == TRVersion.TR2;
 
+        public bool GymWeaponsAvailable => Edition.Version == TRVersion.TR2;
+
         public bool AddGymWeapons
         {
             get => _addGymWeapons;
