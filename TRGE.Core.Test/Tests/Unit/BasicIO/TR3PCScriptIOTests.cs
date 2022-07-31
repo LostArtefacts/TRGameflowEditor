@@ -321,7 +321,7 @@ namespace TRGE.Core.Test
             //There seems to be an issue in the original TR3 script. I think the devs forgot to null-terminate the description properly as it contains the end of the TR2 description.
             //If we set the description to match here, it won't impact the test results.
             _script.Description += "0gn Ltd 1997";
-            byte[] serialData = _script.Serialise();
+            byte[] serialData = _script.SerialiseScriptToBin();
             serialData[63] = 0; //see above
             CollectionAssert.AreEqual(originalData, serialData);
         }

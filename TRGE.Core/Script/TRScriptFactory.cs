@@ -6,26 +6,43 @@ namespace TRGE.Core
     {
         public static AbstractTRScriptEditor GetScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
         {
-            uint scriptVersion = GetDatFileVersion(ioArgs.OriginalFile.FullName);
+            uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile.FullName);
             switch (scriptVersion)
             {
+                case TR1Script.Version:
+                    return new TR1ScriptEditor(ioArgs, openOption);
                 case TR23Script.Version:
                     return new TR23ScriptEditor(ioArgs, openOption);
                 default:
-                    throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, ioArgs.OriginalFile.Name));
+                    throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, ioArgs.TRScriptFile.Name));
             }
         }
 
         public static FileInfo FindScriptFile(DirectoryInfo directory)
         {
-            foreach (FileInfo fi in directory.GetFiles())
+            string dir = directory.FullName;
+            foreach (TREdition edition in TREdition.All)
             {
-                string fileName = fi.Name.ToLower();
-                foreach (TREdition edition in TREdition.All)
+                string script = Path.Combine(dir, edition.ScriptName);
+                if (File.Exists(script))
                 {
-                    if (fileName.Equals(edition.ScriptName.ToLower()))
+                    return new FileInfo(script);
+                }
+            }
+            return null;
+        }
+
+        public static FileInfo FindConfigFile(DirectoryInfo directory)
+        {
+            string dir = directory.FullName;
+            foreach (TREdition edition in TREdition.All)
+            {
+                if (edition.HasConfig)
+                {
+                    string config = Path.Combine(dir, edition.ConfigName);
+                    if (File.Exists(config))
                     {
-                        return fi;
+                        return new FileInfo(config);
                     }
                 }
             }
@@ -42,6 +59,9 @@ namespace TRGE.Core
             AbstractTRScript script;
             switch (GetDatFileVersion(filePath))
             {
+                case TR1Script.Version:
+                    script = new TR1Script();
+                    break;
                 case TR23Script.Version:
                     script = new TR23Script();
                     break;
@@ -55,9 +75,19 @@ namespace TRGE.Core
 
         private static uint GetDatFileVersion(string filePath)
         {
-            using (BinaryReader br = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+            string ext = Path.GetExtension(filePath).ToUpper();
+            switch (ext)
             {
-                return br.ReadUInt32();
+                case ".DAT":
+                    using (BinaryReader br = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+                    {
+                        return br.ReadUInt32();
+                    }
+                case ".JSON":
+                case ".JSON5":
+                    return TR1Script.Version;
+                default:
+                    return 0;
             }
         }
     }

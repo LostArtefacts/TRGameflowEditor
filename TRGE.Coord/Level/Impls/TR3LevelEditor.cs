@@ -63,6 +63,16 @@ namespace TRGE.Coord
             }
         }
 
+        protected override void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor)
+        {
+            // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
+            TR23ScriptEditor editor = scriptEditor as TR23ScriptEditor;
+            if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
+            {
+                _unarmedRng = editor.UnarmedLevelRNG.Create();
+            }
+        }
+
         protected override void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs args)
         {
             if (!args.ScriptedLevel.Enabled)
@@ -73,7 +83,7 @@ namespace TRGE.Coord
             TR3Level level = ReadLevel(args.LevelFileBaseName);
             AbstractTRScriptedLevel scriptedLevel = args.ScriptedLevel;
             
-            Location defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
+            Location defaultLocation = GetDefaultUnarmedLocationForLevel(scriptedLevel);
             if (defaultLocation == null)
             {
                 throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
@@ -104,6 +114,7 @@ namespace TRGE.Coord
             }
             else if (scriptedLevel.RemovesWeapons)
             {
+                defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
                 entities.Add(new TR2Entity
                 {
                     TypeID = (short)TR3Entities.Pistols_P,
@@ -131,7 +142,7 @@ namespace TRGE.Coord
                 return;
             }
 
-            // Fish for some reason cause the game to crash if any level is out of its original sequence.
+            // Fish cause the game to crash if levels are off-sequence due to hardcoded offsets.
             // So we just move the fish to 0,0,0 and remove their triggers, unless TR3Main is being used.
             if (TRInterop.UsingTRMain)
             {

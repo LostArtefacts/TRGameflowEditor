@@ -44,6 +44,20 @@ namespace TRGE.Coord
 
         protected virtual void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs e) { }
 
+        internal Location GetDefaultUnarmedLocationForLevel(AbstractTRScriptedLevel level)
+        {
+            string levelFileName = level.LevelFileBaseName.ToUpper();
+            if (_defaultWeaponLocations.ContainsKey(levelFileName))
+            {
+                List<Location> locations = _defaultWeaponLocations[levelFileName];
+                if (locations.Count > 0)
+                {
+                    return locations[0];
+                }
+            }
+            return null;
+        }
+
         internal Location GetUnarmedLocationForLevel(AbstractTRScriptedLevel level)
         {
             string levelFileName = level.LevelFileBaseName.ToUpper();
@@ -70,12 +84,7 @@ namespace TRGE.Coord
 
         internal sealed override void PreSave(AbstractTRScriptEditor scriptEditor)
         {
-            // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
-            TR23ScriptEditor editor = scriptEditor as TR23ScriptEditor;
-            if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
-            {
-                _unarmedRng = editor.UnarmedLevelRNG.Create();
-            }
+            InitialiseUnarmedRNG(scriptEditor);
 
             // Ensure cutscene files are copied initially
             foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
@@ -94,6 +103,8 @@ namespace TRGE.Coord
 
             PreSaveImpl(scriptEditor);
         }
+
+        protected virtual void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor) { }
 
         protected virtual void PreSaveImpl(AbstractTRScriptEditor scriptEditor) { }
     }

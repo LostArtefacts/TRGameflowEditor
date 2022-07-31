@@ -42,7 +42,7 @@ namespace TRGE.Coord
         protected OperationMode _mode;
 
         protected string _editDirectory;
-        protected string _orignalScriptFile, _backupScriptFile, _scriptConfigFile;
+        protected string _orignalScriptFile, _backupScriptFile, _scriptConfigFile, _originalTRConfigFile, _backupTRConfigFile;
         protected string _originalDirectory, _directoryConfigFile;
 
         internal string OriginalDirectory => _originalDirectory;
@@ -69,6 +69,7 @@ namespace TRGE.Coord
         {
             _mode = Directory.Exists(path) ? OperationMode.Directory : OperationMode.File;
             _orignalScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path) : path;
+            _originalTRConfigFile = _mode == OperationMode.Directory ? FindConfigFile(path) : path;
             _originalDirectory = _mode == OperationMode.Directory ? path : new FileInfo(_orignalScriptFile).DirectoryName;
 
             // Verify that the script and level editors are compatible - this
@@ -105,9 +106,11 @@ namespace TRGE.Coord
         {
             TRScriptIOArgs io = new TRScriptIOArgs
             {
-                OriginalFile = new FileInfo(_orignalScriptFile),
-                BackupFile = new FileInfo(_backupScriptFile),
-                ConfigFile = new FileInfo(_scriptConfigFile),
+                TRScriptFile = new FileInfo(_orignalScriptFile),
+                TRScriptBackupFile = new FileInfo(_backupScriptFile),
+                TRConfigFile = _originalTRConfigFile == null ? null : new FileInfo(_originalTRConfigFile),
+                TRConfigBackupFile = _backupTRConfigFile == null ? null : new FileInfo(_backupTRConfigFile),
+                InternalConfigFile = new FileInfo(_scriptConfigFile),
                 WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
                 OutputDirectory = new DirectoryInfo(GetOutputDirectory())
             };
@@ -147,6 +150,12 @@ namespace TRGE.Coord
             return fi.FullName;
         }
 
+        private string FindConfigFile(string path)
+        {
+            FileInfo fi = TRScriptFactory.FindConfigFile(new DirectoryInfo(path));
+            return fi?.FullName;
+        }
+
         protected void CreateBackup()
         {
             string backupDirectory = GetBackupDirectory();
@@ -160,6 +169,10 @@ namespace TRGE.Coord
                 {
                     _orignalScriptFile
                 };
+                if (_originalTRConfigFile != null)
+                {
+                    filesToBackup.Add(_originalTRConfigFile);
+                }
 
                 // Open the original script and determine which files we need to copy. Merge the level files
                 // with the original paths as some may not be in the current directory (e.g. TR3 cutscene files).
@@ -192,6 +205,10 @@ namespace TRGE.Coord
                 }
 
                 _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
+                if (_originalTRConfigFile != null)
+                {
+                    _backupTRConfigFile = Path.Combine(backupDirectory, new FileInfo(_originalTRConfigFile).Name);
+                }
             }
             else
             {
@@ -232,6 +249,11 @@ namespace TRGE.Coord
             {
                 scriptEditor.BackupFile.Name
             };
+            if (_originalTRConfigFile != null)
+            {
+                expectedFiles.Add(scriptEditor.BackupTRConfigFile.Name);
+            }
+
             if (scriptEditor.Edition.AssaultCourseSupported)
             {
                 expectedFiles.Add(scriptEditor.LevelManager.AssaultLevel.LevelFileBaseName);

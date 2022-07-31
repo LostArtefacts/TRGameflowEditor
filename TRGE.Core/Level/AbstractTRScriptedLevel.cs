@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace TRGE.Core
 {
@@ -113,6 +114,17 @@ namespace TRGE.Core
         {
             writer.Write((byte)OriginalSequence);
             writer.Write((byte)Sequence);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder(base.ToString());
+
+            sb.Append(" Name: " + Name);
+            sb.Append(", File: " + LevelFileBaseName.ToUpper());
+            sb.Append(", Sequence: " + Sequence);
+
+            return sb.ToString();
         }
     }
 }

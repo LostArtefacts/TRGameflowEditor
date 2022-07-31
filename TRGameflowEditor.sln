@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.Core", "TRGE.Core\TRGE.Core.csproj", "{D35A4948-923B-4EF7-87DE-81C27D156D93}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaponImport", "WeaponImport\WeaponImport.csproj", "{E353A2C4-4833-4A83-AB96-447FBD265412}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationConverter", "LocationConverter\LocationConverter.csproj", "{E622C79B-98F1-4EF1-8780-CC4397F41B87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRGE.Test", "TRGE.Test\TRGE.Test.csproj", "{D5257A04-EEDF-4C9C-9D1C-69BEF73B5E92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{E622C79B-98F1-4EF1-8780-CC4397F41B87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E622C79B-98F1-4EF1-8780-CC4397F41B87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E622C79B-98F1-4EF1-8780-CC4397F41B87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5257A04-EEDF-4C9C-9D1C-69BEF73B5E92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5257A04-EEDF-4C9C-9D1C-69BEF73B5E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5257A04-EEDF-4C9C-9D1C-69BEF73B5E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5257A04-EEDF-4C9C-9D1C-69BEF73B5E92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

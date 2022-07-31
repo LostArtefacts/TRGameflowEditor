@@ -9,6 +9,7 @@ namespace TRGE.Coord
     {
         private static readonly IReadOnlyDictionary<TRVersion, Type> _defaultTypeMap = new Dictionary<TRVersion, Type>
         {
+            [TRVersion.TR1] = typeof(TR1LevelEditor),
             [TRVersion.TR2] = typeof(TR2LevelEditor),
             [TRVersion.TR2G] = typeof(TR2LevelEditor),
             [TRVersion.TR3] = typeof(TR3LevelEditor),

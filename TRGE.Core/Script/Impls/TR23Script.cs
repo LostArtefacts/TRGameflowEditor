@@ -541,7 +541,7 @@ namespace TRGE.Core
             }
         }
 
-        public override void Read(BinaryReader br)
+        public override void ReadScriptBin(BinaryReader br)
         {
             if (br.ReadUInt32() != Version)
             {
@@ -720,7 +720,7 @@ namespace TRGE.Core
             return fmvData;
         }
 
-        public override byte[] Serialise()
+        public override byte[] SerialiseScriptToBin()
         {
             using (MemoryStream ms = new MemoryStream())
             using (BinaryWriter bw = new BinaryWriter(ms))

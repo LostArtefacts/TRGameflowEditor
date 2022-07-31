@@ -348,7 +348,7 @@ namespace TRGE.Core.Test
         protected void TestUntouchedWrite()
         {
             byte[] originalData = File.ReadAllBytes(_validFilePath);
-            CollectionAssert.AreEqual(originalData, _script.Serialise());
+            CollectionAssert.AreEqual(originalData, _script.SerialiseScriptToBin());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Collections.Generic;
+using System;
 
 namespace TRGE.Core
 {
@@ -12,29 +13,90 @@ namespace TRGE.Core
             Read(file.FullName);
         }
 
+        public void ReadConfig(FileInfo file)
+        {
+            ReadConfig(file.FullName);
+        }
+
         public void Read(string filePath)
         {
             //All we can go on to begin with is the file name to determine a generic edition.
             //Subclasses should implement CalculateEdition and call it as appropriate while reading the data.
             Edition = filePath.ToLower().Contains("tombpsx") ? TREdition.GenericPSX : TREdition.GenericPC;
 
-            using (BinaryReader br = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+            string ext = Path.GetExtension(filePath).ToUpper();
+            switch (ext)
             {
-                Read(br);
+                case ".DAT":
+                    using (BinaryReader br = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+                    {
+                        ReadScriptBin(br);
+                    }
+                    break;
+                case ".JSON":
+                case ".JSON5":
+                    ReadScriptJson(File.ReadAllText(filePath));
+                    break;
+                default:
+                    throw new UnsupportedScriptException();
+            }
+        }
+
+        public void ReadConfig(string filePath)
+        {
+            string ext = Path.GetExtension(filePath).ToUpper();
+            switch (ext)
+            {
+                case ".JSON":
+                case ".JSON5":
+                    ReadConfigJson(File.ReadAllText(filePath));
+                    break;
+                default:
+                    throw new UnsupportedScriptException();
             }
         }
 
         public void Write(string filePath)
         {
             Stamp();
-            using (BinaryWriter bw = new BinaryWriter(new FileStream(filePath, FileMode.Create)))
+            string ext = Path.GetExtension(filePath).ToUpper();
+            switch (ext)
             {
-                bw.Write(Serialise());
+                case ".DAT":
+                    using (BinaryWriter bw = new BinaryWriter(new FileStream(filePath, FileMode.Create)))
+                    {
+                        bw.Write(SerialiseScriptToBin());
+                    }
+                    break;
+                case ".JSON":
+                case ".JSON5":
+                    File.WriteAllText(filePath, SerialiseScriptToJson());
+                    break;
+                default:
+                    throw new UnsupportedScriptException();
             }
         }
 
-        public abstract void Read(BinaryReader br);
-        public abstract byte[] Serialise();
+        public void WriteConfig(string filePath)
+        {
+            string ext = Path.GetExtension(filePath).ToUpper();
+            switch (ext)
+            {
+                case ".JSON":
+                case ".JSON5":
+                    File.WriteAllText(filePath, SerialiseConfigToJson());
+                    break;
+                default:
+                    throw new UnsupportedScriptException();
+            }
+        }
+
+        public virtual void ReadScriptBin(BinaryReader br) { }
+        public virtual void ReadScriptJson(string json) { }
+        public virtual void ReadConfigJson(string json) { }
+        public virtual byte[] SerialiseScriptToBin() { return Array.Empty<byte>(); }
+        public virtual string SerialiseScriptToJson() { return string.Empty; }
+        public virtual string SerialiseConfigToJson() { return string.Empty; }
         protected abstract void CalculateEdition();
         public abstract AbstractTRFrontEnd FrontEnd { get; }
         public abstract AbstractTRScriptedLevel AssaultLevel { get; set; }

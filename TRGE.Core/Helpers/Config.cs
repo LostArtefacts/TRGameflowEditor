@@ -49,6 +49,12 @@ namespace TRGE.Core
             return value == null ? defaultValue : int.Parse(value.ToString());
         }
 
+        public double GetDouble(string key, int defaultValue = -1)
+        {
+            object value = Get(key);
+            return value == null ? defaultValue : double.Parse(value.ToString());
+        }
+
         public uint GetUInt(string key, uint defaultValue = 0)
         {
             object value = Get(key);
@@ -65,6 +71,12 @@ namespace TRGE.Core
         {
             object value = Get(key);
             return value == null ? defaultValue : Enum.ToObject(enumType, value);
+        }
+
+        public T[] GetArray<T>(string key)
+        {
+            object value = Get(key);
+            return value == null ? null : JsonConvert.DeserializeObject<T[]>(value.ToString());
         }
 
         public Organisation GetOrganisation(string key, Organisation defaultValue = Organisation.Default)

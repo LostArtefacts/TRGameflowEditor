@@ -1,0 +1,31 @@
+﻿namespace TRGE.Core
+{
+    public enum LevelSequenceType
+    {
+        Start_Game,
+        Stop_Game,
+        Loop_Game,
+        Start_Cine,
+        Stop_Cine,
+        Loop_Cine,
+        Play_FMV,
+        Display_Picture,
+        Level_Stats,
+        Total_Stats,
+        Exit_To_Title,
+        Exit_To_Level,
+        Exit_To_Cine,
+        Set_Cam_X,
+        Set_Cam_Y,
+        Set_Cam_Z,
+        Set_Cam_Angle,
+        Flip_Map,
+        Remove_Guns,
+        Remove_Scions,
+        Remove_Ammo,
+        Give_Item,
+        Play_Synced_Audio,
+        Mesh_Swap,
+        Fix_Pyramid_Secret
+    }
+}

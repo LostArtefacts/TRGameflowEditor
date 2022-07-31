@@ -71,6 +71,7 @@
     <Compile Include="Level\AbstractTRLevelEditor.cs" />
     <Compile Include="Level\BaseTRLevelEditor.cs" />
     <Compile Include="Level\Exceptions\ScriptedLevelMismatchException.cs" />
+    <Compile Include="Level\Impls\TR1LevelEditor.cs" />
     <Compile Include="Level\Impls\TR3LevelEditor.cs" />
     <Compile Include="Level\TRLevelEditorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,6 +95,9 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\House.gz" />
+    <None Include="Resources\TR1\Locations\unarmed_locations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\TR2\Models\Autos_M_H\Data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

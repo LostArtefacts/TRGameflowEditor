@@ -36,6 +36,23 @@ namespace TRGE.Core
             SunsetLevelCount = 0
         };
 
+        internal static readonly TREdition TR1PC = new TREdition
+        {
+            Title = "Tomb Raider I (PC)",
+            Version = TRVersion.TR1,
+            ScriptName = @"..\cfg\Tomb1Main_gameflow.json5",
+            ConfigName = @"..\cfg\Tomb1Main.json5",
+            Hardware = Hardware.PC,
+            LevelCompleteOffset = 0,
+            SecretBonusesSupported = false,
+            SunsetsSupported = false,
+            SecretSoundSupported = false,
+            AssaultCourseSupported = true,
+            UnarmedLevelCount = 1,
+            AmmolessLevelCount = 0,
+            SunsetLevelCount = 0
+        };
+
         internal static readonly TREdition TR2PC = new TREdition
         {
             Title = "Tomb Raider II (PC)",
@@ -150,7 +167,7 @@ namespace TRGE.Core
 
         internal static readonly IReadOnlyList<TREdition> All = new List<TREdition>
         {
-            TR2PC, TR2G, TR2PSXBeta, TR2PSX, TR3PC, TR3G, TR3PSX
+            TR1PC, TR2PC, TR2G, TR2PSXBeta, TR2PSX, TR3PC, TR3G, TR3PSX
         };
 
         internal static TREdition From(Hardware hardware, TRVersion version)
@@ -161,6 +178,8 @@ namespace TRGE.Core
         public string Title { get; private set; }
         public TRVersion Version { get; private set; }
         public string ScriptName { get; private set; }
+        public string ConfigName { get; private set; }
+        public bool HasConfig => ConfigName != null;
         public Hardware Hardware { get; private set; }
         /// <summary>
         /// Indicates which level in the game is the final level. The offset

@@ -6,6 +6,8 @@
         {
             switch (script.Edition.Version)
             {
+                case TRVersion.TR1:
+                    return new TR1LevelManager(script as TR1Script);
                 case TRVersion.TR2:
                 case TRVersion.TR2G:
                 case TRVersion.TR3:
