@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="TR1Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TR3Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

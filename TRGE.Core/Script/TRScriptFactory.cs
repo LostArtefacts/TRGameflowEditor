@@ -6,9 +6,11 @@ namespace TRGE.Core
     {
         public static AbstractTRScriptEditor GetScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
         {
-            uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile.FullName);
+            uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile == null ? null : ioArgs.TRScriptFile.FullName);
             switch (scriptVersion)
             {
+                case TR1ATIScript.Version:
+                    return new TR1ATIScriptEditor(ioArgs, openOption);
                 case TR1Script.Version:
                     return new TR1ScriptEditor(ioArgs, openOption);
                 case TR23Script.Version:
@@ -23,10 +25,13 @@ namespace TRGE.Core
             string dir = directory.FullName;
             foreach (TREdition edition in TREdition.All)
             {
-                string script = Path.Combine(dir, edition.ScriptName);
-                if (File.Exists(script))
+                if (edition.HasScript)
                 {
-                    return new FileInfo(script);
+                    string script = Path.Combine(dir, edition.ScriptName);
+                    if (File.Exists(script))
+                    {
+                        return new FileInfo(script);
+                    }
                 }
             }
             return null;
@@ -59,6 +64,9 @@ namespace TRGE.Core
             AbstractTRScript script;
             switch (GetDatFileVersion(filePath))
             {
+                case TR1ATIScript.Version:
+                    script = new TR1ATIScript();
+                    break;
                 case TR1Script.Version:
                     script = new TR1Script();
                     break;
@@ -75,6 +83,11 @@ namespace TRGE.Core
 
         private static uint GetDatFileVersion(string filePath)
         {
+            if (filePath == null)
+            {
+                return TR1ATIScript.Version;
+            }
+
             string ext = Path.GetExtension(filePath).ToUpper();
             switch (ext)
             {

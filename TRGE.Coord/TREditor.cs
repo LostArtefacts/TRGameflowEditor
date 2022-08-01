@@ -198,12 +198,15 @@ namespace TRGE.Coord
 
         private void CopyOutputToTarget()
         {
-            string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ScriptName)));            
-            IOExtensions.CopyFile(ScriptEditor.GetScriptOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+            if (ScriptEditor.Edition.HasScript)
+            {
+                string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ScriptName)));
+                IOExtensions.CopyFile(ScriptEditor.GetScriptOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+            }
 
             if (ScriptEditor.Edition.HasConfig)
             {
-                targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ConfigName)));
+                string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ConfigName)));
                 IOExtensions.CopyFile(ScriptEditor.GetConfigOutputPath(), new DirectoryInfo(targetScriptFolder), true);
             }
 

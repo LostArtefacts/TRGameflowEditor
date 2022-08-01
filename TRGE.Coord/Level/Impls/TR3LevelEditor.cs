@@ -144,7 +144,7 @@ namespace TRGE.Coord
 
             // Fish cause the game to crash if levels are off-sequence due to hardcoded offsets.
             // So we just move the fish to 0,0,0 and remove their triggers, unless TR3Main is being used.
-            if (TRInterop.UsingTRMain)
+            if (_scriptEditor.Edition.IsCommunityPatch)
             {
                 return;
             }

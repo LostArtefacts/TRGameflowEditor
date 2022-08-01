@@ -417,7 +417,7 @@ namespace TRGE.Core
 
         protected override void CalculateEdition()
         {
-            Edition = TREdition.TR1PC;
+            Edition = TREdition.TR1PC.Clone();
         }
 
         protected override void Stamp()

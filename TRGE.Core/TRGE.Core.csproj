@@ -76,6 +76,7 @@
     <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
     <Compile Include="Level\Events\TRScriptedLevelModification.cs" />
     <Compile Include="Level\Impls\TR1LevelManager.cs" />
+    <Compile Include="Level\Impls\TR1ATILevelManager.cs" />
     <Compile Include="Level\Impls\TR1ScriptedLevel.cs" />
     <Compile Include="Level\Impls\TR3ScriptedLevel.cs" />
     <Compile Include="Level\TRLevelType.cs" />
@@ -97,8 +98,10 @@
     <Compile Include="Script\Enums\TRUILocation.cs" />
     <Compile Include="Script\Exceptions\ChecksumMismatchException.cs" />
     <Compile Include="Script\Exceptions\EditionMismatchException.cs" />
+    <Compile Include="Script\Impls\TR1ATIScriptEditor.cs" />
     <Compile Include="Script\Impls\TR1Script.cs" />
     <Compile Include="Script\Impls\TR1ScriptEditor.cs" />
+    <Compile Include="Script\Impls\TR1ATIScript.cs" />
     <Compile Include="Script\TRScriptOpenOption.cs" />
     <Compile Include="TRInterop.cs" />
     <Compile Include="FrontEnd\Impls\TR23FrontEnd.cs" />
@@ -138,6 +141,7 @@
     <Compile Include="Script\Impls\TR23Script.cs" />
     <Compile Include="Script\Exceptions\UnsupportedScriptException.cs" />
     <Compile Include="Version\TREdition.cs" />
+    <Compile Include="Version\TRPatchTester.cs" />
     <Compile Include="Version\TRVersion.cs" />
   </ItemGroup>
   <ItemGroup>

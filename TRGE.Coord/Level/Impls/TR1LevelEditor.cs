@@ -37,19 +37,38 @@ namespace TRGE.Coord
             _writer.WriteLevelToFile(level, GetWriteLevelFilePath(lvl));
         }
 
+        protected override void PreSaveImpl(AbstractTRScriptEditor scriptEditor)
+        {
+            if (!scriptEditor.Edition.IsCommunityPatch)
+            {
+                // Can't guarantee that the ATI levels will have been copied to WIP, so do that now
+                foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
+                {
+                    IOExtensions.CopyFile(GetReadLevelFilePath(level.LevelFileBaseName), GetWriteLevelFilePath(level.LevelFileBaseName), true);
+                    if (level.HasCutScene)
+                    {
+                        IOExtensions.CopyFile(GetReadLevelFilePath(level.CutSceneLevel.LevelFileBaseName), GetWriteLevelFilePath(level.CutSceneLevel.LevelFileBaseName), true);
+                    }
+                }
+            }
+        }
+
         protected override void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor)
         {
-            // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
-            TR1ScriptEditor editor = scriptEditor as TR1ScriptEditor;
-            if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
+            if (scriptEditor.Edition.IsCommunityPatch)
             {
-                _unarmedRng = editor.UnarmedLevelRNG.Create();
+                // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
+                TR1ScriptEditor editor = scriptEditor as TR1ScriptEditor;
+                if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
+                {
+                    _unarmedRng = editor.UnarmedLevelRNG.Create();
+                }
             }
         }
 
         protected override void HandleWeaponlessStateChanged(TRScriptedLevelEventArgs args)
         {
-            if (!args.ScriptedLevel.Enabled)
+            if (!args.ScriptedLevel.Enabled || !_scriptEditor.Edition.IsCommunityPatch)
             {
                 return;
             }

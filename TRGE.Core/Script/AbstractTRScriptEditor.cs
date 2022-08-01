@@ -82,6 +82,8 @@ namespace TRGE.Core
                 Script.ReadConfig(BackupTRConfigFile);
             }
 
+            TRPatchTester.Test(Edition, _io);
+
             LevelManager = TRScriptedLevelFactory.GetLevelManager(script);
             LevelManager.LevelModified += LevelManagerLevelModified;
 
@@ -97,7 +99,7 @@ namespace TRGE.Core
         {
             _config = Config.Read(ConfigFilePath);
             //issue #36
-            if (_config != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
+            if (_config != null && OriginalFile != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
             {
                 switch (_openOption)
                 {
@@ -226,7 +228,7 @@ namespace TRGE.Core
                     ["Version"] = TRInterop.ExecutingVersion
                 },
                 ["Edition"] = Edition.ToJson(),
-                ["Original"] = OriginalFile.FullName,
+                ["Original"] = OriginalFile == null ? null : OriginalFile.FullName,
                 ["CheckSumOnSave"] = string.Empty,
                 ["FrontEndFMVOn"] = FrontEndHasFMV,
                 ["LevelSequencing"] = new Config
@@ -361,8 +363,11 @@ namespace TRGE.Core
 
         private void WriteScript()
         {
-            string outputPath = GetScriptWIPOutputPath();
-            Script.Write(outputPath);
+            if (OriginalFile != null)
+            {
+                string outputPath = GetScriptWIPOutputPath();
+                Script.Write(outputPath);
+            }
 
             if (TRConfigFile != null)
             {
@@ -376,19 +381,25 @@ namespace TRGE.Core
         /// </summary>
         internal sealed override void SaveComplete()
         {
-            _config["CheckSumOnSave"] = new FileInfo(GetScriptWIPOutputPath()).Checksum();
+            if (OriginalFile != null)
+            {
+                _config["CheckSumOnSave"] = new FileInfo(GetScriptWIPOutputPath()).Checksum();
+            }
             _config.Write(InternalConfigFile.FullName);
 
-            // Store sequencing data for third-party tools to access/compare differences
-            string sequenceData = Path.Combine(Path.GetDirectoryName(OriginalFile.FullName), "../", "LEVELINFO.DAT");
-            using (BinaryWriter bw = new BinaryWriter(new FileStream(sequenceData, FileMode.Create)))
+            if (Edition.ExportLevelData)
             {
-                bw.Write((byte)LevelManager.EnabledLevelCount);
-                foreach (AbstractTRScriptedLevel level in LevelManager.Levels)
+                // Store sequencing data for third-party tools to access/compare differences
+                string sequenceData = Path.Combine(Path.GetDirectoryName(OriginalFile.FullName), "../", "LEVELINFO.DAT");
+                using (BinaryWriter bw = new BinaryWriter(new FileStream(sequenceData, FileMode.Create)))
                 {
-                    if (level.Enabled)
+                    bw.Write((byte)LevelManager.EnabledLevelCount);
+                    foreach (AbstractTRScriptedLevel level in LevelManager.Levels)
                     {
-                        level.SerializeToMain(bw);
+                        if (level.Enabled)
+                        {
+                            level.SerializeToMain(bw);
+                        }
                     }
                 }
             }
@@ -435,7 +446,16 @@ namespace TRGE.Core
 
         internal override void Restore()
         {
-            BackupFile.CopyTo(OriginalFile.FullName, true);
+            if (OriginalFile != null)
+            {
+                BackupFile.CopyTo(OriginalFile.FullName, true);
+            }
+
+            if (TRConfigFile != null)
+            {
+                BackupTRConfigFile.CopyTo(TRConfigFile.FullName, true);
+            }
+
             while (File.Exists(InternalConfigFile.FullName))
             {
                 InternalConfigFile.Delete(); //issue #39
@@ -466,7 +486,7 @@ namespace TRGE.Core
 
         internal AbstractTRScript LoadBackupScript()
         {
-            AbstractTRScript script = LoadScript(BackupFile.FullName);
+            AbstractTRScript script = LoadScript(BackupFile == null ? null : BackupFile.FullName);
             if (BackupTRConfigFile != null)
             {
                 script.ReadConfig(BackupTRConfigFile);

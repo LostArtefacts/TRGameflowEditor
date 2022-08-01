@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace TRGE.Core
 {
-    public class TREdition
+    public class TREdition : ICloneable
     {
         internal static readonly TREdition GenericPC = new TREdition
         {
@@ -40,9 +41,9 @@ namespace TRGE.Core
         {
             Title = "Tomb Raider I (PC)",
             Version = TRVersion.TR1,
+            Hardware = Hardware.PC,
             ScriptName = @"..\cfg\Tomb1Main_gameflow.json5",
             ConfigName = @"..\cfg\Tomb1Main.json5",
-            Hardware = Hardware.PC,
             LevelCompleteOffset = 0,
             SecretBonusesSupported = false,
             SunsetsSupported = false,
@@ -175,45 +176,54 @@ namespace TRGE.Core
             return All.FirstOrDefault(e => e.Hardware == hardware && e.Version == version);
         }
 
-        public string Title { get; private set; }
-        public TRVersion Version { get; private set; }
-        public string ScriptName { get; private set; }
-        public string ConfigName { get; private set; }
+        public string Title { get; internal set; }
+        public TRVersion Version { get; internal set; }
+        public string ScriptName { get; set; }
+        public bool HasScript => ScriptName != null;
+        public string ConfigName { get; internal set; }
         public bool HasConfig => ConfigName != null;
-        public Hardware Hardware { get; private set; }
+        public Hardware Hardware { get; internal set; }
         /// <summary>
         /// Indicates which level in the game is the final level. The offset
         /// marks the point from the back of a list of level sequences.
         /// </summary>
-        public ushort LevelCompleteOffset { get; private set; }
+        public ushort LevelCompleteOffset { get; internal set; }
         /// <summary>
         /// Whether or not secret bonus selection/organisation is supported
         /// </summary>
-        public bool SecretBonusesSupported { get; private set; }
+        public bool SecretBonusesSupported { get; internal set; }
         /// <summary>
         /// Whether or not sunsets can be set
         /// </summary>
-        public bool SunsetsSupported { get; private set; }
+        public bool SunsetsSupported { get; internal set; }
         /// <summary>
         /// Whether or not the secret sound can be changed
         /// </summary>
-        public bool SecretSoundSupported { get; private set; }
+        public bool SecretSoundSupported { get; internal set; }
         /// <summary>
         /// Whether or not the game has an assault course level
         /// </summary>
-        public bool AssaultCourseSupported { get; private set; }
+        public bool AssaultCourseSupported { get; internal set; }
         /// <summary>
         /// The default number of levels in which Lara loses her weapons.
         /// </summary>
-        public int UnarmedLevelCount { get; private set; }
+        public int UnarmedLevelCount { get; internal set; }
         /// <summary>
         /// The default number of levels in which Lara loses her ammo.
         /// </summary>
-        public int AmmolessLevelCount { get; private set; }
+        public int AmmolessLevelCount { get; internal set; }
         /// <summary>
         /// The default number of levels with the sunset flag enabled.
         /// </summary>
-        public int SunsetLevelCount { get; private set; }
+        public int SunsetLevelCount { get; internal set; }
+        /// <summary>
+        /// Flag to export level data to external file for third-party tools.
+        /// </summary>
+        public bool ExportLevelData { get; internal set; }
+        /// <summary>
+        /// Flag to show this version is a community patch (e.g. Tomb1Main)
+        /// </summary>
+        public bool IsCommunityPatch { get; internal set; }
 
         private TREdition() { }
 
@@ -239,6 +249,16 @@ namespace TRGE.Core
             hashCode = hashCode * -1521134295 + Version.GetHashCode();
             hashCode = hashCode * -1521134295 + Hardware.GetHashCode();
             return hashCode;
+        }
+
+        public TREdition Clone()
+        {
+            return (TREdition)MemberwiseClone();
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
         }
     }
 }

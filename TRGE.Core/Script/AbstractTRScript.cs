@@ -10,7 +10,7 @@ namespace TRGE.Core
 
         public void Read(FileInfo file)
         {
-            Read(file.FullName);
+            Read(file == null ? null : file.FullName);
         }
 
         public void ReadConfig(FileInfo file)
@@ -18,7 +18,7 @@ namespace TRGE.Core
             ReadConfig(file.FullName);
         }
 
-        public void Read(string filePath)
+        public virtual void Read(string filePath)
         {
             //All we can go on to begin with is the file name to determine a generic edition.
             //Subclasses should implement CalculateEdition and call it as appropriate while reading the data.
@@ -58,6 +58,11 @@ namespace TRGE.Core
 
         public void Write(string filePath)
         {
+            if (filePath == null)
+            {
+                return;
+            }
+
             Stamp();
             string ext = Path.GetExtension(filePath).ToUpper();
             switch (ext)

@@ -11,5 +11,6 @@ namespace TRGE.Core
         public FileInfo InternalConfigFile { get; set; }
         public DirectoryInfo WIPOutputDirectory { get; set; }
         public DirectoryInfo OutputDirectory { get; set; }
+        public DirectoryInfo OriginalDirectory { get; set; }
     }
 }

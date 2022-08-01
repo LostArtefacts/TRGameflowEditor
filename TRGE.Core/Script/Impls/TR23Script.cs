@@ -539,6 +539,11 @@ namespace TRGE.Core
                     Edition = TREdition.TR3G;
                 }
             }
+
+            if (Edition != null)
+            {
+                Edition = Edition.Clone();
+            }
         }
 
         public override void ReadScriptBin(BinaryReader br)

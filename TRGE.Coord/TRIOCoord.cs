@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using TRGE.Core;
+using TRLevelReader.Helpers;
 
 namespace TRGE.Coord
 {
@@ -74,7 +75,7 @@ namespace TRGE.Coord
 
             // Verify that the script and level editors are compatible - this
             // should be done before any backups are performed.
-            if (_mode == OperationMode.Directory)
+            if (_mode == OperationMode.Directory && _orignalScriptFile != null)
             {
                 TREditor.ValidateCompatibility(TRScriptFactory.OpenScript(_orignalScriptFile), _originalDirectory);
             }
@@ -106,13 +107,14 @@ namespace TRGE.Coord
         {
             TRScriptIOArgs io = new TRScriptIOArgs
             {
-                TRScriptFile = new FileInfo(_orignalScriptFile),
-                TRScriptBackupFile = new FileInfo(_backupScriptFile),
+                TRScriptFile = _orignalScriptFile == null ? null : new FileInfo(_orignalScriptFile),
+                TRScriptBackupFile = _backupScriptFile == null ? null : new FileInfo(_backupScriptFile),
                 TRConfigFile = _originalTRConfigFile == null ? null : new FileInfo(_originalTRConfigFile),
                 TRConfigBackupFile = _backupTRConfigFile == null ? null : new FileInfo(_backupTRConfigFile),
                 InternalConfigFile = new FileInfo(_scriptConfigFile),
                 WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
-                OutputDirectory = new DirectoryInfo(GetOutputDirectory())
+                OutputDirectory = new DirectoryInfo(GetOutputDirectory()),
+                OriginalDirectory = new DirectoryInfo(_originalDirectory)
             };
             AbstractTRScriptEditor scriptMan = TRScriptFactory.GetScriptEditor(io, openOption);
 
@@ -145,7 +147,19 @@ namespace TRGE.Coord
             FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path));
             if (fi == null)
             {
-                throw new MissingScriptException(string.Format("No valid Tomb Raider script file (.dat) was found in {0}.", path));
+                // Check for TR1ATI
+                bool isAti = true;
+                foreach (string tr1Level in TRLevelNames.AsList)
+                {
+                    isAti &= File.Exists(Path.Combine(path, tr1Level));
+                }
+
+                if (isAti)
+                {
+                    return null;
+                }
+
+                throw new MissingScriptException(string.Format("No valid Tomb Raider script file was found in {0}.", path));
             }
             return fi.FullName;
         }
@@ -165,10 +179,11 @@ namespace TRGE.Coord
                 DirectoryInfo backupDI = new DirectoryInfo(backupDirectory);
                 DirectoryInfo outputDI = new DirectoryInfo(outputDirectory);
 
-                List<string> filesToBackup = new List<string>
+                List<string> filesToBackup = new List<string>();
+                if (_orignalScriptFile != null)
                 {
-                    _orignalScriptFile
-                };
+                    filesToBackup.Add(_orignalScriptFile);
+                }
                 if (_originalTRConfigFile != null)
                 {
                     filesToBackup.Add(_originalTRConfigFile);
@@ -204,7 +219,10 @@ namespace TRGE.Coord
                     FireBackupProgressChanged(1);
                 }
 
-                _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
+                if (_orignalScriptFile != null)
+                {
+                    _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
+                }
                 if (_originalTRConfigFile != null)
                 {
                     _backupTRConfigFile = Path.Combine(backupDirectory, new FileInfo(_originalTRConfigFile).Name);
@@ -245,10 +263,11 @@ namespace TRGE.Coord
         {
             DirectoryInfo backupDI = new DirectoryInfo(GetBackupDirectory());
             DirectoryInfo outputDI = new DirectoryInfo(GetOutputDirectory());
-            List<string> expectedFiles = new List<string>
+            List<string> expectedFiles = new List<string>();
+            if (_orignalScriptFile != null)
             {
-                scriptEditor.BackupFile.Name
-            };
+                expectedFiles.Add(scriptEditor.BackupFile.Name);
+            }
             if (_originalTRConfigFile != null)
             {
                 expectedFiles.Add(scriptEditor.BackupTRConfigFile.Name);
@@ -261,7 +280,7 @@ namespace TRGE.Coord
             foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
             {
                 expectedFiles.Add(level.LevelFileBaseName);
-                if (level.SupportsCutScenes)
+                if (level.HasCutScene)
                 {
                     expectedFiles.Add(level.CutSceneLevel.LevelFileBaseName);
                 }
@@ -275,7 +294,8 @@ namespace TRGE.Coord
         internal string GetEditDirectory()
         {
             DirectoryInfo topLevelEditDirectory = Directory.CreateDirectory(Path.Combine(TRCoord.Instance.ConfigDirectory, _editDirectoryName));
-            return topLevelEditDirectory.CreateSubdirectory(HashingExtensions.CreateMD5(_orignalScriptFile)).FullName;
+            string hashBase = _orignalScriptFile ?? Path.GetFullPath(Path.Combine(_originalDirectory, TREdition.TR1PC.ScriptName));
+            return topLevelEditDirectory.CreateSubdirectory(HashingExtensions.CreateMD5(hashBase)).FullName;
         }
 
         internal string GetBackupDirectory()
