@@ -43,7 +43,7 @@ namespace TRGE.Core.Test
             {
                 AbstractTRScript script = TRScriptFactory.OpenScript(_validFilePath);
                 Assert.IsTrue(script is TR23Script);
-                Assert.IsTrue(script.Edition == TREdition.TR2PSXBeta);
+                Assert.IsTrue(script.Edition.Equals(TREdition.TR2PSXBeta));
                 _script = script as TR23Script;
             }
             catch (UnsupportedScriptException)

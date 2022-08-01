@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace TRGE.Core
 {
@@ -27,10 +28,15 @@ namespace TRGE.Core
             {
                 if (edition.HasScript)
                 {
-                    string script = Path.Combine(dir, edition.ScriptName);
+                    string script = Path.GetFullPath(Path.Combine(dir, edition.ScriptName));
                     if (File.Exists(script))
                     {
-                        return new FileInfo(script);
+                        // We need to return the matching file name exactly to preserve edits.
+                        // The matched script may not necessarily be in the current folder.
+                        string scriptDir = Path.GetDirectoryName(script);
+                        string scriptName = Path.GetFileName(script);
+                        string match = Array.Find(Directory.GetFiles(scriptDir), f => string.Compare(Path.GetFileName(f), scriptName, true) == 0);
+                        return new FileInfo(match);
                     }
                 }
             }

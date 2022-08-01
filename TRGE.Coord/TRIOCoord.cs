@@ -294,8 +294,17 @@ namespace TRGE.Coord
         internal string GetEditDirectory()
         {
             DirectoryInfo topLevelEditDirectory = Directory.CreateDirectory(Path.Combine(TRCoord.Instance.ConfigDirectory, _editDirectoryName));
+            // This is ugly, but allows TR1ATI to be later opened as Tomb1Main
             string hashBase = _orignalScriptFile ?? Path.GetFullPath(Path.Combine(_originalDirectory, TREdition.TR1PC.ScriptName));
-            return topLevelEditDirectory.CreateSubdirectory(HashingExtensions.CreateMD5(hashBase)).FullName;
+
+            string editDirectory = Path.Combine(topLevelEditDirectory.FullName, HashingExtensions.CreateMD5(hashBase));
+            if (Directory.Exists(editDirectory))
+            {
+                // Legacy - case-sensitive path
+                return editDirectory;
+            }
+
+            return topLevelEditDirectory.CreateSubdirectory(HashingExtensions.CreateMD5(hashBase.ToUpper())).FullName;
         }
 
         internal string GetBackupDirectory()
