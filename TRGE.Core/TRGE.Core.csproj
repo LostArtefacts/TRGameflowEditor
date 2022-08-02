@@ -90,6 +90,10 @@
     <Compile Include="Operation\Sequence\PlaySyncedAudioLevelSequence.cs" />
     <Compile Include="Operation\Sequence\SetCamLevelSequence.cs" />
     <Compile Include="Operation\Sequence\TotalStatsLevelSequence.cs" />
+    <Compile Include="Script\EditorTypes\IAmmolessEditor.cs" />
+    <Compile Include="Script\EditorTypes\IDemoEditor.cs" />
+    <Compile Include="Script\EditorTypes\ISecretRewardEditor.cs" />
+    <Compile Include="Script\EditorTypes\IUnarmedEditor.cs" />
     <Compile Include="Script\Enums\TRAirbarMode.cs" />
     <Compile Include="Script\Enums\TRHealthbarMode.cs" />
     <Compile Include="Script\Enums\TRMenuStyle.cs" />
