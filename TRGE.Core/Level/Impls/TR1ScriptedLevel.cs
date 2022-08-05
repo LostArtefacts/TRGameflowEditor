@@ -191,9 +191,15 @@ namespace TRGE.Core
         {
             AddSequenceBefore(LevelSequenceType.Loop_Game, new GiveItemLevelSequence
             {
+                Type = LevelSequenceType.Give_Item,
                 ObjectId = item,
                 Quantity = (int)count
             });
+        }
+
+        public GiveItemLevelSequence GetStartInventoryItem(TR1Items item)
+        {
+            return Sequences.Find(s => s is GiveItemLevelSequence giver && giver.ObjectId == item) as GiveItemLevelSequence;
         }
 
         public void RemoveStartInventoryItem(TR1Items item)

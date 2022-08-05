@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TRGE.Core.Item.Enums;
 
 namespace TRGE.Core
 {
@@ -163,6 +164,8 @@ namespace TRGE.Core
 
         internal void RandomiseUnarmedLevels(List<AbstractTRScriptedLevel> basisLevels)
         {
+            RemoveUnarmedDependencies();
+
             List<AbstractTRScriptedLevel> enabledLevels = new List<AbstractTRScriptedLevel>();
             foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
             {
@@ -179,6 +182,8 @@ namespace TRGE.Core
                 level.RemovesWeapons = levelSet.Contains(level);
                 FireLevelModificationEvent(level, TRScriptedLevelModification.WeaponlessStateChanged);
             }
+
+            AddUnarmedDependencies();
         }
 
         internal List<TR1ScriptedLevel> GetUnarmedLevels()
@@ -209,6 +214,8 @@ namespace TRGE.Core
 
         internal virtual void SetUnarmedLevelData(List<MutableTuple<string, string, bool>> data)
         {
+            RemoveUnarmedDependencies();
+
             foreach (MutableTuple<string, string, bool> item in data)
             {
                 TR1ScriptedLevel level = (TR1ScriptedLevel)GetLevel(item.Item1);
@@ -218,11 +225,46 @@ namespace TRGE.Core
                     FireLevelModificationEvent(level, TRScriptedLevelModification.WeaponlessStateChanged);
                 }
             }
+
+            AddUnarmedDependencies();
         }
 
         internal void RestoreUnarmedLevels(List<AbstractTRScriptedLevel> originalLevels)
         {
             SetUnarmedLevelData(GetUnarmedLevelData(originalLevels));
+        }
+
+        private void RemoveUnarmedDependencies()
+        {
+            // Remove pistols from the level following one that was unarmed
+            foreach (TR1ScriptedLevel level in Levels)
+            {
+                if (level.RemovesWeapons)
+                {
+                    if (Levels.Find(l => l.Sequence == level.Sequence + 1 && l.Enabled) is TR1ScriptedLevel nextLevel)
+                    {
+                        nextLevel.RemoveStartInventoryItem(TR1Items.Pistols);
+                    }
+                }
+            }
+        }
+
+        private void AddUnarmedDependencies()
+        {
+            // Add pistols to each level that follows one that's unarmed
+            foreach (TR1ScriptedLevel level in Levels)
+            {
+                if (level.RemovesWeapons)
+                {
+                    if (Levels.Find(l => l.Sequence == level.Sequence + 1 && l.Enabled) is TR1ScriptedLevel nextLevel)
+                    {
+                        if (nextLevel.GetStartInventoryItem(TR1Items.Pistols) == null)
+                        {
+                            nextLevel.AddStartInventoryItem(TR1Items.Pistols);
+                        }
+                    }
+                }
+            }
         }
 
         internal bool GetLevelsHaveCutScenes()
