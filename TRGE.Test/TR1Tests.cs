@@ -101,6 +101,10 @@ namespace TRGE.Test
             scriptEd.RandomAmmolessLevelCount = 3;
             scriptEd.AmmolessLevelRNG = new RandomGenerator(20220805);
 
+            scriptEd.UnarmedLevelOrganisation = Organisation.Random;
+            scriptEd.RandomUnarmedLevelCount = 2;
+            scriptEd.UnarmedLevelRNG = new RandomGenerator(20220731);
+
             scriptEd.DemosEnabled = false;
             scriptEd.EnableCheats = true;
 
