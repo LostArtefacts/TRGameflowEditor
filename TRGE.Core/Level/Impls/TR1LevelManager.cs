@@ -256,7 +256,7 @@ namespace TRGE.Core
             {
                 if (level.RemovesWeapons)
                 {
-                    if (Levels.Find(l => l.Sequence == level.Sequence + 1 && l.Enabled) is TR1ScriptedLevel nextLevel)
+                    if (Levels.Find(l => l.Sequence == level.Sequence + 1 && l.Enabled) is TR1ScriptedLevel nextLevel && !nextLevel.RemovesWeapons)
                     {
                         if (nextLevel.GetStartInventoryItem(TR1Items.Pistols) == null)
                         {
