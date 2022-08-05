@@ -132,11 +132,7 @@ namespace TRGE.Core
 
         public override ushort NumSecrets => _levelSecrets[OriginalSequence];
 
-        public override bool IsFinalLevel
-        {
-            get => Sequence == _levelSecrets.Count - 1;
-            set { }
-        }
+        public override bool IsFinalLevel { get; set; }
 
         public LevelType Type { get; set; }
 

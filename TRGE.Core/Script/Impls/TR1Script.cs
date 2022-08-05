@@ -132,7 +132,7 @@ namespace TRGE.Core
                 JObject levelData = levelToken as JObject;
                 TR1ScriptedLevel level = new TR1ScriptedLevel();
 
-                level.Type = ReadEnum<LevelType>(nameof(level.Type), levelData);// (LevelType)Enum.Parse(typeof(LevelType), ReadString(nameof(level.Type), levelData), true);
+                level.Type = ReadEnum<LevelType>(nameof(level.Type), levelData);
                 switch (level.Type)
                 {
                     case LevelType.Gym:
@@ -198,7 +198,7 @@ namespace TRGE.Core
                 {
                     JObject sequenceData = levelSequence as JObject;
                     BaseLevelSequence sequence;
-                    LevelSequenceType sequenceType = ReadEnum<LevelSequenceType>(nameof(sequence.Type), sequenceData);//  (LevelSequenceType)Enum.Parse(typeof(LevelSequenceType), ReadString(nameof(sequence.Type), sequenceData), true);
+                    LevelSequenceType sequenceType = ReadEnum<LevelSequenceType>(nameof(sequence.Type), sequenceData);
                     switch (sequenceType)
                     {
                         case LevelSequenceType.Play_FMV:
@@ -271,6 +271,8 @@ namespace TRGE.Core
                 level.SetDefaults();
                 ++levelID;
             }
+
+            Levels[Levels.Count - 1].IsFinalLevel = true;
         }
 
         public override void ReadConfigJson(string json)
