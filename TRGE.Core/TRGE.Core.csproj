@@ -92,6 +92,7 @@
     <Compile Include="Operation\Sequence\TotalStatsLevelSequence.cs" />
     <Compile Include="Script\EditorTypes\IAmmolessEditor.cs" />
     <Compile Include="Script\EditorTypes\IDemoEditor.cs" />
+    <Compile Include="Script\EditorTypes\IMedilessEditor.cs" />
     <Compile Include="Script\EditorTypes\ISecretRewardEditor.cs" />
     <Compile Include="Script\EditorTypes\IUnarmedEditor.cs" />
     <Compile Include="Script\Enums\TRAirbarMode.cs" />

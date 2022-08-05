@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmolessEditor, IDemoEditor
+    public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmolessEditor, IDemoEditor, IMedilessEditor
     {
         internal TR1ScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
             : base(ioArgs, openOption) { }
@@ -20,6 +20,10 @@ namespace TRGE.Core
                 AmmolessLevelOrganisation = Organisation.Default;
                 AmmolessLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
                 RandomAmmolessLevelCount = Math.Max(1, (LevelManager as TR1LevelManager).GetAmmolessLevelCount());
+
+                MedilessLevelOrganisation = Organisation.Default;
+                MedilessLevelRNG = new RandomGenerator(RandomGenerator.Type.Date);
+                RandomMedilessLevelCount = Math.Max(1, (LevelManager as TR1LevelManager).GetMedilessLevelCount());
 
                 return;
             }
@@ -42,6 +46,16 @@ namespace TRGE.Core
             if (ammolessLevels.ContainsKey("Data"))
             {
                 AmmolessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(ammolessLevels.GetString("Data"));
+            }
+
+            Config medilessLevels = config.GetSubConfig("MedilessLevels");
+            MedilessLevelOrganisation = medilessLevels.GetOrganisation("Organisation");
+            MedilessLevelRNG = new RandomGenerator(medilessLevels.GetSubConfig("RNG"));
+            RandomMedilessLevelCount = Math.Min(medilessLevels.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
+            //see note in base.LoadConfig re restoring randomised - same applies for Ammoless
+            if (medilessLevels.ContainsKey("Data"))
+            {
+                MedilessLevelData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(medilessLevels.GetString("Data"));
             }
 
             LevelsHaveCutScenes = config.GetBool("LevelCutScenesOn");
@@ -131,6 +145,14 @@ namespace TRGE.Core
                 ["RNG"] = AmmolessLevelRNG.ToJson(),
                 ["RandomCount"] = RandomAmmolessLevelCount,
                 ["Data"] = AmmolessLevelData
+            };
+
+            _config["MedilessLevels"] = new Config
+            {
+                ["Organisation"] = (int)MedilessLevelOrganisation,
+                ["RNG"] = MedilessLevelRNG.ToJson(),
+                ["RandomCount"] = RandomMedilessLevelCount,
+                ["Data"] = MedilessLevelData
             };
 
             _config["LevelCutScenesOn"] = LevelsHaveCutScenes;
@@ -223,6 +245,22 @@ namespace TRGE.Core
             else if (AmmolessLevelOrganisation == Organisation.Default)
             {
                 currentLevelManager.SetAmmolessLevelData(backupLevelManager.GetAmmolessLevelData(backupLevelManager.Levels));
+            }
+
+            if (MedilessLevelOrganisation == Organisation.Random)
+            {
+                if (TRInterop.RandomisationSupported)
+                {
+                    currentLevelManager.RandomiseMedilessLevels(randoBaseLevels);
+                }
+                else
+                {
+                    currentLevelManager.SetMedilessLevelData(backupLevelManager.GetMedilessLevelData(backupLevelManager.Levels));
+                }
+            }
+            else if (MedilessLevelOrganisation == Organisation.Default)
+            {
+                currentLevelManager.SetMedilessLevelData(backupLevelManager.GetMedilessLevelData(backupLevelManager.Levels));
             }
 
             if (UnarmedLevelOrganisation == Organisation.Random)
@@ -345,6 +383,40 @@ namespace TRGE.Core
         internal List<TR1ScriptedLevel> GetAmmolessLevels()
         {
             return (LevelManager as TR1LevelManager).GetAmmolessLevels();
+        }
+
+        public List<MutableTuple<string, string, bool>> MedilessLevelData
+        {
+            get => (LevelManager as TR1LevelManager).GetMedilessLevelData(LoadBackupScript().Levels);
+            set => (LevelManager as TR1LevelManager).SetMedilessLevelData(value);
+        }
+
+        public Organisation MedilessLevelOrganisation
+        {
+            get => (LevelManager as TR1LevelManager).MedilessLevelOrganisation;
+            set => (LevelManager as TR1LevelManager).MedilessLevelOrganisation = value;
+        }
+
+        public RandomGenerator MedilessLevelRNG
+        {
+            get => (LevelManager as TR1LevelManager).MedilessLevelRNG;
+            set => (LevelManager as TR1LevelManager).MedilessLevelRNG = value;
+        }
+
+        public uint RandomMedilessLevelCount
+        {
+            get => (LevelManager as TR1LevelManager).RandomMedilessLevelCount;
+            set => (LevelManager as TR1LevelManager).RandomMedilessLevelCount = value;
+        }
+
+        internal void RandomiseMedilessLevels()
+        {
+            (LevelManager as TR1LevelManager).RandomiseMedilessLevels(LoadRandomisationBaseScript().Levels);
+        }
+
+        internal List<TR1ScriptedLevel> GetMedilessLevels()
+        {
+            return (LevelManager as TR1LevelManager).GetMedilessLevels();
         }
 
         public bool LevelsHaveCutScenes

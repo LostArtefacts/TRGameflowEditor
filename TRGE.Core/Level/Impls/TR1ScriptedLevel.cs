@@ -124,6 +124,22 @@ namespace TRGE.Core
             }
         }
 
+        public bool RemovesMedis
+        {
+            get => HasSequence(LevelSequenceType.Remove_Medpacks);
+            set
+            {
+                if (value)
+                {
+                    AddSequenceAfter(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Medpacks }, false);
+                }
+                else
+                {
+                    RemoveSequence(LevelSequenceType.Remove_Medpacks);
+                }
+            }
+        }
+
         public override bool HasSecrets
         {
             get => NumSecrets > 0;

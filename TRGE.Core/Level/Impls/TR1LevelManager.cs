@@ -46,6 +46,10 @@ namespace TRGE.Core
         internal RandomGenerator AmmolessLevelRNG { get; set; }
         internal uint RandomAmmolessLevelCount { get; set; }
 
+        internal Organisation MedilessLevelOrganisation { get; set; }
+        internal RandomGenerator MedilessLevelRNG { get; set; }
+        internal uint RandomMedilessLevelCount { get; set; }
+
         internal TR1LevelManager(TR1Script script)
             : base(script.Edition)
         {
@@ -160,6 +164,65 @@ namespace TRGE.Core
         internal void RestoreAmmolessLevels(List<AbstractTRScriptedLevel> originalLevels)
         {
             SetAmmolessLevelData(GetAmmolessLevelData(originalLevels));
+        }
+
+        internal List<TR1ScriptedLevel> GetMedilessLevels()
+        {
+            return _levels.FindAll(l => l.RemovesMedis);
+        }
+
+        internal uint GetMedilessLevelCount()
+        {
+            return (uint)GetMedilessLevels().Count;
+        }
+
+        internal virtual List<MutableTuple<string, string, bool>> GetMedilessLevelData(List<AbstractTRScriptedLevel> originalLevels)
+        {
+            return GetMedilessLevelData(Levels, originalLevels);
+        }
+
+        private List<MutableTuple<string, string, bool>> GetMedilessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
+        {
+            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            {
+                TR1ScriptedLevel level = GetLevel(originalLevel.ID) as TR1ScriptedLevel;
+                data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.RemovesMedis));
+            }
+            return data;
+        }
+
+        internal virtual void SetMedilessLevelData(List<MutableTuple<string, string, bool>> data)
+        {
+            foreach (MutableTuple<string, string, bool> item in data)
+            {
+                TR1ScriptedLevel level = (TR1ScriptedLevel)GetLevel(item.Item1);
+                if (level != null && level.RemovesAmmo != item.Item3)
+                {
+                    level.RemovesMedis = item.Item3;
+                    FireLevelModificationEvent(level, TRScriptedLevelModification.MedilessStateChanged);
+                }
+            }
+        }
+
+        internal void RandomiseMedilessLevels(List<AbstractTRScriptedLevel> basisLevels)
+        {
+            List<AbstractTRScriptedLevel> enabledLevels = new List<AbstractTRScriptedLevel>();
+            foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
+            {
+                AbstractTRScriptedLevel lvl = GetLevel(originalLevel.ID);
+                if (lvl.Enabled)
+                {
+                    enabledLevels.Add(originalLevel);
+                }
+            }
+
+            List<AbstractTRScriptedLevel> levelSet = enabledLevels.RandomSelection(MedilessLevelRNG.Create(), RandomMedilessLevelCount);
+            foreach (AbstractTRScriptedLevel level in Levels)
+            {
+                (level as TR1ScriptedLevel).RemovesMedis = levelSet.Contains(level);
+                FireLevelModificationEvent(level, TRScriptedLevelModification.MedilessStateChanged);
+            }
         }
 
         internal void RandomiseUnarmedLevels(List<AbstractTRScriptedLevel> basisLevels)

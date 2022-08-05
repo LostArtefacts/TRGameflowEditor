@@ -60,6 +60,54 @@ namespace TRGE.Test
         }
 
         [TestMethod]
+        public void TestTomb1MainLevelCount()
+        {
+            string dir = @"TR1\Tomb1Main\Data";
+            TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
+            TRInterop.RandomisationSupported = true;
+
+            editor.ScriptEditor.EnabledLevelOrganisation = Organisation.Random;
+            editor.ScriptEditor.EnabledLevelRNG = new RandomGenerator(20220731);
+            editor.ScriptEditor.RandomEnabledLevelCount = 5;
+
+            TR1ScriptEditor scriptEd = editor.ScriptEditor as TR1ScriptEditor;
+            scriptEd.UnarmedLevelOrganisation = Organisation.Random;
+            scriptEd.RandomUnarmedLevelCount = 2;
+            scriptEd.UnarmedLevelRNG = new RandomGenerator(20220731);
+
+            scriptEd.DemosEnabled = false;
+            scriptEd.EnableCheats = true;
+
+            editor.Save();
+        }
+
+        [TestMethod]
+        public void TestTomb1MainMediless()
+        {
+            string dir = @"TR1\Tomb1Main\Data";
+            TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
+            TRInterop.RandomisationSupported = true;
+
+            editor.ScriptEditor.EnabledLevelOrganisation = Organisation.Random;
+            editor.ScriptEditor.EnabledLevelRNG = new RandomGenerator(20220731);
+            editor.ScriptEditor.RandomEnabledLevelCount = 5;
+
+            TR1ScriptEditor scriptEd = editor.ScriptEditor as TR1ScriptEditor;
+            scriptEd.MedilessLevelOrganisation = Organisation.Random;
+            scriptEd.RandomMedilessLevelCount = 3;
+            scriptEd.MedilessLevelRNG = new RandomGenerator(20220731);
+
+            scriptEd.AmmolessLevelOrganisation = Organisation.Random;
+            scriptEd.RandomAmmolessLevelCount = 3;
+            scriptEd.AmmolessLevelRNG = new RandomGenerator(20220805);
+
+            scriptEd.DemosEnabled = false;
+            scriptEd.EnableCheats = true;
+
+            editor.Save();
+        }
+
+        [TestMethod]
         public void TestTomb1MainRestore()
         {
             string dir = @"TR1\Tomb1Main\Data";

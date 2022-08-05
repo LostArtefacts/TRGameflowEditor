@@ -10,6 +10,7 @@
         StartingWeaponsAdded,
         StartingWeaponsRemoved,
         SkidooAdded,
-        SkidooRemoved
+        SkidooRemoved,
+        MedilessStateChanged
     }
 }
