@@ -203,7 +203,8 @@ namespace TRGE.Core
                     Name = "The Great Pyramid",
                     LevelFile = @"data\level10c.phd",
                     Sequence = 15,
-                    Sequences = new List<BaseLevelSequence>()
+                    Sequences = new List<BaseLevelSequence>(),
+                    IsFinalLevel = true
                 }
             };
         }
