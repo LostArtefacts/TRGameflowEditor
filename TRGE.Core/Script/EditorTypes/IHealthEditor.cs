@@ -2,7 +2,7 @@
 
 namespace TRGE.Core
 {
-    public interface IMedilessEditor
+    public interface IHealthEditor
     {
         Organisation MedilessLevelOrganisation { get; set; }
 
@@ -11,5 +11,7 @@ namespace TRGE.Core
         uint RandomMedilessLevelCount { get; set; }
 
         List<MutableTuple<string, string, bool>> MedilessLevelData { get; set; }
+        bool DisableHealingBetweenLevels { get; set; }
+        bool DisableMedpacks { get; set; }
     }
 }

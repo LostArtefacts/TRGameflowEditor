@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmolessEditor, IDemoEditor, IMedilessEditor
+    public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmolessEditor, IDemoEditor, IHealthEditor
     {
         internal TR1ScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
             : base(ioArgs, openOption) { }

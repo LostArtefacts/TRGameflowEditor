@@ -213,6 +213,10 @@ namespace TRGE.Core
         /// </summary>
         public int AmmolessLevelCount { get; internal set; }
         /// <summary>
+        /// The default number of levels in which Lara loses her medpacks.
+        /// </summary>
+        public int MedilessLevelCount { get; internal set; }
+        /// <summary>
         /// The default number of levels with the sunset flag enabled.
         /// </summary>
         public int SunsetLevelCount { get; internal set; }
