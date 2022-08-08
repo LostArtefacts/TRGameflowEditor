@@ -49,7 +49,7 @@ namespace TRGE.Core
 
         protected override int[] GetGameStringIndices()
         {
-            if (_edition == TREdition.TR2PC || _edition == TREdition.TR2G || _edition == TREdition.TR2PSX)
+            if (_edition.Equals(TREdition.TR2PC) || _edition.Equals(TREdition.TR2G) || _edition.Equals(TREdition.TR2PSX))
             {
                 return new int[]
                 {
@@ -75,7 +75,7 @@ namespace TRGE.Core
                     55, 55, 55, 55  //Key
                 };
             }
-            if (_edition == TREdition.TR2PSXBeta)
+            if (_edition.Equals(TREdition.TR2PSXBeta))
             {
                 return new int[]
                 {

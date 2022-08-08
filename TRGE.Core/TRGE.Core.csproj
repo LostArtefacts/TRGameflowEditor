@@ -46,7 +46,8 @@
   <ItemGroup>
     <Compile Include="AbstractTRGEEditor.cs" />
     <Compile Include="Audio\AbstractTRAudioProvider.cs" />
-    <Compile Include="Audio\Impls\AbstractTR23AudioProvider.cs" />
+    <Compile Include="Audio\Impls\BaseTRAudioProvider.cs" />
+    <Compile Include="Audio\Impls\TR1AudioProvider.cs" />
     <Compile Include="Audio\Impls\TR23AudioExtractor.cs" />
     <Compile Include="Audio\Impls\TR2AudioProvider.cs" />
     <Compile Include="Audio\Impls\TR3AudioProvider.cs" />
@@ -54,14 +55,19 @@
     <Compile Include="Audio\TRAudioFactory.cs" />
     <Compile Include="Audio\TRAudioTrack.cs" />
     <Compile Include="Audio\TRAudioType.cs" />
+    <Compile Include="FrontEnd\Impls\TR1FrontEnd.cs" />
     <Compile Include="Helpers\Config.cs" />
+    <Compile Include="Helpers\Extensions\BaseFirstContractResolver.cs" />
     <Compile Include="Helpers\Extensions\IOExtensions.cs" />
+    <Compile Include="Helpers\Extensions\LowerCaseNamingStrategy.cs" />
+    <Compile Include="Helpers\Extensions\StringExtensions.cs" />
     <Compile Include="IO\ITRSaveProgressProvider.cs" />
     <Compile Include="IO\TRDirectoryIOArgs.cs" />
     <Compile Include="IO\TRSaveCategory.cs" />
     <Compile Include="IO\TRSaveEventArgs.cs" />
     <Compile Include="IO\TRSaveMonitor.cs" />
     <Compile Include="IO\TRScriptIOArgs.cs" />
+    <Compile Include="Item\Enums\TR1Items.cs" />
     <Compile Include="Item\Enums\TR2Items.cs" />
     <Compile Include="Item\Enums\TR3Items.cs" />
     <Compile Include="ITRConfigProvider.cs" />
@@ -69,9 +75,38 @@
     <Compile Include="Language\TRLanguage.cs" />
     <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
     <Compile Include="Level\Events\TRScriptedLevelModification.cs" />
+    <Compile Include="Level\Impls\TR1LevelManager.cs" />
+    <Compile Include="Level\Impls\TR1ATILevelManager.cs" />
+    <Compile Include="Level\Impls\TR1ScriptedLevel.cs" />
     <Compile Include="Level\Impls\TR3ScriptedLevel.cs" />
+    <Compile Include="Level\TRLevelType.cs" />
+    <Compile Include="Operation\Sequence\BaseLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\DisplayPictureLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\FMVLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\GiveItemLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\LevelSequenceType.cs" />
+    <Compile Include="Operation\Sequence\LevelExitLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\MeshSwapLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\PlaySyncedAudioLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\SetCamLevelSequence.cs" />
+    <Compile Include="Operation\Sequence\TotalStatsLevelSequence.cs" />
+    <Compile Include="Script\EditorTypes\IAmmolessEditor.cs" />
+    <Compile Include="Script\EditorTypes\IDemoEditor.cs" />
+    <Compile Include="Script\EditorTypes\IHealthEditor.cs" />
+    <Compile Include="Script\EditorTypes\ISecretRewardEditor.cs" />
+    <Compile Include="Script\EditorTypes\IUnarmedEditor.cs" />
+    <Compile Include="Script\Enums\TRAirbarMode.cs" />
+    <Compile Include="Script\Enums\TRHealthbarMode.cs" />
+    <Compile Include="Script\Enums\TRMenuStyle.cs" />
+    <Compile Include="Script\Enums\TRScreenshotFormat.cs" />
+    <Compile Include="Script\Enums\TRUIColour.cs" />
+    <Compile Include="Script\Enums\TRUILocation.cs" />
     <Compile Include="Script\Exceptions\ChecksumMismatchException.cs" />
     <Compile Include="Script\Exceptions\EditionMismatchException.cs" />
+    <Compile Include="Script\Impls\TR1ATIScriptEditor.cs" />
+    <Compile Include="Script\Impls\TR1Script.cs" />
+    <Compile Include="Script\Impls\TR1ScriptEditor.cs" />
+    <Compile Include="Script\Impls\TR1ATIScript.cs" />
     <Compile Include="Script\TRScriptOpenOption.cs" />
     <Compile Include="TRInterop.cs" />
     <Compile Include="FrontEnd\Impls\TR23FrontEnd.cs" />
@@ -111,10 +146,14 @@
     <Compile Include="Script\Impls\TR23Script.cs" />
     <Compile Include="Script\Exceptions\UnsupportedScriptException.cs" />
     <Compile Include="Version\TREdition.cs" />
+    <Compile Include="Version\TRPatchTester.cs" />
     <Compile Include="Version\TRVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\TR1\Audio\audio_tracks.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\TR2\Audio\audio_tracks.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -11,6 +11,8 @@
         {
             switch (version)
             {
+                case TRVersion.TR1:
+                    return new TR1AudioProvider();
                 case TRVersion.TR2:
                 case TRVersion.TR2G:
                     return new TR2AudioProvider();

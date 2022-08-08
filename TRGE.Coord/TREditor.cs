@@ -9,7 +9,7 @@ namespace TRGE.Coord
 {
     public class TREditor
     {
-        public static readonly string[] TargetFileExtensions = new string[] { "*.dat", "*.tr2", "*.psx" };
+        public static readonly string[] TargetFileExtensions = new string[] { "*.dat", "*.tr2", "*.psx", "*.phd", "*.json5" };
 
         private AbstractTRScriptEditor _scriptEditor;
         public AbstractTRScriptEditor ScriptEditor
@@ -198,9 +198,17 @@ namespace TRGE.Coord
 
         private void CopyOutputToTarget()
         {
-            DirectoryInfo targetDataDirectory = new DirectoryInfo(_targetDirectory);
-            string outputScript = ScriptEditor.GetScriptOutputPath();
-            IOExtensions.CopyFile(outputScript, targetDataDirectory, true);
+            if (ScriptEditor.Edition.HasScript)
+            {
+                string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ScriptName)));
+                IOExtensions.CopyFile(ScriptEditor.GetScriptOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+            }
+
+            if (ScriptEditor.Edition.HasConfig)
+            {
+                string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ConfigName)));
+                IOExtensions.CopyFile(ScriptEditor.GetConfigOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+            }
 
             List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(ScriptEditor.Levels);
             if (ScriptEditor.Edition.AssaultCourseSupported)

@@ -103,7 +103,7 @@ namespace TRGE.Coord
 
         protected virtual void SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
         {
-            Location defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
+            Location defaultLocation = GetDefaultUnarmedLocationForLevel(scriptedLevel);
             if (defaultLocation == null)
             {
                 throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
@@ -153,6 +153,7 @@ namespace TRGE.Coord
                 //only inject if it hasn't been done already i.e. no pistols, other weapon or ammo found in the default spot
                 if (existingInjections.Count() == 0)
                 {
+                    defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
                     entities.Add(new TR2Entity
                     {
                         TypeID = (short)TR2Entities.Pistols_S_P,
@@ -261,6 +262,16 @@ namespace TRGE.Coord
                     File.WriteAllBytes(currentBackupFile, houseData);
                     File.WriteAllBytes(Path.Combine(_io.OutputDirectory.FullName, "house.tr2"), houseData);
                 }
+            }
+        }
+
+        protected override void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor)
+        {
+            // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
+            TR23ScriptEditor editor = scriptEditor as TR23ScriptEditor;
+            if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
+            {
+                _unarmedRng = editor.UnarmedLevelRNG.Create();
             }
         }
 
@@ -398,7 +409,7 @@ namespace TRGE.Coord
 
         private void ImportModels(TR2Level level, string lvlName, List<TR2Entities> entities)
         {
-            TRModelImporter importer = new TRModelImporter
+            TR2ModelImporter importer = new TR2ModelImporter
             {
                 DataFolder = @"Resources\TR2\Models",
                 Level = level,

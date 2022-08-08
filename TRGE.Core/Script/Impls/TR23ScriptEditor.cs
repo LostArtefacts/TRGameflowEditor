@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TRGE.Core
 {
-    public class TR23ScriptEditor : AbstractTRScriptEditor
+    public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmolessEditor, ISecretRewardEditor, IDemoEditor
     {
         private bool _addGymWeapons, _addGymSkidoo;
 

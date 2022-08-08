@@ -43,7 +43,7 @@ namespace TRGE.Core.Test
             {
                 AbstractTRScript script = TRScriptFactory.OpenScript(_validFilePath);
                 Assert.IsTrue(script is TR23Script);
-                Assert.IsTrue(script.Edition == TREdition.TR3PSX);
+                Assert.IsTrue(script.Edition.Equals(TREdition.TR3PSX));
                 _script = script as TR23Script;
             }
             catch (UnsupportedScriptException)
@@ -348,7 +348,7 @@ namespace TRGE.Core.Test
         protected void TestUntouchedWrite()
         {
             byte[] originalData = File.ReadAllBytes(_validFilePath);
-            CollectionAssert.AreEqual(originalData, _script.Serialise());
+            CollectionAssert.AreEqual(originalData, _script.SerialiseScriptToBin());
         }
     }
 }

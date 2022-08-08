@@ -107,6 +107,8 @@ namespace TRGE.Core
 
         internal void SetLevelSequencing()
         {
+            AbstractTRScriptedLevel currentFinalLevel = Levels.Find(l => l.IsFinalLevel);
+
             // Set enabled levels first
             ushort newSeq = 1;
             foreach (AbstractTRScriptedLevel level in Levels)
@@ -130,41 +132,20 @@ namespace TRGE.Core
             ushort finalSequence = (ushort)(LevelCount - Edition.LevelCompleteOffset);
             finalSequence -= (ushort)(LevelCount - EnabledLevelCount);
 
-            AbstractTRScriptedLevel currentFinalLevel = Levels.Find(l => l.IsFinalLevel);
-            AbstractTRScriptedLevel newFinalLavel = Levels.Find(l => l.Sequence == finalSequence);
-            if (currentFinalLevel != newFinalLavel)
+            AbstractTRScriptedLevel newFinalLevel = Levels.Find(l => l.Sequence == finalSequence);
+            if (currentFinalLevel != newFinalLevel)
             {
                 currentFinalLevel.IsFinalLevel = false;
-                newFinalLavel.IsFinalLevel = true;
+                newFinalLevel.IsFinalLevel = true;
+
+                FinalLevelChanged(currentFinalLevel, newFinalLevel);
 
                 FireLevelModificationEvent(currentFinalLevel, TRScriptedLevelModification.SequenceChanged);
-                FireLevelModificationEvent(newFinalLavel, TRScriptedLevelModification.SequenceChanged);
+                FireLevelModificationEvent(newFinalLevel, TRScriptedLevelModification.SequenceChanged);
             }
-
-            //ushort newSeq = 1;
-            //foreach (AbstractTRScriptedLevel level in Levels)
-            //{
-            //    bool modified = false;
-            //    if (level.Sequence != newSeq)
-            //    {
-            //        level.Sequence = newSeq;
-            //        modified = true;
-            //    }
-            //    newSeq++;
-
-            //    bool isFinalLevel = newSeq == (LevelCount - Edition.LevelCompleteOffset) + 1;
-            //    if (isFinalLevel != level.IsFinalLevel)
-            //    {
-            //        level.IsFinalLevel = isFinalLevel;
-            //        modified = true;
-            //    }
-
-            //    if (modified)
-            //    {
-            //        FireLevelModificationEvent(level, TRScriptedLevelModification.SequenceChanged);
-            //    }
-            //}
         }
+
+        protected virtual void FinalLevelChanged(AbstractTRScriptedLevel oldFinalLevel, AbstractTRScriptedLevel newFinalLevel) { }
 
         private void SetSequence(AbstractTRScriptedLevel level, ushort newSeq)
         {
@@ -174,13 +155,6 @@ namespace TRGE.Core
                 level.Sequence = newSeq;
                 modified = true;
             }
-
-            //bool isFinalLevel = newSeq == finalSequence;// (EnabledLevelCount - Edition.LevelCompleteOffset) + 1;
-            //if (isFinalLevel != level.IsFinalLevel)
-            //{
-            //    level.IsFinalLevel = isFinalLevel;
-            //    modified = true;
-            //}
 
             if (modified)
             {

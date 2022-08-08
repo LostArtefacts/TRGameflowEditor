@@ -120,12 +120,17 @@ namespace TRGE.Coord
 
         internal int GetRestoreTarget()
         {
-            return _io.BackupDirectory.GetFilteredFiles(new string[] { "*.dat", "*.tr2" }).Length;
+            return GetRestoreFiles().Count;
         }
 
         internal sealed override void Restore()
         {
-            _io.BackupDirectory.Copy(_io.OriginalDirectory, true, new string[] { "*.dat", "*.tr2" }, new Action<FileInfo>(fi => RestoreProgressChanged?.Invoke(this, EventArgs.Empty)));
+            Dictionary<string, string> restoreFiles = GetRestoreFiles();
+            foreach (string backup in restoreFiles.Keys)
+            {
+                IOExtensions.CopyFile(backup, restoreFiles[backup], true);
+                RestoreProgressChanged?.Invoke(this, EventArgs.Empty);
+            }
 
             ApplyRestore();
 
@@ -135,6 +140,24 @@ namespace TRGE.Coord
             }
             _io.ConfigFile = new FileInfo(_io.ConfigFile.FullName);
             ReadConfig(_config = Config.Read(_io.ConfigFile.FullName));
+        }
+
+        protected Dictionary<string, string> GetRestoreFiles()
+        {
+            Dictionary<string, string> files = new Dictionary<string, string>();
+            foreach (AbstractTRScriptedLevel level in _scriptEditor.Levels)
+            {
+                string backup = Path.Combine(_io.BackupDirectory.FullName, level.LevelFileBaseName);
+                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.LevelFile)); // Supports restoring to folders outside data
+                files[backup] = restore;
+                if (level.HasCutScene)
+                {
+                    string cutBackup = Path.Combine(_io.BackupDirectory.FullName, level.CutSceneLevel.LevelFileBaseName);
+                    string cutRestore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.CutSceneLevel.LevelFile));
+                    files[cutBackup] = cutRestore;
+                }
+            }
+            return files;
         }
 
         protected virtual void ApplyRestore() { }

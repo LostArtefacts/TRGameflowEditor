@@ -7,7 +7,7 @@ namespace TRGE.Core
 {
     internal class TR23LevelManager : AbstractTRLevelManager
     {
-        private readonly AbstractTR23AudioProvider _audioProvider;
+        private readonly BaseTRAudioProvider _audioProvider;
         private readonly AbstractTR23ItemProvider _itemProvider;
         private readonly TR23Script _script;
         private readonly TR2ScriptedLevel _assaultLevel;
@@ -56,7 +56,7 @@ namespace TRGE.Core
         {
             Levels = (_script = script).Levels;
             _assaultLevel = _script.AssaultLevel as TR2ScriptedLevel;
-            _audioProvider = TRAudioFactory.GetAudioProvider(script.Edition) as AbstractTR23AudioProvider;
+            _audioProvider = TRAudioFactory.GetAudioProvider(script.Edition) as BaseTRAudioProvider;
             _itemProvider = TRItemFactory.GetProvider(script.Edition, script.GameStrings1) as AbstractTR23ItemProvider;
         }
 

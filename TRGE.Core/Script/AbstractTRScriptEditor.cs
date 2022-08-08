@@ -11,23 +11,26 @@ namespace TRGE.Core
 
         public FileInfo OriginalFile
         {
-            get => _io.OriginalFile;
-            set => _io.OriginalFile = value;
+            get => _io.TRScriptFile;
+            set => _io.TRScriptFile = value;
         }
 
         public FileInfo BackupFile
         {
-            get => _io.BackupFile;
-            set => _io.BackupFile = value;
+            get => _io.TRScriptBackupFile;
+            set => _io.TRScriptBackupFile = value;
         }
 
-        public FileInfo ConfigFile
+        public FileInfo TRConfigFile => _io.TRConfigFile;
+        public FileInfo BackupTRConfigFile => _io.TRConfigBackupFile;
+
+        public FileInfo InternalConfigFile
         {
-            get => _io.ConfigFile;
-            set => _io.ConfigFile = value;
+            get => _io.InternalConfigFile;
+            set => _io.InternalConfigFile = value;
         }
 
-        internal override string ConfigFilePath => ConfigFile.FullName;
+        internal override string ConfigFilePath => InternalConfigFile.FullName;
 
         public DirectoryInfo WIPOutputDirectory
         {
@@ -74,6 +77,12 @@ namespace TRGE.Core
             LoadConfig();
 
             (Script = script).Read(BackupFile);
+            if (BackupTRConfigFile != null)
+            {
+                Script.ReadConfig(BackupTRConfigFile);
+            }
+
+            TRPatchTester.Test(Edition, _io);
 
             LevelManager = TRScriptedLevelFactory.GetLevelManager(script);
             LevelManager.LevelModified += LevelManagerLevelModified;
@@ -90,7 +99,7 @@ namespace TRGE.Core
         {
             _config = Config.Read(ConfigFilePath);
             //issue #36
-            if (_config != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
+            if (_config != null && OriginalFile != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
             {
                 switch (_openOption)
                 {
@@ -100,9 +109,9 @@ namespace TRGE.Core
                     //overwrite the existing backup with the "new" original file, delete the config as though we have never opened the file before
                     case TRScriptOpenOption.DiscardBackup:
                         File.Copy(OriginalFile.FullName, BackupFile.FullName, true);
-                        while (File.Exists(ConfigFile.FullName))
+                        while (File.Exists(InternalConfigFile.FullName))
                         {
-                            ConfigFile.Delete(); //issue #39
+                            InternalConfigFile.Delete(); //issue #39
                         }
                         _config = null;
                         break;
@@ -219,7 +228,7 @@ namespace TRGE.Core
                     ["Version"] = TRInterop.ExecutingVersion
                 },
                 ["Edition"] = Edition.ToJson(),
-                ["Original"] = OriginalFile.FullName,
+                ["Original"] = OriginalFile == null ? null : OriginalFile.FullName,
                 ["CheckSumOnSave"] = string.Empty,
                 ["FrontEndFMVOn"] = FrontEndHasFMV,
                 ["LevelSequencing"] = new Config
@@ -341,8 +350,7 @@ namespace TRGE.Core
 
             LevelManager.Save();
 
-            string outputPath = GetScriptWIPOutputPath();
-            Script.Write(outputPath);
+            WriteScript();
         }
 
         public void SaveScript()
@@ -350,8 +358,21 @@ namespace TRGE.Core
             // Commit level specifics
             LevelManager.UpdateScript();
 
-            string outputPath = GetScriptWIPOutputPath();
-            Script.Write(outputPath);
+            WriteScript();
+        }
+
+        private void WriteScript()
+        {
+            if (OriginalFile != null)
+            {
+                string outputPath = GetScriptWIPOutputPath();
+                Script.Write(outputPath);
+            }
+
+            if (TRConfigFile != null)
+            {
+                Script.WriteConfig(GetTRConfigWIPOutputPath());
+            }
         }
 
         /// <summary>
@@ -360,19 +381,25 @@ namespace TRGE.Core
         /// </summary>
         internal sealed override void SaveComplete()
         {
-            _config["CheckSumOnSave"] = new FileInfo(GetScriptWIPOutputPath()).Checksum();
-            _config.Write(ConfigFile.FullName);
-
-            // Store sequencing data for third-party tools to access/compare differences
-            string sequenceData = Path.Combine(Path.GetDirectoryName(OriginalFile.FullName), "../", "LEVELINFO.DAT");
-            using (BinaryWriter bw = new BinaryWriter(new FileStream(sequenceData, FileMode.Create)))
+            if (OriginalFile != null)
             {
-                bw.Write((byte)LevelManager.EnabledLevelCount);
-                foreach (AbstractTRScriptedLevel level in LevelManager.Levels)
+                _config["CheckSumOnSave"] = new FileInfo(GetScriptWIPOutputPath()).Checksum();
+            }
+            _config.Write(InternalConfigFile.FullName);
+
+            if (Edition.ExportLevelData)
+            {
+                // Store sequencing data for third-party tools to access/compare differences
+                string sequenceData = Path.Combine(Path.GetDirectoryName(OriginalFile.FullName), "../", "LEVELINFO.DAT");
+                using (BinaryWriter bw = new BinaryWriter(new FileStream(sequenceData, FileMode.Create)))
                 {
-                    if (level.Enabled)
+                    bw.Write((byte)LevelManager.EnabledLevelCount);
+                    foreach (AbstractTRScriptedLevel level in LevelManager.Levels)
                     {
-                        level.SerializeToMain(bw);
+                        if (level.Enabled)
+                        {
+                            level.SerializeToMain(bw);
+                        }
                     }
                 }
             }
@@ -419,12 +446,21 @@ namespace TRGE.Core
 
         internal override void Restore()
         {
-            BackupFile.CopyTo(OriginalFile.FullName, true);
-            while (File.Exists(ConfigFile.FullName))
+            if (OriginalFile != null)
             {
-                ConfigFile.Delete(); //issue #39
+                BackupFile.CopyTo(OriginalFile.FullName, true);
             }
-            ConfigFile = new FileInfo(ConfigFile.FullName);
+
+            if (TRConfigFile != null)
+            {
+                BackupTRConfigFile.CopyTo(TRConfigFile.FullName, true);
+            }
+
+            while (File.Exists(InternalConfigFile.FullName))
+            {
+                InternalConfigFile.Delete(); //issue #39
+            }
+            InternalConfigFile = new FileInfo(InternalConfigFile.FullName);
             Initialise(Script);
         }
 
@@ -433,19 +469,29 @@ namespace TRGE.Core
             return Path.Combine(WIPOutputDirectory.FullName, OriginalFile.Name);
         }
 
+        protected string GetTRConfigWIPOutputPath()
+        {
+            return Path.Combine(WIPOutputDirectory.FullName, TRConfigFile.Name);
+        }
+
         internal string GetScriptOutputPath()
         {
             return Path.Combine(OutputDirectory.FullName, OriginalFile.Name);
         }
 
-        internal AbstractTRScript LoadBackupScript()
+        internal string GetConfigOutputPath()
         {
-            return LoadScript(BackupFile.FullName);
+            return TRConfigFile == null ? null : Path.Combine(OutputDirectory.FullName, TRConfigFile.Name);
         }
 
-        internal AbstractTRScript LoadOutputScript()
+        internal AbstractTRScript LoadBackupScript()
         {
-            return LoadScript(GetScriptOutputPath());
+            AbstractTRScript script = LoadScript(BackupFile == null ? null : BackupFile.FullName);
+            if (BackupTRConfigFile != null)
+            {
+                script.ReadConfig(BackupTRConfigFile);
+            }
+            return script;
         }
 
         internal AbstractTRScript LoadRandomisationBaseScript()
