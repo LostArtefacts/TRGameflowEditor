@@ -140,6 +140,8 @@ namespace TRGE.Test
         {
             const string gf = @"TR1\cfgonly\Tomb1Main_gameflow.json5";
             const string cf = @"TR1\cfgonly\Tomb1Main.json5";
+            const string cfEmpty = @"TR1\cfgonly\Tomb1Main_empty.json5";
+            const string cfFuture = @"TR1\cfgonly\Tomb1Main_future.json5";
             const string gfTest = @"TR1\cfgonly\Tomb1Main_gameflow_TEST.json5";
             const string cfTest = @"TR1\cfgonly\Tomb1Main_TEST.json5";
 
@@ -167,6 +169,49 @@ namespace TRGE.Test
 
             File.WriteAllText("cf1.json", defaultSerializedConfig);
             File.WriteAllText("cf2.json", savedSerializedConfig);
+            Assert.AreEqual(defaultSerializedConfig, savedSerializedConfig);
+
+            script = TRScriptFactory.OpenScript(gf) as TR1Script;
+            script.ReadConfig(cfEmpty);
+
+            script.Write(gfTest);
+            script.WriteConfig(cfTest);
+
+            savedGameflow = JObject.Parse(File.ReadAllText(gfTest));
+            savedSerializedGameflow = JsonConvert.SerializeObject(savedGameflow, Formatting.Indented);
+
+            File.WriteAllText("gf1_empty.json", defaultSerializedGameflow);
+            File.WriteAllText("gf2_empty.json", savedSerializedGameflow);
+            Assert.AreEqual(defaultSerializedGameflow, savedSerializedGameflow);
+
+            savedConfig = JObject.Parse(File.ReadAllText(cfTest));
+            savedSerializedConfig = JsonConvert.SerializeObject(savedConfig, Formatting.Indented);
+
+            File.WriteAllText("cf1_empty.json", defaultSerializedConfig);
+            File.WriteAllText("cf2_empty.json", savedSerializedConfig);
+            Assert.AreEqual(defaultSerializedConfig, savedSerializedConfig);
+
+            defaultConfig = JObject.Parse(File.ReadAllText(cfFuture));
+            defaultSerializedConfig = JsonConvert.SerializeObject(defaultConfig, Formatting.Indented);
+
+            script = TRScriptFactory.OpenScript(gf) as TR1Script;
+            script.ReadConfig(cfFuture);
+
+            script.Write(gfTest);
+            script.WriteConfig(cfTest);
+
+            savedGameflow = JObject.Parse(File.ReadAllText(gfTest));
+            savedSerializedGameflow = JsonConvert.SerializeObject(savedGameflow, Formatting.Indented);
+
+            File.WriteAllText("gf1_future.json", defaultSerializedGameflow);
+            File.WriteAllText("gf2_future.json", savedSerializedGameflow);
+            Assert.AreEqual(defaultSerializedGameflow, savedSerializedGameflow);
+
+            savedConfig = JObject.Parse(File.ReadAllText(cfTest));
+            savedSerializedConfig = JsonConvert.SerializeObject(savedConfig, Formatting.Indented);
+
+            File.WriteAllText("cf1_future.json", defaultSerializedConfig);
+            File.WriteAllText("cf2_future.json", savedSerializedConfig);
             Assert.AreEqual(defaultSerializedConfig, savedSerializedConfig);
         }
     }

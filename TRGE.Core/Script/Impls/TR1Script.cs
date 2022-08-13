@@ -115,12 +115,12 @@ namespace TRGE.Core
             MainMenuPicture = ReadString(nameof(MainMenuPicture), GameflowData);
             SavegameFmtLegacy = ReadString(nameof(SavegameFmtLegacy), GameflowData);
             SavegameFmtBson = ReadString(nameof(SavegameFmtBson), GameflowData);
-            EnableGameModes = ReadBool(nameof(EnableGameModes), GameflowData).Value;
-            EnableSaveCrystals = ReadBool(nameof(EnableSaveCrystals), GameflowData).Value;
-            DemoDelay = ReadDouble(nameof(DemoDelay), GameflowData).Value;
+            EnableGameModes = ReadBool(nameof(EnableGameModes), GameflowData);
+            EnableSaveCrystals = ReadBool(nameof(EnableSaveCrystals), GameflowData);
+            DemoDelay = ReadDouble(nameof(DemoDelay), GameflowData);
             WaterColor = ReadArray<double>(nameof(WaterColor), GameflowData);
-            DrawDistanceFade = ReadDouble(nameof(DrawDistanceFade), GameflowData).Value;
-            DrawDistanceMax = ReadDouble(nameof(DrawDistanceMax), GameflowData).Value;
+            DrawDistanceFade = ReadDouble(nameof(DrawDistanceFade), GameflowData);
+            DrawDistanceMax = ReadDouble(nameof(DrawDistanceMax), GameflowData);
             Strings = ReadDictionary<string, string>(nameof(Strings), GameflowData);
 
             Levels = new List<AbstractTRScriptedLevel>();
@@ -166,12 +166,12 @@ namespace TRGE.Core
 
                 level.Name = ReadString("Title", levelData);
                 level.LevelFile = ReadString("File", levelData);
-                level.Music = ReadInt(nameof(level.Music), levelData).Value;
-                level.Demo = ReadBool(nameof(level.Demo), levelData);
-                level.DrawDistanceFade = ReadDouble(nameof(level.DrawDistanceFade), levelData);
-                level.DrawDistanceMax = ReadDouble(nameof(level.DrawDistanceMax), levelData);
-                level.UnobtainableKills = ReadInt(nameof(level.UnobtainableKills), levelData);
-                level.UnobtainablePickups = ReadInt(nameof(level.UnobtainablePickups), levelData);
+                level.Music = ReadInt(nameof(level.Music), levelData);
+                level.Demo = ReadNullableBool(nameof(level.Demo), levelData);
+                level.DrawDistanceFade = ReadNullableDouble(nameof(level.DrawDistanceFade), levelData);
+                level.DrawDistanceMax = ReadNullableDouble(nameof(level.DrawDistanceMax), levelData);
+                level.UnobtainableKills = ReadNullableInt(nameof(level.UnobtainableKills), levelData);
+                level.UnobtainablePickups = ReadNullableInt(nameof(level.UnobtainablePickups), levelData);
 
                 
                 Dictionary<string, string> strings = ReadDictionary<string, string>("Strings", levelData);
@@ -211,7 +211,7 @@ namespace TRGE.Core
                             sequence = new DisplayPictureLevelSequence
                             {
                                 PicturePath = ReadString("PicturePath", sequenceData),
-                                DisplayTime = ReadDouble("DisplayTime", sequenceData).Value
+                                DisplayTime = ReadDouble("DisplayTime", sequenceData)
                             };
                             break;
                         case LevelSequenceType.Total_Stats:
@@ -225,7 +225,7 @@ namespace TRGE.Core
                         case LevelSequenceType.Exit_To_Cine:
                             sequence = new LevelExitLevelSequence
                             {
-                                LevelId = ReadInt("LevelId", sequenceData).Value
+                                LevelId = ReadInt("LevelId", sequenceData)
                             };
                             break;                        
                         
@@ -235,28 +235,28 @@ namespace TRGE.Core
                         case LevelSequenceType.Set_Cam_Angle:
                             sequence = new SetCamLevelSequence
                             {
-                                Value = ReadInt("Value", sequenceData).Value
+                                Value = ReadInt("Value", sequenceData)
                             };
                             break;                        
                         case LevelSequenceType.Give_Item:
                             sequence = new GiveItemLevelSequence
                             {
-                                ObjectId = (TR1Items)ReadInt("ObjectId", sequenceData).Value,
-                                Quantity = ReadInt("Quantity", sequenceData).Value
+                                ObjectId = (TR1Items)ReadInt("ObjectId", sequenceData),
+                                Quantity = ReadInt("Quantity", sequenceData)
                             };
                             break;
                         case LevelSequenceType.Play_Synced_Audio:
                             sequence = new PlaySyncedAudioLevelSequence
                             {
-                                AudioId = ReadInt("AudioId", sequenceData).Value
+                                AudioId = ReadInt("AudioId", sequenceData)
                             };
                             break;
                         case LevelSequenceType.Mesh_Swap:
                             sequence = new MeshSwapLevelSequence
                             {
-                                Object1ID = ReadInt("Object1Id", sequenceData).Value,
-                                Object2ID = ReadInt("Object2Id", sequenceData).Value,
-                                MeshID = ReadInt("MeshId", sequenceData).Value
+                                Object1ID = ReadInt("Object1Id", sequenceData),
+                                Object2ID = ReadInt("Object2Id", sequenceData),
+                                MeshID = ReadInt("MeshId", sequenceData)
                             };
                             break;
                         default:
@@ -279,70 +279,80 @@ namespace TRGE.Core
         {
             ConfigData = JObject.Parse(json);
 
-            StartLaraHitpoints = ReadInt(nameof(StartLaraHitpoints), ConfigData).Value;
-            DisableHealingBetweenLevels = ReadBool(nameof(DisableHealingBetweenLevels), ConfigData).Value;
-            DisableMedpacks = ReadBool(nameof(DisableMedpacks), ConfigData).Value;
-            DisableMagnums = ReadBool(nameof(DisableMagnums), ConfigData).Value;
-            DisableUzis = ReadBool(nameof(DisableUzis), ConfigData).Value;
-            DisableShotgun = ReadBool(nameof(DisableShotgun), ConfigData).Value;
-            EnableDeathsCounter = ReadBool(nameof(EnableDeathsCounter), ConfigData).Value;
-            EnableEnemyHealthbar = ReadBool(nameof(EnableEnemyHealthbar), ConfigData).Value;
-            EnableEnhancedLook = ReadBool(nameof(EnableEnhancedLook), ConfigData).Value;
-            EnableShotgunFlash = ReadBool(nameof(EnableShotgunFlash), ConfigData).Value;
-            FixShotgunTargeting = ReadBool(nameof(FixShotgunTargeting), ConfigData).Value;
-            EnableNumericKeys = ReadBool(nameof(EnableNumericKeys), ConfigData).Value;
-            EnableTr3Sidesteps = ReadBool(nameof(EnableTr3Sidesteps), ConfigData).Value;
-            EnableCheats = ReadBool(nameof(EnableCheats), ConfigData).Value;
-            EnableBraid = ReadBool(nameof(EnableBraid), ConfigData).Value;
-            EnableDetailedStats = ReadBool(nameof(EnableDetailedStats), ConfigData).Value;
-            EnableCompassStats = ReadBool(nameof(EnableCompassStats), ConfigData).Value;
-            EnableTotalStats = ReadBool(nameof(EnableTotalStats), ConfigData).Value;
-            EnableTimerInInventory = ReadBool(nameof(EnableTimerInInventory), ConfigData).Value;
-            EnableSmoothBars = ReadBool(nameof(EnableSmoothBars), ConfigData).Value;
-            EnableFadeEffects = ReadBool(nameof(EnableFadeEffects), ConfigData).Value;
-            MenuStyle = ReadEnum<TRMenuStyle>(nameof(MenuStyle), ConfigData);
-            HealthbarShowingMode = ReadEnum<TRHealthbarMode>(nameof(HealthbarShowingMode), ConfigData);
-            HealthbarLocation = ReadEnum<TRUILocation>(nameof(HealthbarLocation), ConfigData);
-            HealthbarColor = ReadEnum<TRUIColour>(nameof(HealthbarColor), ConfigData);
-            AirbarShowingMode = ReadEnum<TRAirbarMode>(nameof(AirbarShowingMode), ConfigData);
-            AirbarLocation = ReadEnum<TRUILocation>(nameof(AirbarLocation), ConfigData);
-            AirbarColor = ReadEnum<TRUIColour>(nameof(AirbarColor), ConfigData);
-            EnemyHealthbarLocation = ReadEnum<TRUILocation>(nameof(EnemyHealthbarLocation), ConfigData);
-            EnemyHealthbarColor = ReadEnum<TRUIColour>(nameof(EnemyHealthbarColor), ConfigData);
-            FixTihocanSecretSound = ReadBool(nameof(FixTihocanSecretSound), ConfigData).Value;
-            FixPyramidSecretTrigger = ReadBool(nameof(FixPyramidSecretTrigger), ConfigData).Value;
-            FixSecretsKillingMusic = ReadBool(nameof(FixSecretsKillingMusic), ConfigData).Value;
-            FixDescendingGlitch = ReadBool(nameof(FixDescendingGlitch), ConfigData).Value;
-            FixWallJumpGlitch = ReadBool(nameof(FixWallJumpGlitch), ConfigData).Value;
-            FixBridgeCollision = ReadBool(nameof(FixBridgeCollision), ConfigData).Value;
-            FixQwopGlitch = ReadBool(nameof(FixQwopGlitch), ConfigData).Value;
-            FixAlligatorAi = ReadBool(nameof(FixAlligatorAi), ConfigData).Value;
-            ChangePierreSpawn = ReadBool(nameof(ChangePierreSpawn), ConfigData).Value;
-            FovValue = ReadInt(nameof(FovValue), ConfigData).Value;
-            FovVertical = ReadBool(nameof(FovVertical), ConfigData).Value;
-            DisableDemo = ReadBool(nameof(DisableDemo), ConfigData).Value;
-            DisableFmv = ReadBool(nameof(DisableFmv), ConfigData).Value;
-            DisableCine = ReadBool(nameof(DisableCine), ConfigData).Value;
-            DisableMusicInMenu = ReadBool(nameof(DisableMusicInMenu), ConfigData).Value;
-            DisableMusicInInventory = ReadBool(nameof(DisableMusicInInventory), ConfigData).Value;
-            DisableTrexCollision = ReadBool(nameof(DisableTrexCollision), ConfigData).Value;
-            ResolutionWidth = ReadInt(nameof(ResolutionWidth), ConfigData).Value;
-            ResolutionHeight = ReadInt(nameof(ResolutionHeight), ConfigData).Value;
-            EnableRoundShadow = ReadBool(nameof(EnableRoundShadow), ConfigData).Value;
-            Enable3dPickups = ReadBool(nameof(Enable3dPickups), ConfigData).Value;
-            ScreenshotFormat = ReadEnum<TRScreenshotFormat>(nameof(ScreenshotFormat), ConfigData);
-            AnisotropyFilter = ReadDouble(nameof(AnisotropyFilter), ConfigData).Value;
-            WalkToItems = ReadBool(nameof(WalkToItems), ConfigData).Value;
-            MaximumSaveSlots = ReadInt(nameof(MaximumSaveSlots), ConfigData).Value;
-            RevertToPistols = ReadBool(nameof(RevertToPistols), ConfigData).Value;
+            StartLaraHitpoints          = ReadInt(nameof(StartLaraHitpoints), ConfigData, 1000);
+            DisableHealingBetweenLevels = ReadBool(nameof(DisableHealingBetweenLevels), ConfigData, false);
+            DisableMedpacks             = ReadBool(nameof(DisableMedpacks), ConfigData, false);
+            DisableMagnums              = ReadBool(nameof(DisableMagnums), ConfigData, false);
+            DisableUzis                 = ReadBool(nameof(DisableUzis), ConfigData, false);
+            DisableShotgun              = ReadBool(nameof(DisableShotgun), ConfigData, false);
+            EnableDeathsCounter         = ReadBool(nameof(EnableDeathsCounter), ConfigData, true);
+            EnableEnemyHealthbar        = ReadBool(nameof(EnableEnemyHealthbar), ConfigData, true);
+            EnableEnhancedLook          = ReadBool(nameof(EnableEnhancedLook), ConfigData, true);
+            EnableShotgunFlash          = ReadBool(nameof(EnableShotgunFlash), ConfigData, true);
+            FixShotgunTargeting         = ReadBool(nameof(FixShotgunTargeting), ConfigData, true);
+            EnableNumericKeys           = ReadBool(nameof(EnableNumericKeys), ConfigData, true);
+            EnableTr3Sidesteps          = ReadBool(nameof(EnableTr3Sidesteps), ConfigData, true);
+            EnableCheats                = ReadBool(nameof(EnableCheats), ConfigData, false);
+            EnableBraid                 = ReadBool(nameof(EnableBraid), ConfigData, false);
+            EnableDetailedStats         = ReadBool(nameof(EnableDetailedStats), ConfigData, true);
+            EnableCompassStats          = ReadBool(nameof(EnableCompassStats), ConfigData, true);
+            EnableTotalStats            = ReadBool(nameof(EnableTotalStats), ConfigData, true);
+            EnableTimerInInventory      = ReadBool(nameof(EnableTimerInInventory), ConfigData, true);
+            EnableSmoothBars            = ReadBool(nameof(EnableSmoothBars), ConfigData, true);
+            EnableFadeEffects           = ReadBool(nameof(EnableFadeEffects), ConfigData, true);
+            MenuStyle                   = ReadEnum(nameof(MenuStyle), ConfigData, TRMenuStyle.PC);
+            HealthbarShowingMode        = ReadEnum(nameof(HealthbarShowingMode), ConfigData, TRHealthbarMode.FlashingOrDefault);
+            HealthbarLocation           = ReadEnum(nameof(HealthbarLocation), ConfigData, TRUILocation.TopLeft);
+            HealthbarColor              = ReadEnum(nameof(HealthbarColor), ConfigData, TRUIColour.Red);
+            AirbarShowingMode           = ReadEnum(nameof(AirbarShowingMode), ConfigData, TRAirbarMode.Default);
+            AirbarLocation              = ReadEnum(nameof(AirbarLocation), ConfigData, TRUILocation.TopRight);
+            AirbarColor                 = ReadEnum(nameof(AirbarColor), ConfigData, TRUIColour.Blue);
+            EnemyHealthbarLocation      = ReadEnum(nameof(EnemyHealthbarLocation), ConfigData, TRUILocation.BottomLeft);
+            EnemyHealthbarColor         = ReadEnum(nameof(EnemyHealthbarColor), ConfigData, TRUIColour.Grey);
+            FixTihocanSecretSound       = ReadBool(nameof(FixTihocanSecretSound), ConfigData, true);
+            FixPyramidSecretTrigger     = ReadBool(nameof(FixPyramidSecretTrigger), ConfigData, true);
+            FixSecretsKillingMusic      = ReadBool(nameof(FixSecretsKillingMusic), ConfigData, true);
+            FixDescendingGlitch         = ReadBool(nameof(FixDescendingGlitch), ConfigData, false);
+            FixWallJumpGlitch           = ReadBool(nameof(FixWallJumpGlitch), ConfigData, false);
+            FixBridgeCollision          = ReadBool(nameof(FixBridgeCollision), ConfigData, true);
+            FixQwopGlitch               = ReadBool(nameof(FixQwopGlitch), ConfigData, false);
+            FixAlligatorAi              = ReadBool(nameof(FixAlligatorAi), ConfigData, true);
+            ChangePierreSpawn           = ReadBool(nameof(ChangePierreSpawn), ConfigData, true);
+            FovValue                    = ReadInt(nameof(FovValue), ConfigData, 65);
+            FovVertical                 = ReadBool(nameof(FovVertical), ConfigData, true);
+            DisableDemo                 = ReadBool(nameof(DisableDemo), ConfigData, false);
+            DisableFmv                  = ReadBool(nameof(DisableFmv), ConfigData, false);
+            DisableCine                 = ReadBool(nameof(DisableCine), ConfigData, false);
+            DisableMusicInMenu          = ReadBool(nameof(DisableMusicInMenu), ConfigData, false);
+            DisableMusicInInventory     = ReadBool(nameof(DisableMusicInInventory), ConfigData, false);
+            DisableTrexCollision        = ReadBool(nameof(DisableTrexCollision), ConfigData, false);
+            ResolutionWidth             = ReadInt(nameof(ResolutionWidth), ConfigData, -1);
+            ResolutionHeight            = ReadInt(nameof(ResolutionHeight), ConfigData, -1);
+            EnableRoundShadow           = ReadBool(nameof(EnableRoundShadow), ConfigData, true);
+            Enable3dPickups             = ReadBool(nameof(Enable3dPickups), ConfigData, true);
+            ScreenshotFormat            = ReadEnum(nameof(ScreenshotFormat), ConfigData, TRScreenshotFormat.JPG);
+            AnisotropyFilter            = ReadDouble(nameof(AnisotropyFilter), ConfigData, 16);
+            WalkToItems                 = ReadBool(nameof(WalkToItems), ConfigData, false);
+            MaximumSaveSlots            = ReadInt(nameof(MaximumSaveSlots), ConfigData, 25);
+            RevertToPistols             = ReadBool(nameof(RevertToPistols), ConfigData, false);
         }
 
         private string ReadString(string key, JObject data)
         {
+            string result = ReadString(key, data, null);
+            if (result == null)
+            {
+                throw new ArgumentException("Invalid/missing value for " + key);
+            }
+            return result;
+        }
+
+        private string ReadString(string key, JObject data, string defaultValue)
+        {
             key = key.ToLowerSnake();
             if (!data.ContainsKey(key))
             {
-                return null;
+                return defaultValue;
             }
 
             string result = data[key].ToString();
@@ -350,55 +360,145 @@ namespace TRGE.Core
             return result;
         }
 
-        private bool? ReadBool(string key, JObject data)
+        private int ReadInt(string key, JObject data)
         {
-            bool? result = null;
-            string b = ReadString(key, data);
-            if (b != null)
+            int result = ReadInt(key, data, int.MinValue);
+            if (result == int.MinValue)
             {
-                result = bool.Parse(b);
+                throw new ArgumentException("Invalid/missing value for " + key);
             }
             return result;
         }
 
-        private int? ReadInt(string key, JObject data)
+        private int? ReadNullableInt(string key, JObject data)
         {
-            int? result = null;
-            string i = ReadString(key, data);
-            if (i != null)
+            int result = ReadInt(key, data, int.MinValue);
+            if (result == int.MinValue)
             {
-                result = int.Parse(i);
+                return null;
             }
             return result;
         }
 
-        private double? ReadDouble(string key, JObject data)
+        private int ReadInt(string key, JObject data, int defaultValue)
         {
-            double? result = null;
-            string d = ReadString(key, data);
-            if (d != null)
+            key = key.ToLowerSnake();
+            if (!data.ContainsKey(key))
             {
-                result = double.Parse(d);
+                return defaultValue;
+            }
+
+            string result = data[key].ToString();
+            data.Remove(key);
+
+            return int.TryParse(result, out int value) ? value : defaultValue;
+        }
+
+        private bool ReadBool(string key, JObject data)
+        {
+            key = key.ToLowerSnake();
+            if (!data.ContainsKey(key))
+            {
+                throw new ArgumentException("Invalid/missing value for " + key);
+            }
+
+            return ReadBool(key, data, false);
+        }
+
+        private bool? ReadNullableBool(string key, JObject data)
+        {
+            key = key.ToLowerSnake();
+            if (!data.ContainsKey(key))
+            {
+                return null;
+            }
+
+            return ReadBool(key, data, false);
+        }
+
+        private bool ReadBool(string key, JObject data, bool defaultValue)
+        {
+            key = key.ToLowerSnake();
+            if (!data.ContainsKey(key))
+            {
+                return defaultValue;
+            }
+
+            string result = data[key].ToString();
+            data.Remove(key);
+
+            return bool.TryParse(result, out bool value) ? value : defaultValue;
+        }
+
+        private double ReadDouble(string key, JObject data)
+        {
+            double result = ReadDouble(key, data, double.NaN);
+            if (result == double.NaN)
+            {
+                throw new ArgumentException("Invalid/missing value for " + key);
             }
             return result;
+        }
+
+        private double? ReadNullableDouble(string key, JObject data)
+        {
+            double result = ReadDouble(key, data, double.MinValue);
+            if (result == double.MinValue)
+            {
+                return null;
+            }
+            return result;
+        }
+
+        private double ReadDouble(string key, JObject data, double defaultValue)
+        {
+            key = key.ToLowerSnake();
+            if (!data.ContainsKey(key))
+            {
+                return defaultValue;
+            }
+
+            string result = data[key].ToString();
+            data.Remove(key);
+
+            return double.TryParse(result, out double value) ? value : defaultValue;
         }
 
         private T ReadEnum<T>(string key, JObject data)
         {
-            string val = ReadString(key, data);
-            val = val.Replace("-", string.Empty);
-            return (T)Enum.Parse(typeof(T), val, true);
+            key = key.ToLowerSnake();
+            if (!data.ContainsKey(key))
+            {
+                throw new ArgumentException("Invalid/missing value for " + key);
+            }
+
+            return ReadEnum(key, data, default(T));
+        }
+
+        private T ReadEnum<T>(string key, JObject data, T defaultValue)
+        {
+            key = key.ToLowerSnake();
+            if (!data.ContainsKey(key))
+            {
+                return defaultValue;
+            }
+
+            string result = data[key].ToString();
+            data.Remove(key);
+
+            result = result.Replace("-", string.Empty);
+            return (T)Enum.Parse(typeof(T), result, true);
         }
 
         private T[] ReadArray<T>(string key, JObject data)
         {
-            string a = ReadString(key, data);
+            string a = ReadString(key, data, string.Empty);
             return a.Length == 0 ? null : JsonConvert.DeserializeObject<T[]>(a);
         }
 
         private Dictionary<K, V> ReadDictionary<K, V>(string key, JObject data)
         {
-            string d = ReadString(key, data);
+            string d = ReadString(key, data, string.Empty);
             return d.Length == 0 ? null : JsonConvert.DeserializeObject<Dictionary<K, V>>(d);
         }
 
@@ -575,7 +675,7 @@ namespace TRGE.Core
 
             Write("Title", level.Name, levelObj);
             Write("File", level.LevelFile, levelObj);
-            Write(nameof(level.Type), level.Type/*.ToString().ToLower()*/, levelObj);
+            Write(nameof(level.Type), level.Type, levelObj);
             Write(nameof(level.Music), level.Music, levelObj);
 
             if (level.WaterColor != null)
@@ -632,7 +732,7 @@ namespace TRGE.Core
             foreach (BaseLevelSequence sequence in level.Sequences)
             {
                 JObject seq = JObject.FromObject(sequence, _mainSerializer);
-                Write(nameof(seq.Type), sequence.Type/*.ToString().ToLower()*/, seq);
+                Write(nameof(seq.Type), sequence.Type, seq);
                 sequences.Add(seq);
             }
 
