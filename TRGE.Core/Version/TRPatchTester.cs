@@ -39,7 +39,7 @@ namespace TRGE.Core
         private static void TestForTR3Main(TREdition edition, TRScriptIOArgs ioArgs)
         {
             string dllPath = Path.GetFullPath(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\tomb3decomp.dll"));
-            edition.IsCommunityPatch = File.Exists(dllPath);
+            edition.IsCommunityPatch = edition.ExportLevelData = File.Exists(dllPath);
         }
     }
 }

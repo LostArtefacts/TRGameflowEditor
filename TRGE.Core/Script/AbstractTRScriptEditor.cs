@@ -393,7 +393,18 @@ namespace TRGE.Core
                 string sequenceData = Path.Combine(Path.GetDirectoryName(OriginalFile.FullName), "../", "LEVELINFO.DAT");
                 using (BinaryWriter bw = new BinaryWriter(new FileStream(sequenceData, FileMode.Create)))
                 {
-                    bw.Write((byte)LevelManager.EnabledLevelCount);
+                    byte levelCount = (byte)LevelManager.EnabledLevelCount;
+                    AbstractTRScriptedLevel assaultLevel = null;// AssaultLevel;
+                    if (assaultLevel != null)
+                    {
+                        levelCount++;
+                    }
+                    bw.Write(levelCount);
+                    if (assaultLevel != null)
+                    {
+                        assaultLevel.SerializeToMain(bw);
+                    }
+
                     foreach (AbstractTRScriptedLevel level in LevelManager.Levels)
                     {
                         if (level.Enabled)

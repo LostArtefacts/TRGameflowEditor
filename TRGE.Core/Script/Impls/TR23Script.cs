@@ -317,7 +317,7 @@ namespace TRGE.Core
                 List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(count);
                 for (ushort i = 1; i < count; i++) //skip assault and however many demos there are
                 {
-                    levels.Add(CreateLevel(i, true));
+                    levels.Add(CreateLevel(i, false));
                 }
                 return levels;
             }
