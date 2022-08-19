@@ -20,7 +20,11 @@ namespace TRGE.Core
             set { }
         }
 
-        public override ushort NumSecrets => _levelSecrets[Sequence];
+        public override ushort NumSecrets
+        {
+            get => _levelSecrets[Sequence];
+            set { }
+        }
 
         public void AddStartInventoryItem(TR3Items item, uint count = 1)
         {

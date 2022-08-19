@@ -43,7 +43,7 @@ namespace TRGE.Core
         public abstract bool RemovesWeapons { get; set; }
         public abstract bool RemovesAmmo { get; set; }
         public abstract bool HasSecrets { get; set; }
-        public abstract ushort NumSecrets { get; }
+        public abstract ushort NumSecrets { get; set; }
         public abstract bool KillToComplete { get; set; }
         public abstract bool IsFinalLevel { get; set; }
 

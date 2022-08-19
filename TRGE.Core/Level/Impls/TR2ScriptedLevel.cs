@@ -178,7 +178,11 @@ namespace TRGE.Core
         /// Although the script is defined to specify the number of secrets, it's all hard-coded in the game.
         /// TR2 can have a maximum of 3 per level.
         /// </summary>
-        public override ushort NumSecrets => (ushort)(HasSecrets ? 3 : 0);
+        public override ushort NumSecrets
+        {
+            get => (ushort)(HasSecrets ? 3 : 0);
+            set { }
+        }        
 
         /// <summary>
         /// This is set in HSH, although the game is hard-coded to complete after killing

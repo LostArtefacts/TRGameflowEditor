@@ -146,7 +146,12 @@ namespace TRGE.Core
             set { }
         }
 
-        public override ushort NumSecrets => _levelSecrets[OriginalSequence];
+        private ushort? _numSecrets;
+        public override ushort NumSecrets
+        {
+            get => _numSecrets ?? _levelSecrets[OriginalSequence];
+            set => _numSecrets = value;
+        }
 
         public override bool IsFinalLevel { get; set; }
 
