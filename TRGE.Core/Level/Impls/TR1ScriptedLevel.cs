@@ -99,7 +99,7 @@ namespace TRGE.Core
             {
                 if (value)
                 {
-                    AddSequenceAfter(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Guns }, false);
+                    AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Guns }, false);
                 }
                 else
                 {
@@ -115,7 +115,7 @@ namespace TRGE.Core
             {
                 if (value)
                 {
-                    AddSequenceAfter(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Ammo }, false);
+                    AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Ammo }, false);
                 }
                 else
                 {
@@ -131,7 +131,7 @@ namespace TRGE.Core
             {
                 if (value)
                 {
-                    AddSequenceAfter(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Medpacks }, false);
+                    AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Medpacks }, false);
                 }
                 else
                 {
