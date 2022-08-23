@@ -126,16 +126,16 @@ namespace TRGE.Core
 
         public bool RemovesMedis
         {
-            get => HasSequence(LevelSequenceType.Remove_Medpacks);
+            get => HasSequence(LevelSequenceType.Remove_Medipacks);
             set
             {
                 if (value)
                 {
-                    AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Medpacks }, false);
+                    AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Medipacks }, false);
                 }
                 else
                 {
-                    RemoveSequence(LevelSequenceType.Remove_Medpacks);
+                    RemoveSequence(LevelSequenceType.Remove_Medipacks);
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace TRGE.Core
 
         public void AddStartInventoryItem(TR1Items item, uint count = 1)
         {
-            AddSequenceBefore(LevelSequenceType.Loop_Game, new GiveItemLevelSequence
+            AddSequenceBefore(LevelSequenceType.Start_Game, new GiveItemLevelSequence
             {
                 Type = LevelSequenceType.Give_Item,
                 ObjectId = item,

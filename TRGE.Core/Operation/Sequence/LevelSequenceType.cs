@@ -23,7 +23,7 @@
         Remove_Guns,
         Remove_Scions,
         Remove_Ammo,
-        Remove_Medpacks,
+        Remove_Medipacks,
         Give_Item,
         Play_Synced_Audio,
         Mesh_Swap,
