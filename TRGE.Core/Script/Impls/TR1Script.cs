@@ -102,6 +102,7 @@ namespace TRGE.Core
         public bool WalkToItems { get; set; }
         public int MaximumSaveSlots { get; set; }
         public bool RevertToPistols { get; set; }
+        public bool EnableEnhancedSaves { get; set; }
         #endregion
 
         public JObject GameflowData { get; internal set; }
@@ -335,6 +336,7 @@ namespace TRGE.Core
             WalkToItems                 = ReadBool(nameof(WalkToItems), ConfigData, false);
             MaximumSaveSlots            = ReadInt(nameof(MaximumSaveSlots), ConfigData, 25);
             RevertToPistols             = ReadBool(nameof(RevertToPistols), ConfigData, false);
+            EnableEnhancedSaves         = ReadBool(nameof(EnableEnhancedSaves), ConfigData, true);
         }
 
         private string ReadString(string key, JObject data)
@@ -612,6 +614,7 @@ namespace TRGE.Core
             Write(nameof(WalkToItems), WalkToItems, data);
             Write(nameof(MaximumSaveSlots), MaximumSaveSlots, data);
             Write(nameof(RevertToPistols), RevertToPistols, data);
+            Write(nameof(EnableEnhancedSaves), EnableEnhancedSaves, data);
 
             // Add anything else from the original data that we may not have captured.
             data.Merge(ConfigData);

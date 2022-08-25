@@ -72,27 +72,27 @@ namespace TRGE.Core
             DrawDistanceFade = config.GetDouble("DrawDistanceFade");
             DrawDistanceMax = config.GetDouble("DrawDistanceMax");
 
-            StartLaraHitpoints = config.GetInt(nameof(StartLaraHitpoints));
-            DisableHealingBetweenLevels = config.GetBool(nameof(DisableHealingBetweenLevels));
-            DisableMedpacks = config.GetBool(nameof(DisableMedpacks));
-            DisableMagnums = config.GetBool(nameof(DisableMagnums));
-            DisableUzis = config.GetBool(nameof(DisableUzis));
-            DisableShotgun = config.GetBool(nameof(DisableShotgun));
-            EnableDeathsCounter = config.GetBool(nameof(EnableDeathsCounter));
-            EnableEnemyHealthbar = config.GetBool(nameof(EnableEnemyHealthbar));
-            EnableEnhancedLook = config.GetBool(nameof(EnableEnhancedLook));
-            EnableShotgunFlash = config.GetBool(nameof(EnableShotgunFlash));
-            FixShotgunTargeting = config.GetBool(nameof(FixShotgunTargeting));
-            EnableNumericKeys = config.GetBool(nameof(EnableNumericKeys));
-            EnableTr3Sidesteps = config.GetBool(nameof(EnableTr3Sidesteps));
-            EnableCheats = config.GetBool(nameof(EnableCheats));
-            EnableBraid = config.GetBool(nameof(EnableBraid));
-            EnableDetailedStats = config.GetBool(nameof(EnableDetailedStats));
-            EnableCompassStats = config.GetBool(nameof(EnableCompassStats));
-            EnableTotalStats = config.GetBool(nameof(EnableTotalStats));
-            EnableTimerInInventory = config.GetBool(nameof(EnableTimerInInventory));
-            EnableSmoothBars = config.GetBool(nameof(EnableSmoothBars));
-            EnableFadeEffects = config.GetBool(nameof(EnableFadeEffects));
+            StartLaraHitpoints = config.GetInt(nameof(StartLaraHitpoints), 1000);
+            DisableHealingBetweenLevels = config.GetBool(nameof(DisableHealingBetweenLevels), false);
+            DisableMedpacks = config.GetBool(nameof(DisableMedpacks), false);
+            DisableMagnums = config.GetBool(nameof(DisableMagnums), false);
+            DisableUzis = config.GetBool(nameof(DisableUzis), false);
+            DisableShotgun = config.GetBool(nameof(DisableShotgun), false);
+            EnableDeathsCounter = config.GetBool(nameof(EnableDeathsCounter), true);
+            EnableEnemyHealthbar = config.GetBool(nameof(EnableEnemyHealthbar), true);
+            EnableEnhancedLook = config.GetBool(nameof(EnableEnhancedLook), true);
+            EnableShotgunFlash = config.GetBool(nameof(EnableShotgunFlash), true);
+            FixShotgunTargeting = config.GetBool(nameof(FixShotgunTargeting), true);
+            EnableNumericKeys = config.GetBool(nameof(EnableNumericKeys), true);
+            EnableTr3Sidesteps = config.GetBool(nameof(EnableTr3Sidesteps), true);
+            EnableCheats = config.GetBool(nameof(EnableCheats), false);
+            EnableBraid = config.GetBool(nameof(EnableBraid), false);
+            EnableDetailedStats = config.GetBool(nameof(EnableDetailedStats), true);
+            EnableCompassStats = config.GetBool(nameof(EnableCompassStats), true);
+            EnableTotalStats = config.GetBool(nameof(EnableTotalStats), true);
+            EnableTimerInInventory = config.GetBool(nameof(EnableTimerInInventory), true);
+            EnableSmoothBars = config.GetBool(nameof(EnableSmoothBars), true);
+            EnableFadeEffects = config.GetBool(nameof(EnableFadeEffects), true);
             MenuStyle = (TRMenuStyle)config.GetEnum(nameof(MenuStyle), typeof(TRMenuStyle), TRMenuStyle.PC);
             HealthbarShowingMode = (TRHealthbarMode)config.GetEnum(nameof(HealthbarShowingMode), typeof(TRHealthbarMode), TRHealthbarMode.FlashingOrDefault);
             HealthbarLocation = (TRUILocation)config.GetEnum(nameof(HealthbarLocation), typeof(TRUILocation), TRUILocation.TopLeft);
@@ -102,31 +102,32 @@ namespace TRGE.Core
             AirbarColor = (TRUIColour)config.GetEnum(nameof(AirbarColor), typeof(TRUIColour), TRUIColour.Blue);
             EnemyHealthbarLocation = (TRUILocation)config.GetEnum(nameof(EnemyHealthbarLocation), typeof(TRUILocation), TRUILocation.BottomLeft);
             EnemyHealthbarColor = (TRUIColour)config.GetEnum(nameof(EnemyHealthbarColor), typeof(TRUIColour), TRUIColour.Grey);
-            FixTihocanSecretSound = config.GetBool(nameof(FixTihocanSecretSound));
-            FixPyramidSecretTrigger = config.GetBool(nameof(FixPyramidSecretTrigger));
-            FixSecretsKillingMusic = config.GetBool(nameof(FixSecretsKillingMusic));
-            FixDescendingGlitch = config.GetBool(nameof(FixDescendingGlitch));
-            FixWallJumpGlitch = config.GetBool(nameof(FixWallJumpGlitch));
-            FixBridgeCollision = config.GetBool(nameof(FixBridgeCollision));
-            FixQwopGlitch = config.GetBool(nameof(FixQwopGlitch));
-            FixAlligatorAi = config.GetBool(nameof(FixAlligatorAi));
-            ChangePierreSpawn = config.GetBool(nameof(ChangePierreSpawn));
-            FovValue = config.GetInt(nameof(FovValue));
-            FovVertical = config.GetBool(nameof(FovVertical));
-            DisableFmv = config.GetBool(nameof(DisableFmv));
-            DisableCine = config.GetBool(nameof(DisableCine));
-            DisableMusicInMenu = config.GetBool(nameof(DisableMusicInMenu));
-            DisableMusicInInventory = config.GetBool(nameof(DisableMusicInInventory));
-            DisableTrexCollision = config.GetBool(nameof(DisableTrexCollision));
+            FixTihocanSecretSound = config.GetBool(nameof(FixTihocanSecretSound), true);
+            FixPyramidSecretTrigger = config.GetBool(nameof(FixPyramidSecretTrigger), true);
+            FixSecretsKillingMusic = config.GetBool(nameof(FixSecretsKillingMusic), true);
+            FixDescendingGlitch = config.GetBool(nameof(FixDescendingGlitch), false);
+            FixWallJumpGlitch = config.GetBool(nameof(FixWallJumpGlitch), false);
+            FixBridgeCollision = config.GetBool(nameof(FixBridgeCollision), true);
+            FixQwopGlitch = config.GetBool(nameof(FixQwopGlitch), false);
+            FixAlligatorAi = config.GetBool(nameof(FixAlligatorAi), true);
+            ChangePierreSpawn = config.GetBool(nameof(ChangePierreSpawn), true);
+            FovValue = config.GetInt(nameof(FovValue), 65);
+            FovVertical = config.GetBool(nameof(FovVertical), true);
+            DisableFmv = config.GetBool(nameof(DisableFmv), false);
+            DisableCine = config.GetBool(nameof(DisableCine), false);
+            DisableMusicInMenu = config.GetBool(nameof(DisableMusicInMenu), false);
+            DisableMusicInInventory = config.GetBool(nameof(DisableMusicInInventory), false);
+            DisableTrexCollision = config.GetBool(nameof(DisableTrexCollision), false);
             ResolutionWidth = config.GetInt(nameof(ResolutionWidth));
             ResolutionHeight = config.GetInt(nameof(ResolutionHeight));
-            EnableRoundShadow = config.GetBool(nameof(EnableRoundShadow));
-            Enable3dPickups = config.GetBool(nameof(Enable3dPickups));
+            EnableRoundShadow = config.GetBool(nameof(EnableRoundShadow), true);
+            Enable3dPickups = config.GetBool(nameof(Enable3dPickups), true);
             ScreenshotFormat = (TRScreenshotFormat)config.GetEnum(nameof(ScreenshotFormat), typeof(TRScreenshotFormat), TRScreenshotFormat.JPG);
-            AnisotropyFilter = config.GetDouble(nameof(AnisotropyFilter));
-            WalkToItems = config.GetBool(nameof(WalkToItems));
-            MaximumSaveSlots = config.GetInt(nameof(MaximumSaveSlots));
-            RevertToPistols = config.GetBool(nameof(RevertToPistols));
+            AnisotropyFilter = config.GetDouble(nameof(AnisotropyFilter), 16);
+            WalkToItems = config.GetBool(nameof(WalkToItems), false);
+            MaximumSaveSlots = config.GetInt(nameof(MaximumSaveSlots), 25);
+            RevertToPistols = config.GetBool(nameof(RevertToPistols), false);
+            EnableEnhancedSaves = config.GetBool(nameof(EnableEnhancedSaves), true);
         }
 
         protected override void SaveImpl()
@@ -223,6 +224,7 @@ namespace TRGE.Core
             _config[nameof(WalkToItems)] = WalkToItems;
             _config[nameof(MaximumSaveSlots)] = MaximumSaveSlots;
             _config[nameof(RevertToPistols)] = RevertToPistols;
+            _config[nameof(EnableEnhancedSaves)] = EnableEnhancedSaves;
 
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
@@ -823,6 +825,12 @@ namespace TRGE.Core
         {
             get => (Script as TR1Script).RevertToPistols;
             set => (Script as TR1Script).RevertToPistols = value;
+        }
+
+        public bool EnableEnhancedSaves
+        {
+            get => (Script as TR1Script).EnableEnhancedSaves;
+            set => (Script as TR1Script).EnableEnhancedSaves = value;
         }
     }
 }
