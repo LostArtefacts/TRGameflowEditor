@@ -210,12 +210,15 @@ namespace TRGE.Core
 
         public void AddStartInventoryItem(TR1Items item, uint count = 1)
         {
-            AddSequenceBefore(LevelSequenceType.Start_Game, new GiveItemLevelSequence
+            if (count > 0)
             {
-                Type = LevelSequenceType.Give_Item,
-                ObjectId = item,
-                Quantity = (int)count
-            });
+                AddSequenceAfter(LevelSequenceType.Start_Game, new GiveItemLevelSequence
+                {
+                    Type = LevelSequenceType.Give_Item,
+                    ObjectId = item,
+                    Quantity = (int)count
+                });
+            }
         }
 
         public GiveItemLevelSequence GetStartInventoryItem(TR1Items item)
