@@ -134,5 +134,10 @@ namespace TRGE.Core
 
             return gameString + stamp;
         }
+
+        public List<string> GetAdditionalBackupFiles() => _additionalFiles;
+        public virtual void AddAdditionalBackupFile(string file) => _additionalFiles.Add(file);
+
+        protected List<string> _additionalFiles = new List<string>();
     }
 }

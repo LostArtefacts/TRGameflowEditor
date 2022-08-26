@@ -157,6 +157,17 @@ namespace TRGE.Coord
                     files[cutBackup] = cutRestore;
                 }
             }
+
+            foreach (string additionalFile in _scriptEditor.Script.GetAdditionalBackupFiles())
+            {
+                string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(additionalFile));
+                if (File.Exists(backup))
+                {
+                    string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", additionalFile));
+                    files[backup] = restore;
+                }
+            }
+
             return files;
         }
 

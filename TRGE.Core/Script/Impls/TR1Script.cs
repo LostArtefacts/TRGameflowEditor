@@ -124,6 +124,8 @@ namespace TRGE.Core
             DrawDistanceMax = ReadDouble(nameof(DrawDistanceMax), GameflowData);
             Strings = ReadDictionary<string, string>(nameof(Strings), GameflowData);
 
+            _additionalFiles.Add(MainMenuPicture);
+
             Levels = new List<AbstractTRScriptedLevel>();
             JArray levels = JArray.Parse(ReadString(nameof(Levels), GameflowData));
 

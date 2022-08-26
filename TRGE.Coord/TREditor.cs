@@ -9,7 +9,7 @@ namespace TRGE.Coord
 {
     public class TREditor
     {
-        public static readonly string[] TargetFileExtensions = new string[] { "*.dat", "*.tr2", "*.psx", "*.phd", "*.json5" };
+        public static readonly string[] TargetFileExtensions = new string[] { "*.dat", "*.tr2", "*.psx", "*.phd", "*.json5", "*.png" };
 
         private AbstractTRScriptEditor _scriptEditor;
         public AbstractTRScriptEditor ScriptEditor
@@ -225,6 +225,13 @@ namespace TRGE.Coord
                 {
                     CopyLevelToTarget(level.CutSceneLevel);
                 }
+            }
+
+            foreach (string additionalFile in ScriptEditor.Script.GetAdditionalBackupFiles())
+            {
+                string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, @"..\", additionalFile)));
+                string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(additionalFile));
+                IOExtensions.CopyFile(outputFile, new DirectoryInfo(targetFolder), true);
             }
         }
 

@@ -207,6 +207,12 @@ namespace TRGE.Coord
                     filesToBackup.Add(GetOriginalFilePath(assaultLevel.LevelFile));
                 }
 
+                List<string> additionalFiles = script.GetAdditionalBackupFiles();
+                foreach (string additionalFile in additionalFiles)
+                {
+                    filesToBackup.Add(GetOriginalFilePath(additionalFile));
+                }
+
                 _backupArgs.ProgressTarget += filesToBackup.Count * 2;
                 FireBackupProgressChanged();
 
@@ -284,6 +290,11 @@ namespace TRGE.Coord
                 {
                     expectedFiles.Add(level.CutSceneLevel.LevelFileBaseName);
                 }
+            }
+
+            foreach (string additionalFile in scriptEditor.Script.GetAdditionalBackupFiles())
+            {
+                expectedFiles.Add(Path.GetFileName(additionalFile));
             }
 
             backupDI.ClearExcept(expectedFiles, TREditor.TargetFileExtensions);
