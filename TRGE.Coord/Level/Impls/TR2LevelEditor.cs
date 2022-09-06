@@ -18,12 +18,12 @@ namespace TRGE.Coord
         private static readonly string _flUKChecksum = "b8fc5d8444b15527cec447bc0387c41a"; // #83
         private static readonly string _flMPChecksum = "1e7d0d88ff9d569e22982af761bb006b"; // #83
 
-        protected readonly Dictionary<string, Dictionary<TR2Entities, List<Location>>> _defaultVehicleLocations;
+        protected readonly Dictionary<string, List<Location>> _defaultVehicleLocations;
 
         public TR2LevelEditor(TRDirectoryIOArgs io, TREdition edition)
             : base(io, edition)
         {
-            _defaultVehicleLocations = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<TR2Entities, List<Location>>>>(ReadResource(@"Locations\vehicle_locations.json"));
+            _defaultVehicleLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(ReadResource(@"Locations\vehicle_locations.json"));
             CheckFloaterBackup();
             CheckHSHBackup();
         }
@@ -378,29 +378,30 @@ namespace TRGE.Coord
             if
             (
                 skidooAvailable &&
-                _defaultVehicleLocations.ContainsKey(levelName) &&
-                _defaultVehicleLocations[levelName].ContainsKey(TR2Entities.RedSnowmobile) &&
-                _defaultVehicleLocations[levelName][TR2Entities.RedSnowmobile].Count > 0
+                _defaultVehicleLocations.ContainsKey(levelName)
             )
             {
-                ImportModels(level, e.LevelFileBaseName, new List<TR2Entities> { TR2Entities.RedSnowmobile });
-
-                List<TR2Entity> entities = level.Entities.ToList();
-                Location location = _defaultVehicleLocations[levelName][TR2Entities.RedSnowmobile][0];
-                entities.Add(new TR2Entity
+                Location location = _defaultVehicleLocations[levelName].Find(l => l.TargetType == (short)TR2Entities.RedSnowmobile);
+                if (location != null)
                 {
-                    TypeID = (short)TR2Entities.RedSnowmobile,
-                    Room = location.Room,
-                    X = location.X,
-                    Y = location.Y,
-                    Z = location.Z,
-                    Angle = 16384,
-                    Flags = 0,
-                    Intensity1 = -1,
-                    Intensity2 = -1
-                });
-                level.Entities = entities.ToArray();
-                level.NumEntities++;
+                    ImportModels(level, e.LevelFileBaseName, new List<TR2Entities> { TR2Entities.RedSnowmobile });
+
+                    List<TR2Entity> entities = level.Entities.ToList();
+                    entities.Add(new TR2Entity
+                    {
+                        TypeID = (short)TR2Entities.RedSnowmobile,
+                        Room = location.Room,
+                        X = location.X,
+                        Y = location.Y,
+                        Z = location.Z,
+                        Angle = 16384,
+                        Flags = 0,
+                        Intensity1 = -1,
+                        Intensity2 = -1
+                    });
+                    level.Entities = entities.ToArray();
+                    level.NumEntities++;
+                }
             }
 
             TR2LevelWriter writer = new TR2LevelWriter();
