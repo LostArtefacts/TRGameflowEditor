@@ -61,7 +61,6 @@ namespace TRGE.Core
             LevelsHaveCutScenes = config.GetBool("LevelCutScenesOn");
             LevelsHaveFMV = config.GetBool("LevelFMVsOn");
             DemosEnabled = config.GetBool("DemosOn");
-            DemoTime = config.GetUInt("DemoTime");
             MainMenuPicture = config.GetString("MainMenuPicture");
             SavegameFmtLegacy = config.GetString("SavegameFmtLegacy");
             SavegameFmtBson = config.GetString("SavegameFmtBson");
