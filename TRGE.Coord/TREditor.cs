@@ -100,13 +100,6 @@ namespace TRGE.Coord
         /// </summary>
         public void Save()
         {
-            //TRSaveMonitor monitor = new TRSaveMonitor(new TRSaveEventArgs
-            //{
-            //    ProgressTarget = ScriptEditor.GetSaveTargetCount() + 
-            //    (LevelEditor == null ? 0 : LevelEditor.GetSaveTargetCount())
-            //});
-            //monitor.SaveStateChanged += Editor_SaveStateChanged;
-
             DirectoryInfo wipDirectory = new DirectoryInfo(_wipOutputDirectory);
             wipDirectory.Create();
             wipDirectory.Clear();
@@ -120,7 +113,7 @@ namespace TRGE.Coord
                     LevelEditor.PreSave(ScriptEditor);
                 }
 
-                ScriptEditor.Save(/*monitor*/);
+                ScriptEditor.Save();
 
                 TRSaveMonitor monitor = new TRSaveMonitor(new TRSaveEventArgs
                 {
