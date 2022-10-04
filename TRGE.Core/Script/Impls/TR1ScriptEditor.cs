@@ -127,6 +127,7 @@ namespace TRGE.Core
             MaximumSaveSlots = config.GetInt(nameof(MaximumSaveSlots), 25);
             RevertToPistols = config.GetBool(nameof(RevertToPistols), false);
             EnableEnhancedSaves = config.GetBool(nameof(EnableEnhancedSaves), true);
+            EnablePitchedSounds = config.GetBool(nameof(EnablePitchedSounds), true);
         }
 
         protected override void SaveImpl()
@@ -830,6 +831,12 @@ namespace TRGE.Core
         {
             get => (Script as TR1Script).EnableEnhancedSaves;
             set => (Script as TR1Script).EnableEnhancedSaves = value;
+        }
+
+        public bool EnablePitchedSounds
+        {
+            get => (Script as TR1Script).EnablePitchedSounds;
+            set => (Script as TR1Script).EnablePitchedSounds = value;
         }
     }
 }
