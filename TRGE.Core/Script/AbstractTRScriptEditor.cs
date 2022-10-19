@@ -371,7 +371,7 @@ namespace TRGE.Core
 
             if (TRConfigFile != null)
             {
-                Script.WriteConfig(GetTRConfigWIPOutputPath());
+                Script.WriteConfig(GetTRConfigWIPOutputPath(), TRConfigFile.FullName);
             }
         }
 

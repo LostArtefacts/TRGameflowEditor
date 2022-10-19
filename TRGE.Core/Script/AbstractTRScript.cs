@@ -82,14 +82,19 @@ namespace TRGE.Core
             }
         }
 
-        public void WriteConfig(string filePath)
+        public void WriteConfig(string outputFilePath, string originalFilePath = null)
         {
-            string ext = Path.GetExtension(filePath).ToUpper();
+            string ext = Path.GetExtension(outputFilePath).ToUpper();
             switch (ext)
             {
                 case ".JSON":
                 case ".JSON5":
-                    File.WriteAllText(filePath, SerialiseConfigToJson());
+                    string existingData = null;
+                    if (originalFilePath != null && File.Exists(originalFilePath))
+                    {
+                        existingData = File.ReadAllText(originalFilePath);
+                    }
+                    File.WriteAllText(outputFilePath, SerialiseConfigToJson(existingData));
                     break;
                 default:
                     throw new UnsupportedScriptException();
@@ -101,7 +106,7 @@ namespace TRGE.Core
         public virtual void ReadConfigJson(string json) { }
         public virtual byte[] SerialiseScriptToBin() { return Array.Empty<byte>(); }
         public virtual string SerialiseScriptToJson() { return string.Empty; }
-        public virtual string SerialiseConfigToJson() { return string.Empty; }
+        public virtual string SerialiseConfigToJson(string existingData) { return string.Empty; }
         protected abstract void CalculateEdition();
         public abstract AbstractTRFrontEnd FrontEnd { get; }
         public abstract AbstractTRScriptedLevel AssaultLevel { get; set; }

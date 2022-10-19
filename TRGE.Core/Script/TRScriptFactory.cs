@@ -50,9 +50,16 @@ namespace TRGE.Core
             {
                 if (edition.HasConfig)
                 {
-                    string config = Path.Combine(dir, edition.ConfigName);
+                    string config = Path.GetFullPath(Path.Combine(dir, edition.ConfigName));
                     if (File.Exists(config))
                     {
+                        return new FileInfo(config);
+                    }
+                    else if (edition.HasDefaultConfig && Directory.Exists(Path.GetDirectoryName(config)))
+                    {
+                        // T1M no longer ships with Tomb1Main.json5 as standard, so we create
+                        // a dummy file to trigger the correct processes further down the line.
+                        File.WriteAllText(config, edition.DefaultConfig);
                         return new FileInfo(config);
                     }
                 }

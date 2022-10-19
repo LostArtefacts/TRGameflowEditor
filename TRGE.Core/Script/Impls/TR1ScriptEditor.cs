@@ -112,10 +112,10 @@ namespace TRGE.Core
             ChangePierreSpawn = config.GetBool(nameof(ChangePierreSpawn), true);
             FovValue = config.GetInt(nameof(FovValue), 65);
             FovVertical = config.GetBool(nameof(FovVertical), true);
-            DisableFmv = config.GetBool(nameof(DisableFmv), false);
-            DisableCine = config.GetBool(nameof(DisableCine), false);
-            DisableMusicInMenu = config.GetBool(nameof(DisableMusicInMenu), false);
-            DisableMusicInInventory = config.GetBool(nameof(DisableMusicInInventory), false);
+            EnableFmv = config.GetBool(nameof(EnableFmv), true);
+            EnableCine = config.GetBool(nameof(EnableCine), true);
+            EnableMusicInMenu = config.GetBool(nameof(EnableMusicInMenu), true);
+            EnableMusicInInventory = config.GetBool(nameof(EnableMusicInInventory), true);
             DisableTrexCollision = config.GetBool(nameof(DisableTrexCollision), false);
             ResolutionWidth = config.GetInt(nameof(ResolutionWidth));
             ResolutionHeight = config.GetInt(nameof(ResolutionHeight));
@@ -210,10 +210,10 @@ namespace TRGE.Core
             _config[nameof(ChangePierreSpawn)] = ChangePierreSpawn;
             _config[nameof(FovValue)] = FovValue;
             _config[nameof(FovVertical)] = FovVertical;
-            _config[nameof(DisableFmv)] = DisableFmv;
-            _config[nameof(DisableCine)] = DisableCine;
-            _config[nameof(DisableMusicInMenu)] = DisableMusicInMenu;
-            _config[nameof(DisableMusicInInventory)] = DisableMusicInInventory;
+            _config[nameof(EnableFmv)] = EnableFmv;
+            _config[nameof(EnableCine)] = EnableCine;
+            _config[nameof(EnableMusicInMenu)] = EnableMusicInMenu;
+            _config[nameof(EnableMusicInInventory)] = EnableMusicInInventory;
             _config[nameof(DisableTrexCollision)] = DisableTrexCollision;
             _config[nameof(ResolutionWidth)] = ResolutionWidth;
             _config[nameof(ResolutionHeight)] = ResolutionHeight;
@@ -439,8 +439,8 @@ namespace TRGE.Core
 
         public bool DemosEnabled
         {
-            get => !(Script as TR1Script).DisableDemo;
-            set => (Script as TR1Script).DisableDemo = !value;
+            get => (Script as TR1Script).EnableDemo;
+            set => (Script as TR1Script).EnableDemo = value;
         }
 
         public string MainMenuPicture
@@ -743,28 +743,28 @@ namespace TRGE.Core
             set => (Script as TR1Script).FovVertical = value;
         }
 
-        public bool DisableFmv
+        public bool EnableFmv
         {
-            get => (Script as TR1Script).DisableFmv;
-            set => (Script as TR1Script).DisableFmv = value;
+            get => (Script as TR1Script).EnableFmv;
+            set => (Script as TR1Script).EnableFmv = value;
         }
 
-        public bool DisableCine
+        public bool EnableCine
         {
-            get => (Script as TR1Script).DisableCine;
-            set => (Script as TR1Script).DisableCine = value;
+            get => (Script as TR1Script).EnableCine;
+            set => (Script as TR1Script).EnableCine = value;
         }
 
-        public bool DisableMusicInMenu
+        public bool EnableMusicInMenu
         {
-            get => (Script as TR1Script).DisableMusicInMenu;
-            set => (Script as TR1Script).DisableMusicInMenu = value;
+            get => (Script as TR1Script).EnableMusicInMenu;
+            set => (Script as TR1Script).EnableMusicInMenu = value;
         }
 
-        public bool DisableMusicInInventory
+        public bool EnableMusicInInventory
         {
-            get => (Script as TR1Script).DisableMusicInInventory;
-            set => (Script as TR1Script).DisableMusicInInventory = value;
+            get => (Script as TR1Script).EnableMusicInInventory;
+            set => (Script as TR1Script).EnableMusicInInventory = value;
         }
 
         public bool DisableTrexCollision

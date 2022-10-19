@@ -44,6 +44,7 @@ namespace TRGE.Core
             Hardware = Hardware.PC,
             ScriptName = @"..\cfg\Tomb1Main_gameflow.json5",
             ConfigName = @"..\cfg\Tomb1Main.json5",
+            DefaultConfig = "{}",
             LevelCompleteOffset = 0,
             SecretBonusesSupported = false,
             SunsetsSupported = false,
@@ -182,6 +183,8 @@ namespace TRGE.Core
         public bool HasScript => ScriptName != null;
         public string ConfigName { get; internal set; }
         public bool HasConfig => ConfigName != null;
+        public string DefaultConfig { get; internal set; }
+        public bool HasDefaultConfig => DefaultConfig != null;
         public Hardware Hardware { get; internal set; }
         /// <summary>
         /// Indicates which level in the game is the final level. The offset

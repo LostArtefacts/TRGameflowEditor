@@ -87,11 +87,11 @@ namespace TRGE.Core
         public bool ChangePierreSpawn { get; set; }
         public int FovValue { get; set; }
         public bool FovVertical { get; set; }
-        public bool DisableDemo { get; set; }
-        public bool DisableFmv { get; set; }
-        public bool DisableCine { get; set; }
-        public bool DisableMusicInMenu { get; set; }
-        public bool DisableMusicInInventory { get; set; }
+        public bool EnableDemo { get; set; }
+        public bool EnableFmv { get; set; }
+        public bool EnableCine { get; set; }
+        public bool EnableMusicInMenu { get; set; }
+        public bool EnableMusicInInventory { get; set; }
         public bool DisableTrexCollision { get; set; }
         public int ResolutionWidth { get; set; }
         public int ResolutionHeight { get; set; }
@@ -324,11 +324,11 @@ namespace TRGE.Core
             ChangePierreSpawn           = ReadBool(nameof(ChangePierreSpawn), ConfigData, true);
             FovValue                    = ReadInt(nameof(FovValue), ConfigData, 65);
             FovVertical                 = ReadBool(nameof(FovVertical), ConfigData, true);
-            DisableDemo                 = ReadBool(nameof(DisableDemo), ConfigData, false);
-            DisableFmv                  = ReadBool(nameof(DisableFmv), ConfigData, false);
-            DisableCine                 = ReadBool(nameof(DisableCine), ConfigData, false);
-            DisableMusicInMenu          = ReadBool(nameof(DisableMusicInMenu), ConfigData, false);
-            DisableMusicInInventory     = ReadBool(nameof(DisableMusicInInventory), ConfigData, false);
+            EnableDemo                  = ReadBool(nameof(EnableDemo), ConfigData, true);
+            EnableFmv                   = ReadBool(nameof(EnableFmv), ConfigData, true);
+            EnableCine                  = ReadBool(nameof(EnableCine), ConfigData, true);
+            EnableMusicInMenu           = ReadBool(nameof(EnableMusicInMenu), ConfigData, true);
+            EnableMusicInInventory      = ReadBool(nameof(EnableMusicInInventory), ConfigData, true);
             DisableTrexCollision        = ReadBool(nameof(DisableTrexCollision), ConfigData, false);
             ResolutionWidth             = ReadInt(nameof(ResolutionWidth), ConfigData, -1);
             ResolutionHeight            = ReadInt(nameof(ResolutionHeight), ConfigData, -1);
@@ -558,7 +558,7 @@ namespace TRGE.Core
             return JsonConvert.SerializeObject(data, Formatting.Indented);
         }
 
-        public override string SerialiseConfigToJson()
+        public override string SerialiseConfigToJson(string existingData)
         {
             JObject data = new JObject();
 
@@ -603,11 +603,11 @@ namespace TRGE.Core
             Write(nameof(ChangePierreSpawn), ChangePierreSpawn, data);
             Write(nameof(FovValue), FovValue, data);
             Write(nameof(FovVertical), FovVertical, data);
-            Write(nameof(DisableDemo), DisableDemo, data);
-            Write(nameof(DisableFmv), DisableFmv, data);
-            Write(nameof(DisableCine), DisableCine, data);
-            Write(nameof(DisableMusicInMenu), DisableMusicInMenu, data);
-            Write(nameof(DisableMusicInInventory), DisableMusicInInventory, data);
+            Write(nameof(EnableDemo), EnableDemo, data);
+            Write(nameof(EnableFmv), EnableFmv, data);
+            Write(nameof(EnableCine), EnableCine, data);
+            Write(nameof(EnableMusicInMenu), EnableMusicInMenu, data);
+            Write(nameof(EnableMusicInInventory), EnableMusicInInventory, data);
             Write(nameof(DisableTrexCollision), DisableTrexCollision, data);
             Write(nameof(ResolutionWidth), ResolutionWidth, data);
             Write(nameof(ResolutionHeight), ResolutionHeight, data);
@@ -621,10 +621,41 @@ namespace TRGE.Core
             Write(nameof(EnableEnhancedSaves), EnableEnhancedSaves, data);
             Write(nameof(EnablePitchedSounds), EnablePitchedSounds, data);
 
-            // Add anything else from the original data that we may not have captured.
+            // The existing data will have been re-read at this stage (T1M stores runtime config
+            // in the same file so this may well have changed between saves in TRGE). Re-scan this
+            // data, but in any case fall back to what was read when initially loaded.
+            if (existingData != null)
+            {
+                JObject existingExternalData = GetExistingExternalData(data, existingData);
+                if (existingExternalData != null)
+                {
+                    ConfigData = existingExternalData;
+                }
+            }
+
             data.Merge(ConfigData);
 
             return JsonConvert.SerializeObject(data, Formatting.Indented);
+        }
+
+        private JObject GetExistingExternalData(JObject convertedData, string externalJsonData)
+        {
+            try
+            {
+                JObject externalData = JObject.Parse(externalJsonData);
+                foreach (KeyValuePair<string, JToken> pair in convertedData)
+                {
+                    if (externalData.ContainsKey(pair.Key))
+                    {
+                        externalData.Remove(pair.Key);
+                    }
+                }
+                return externalData;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void Write<T>(string key, T value, JObject data)
