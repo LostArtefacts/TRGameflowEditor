@@ -40,7 +40,7 @@ namespace TRGE.Coord
         }
 
         public TREdition Edition => _scriptEditor.Edition;
-        public string BackupDirectory => _scriptEditor.BackupFile.DirectoryName;
+        public string BackupDirectory => _scriptEditor.BackupDirectory.FullName;
         public string ErrorDirectory => Path.GetFullPath(Path.Combine(BackupDirectory, @"..\Errors"));
         public string OutputDirectory => _outputDirectory;
         public string TargetDirectory => _targetDirectory;

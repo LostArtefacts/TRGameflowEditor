@@ -114,7 +114,8 @@ namespace TRGE.Coord
                 InternalConfigFile = new FileInfo(_scriptConfigFile),
                 WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
                 OutputDirectory = new DirectoryInfo(GetOutputDirectory()),
-                OriginalDirectory = new DirectoryInfo(_originalDirectory)
+                OriginalDirectory = new DirectoryInfo(_originalDirectory),
+                BackupDirectory = new DirectoryInfo(GetBackupDirectory())
             };
             AbstractTRScriptEditor scriptMan = TRScriptFactory.GetScriptEditor(io, openOption);
 

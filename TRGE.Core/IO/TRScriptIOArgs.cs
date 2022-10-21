@@ -12,5 +12,6 @@ namespace TRGE.Core
         public DirectoryInfo WIPOutputDirectory { get; set; }
         public DirectoryInfo OutputDirectory { get; set; }
         public DirectoryInfo OriginalDirectory { get; set; }
+        public DirectoryInfo BackupDirectory { get; set; }
     }
 }

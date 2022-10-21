@@ -44,6 +44,12 @@ namespace TRGE.Core
             set => _io.OutputDirectory = value;
         }
 
+        public DirectoryInfo BackupDirectory
+        {
+            get => _io.BackupDirectory;
+            set => _io.BackupDirectory = value;
+        }
+
         public TREdition Edition => Script.Edition;
 
         public AbstractTRAudioProvider AudioProvider => LevelManager.AudioProvider;
