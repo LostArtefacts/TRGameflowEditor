@@ -68,6 +68,7 @@
     <Compile Include="Helpers\Location.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
     <Compile Include="Helpers\SpriteDefinition.cs" />
+    <Compile Include="Helpers\TRBackupChecksumOption.cs" />
     <Compile Include="Level\AbstractTRLevelEditor.cs" />
     <Compile Include="Level\BaseTRLevelEditor.cs" />
     <Compile Include="Level\Exceptions\ScriptedLevelMismatchException.cs" />

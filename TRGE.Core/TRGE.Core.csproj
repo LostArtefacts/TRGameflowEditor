@@ -67,6 +67,7 @@
     <Compile Include="Helpers\Extensions\IOExtensions.cs" />
     <Compile Include="Helpers\Extensions\LowerCaseNamingStrategy.cs" />
     <Compile Include="Helpers\Extensions\StringExtensions.cs" />
+    <Compile Include="IChecksumTester.cs" />
     <Compile Include="IO\ITRSaveProgressProvider.cs" />
     <Compile Include="IO\TRDirectoryIOArgs.cs" />
     <Compile Include="IO\TRSaveCategory.cs" />

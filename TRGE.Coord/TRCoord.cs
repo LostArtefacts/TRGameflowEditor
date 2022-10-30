@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using TRGE.Coord.Helpers;
 using TRGE.Core;
 
 [assembly: InternalsVisibleTo("TRGE.Core.Test")]
@@ -120,14 +121,14 @@ namespace TRGE.Coord
             remove => _trioCoord.BackupProgressChanged -= value;
         }
 
-        public TREditor Open(FileInfo editFilePath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
+        public TREditor Open(FileInfo editFilePath, TRScriptOpenOption openOption = TRScriptOpenOption.Default, TRBackupChecksumOption checksumOption = TRBackupChecksumOption.PerformCheck)
         {
-            return Open(editFilePath.FullName, openOption);
+            return Open(editFilePath.FullName, openOption, checksumOption);
         }
 
-        public TREditor Open(DirectoryInfo editFolderPath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
+        public TREditor Open(DirectoryInfo editFolderPath, TRScriptOpenOption openOption = TRScriptOpenOption.Default, TRBackupChecksumOption checksumOption = TRBackupChecksumOption.PerformCheck)
         {
-            return Open(editFolderPath.FullName, openOption);
+            return Open(editFolderPath.FullName, openOption, checksumOption);
         }
 
         /// <summary>
@@ -137,15 +138,21 @@ namespace TRGE.Coord
         /// </summary>
         /// <param name="path">The full path to the script file or directory containing a script file and level files.</param>
         /// <param name="errorOption">The action to take if an error is detected with the previous configuration.</param>
+        /// <param name="checksumOption">Level file checksum handling.</param>
         /// <returns></returns>
-        public TREditor Open(string path, TRScriptOpenOption errorOption = TRScriptOpenOption.Default)
+        public TREditor Open(string path, TRScriptOpenOption errorOption = TRScriptOpenOption.Default, TRBackupChecksumOption checksumOption = TRBackupChecksumOption.PerformCheck)
         {
-            return _trioCoord.Open(path, errorOption);
+            return _trioCoord.Open(path, errorOption, checksumOption);
         }
 
         public void ClearHistory()
         {
             _trioCoord.ClearHistory();
+        }
+
+        public void ClearCurrentBackup()
+        {
+            _trioCoord.ClearBackup();
         }
     }
 }

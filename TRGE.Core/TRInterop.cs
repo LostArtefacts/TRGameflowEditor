@@ -28,5 +28,6 @@ namespace TRGE.Core
         public static bool RandomisationSupported { get; set; }
         public static bool SecretRewardsSupported { get; set; }
         public static GameStamp ScriptModificationStamp { get; }
+        public static IChecksumTester ChecksumTester { get; set; }
     }
 }

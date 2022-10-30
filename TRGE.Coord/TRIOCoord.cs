@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using TRGE.Coord.Helpers;
 using TRGE.Core;
 using TRLevelReader.Helpers;
 
@@ -66,7 +67,7 @@ namespace TRGE.Coord
             _history = new List<string>();
         }
 
-        internal TREditor Open(string path, TRScriptOpenOption openOption)
+        internal TREditor Open(string path, TRScriptOpenOption openOption, TRBackupChecksumOption checksumOption)
         {
             _mode = Directory.Exists(path) ? OperationMode.Directory : OperationMode.File;
             _orignalScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path) : path;
@@ -87,7 +88,7 @@ namespace TRGE.Coord
                 ProgressValue = 0,
                 ProgressTarget = 1
             };
-            CreateBackup();
+            CreateBackup(checksumOption);
 
             AbstractTRScriptEditor scriptEditor = GetScriptEditor(openOption);
             TidyBackup(scriptEditor);
@@ -171,7 +172,7 @@ namespace TRGE.Coord
             return fi?.FullName;
         }
 
-        protected void CreateBackup()
+        protected void CreateBackup(TRBackupChecksumOption checksumOption)
         {
             string backupDirectory = GetBackupDirectory();
             string outputDirectory = GetOutputDirectory();
@@ -208,6 +209,34 @@ namespace TRGE.Coord
                     filesToBackup.Add(GetOriginalFilePath(assaultLevel.LevelFile));
                 }
 
+                // Perform a checksum against the level files unless the option to ignore issues has already been passed.
+                // This only happens during the initial backup of a file, otherwise future edits would be flagged.
+                if (checksumOption == TRBackupChecksumOption.PerformCheck && TRInterop.ChecksumTester != null)
+                {
+                    _backupArgs.ProgressTarget += filesToBackup.Count;
+                    FireBackupProgressChanged();
+
+                    List<string> failures = new List<string>();
+                    List<string> exts = new List<string>{ ".PHD", ".TR2", ".TR4", ".TRC" };
+                    foreach (string file in filesToBackup)
+                    {
+                        if (!exts.Contains(Path.GetExtension(file).ToUpper()))
+                        {
+                            FireBackupProgressChanged(1);
+                            continue;
+                        }
+                        if (!File.Exists(Path.Combine(backupDI.FullName, Path.GetFileName(file))) && !TRInterop.ChecksumTester.Test(file))
+                        {
+                            failures.Add(file);
+                        }
+                        FireBackupProgressChanged(1);
+                    }
+                    if (failures.Count > 0)
+                    {
+                        throw new ChecksumMismatchException();
+                    }
+                }
+
                 List<string> additionalFiles = script.GetAdditionalBackupFiles();
                 foreach (string additionalFile in additionalFiles)
                 {
@@ -233,6 +262,10 @@ namespace TRGE.Coord
                 if (_originalTRConfigFile != null)
                 {
                     _backupTRConfigFile = Path.Combine(backupDirectory, new FileInfo(_originalTRConfigFile).Name);
+                }
+                else
+                {
+                    _backupTRConfigFile = null;
                 }
             }
             else
@@ -394,6 +427,15 @@ namespace TRGE.Coord
             }
             _history.Clear();
             FireHistoryChanged();
+        }
+
+        internal void ClearBackup()
+        {
+            string backupDirectory = GetEditDirectory();
+            if (Directory.Exists(backupDirectory))
+            {
+                Directory.Delete(backupDirectory, true);
+            }
         }
         #endregion
 
