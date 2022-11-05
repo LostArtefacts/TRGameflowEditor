@@ -11,6 +11,7 @@
         LongSoundtrack = 6,
         Warning = 7,
         Revelation = 8,
-        Training = 9
+        Training = 9,
+        Credits = 10
     }
 }

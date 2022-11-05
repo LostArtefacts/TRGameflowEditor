@@ -416,7 +416,10 @@ namespace TRGE.Core
                     AssaultLevel.TrackID = levelTracks[nextTrack++].ID;
                 }
             }
+            RandomiseGameTracksImpl(rand);
         }
+
+        internal virtual void RandomiseGameTracksImpl(Random rand) { }
 
         internal void RestoreGameTracks(AbstractTRScript originalScript)
         {

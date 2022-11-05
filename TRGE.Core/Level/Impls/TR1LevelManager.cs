@@ -397,5 +397,25 @@ namespace TRGE.Core
                 level.Demo = value && origLevel.Demo.HasValue && origLevel.Demo.Value;
             }
         }
+
+        internal override void RandomiseGameTracksImpl(Random rand)
+        {
+            IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
+            HashSet<TRAudioTrack> exclusions = new HashSet<TRAudioTrack>
+            {
+                AudioProvider.GetBlankTrack()
+            };
+            if (tracks[TRAudioCategory.Credits].Count > 0)
+            {
+                foreach (TR1ScriptedLevel level in Levels)
+                {
+                    if (level.IsFinalLevel && level.Sequences.Find(s => s is PlaySyncedAudioLevelSequence) is PlaySyncedAudioLevelSequence sequence)
+                    {
+                        sequence.AudioId = tracks[TRAudioCategory.Credits].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
