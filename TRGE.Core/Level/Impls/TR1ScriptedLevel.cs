@@ -159,6 +159,8 @@ namespace TRGE.Core
 
         public List<BaseLevelSequence> Sequences { get; set; }
 
+        public string[] Injections { get; set; }
+        public uint? LaraType { get; set; }
         public bool? Demo { get; set; }
         public double[] WaterColor { get; set; }
         public double? DrawDistanceFade { get; set; }

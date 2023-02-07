@@ -29,6 +29,7 @@ namespace TRGE.Core
         public double[] WaterColor { get; set; }
         public double DrawDistanceFade { get; set; }
         public double DrawDistanceMax { get; set; }
+        public string[] Injections { get; set; }
         public Dictionary<string, string> Strings { get; set; }
 
         private TR1FrontEnd _frontEnd;
@@ -123,6 +124,7 @@ namespace TRGE.Core
             WaterColor = ReadArray<double>(nameof(WaterColor), GameflowData);
             DrawDistanceFade = ReadDouble(nameof(DrawDistanceFade), GameflowData);
             DrawDistanceMax = ReadDouble(nameof(DrawDistanceMax), GameflowData);
+            Injections = ReadNullableArray<string>(nameof(Injections), GameflowData);
             Strings = ReadDictionary<string, string>(nameof(Strings), GameflowData);
 
             _additionalFiles.Add(MainMenuPicture);
@@ -171,12 +173,13 @@ namespace TRGE.Core
                 level.Name = ReadString("Title", levelData);
                 level.LevelFile = ReadString("File", levelData);
                 level.Music = ReadInt(nameof(level.Music), levelData);
+                level.Injections = ReadNullableArray<string>(nameof(level.Injections), levelData);
                 level.Demo = ReadNullableBool(nameof(level.Demo), levelData);
                 level.DrawDistanceFade = ReadNullableDouble(nameof(level.DrawDistanceFade), levelData);
                 level.DrawDistanceMax = ReadNullableDouble(nameof(level.DrawDistanceMax), levelData);
                 level.UnobtainableKills = ReadNullableInt(nameof(level.UnobtainableKills), levelData);
                 level.UnobtainablePickups = ReadNullableInt(nameof(level.UnobtainablePickups), levelData);
-
+                level.LaraType = (uint?)ReadNullableInt(nameof(level.LaraType), levelData);
                 
                 Dictionary<string, string> strings = ReadDictionary<string, string>("Strings", levelData);
                 foreach (string key in strings.Keys)
@@ -502,6 +505,16 @@ namespace TRGE.Core
             return a.Length == 0 ? null : JsonConvert.DeserializeObject<T[]>(a);
         }
 
+        private T[] ReadNullableArray<T>(string key, JObject data)
+        {
+            string arr = ReadString(key, data, null);
+            if (arr == null)
+            {
+                return null;
+            }
+            return arr.Length == 0 ? null : JsonConvert.DeserializeObject<T[]>(arr);
+        }
+
         private Dictionary<K, V> ReadDictionary<K, V>(string key, JObject data)
         {
             string d = ReadString(key, data, string.Empty);
@@ -547,6 +560,10 @@ namespace TRGE.Core
             Write(nameof(WaterColor), WaterColor, data);
             Write(nameof(DrawDistanceFade), DrawDistanceFade, data);
             Write(nameof(DrawDistanceMax), DrawDistanceMax, data);
+            if (Injections != null)
+            {
+                Write(nameof(Injections), Injections, data);
+            }
 
             Write(nameof(Levels), BuildLevels(), data);
 
@@ -717,6 +734,10 @@ namespace TRGE.Core
             Write(nameof(level.Type), level.Type, levelObj);
             Write(nameof(level.Music), level.Music, levelObj);
 
+            if (level.Injections != null)
+            {
+                Write(nameof(level.Injections), level.Injections, levelObj);
+            }
             if (level.WaterColor != null)
             {
                 Write(nameof(level.WaterColor), level.WaterColor, levelObj);
@@ -759,6 +780,10 @@ namespace TRGE.Core
             if (level.Demo.HasValue)
             {
                 Write(nameof(level.Demo), level.Demo.Value, levelObj);
+            }
+            if (level.LaraType.HasValue)
+            {
+                Write(nameof(level.LaraType), level.LaraType.Value, levelObj);
             }
 
             return levelObj;
