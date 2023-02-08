@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace TRGE.Core
@@ -231,6 +232,7 @@ namespace TRGE.Core
         /// Flag to show this version is a community patch (e.g. Tomb1Main)
         /// </summary>
         public bool IsCommunityPatch { get; internal set; }
+        public Version ExeVersion { get; internal set; }
 
         private TREdition() { }
 

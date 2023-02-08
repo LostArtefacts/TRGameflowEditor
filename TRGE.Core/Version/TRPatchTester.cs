@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace TRGE.Core
 {
@@ -28,6 +30,10 @@ namespace TRGE.Core
                 edition.ConfigName = null;
                 edition.ScriptName = null;
             }
+            else
+            {
+                edition.ExeVersion = CalculateProductVersion(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\Tomb1Main.exe"));
+            }
         }
 
         private static void TestForTR2Main(TREdition edition, TRScriptIOArgs ioArgs)
@@ -40,6 +46,31 @@ namespace TRGE.Core
         {
             string dllPath = Path.GetFullPath(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\tomb3decomp.dll"));
             edition.IsCommunityPatch = edition.ExportLevelData = File.Exists(dllPath);
+        }
+
+        private static Version CalculateProductVersion(string exePath)
+        {
+            try
+            {
+                FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(exePath);
+                int[] parts = new int[] { 0, 0, 0 };
+                string[] productParts = versionInfo.ProductVersion.Split('.');
+                for (int i = 0; i < productParts.Length; i++)
+                {
+                    int j = 0;
+                    string part = string.Empty;
+                    while (j < productParts[i].Length && char.IsDigit(productParts[i][j]))
+                    {
+                        part += productParts[i][j++];
+                    }
+                    parts[i] = int.Parse(part);
+                }
+                return new Version(parts[0], parts[1], parts[2]);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

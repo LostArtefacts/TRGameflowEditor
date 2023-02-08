@@ -174,6 +174,7 @@ namespace TRGE.Core
                 level.LevelFile = ReadString("File", levelData);
                 level.Music = ReadInt(nameof(level.Music), levelData);
                 level.Injections = ReadNullableArray<string>(nameof(level.Injections), levelData);
+                level.InheritInjections = ReadNullableBool(nameof(level.InheritInjections), levelData);
                 level.Demo = ReadNullableBool(nameof(level.Demo), levelData);
                 level.DrawDistanceFade = ReadNullableDouble(nameof(level.DrawDistanceFade), levelData);
                 level.DrawDistanceMax = ReadNullableDouble(nameof(level.DrawDistanceMax), levelData);
@@ -737,6 +738,10 @@ namespace TRGE.Core
             if (level.Injections != null)
             {
                 Write(nameof(level.Injections), level.Injections, levelObj);
+            }
+            if (level.InheritInjections.HasValue)
+            {
+                Write(nameof(level.InheritInjections), level.InheritInjections.Value, levelObj);
             }
             if (level.WaterColor != null)
             {

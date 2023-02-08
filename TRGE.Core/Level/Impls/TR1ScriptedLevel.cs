@@ -160,6 +160,7 @@ namespace TRGE.Core
         public List<BaseLevelSequence> Sequences { get; set; }
 
         public string[] Injections { get; set; }
+        public bool? InheritInjections { get; set; }
         public uint? LaraType { get; set; }
         public bool? Demo { get; set; }
         public double[] WaterColor { get; set; }
@@ -167,6 +168,16 @@ namespace TRGE.Core
         public double? DrawDistanceMax { get; set; }
         public int? UnobtainablePickups { get; set; }
         public int? UnobtainableKills { get; set; }
+
+        public void ResetInjections()
+        {
+            Injections = null;
+            InheritInjections = null;
+            if (HasCutScene)
+            {
+                (CutSceneLevel as TR1ScriptedLevel).ResetInjections();
+            }
+        }
 
         public bool HasSequence(LevelSequenceType type)
         {
