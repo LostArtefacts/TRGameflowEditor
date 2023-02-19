@@ -9,6 +9,11 @@
 
         public abstract int GetSaveTargetCount();
 
+        public void ResetConfig()
+        {
+            ReadConfig(_config = null);
+        }
+
         internal virtual Config ExportConfig()
         {
             return new Config(_config);

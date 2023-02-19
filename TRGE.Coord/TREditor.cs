@@ -310,6 +310,12 @@ namespace TRGE.Coord
             }
         }
 
+        public void ResetSettings()
+        {
+            ScriptEditor.ResetConfig();
+            LevelEditor?.ResetConfig();
+        }
+
         private void ConfigureWatcher()
         {
             if (_watcher != null || ScriptEditor == null)
