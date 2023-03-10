@@ -1,172 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D35A4948-923B-4EF7-87DE-81C27D156D93}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TRGE.Core</RootNamespace>
-    <AssemblyName>TRGE.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <TargetFramework>net472</TargetFramework>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>1.1.0</Version>
+    <Product>TRGE Core Library</Product>
+    <Copyright>Copyright © Tomb Raider Community 2023</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSTest.TestFramework.2.2.10\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSTest.TestFramework.2.2.10\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractTRGEEditor.cs" />
-    <Compile Include="Audio\AbstractTRAudioProvider.cs" />
-    <Compile Include="Audio\Impls\BaseTRAudioProvider.cs" />
-    <Compile Include="Audio\Impls\TR1AudioProvider.cs" />
-    <Compile Include="Audio\Impls\TR23AudioExtractor.cs" />
-    <Compile Include="Audio\Impls\TR2AudioProvider.cs" />
-    <Compile Include="Audio\Impls\TR3AudioProvider.cs" />
-    <Compile Include="Audio\TRAudioCategory.cs" />
-    <Compile Include="Audio\TRAudioFactory.cs" />
-    <Compile Include="Audio\TRAudioTrack.cs" />
-    <Compile Include="Audio\TRAudioType.cs" />
-    <Compile Include="FrontEnd\Impls\TR1FrontEnd.cs" />
-    <Compile Include="Helpers\Config.cs" />
-    <Compile Include="Helpers\Extensions\BaseFirstContractResolver.cs" />
-    <Compile Include="Helpers\Extensions\IOExtensions.cs" />
-    <Compile Include="Helpers\Extensions\LowerCaseNamingStrategy.cs" />
-    <Compile Include="Helpers\Extensions\StringExtensions.cs" />
-    <Compile Include="IChecksumTester.cs" />
-    <Compile Include="IO\ITRSaveProgressProvider.cs" />
-    <Compile Include="IO\TRDirectoryIOArgs.cs" />
-    <Compile Include="IO\TRSaveCategory.cs" />
-    <Compile Include="IO\TRSaveEventArgs.cs" />
-    <Compile Include="IO\TRSaveMonitor.cs" />
-    <Compile Include="IO\TRScriptIOArgs.cs" />
-    <Compile Include="Item\Enums\TR1Items.cs" />
-    <Compile Include="Item\Enums\TR2Items.cs" />
-    <Compile Include="Item\Enums\TR3Items.cs" />
-    <Compile Include="ITRConfigProvider.cs" />
-    <Compile Include="Language\GameStamp.cs" />
-    <Compile Include="Language\TRLanguage.cs" />
-    <Compile Include="Level\Events\TRScriptedLevelEventArgs.cs" />
-    <Compile Include="Level\Events\TRScriptedLevelModification.cs" />
-    <Compile Include="Level\Impls\TR1LevelManager.cs" />
-    <Compile Include="Level\Impls\TR1ATILevelManager.cs" />
-    <Compile Include="Level\Impls\TR1ScriptedLevel.cs" />
-    <Compile Include="Level\Impls\TR3ScriptedLevel.cs" />
-    <Compile Include="Level\TRLevelType.cs" />
-    <Compile Include="Operation\Sequence\BaseLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\DisplayPictureLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\FMVLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\GiveItemLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\LevelSequenceType.cs" />
-    <Compile Include="Operation\Sequence\LevelExitLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\MeshSwapLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\PlaySyncedAudioLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\SetCamLevelSequence.cs" />
-    <Compile Include="Operation\Sequence\TotalStatsLevelSequence.cs" />
-    <Compile Include="Script\EditorTypes\IAmmolessEditor.cs" />
-    <Compile Include="Script\EditorTypes\IDemoEditor.cs" />
-    <Compile Include="Script\EditorTypes\IHealthEditor.cs" />
-    <Compile Include="Script\EditorTypes\ISecretRewardEditor.cs" />
-    <Compile Include="Script\EditorTypes\IUnarmedEditor.cs" />
-    <Compile Include="Script\Enums\TRAirbarMode.cs" />
-    <Compile Include="Script\Enums\TRHealthbarMode.cs" />
-    <Compile Include="Script\Enums\TRMenuStyle.cs" />
-    <Compile Include="Script\Enums\TRScreenshotFormat.cs" />
-    <Compile Include="Script\Enums\TRUIColour.cs" />
-    <Compile Include="Script\Enums\TRUILocation.cs" />
-    <Compile Include="Script\Exceptions\ChecksumMismatchException.cs" />
-    <Compile Include="Script\Exceptions\EditionMismatchException.cs" />
-    <Compile Include="Script\Impls\TR1ATIScriptEditor.cs" />
-    <Compile Include="Script\Impls\TR1Script.cs" />
-    <Compile Include="Script\Impls\TR1ScriptEditor.cs" />
-    <Compile Include="Script\Impls\TR1ATIScript.cs" />
-    <Compile Include="Script\TRScriptOpenOption.cs" />
-    <Compile Include="TRInterop.cs" />
-    <Compile Include="FrontEnd\Impls\TR23FrontEnd.cs" />
-    <Compile Include="Helpers\Extensions\CollectionExtensions.cs" />
-    <Compile Include="Helpers\Extensions\HashingExtensions.cs" />
-    <Compile Include="Helpers\MutableTuple.cs" />
-    <Compile Include="Helpers\Organisation.cs" />
-    <Compile Include="Helpers\RandomGenerator.cs" />
-    <Compile Include="IO\TRDownloader.cs" />
-    <Compile Include="IO\TRDownloadEventArgs.cs" />
-    <Compile Include="Item\BaseTRItemBroker.cs" />
-    <Compile Include="Item\AbstractTRItemProvider.cs" />
-    <Compile Include="Item\Impls\AbstractTR23ItemProvider.cs" />
-    <Compile Include="Item\Impls\TR2ItemProvider.cs" />
-    <Compile Include="Item\Impls\TR3ItemProvider.cs" />
-    <Compile Include="Item\TRItem.cs" />
-    <Compile Include="Item\TRItemBrokerDealer.cs" />
-    <Compile Include="Item\TRItemCategory.cs" />
-    <Compile Include="Item\TRItemFactory.cs" />
-    <Compile Include="FrontEnd\AbstractTRFrontEnd.cs" />
-    <Compile Include="Level\AbstractTRScriptedLevel.cs" />
-    <Compile Include="Level\AbstractTRLevelManager.cs" />
-    <Compile Include="Level\Impls\TR2ScriptedLevel.cs" />
-    <Compile Include="Level\Impls\TR23LevelManager.cs" />
-    <Compile Include="Level\TRScriptedLevelFactory.cs" />
-    <Compile Include="Operation\TR23OpDefs.cs" />
-    <Compile Include="Operation\TROpDef.cs" />
-    <Compile Include="Operation\TROperation.cs" />
-    <Compile Include="Operation\AbstractTROperationContainer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Script\AbstractTRScript.cs" />
-    <Compile Include="Script\AbstractTRScriptEditor.cs" />
-    <Compile Include="Script\Impls\TR23ScriptEditor.cs" />
-    <Compile Include="Script\Exceptions\MissingScriptException.cs" />
-    <Compile Include="Version\Hardware.cs" />
-    <Compile Include="Script\TRScriptFactory.cs" />
-    <Compile Include="Script\Impls\TR23Script.cs" />
-    <Compile Include="Script\Exceptions\UnsupportedScriptException.cs" />
-    <Compile Include="Version\TREdition.cs" />
-    <Compile Include="Version\TRPatchTester.cs" />
-    <Compile Include="Version\TRVersion.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Resources\TR1\Audio\audio_tracks.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\TR2\Audio\audio_tracks.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\TR3\Audio\audio_tracks.json">
+    <None Include="Resources\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
