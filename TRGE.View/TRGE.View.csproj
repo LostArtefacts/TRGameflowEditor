@@ -1,328 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A1052ABB-CCFE-433E-9CAC-414CC4312F85}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TRGE.View</RootNamespace>
+    <TargetFramework>net472</TargetFramework>
+    <UseWpf>true</UseWpf>
+
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyName>TRGE</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Resources\shuffle.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <ApplicationIcon>Resources\shuffle.ico</ApplicationIcon>
+
+    <Version>1.1.0</Version>
+    <Product>Tomb Raider Gameflow Editor</Product>
+    <Copyright>Copyright © Tomp Community 2023</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.ExtendedLinguisticServices, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Sensors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAPICodePack.1.1.1\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <None Remove="Resources\down.png" />
+    <None Remove="Resources\shuffle.ico" />
+    <None Remove="Resources\shuffle.png" />
+    <None Remove="Resources\up.png" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Controls\AudioControl.xaml.cs">
-      <DependentUpon>AudioControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\BoolNumericOptionControl.xaml.cs">
-      <DependentUpon>BoolNumericOptionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\BoolOptionControl.xaml.cs">
-      <DependentUpon>BoolOptionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CompactBoolNumericOptionControl.xaml.cs">
-      <DependentUpon>CompactBoolNumericOptionControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DefaultManualControl.xaml.cs">
-      <DependentUpon>DefaultManualControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\NumericUpDown.xaml.cs">
-      <DependentUpon>NumericUpDown.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Audio\IAudioDataProvider.cs" />
-    <Compile Include="Model\Data\AudioData.cs" />
-    <Compile Include="Model\Data\FlaggedLevelData.cs" />
-    <Compile Include="Model\EditorEventArgs.cs" />
-    <Compile Include="Model\EditorOptions.cs" />
-    <Compile Include="Model\Audio\IPlayAudioCallback.cs" />
-    <Compile Include="Model\IRecentFolderOpener.cs" />
-    <Compile Include="Model\Data\LevelSequencingData.cs" />
-    <Compile Include="Model\Data\BaseLevelData.cs" />
-    <Compile Include="Model\Audio\PlayAudioEventArgs.cs" />
-    <Compile Include="Model\RecentFolder.cs" />
-    <Compile Include="Model\RecentFolderList.cs" />
-    <Compile Include="Model\Data\SecretBonusData.cs" />
-    <Compile Include="Updates\Update.cs" />
-    <Compile Include="Updates\UpdateEventArgs.cs" />
-    <Compile Include="Utils\AudioPlayer.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Utils\ControlUtils.cs" />
-    <Compile Include="Controls\EditorControl.xaml.cs">
-      <DependentUpon>EditorControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\FolderLoadControl.xaml.cs">
-      <DependentUpon>FolderLoadControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Model\DataFolderEventArgs.cs" />
-    <Compile Include="Updates\UpdateChecker.cs" />
-    <Compile Include="Windows\AboutWindow.xaml.cs">
-      <DependentUpon>AboutWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\AmmolessLevelsWindow.xaml.cs">
-      <DependentUpon>AmmolessLevelsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\AudioWindow.xaml.cs">
-      <DependentUpon>AudioWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\OpenProgressWindow.xaml.cs">
-      <DependentUpon>OpenProgressWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\BonusItemsWindow.xaml.cs">
-      <DependentUpon>BonusItemsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\DownloadingWindow.xaml.cs">
-      <DependentUpon>DownloadingWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\LevelSequenceWindow.xaml.cs">
-      <DependentUpon>LevelSequenceWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\WindowUtils.cs" />
-    <Compile Include="Windows\MessageWindow.xaml.cs">
-      <DependentUpon>MessageWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\RestoreProgressWindow.xaml.cs">
-      <DependentUpon>RestoreProgressWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\SaveProgressWindow.xaml.cs">
-      <DependentUpon>SaveProgressWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\ScriptOptionWindow.xaml.cs">
-      <DependentUpon>ScriptOptionWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\SunsetLevelsWindow.xaml.cs">
-      <DependentUpon>SunsetLevelsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\UnarmedLevelsWindow.xaml.cs">
-      <DependentUpon>UnarmedLevelsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\UpdateAvailableWindow.xaml.cs">
-      <DependentUpon>UpdateAvailableWindow.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Controls\AudioControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\BoolNumericOptionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\CompactBoolNumericOptionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\DefaultManualControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\EditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\FolderLoadControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Controls\BoolOptionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\NumericUpDown.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\AboutWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\AmmolessLevelsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\AudioWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\OpenProgressWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\BonusItemsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\DownloadingWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\LevelSequenceWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\MessageWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\RestoreProgressWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\SaveProgressWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\ScriptOptionWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\SunsetLevelsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\UnarmedLevelsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\UpdateAvailableWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
+    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="app.manifest" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\shuffle.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TRGE.Coord\TRGE.Coord.csproj">
-      <Project>{1d29769f-96db-4829-9e9a-9d0e314c7743}</Project>
-      <Name>TRGE.Coord</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TRGE.Core\TRGE.Core.csproj">
-      <Project>{d35a4948-923b-4ef7-87de-81c27d156d93}</Project>
-      <Name>TRGE.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\shuffle.png" />
+    <ProjectReference Include="..\TRGE.Coord\TRGE.Coord.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\down.png" />
+    <Resource Include="Resources\shuffle.ico" />
+    <Resource Include="Resources\shuffle.png" />
     <Resource Include="Resources\up.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>mkdir Lib
-move /Y *.dll Lib
-move /Y *.xml Lib</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>rmdir /S /Q Lib</PreBuildEvent>
-  </PropertyGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rmdir /S /Q $(TargetDir)\Lib" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="mkdir $(TargetDir)Lib&#xD;&#xA;move /Y $(TargetDir)\*.dll $(TargetDir)\Lib" />
+  </Target>
 </Project>
