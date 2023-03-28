@@ -79,7 +79,9 @@ namespace TRGE.Core
         public TRUIColour EnemyHealthbarColor { get; set; }
         public bool FixTihocanSecretSound { get; set; }
         public bool FixPyramidSecretTrigger { get; set; }
+        public bool FixFloorDataIssues { get; set; }
         public bool FixSecretsKillingMusic { get; set; }
+        public bool FixSpeechesKillingMusic { get; set; }
         public bool FixDescendingGlitch { get; set; }
         public bool FixWallJumpGlitch { get; set; }
         public bool FixBridgeCollision { get; set; }
@@ -319,7 +321,9 @@ namespace TRGE.Core
             EnemyHealthbarColor         = ReadEnum(nameof(EnemyHealthbarColor), ConfigData, TRUIColour.Grey);
             FixTihocanSecretSound       = ReadBool(nameof(FixTihocanSecretSound), ConfigData, true);
             FixPyramidSecretTrigger     = ReadBool(nameof(FixPyramidSecretTrigger), ConfigData, true);
+            FixFloorDataIssues          = ReadBool(nameof(FixFloorDataIssues), ConfigData, true);
             FixSecretsKillingMusic      = ReadBool(nameof(FixSecretsKillingMusic), ConfigData, true);
+            FixSpeechesKillingMusic     = ReadBool(nameof(FixSpeechesKillingMusic), ConfigData, true);
             FixDescendingGlitch         = ReadBool(nameof(FixDescendingGlitch), ConfigData, false);
             FixWallJumpGlitch           = ReadBool(nameof(FixWallJumpGlitch), ConfigData, false);
             FixBridgeCollision          = ReadBool(nameof(FixBridgeCollision), ConfigData, true);
@@ -612,7 +616,9 @@ namespace TRGE.Core
             WriteKebab(nameof(EnemyHealthbarColor), EnemyHealthbarColor, data);
             Write(nameof(FixTihocanSecretSound), FixTihocanSecretSound, data);
             Write(nameof(FixPyramidSecretTrigger), FixPyramidSecretTrigger, data);
+            Write(nameof(FixFloorDataIssues), FixFloorDataIssues, data);
             Write(nameof(FixSecretsKillingMusic), FixSecretsKillingMusic, data);
+            Write(nameof(FixSpeechesKillingMusic), FixSpeechesKillingMusic, data);
             Write(nameof(FixDescendingGlitch), FixDescendingGlitch, data);
             Write(nameof(FixWallJumpGlitch), FixWallJumpGlitch, data);
             Write(nameof(FixBridgeCollision), FixBridgeCollision, data);
@@ -800,6 +806,13 @@ namespace TRGE.Core
 
             foreach (BaseLevelSequence sequence in level.Sequences)
             {
+                if (sequence.Type == LevelSequenceType.Fix_Pyramid_Secret
+                    && Edition.ExeVersion >= new Version(2, 14))
+                {
+                    // Legacy sequence type, which will prevent T1M launching if present in 2.14+
+                    continue;
+                }
+
                 JObject seq = JObject.FromObject(sequence, _mainSerializer);
                 Write(nameof(seq.Type), sequence.Type, seq);
                 sequences.Add(seq);
