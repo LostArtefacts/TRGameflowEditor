@@ -689,10 +689,22 @@ namespace TRGE.Core
             set => (Script as TR1Script).FixPyramidSecretTrigger = value;
         }
 
+        public bool FixFloorDataIssues
+        {
+            get => (Script as TR1Script).FixFloorDataIssues;
+            set => (Script as TR1Script).FixFloorDataIssues = value;
+        }
+
         public bool FixSecretsKillingMusic
         {
             get => (Script as TR1Script).FixSecretsKillingMusic;
             set => (Script as TR1Script).FixSecretsKillingMusic = value;
+        }
+
+        public bool FixSpeechesKillingMusic
+        {
+            get => (Script as TR1Script).FixSpeechesKillingMusic;
+            set => (Script as TR1Script).FixSpeechesKillingMusic = value;
         }
 
         public bool FixDescendingGlitch
