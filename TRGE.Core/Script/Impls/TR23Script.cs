@@ -491,6 +491,14 @@ namespace TRGE.Core
                     };
                 case TRVersion.TR3:
                 case TRVersion.TR3G:
+                    if (Edition.IsCommunityPatch)
+                    {
+                        return new Tomb3ScriptedLevel
+                        {
+                            Name = name,
+                            LevelFile = dataFile
+                        };
+                    }
                     return new TR3ScriptedLevel
                     {
                         Name = name,

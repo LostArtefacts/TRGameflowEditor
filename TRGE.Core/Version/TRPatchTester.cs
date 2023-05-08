@@ -44,15 +44,23 @@ namespace TRGE.Core
 
         private static void TestForTR3Main(TREdition edition, TRScriptIOArgs ioArgs)
         {
-            string dllPath = Path.GetFullPath(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\tomb3decomp.dll"));
-            edition.IsCommunityPatch = edition.ExportLevelData = File.Exists(dllPath);
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\tomb3.exe"));
+            edition.IsCommunityPatch = versionInfo.InternalName != null;
+            if (edition.IsCommunityPatch)
+            {
+                edition.ExeVersion = CalculateProductVersion(versionInfo);
+            }
         }
 
         private static Version CalculateProductVersion(string exePath)
         {
+            return CalculateProductVersion(FileVersionInfo.GetVersionInfo(exePath));
+        }
+
+        private static Version CalculateProductVersion(FileVersionInfo versionInfo)
+        {
             try
             {
-                FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(exePath);
                 int[] parts = new int[] { 0, 0, 0 };
                 string[] productParts = versionInfo.ProductVersion.Split('.');
                 for (int i = 0; i < productParts.Length; i++)
