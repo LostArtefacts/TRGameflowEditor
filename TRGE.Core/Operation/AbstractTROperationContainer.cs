@@ -17,11 +17,10 @@ namespace TRGE.Core
             for (ushort i = 0; i < scriptData.Length; i++)
             {
                 TROpDef opDef = GetOpDefFor(scriptData[i]);
-                ushort operand = ushort.MaxValue;
-                if (opDef.HasOperand)
-                {
-                    operand = scriptData[++i];
-                }
+                if (opDef == null)
+                    continue;
+
+                ushort operand = opDef.HasOperand ? scriptData[++i] : ushort.MaxValue;
                 AddOperation(opDef, operand);
             }
         }

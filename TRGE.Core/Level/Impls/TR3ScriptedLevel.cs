@@ -14,6 +14,10 @@ namespace TRGE.Core
             0, 6, 4, 5, 0, 3, 3, 3, 1, 5, 5, 6, 1, 3, 2, 3, 3, 3, 3, 0, 0
         };
 
+        private static readonly List<ushort> _ogRainLevels = new List<ushort> { 1, 3, 9, 12, 20 };
+        private static readonly List<ushort> _ogSnowLevels = new List<ushort> { 16, 19 };
+        private static readonly List<ushort> _ogColdLevels = new List<ushort> { 16, 17 };
+
         public override bool HasSecrets
         {
             get => _levelSecrets[Sequence] > 0;
@@ -41,39 +45,23 @@ namespace TRGE.Core
             SetStartInventoryItems(items.ToDictionary(item => (ushort)item.Key, item => item.Value));
         }
 
-        public bool HasRain { get; set; }
-        public bool HasSnow { get; set; }
-        public bool HasColdWater { get; set; }
-
-        public override void SetDefaults()
+        public virtual bool HasRain
         {
-            base.SetDefaults();
-
-            HasRain = HasSnow = HasColdWater = false;
-
-            switch (OriginalSequence)
-            {
-                case 1:
-                case 9:
-                    // Jungle & Thames
-                    HasRain = true;
-                    break;
-                case 16:
-                    // Antarctica
-                    HasSnow = true;
-                    HasColdWater = true;
-                    break;
-                case 17:
-                    // Antarctica & RX-Tech
-                    HasColdWater = true;
-                    break;
-                case 19:
-                    // Willie
-                    HasSnow = true;
-                    break;
-            }
+            get => _ogRainLevels.Contains(Sequence);
+            set { }
         }
 
+        public virtual bool HasSnow
+        {
+            get => _ogSnowLevels.Contains(Sequence);
+            set { }
+        }
+
+        public virtual bool HasColdWater
+        {
+            get => _ogColdLevels.Contains(Sequence);
+            set { }
+        }
         public override void SerializeToMain(BinaryWriter writer)
         {
             base.SerializeToMain(writer);

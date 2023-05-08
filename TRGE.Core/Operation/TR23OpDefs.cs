@@ -26,10 +26,23 @@
         internal static readonly TROpDef KillToComplete = new TROpDef(21, false);
         internal static readonly TROpDef RemoveAmmo     = new TROpDef(22, false, Track);
 
+        // tomb3
+        internal static readonly TROpDef HasRain = new TROpDef(23, false, Track);
+        internal static readonly TROpDef HasSnow = new TROpDef(24, false, Track);
+        internal static readonly TROpDef WaterParts = new TROpDef(25, false, Track);
+        internal static readonly TROpDef IsCold = new TROpDef(26, false, Track);
+        // 0 = lava
+        // 1 = rapids
+        // 2 = electricity
+        internal static readonly TROpDef DeathTile = new TROpDef(27, true, Track);
+        // 2 operands - 32-bit RGB
+        internal static readonly TROpDef WaterColour = new TROpDef(28, true, Track);
+
         private static readonly TROpDef[] All = new TROpDef[]
         {
             Picture, ListStart, ListEnd, FMV, Level, Cinematic, Complete, Demo, JumpToSequence, End, Track, Sunset, LoadPic, DeadlyWater, 
-            RemoveWeapons, GameComplete, CutAngle, NoFloor, StartInvBonus, StartAnimation, Secrets, KillToComplete, RemoveAmmo
+            RemoveWeapons, GameComplete, CutAngle, NoFloor, StartInvBonus, StartAnimation, Secrets, KillToComplete, RemoveAmmo,
+            HasRain, HasSnow, WaterParts, IsCold, DeathTile, WaterColour
         };
 
         internal static TROpDef Get(ushort opCode)
@@ -94,6 +107,18 @@
                     return nameof(KillToComplete);
                 case 22:
                     return nameof(RemoveAmmo);
+                case 23:
+                    return nameof(HasRain);
+                case 24:
+                    return nameof(HasSnow);
+                case 25:
+                    return nameof(WaterParts);
+                case 26:
+                    return nameof(IsCold);
+                case 27:
+                    return nameof(DeathTile);
+                case 28:
+                    return nameof(WaterColour);
                 default:
                     return "Unknown";
             }
