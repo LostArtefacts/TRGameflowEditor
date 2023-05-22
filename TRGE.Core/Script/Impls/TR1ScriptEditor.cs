@@ -128,6 +128,9 @@ namespace TRGE.Core
             RevertToPistols = config.GetBool(nameof(RevertToPistols), false);
             EnableEnhancedSaves = config.GetBool(nameof(EnableEnhancedSaves), true);
             EnablePitchedSounds = config.GetBool(nameof(EnablePitchedSounds), true);
+            EnableJumpTwists = config.GetBool(nameof(EnableJumpTwists), true);
+            EnableInvertedLook = config.GetBool(nameof(EnableInvertedLook), false);
+            CameraSpeed = config.GetInt(nameof(CameraSpeed), 5);
         }
 
         protected override void SaveImpl()
@@ -225,6 +228,10 @@ namespace TRGE.Core
             _config[nameof(MaximumSaveSlots)] = MaximumSaveSlots;
             _config[nameof(RevertToPistols)] = RevertToPistols;
             _config[nameof(EnableEnhancedSaves)] = EnableEnhancedSaves;
+            _config[nameof(EnablePitchedSounds)] = EnablePitchedSounds;
+            _config[nameof(EnableJumpTwists)] = EnableJumpTwists;
+            _config[nameof(EnableInvertedLook)] = EnableInvertedLook;
+            _config[nameof(CameraSpeed)] = CameraSpeed;
 
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
@@ -849,6 +856,24 @@ namespace TRGE.Core
         {
             get => (Script as TR1Script).EnablePitchedSounds;
             set => (Script as TR1Script).EnablePitchedSounds = value;
+        }
+
+        public bool EnableJumpTwists
+        {
+            get => (Script as TR1Script).EnableJumpTwists;
+            set => (Script as TR1Script).EnableJumpTwists = value;
+        }
+
+        public bool EnableInvertedLook
+        {
+            get => (Script as TR1Script).EnabledInvertedLook;
+            set => (Script as TR1Script).EnabledInvertedLook = value;
+        }
+
+        public int CameraSpeed
+        {
+            get => (Script as TR1Script).CameraSpeed;
+            set => (Script as TR1Script).CameraSpeed = value;
         }
     }
 }

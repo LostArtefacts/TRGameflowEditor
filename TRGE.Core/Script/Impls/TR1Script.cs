@@ -107,6 +107,9 @@ namespace TRGE.Core
         public bool RevertToPistols { get; set; }
         public bool EnableEnhancedSaves { get; set; }
         public bool EnablePitchedSounds { get; set; }
+        public bool EnableJumpTwists { get; set; }
+        public bool EnabledInvertedLook { get; set; }
+        public int CameraSpeed { get; set; }
         #endregion
 
         public JObject GameflowData { get; internal set; }
@@ -349,6 +352,9 @@ namespace TRGE.Core
             RevertToPistols             = ReadBool(nameof(RevertToPistols), ConfigData, false);
             EnableEnhancedSaves         = ReadBool(nameof(EnableEnhancedSaves), ConfigData, true);
             EnablePitchedSounds         = ReadBool(nameof(EnablePitchedSounds), ConfigData, true);
+            EnableJumpTwists            = ReadBool(nameof(EnableJumpTwists), ConfigData, true);
+            EnabledInvertedLook         = ReadBool(nameof(EnabledInvertedLook), ConfigData, false);
+            CameraSpeed                 = ReadInt(nameof(CameraSpeed), ConfigData, 5);
         }
 
         private string ReadString(string key, JObject data)
@@ -644,6 +650,9 @@ namespace TRGE.Core
             Write(nameof(RevertToPistols), RevertToPistols, data);
             Write(nameof(EnableEnhancedSaves), EnableEnhancedSaves, data);
             Write(nameof(EnablePitchedSounds), EnablePitchedSounds, data);
+            Write(nameof(EnableJumpTwists), EnableJumpTwists, data);
+            Write(nameof(EnabledInvertedLook), EnabledInvertedLook, data);
+            Write(nameof(CameraSpeed), CameraSpeed, data);
 
             // The existing data will have been re-read at this stage (T1M stores runtime config
             // in the same file so this may well have changed between saves in TRGE). Re-scan this
