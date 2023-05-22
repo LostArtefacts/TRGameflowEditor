@@ -353,7 +353,7 @@ namespace TRGE.Core
             EnableEnhancedSaves         = ReadBool(nameof(EnableEnhancedSaves), ConfigData, true);
             EnablePitchedSounds         = ReadBool(nameof(EnablePitchedSounds), ConfigData, true);
             EnableJumpTwists            = ReadBool(nameof(EnableJumpTwists), ConfigData, true);
-            EnabledInvertedLook          = ReadBool(nameof(EnabledInvertedLook), ConfigData, false);
+            EnabledInvertedLook         = ReadBool(nameof(EnabledInvertedLook), ConfigData, false);
             CameraSpeed                 = ReadInt(nameof(CameraSpeed), ConfigData, 5);
         }
 
