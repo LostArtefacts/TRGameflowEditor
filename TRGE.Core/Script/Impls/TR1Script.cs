@@ -110,6 +110,8 @@ namespace TRGE.Core
         public bool EnableJumpTwists { get; set; }
         public bool EnabledInvertedLook { get; set; }
         public int CameraSpeed { get; set; }
+        public bool EnableSwingCancel { get; set; }
+        public bool EnableTr2Jumping { get; set; }
         #endregion
 
         public JObject GameflowData { get; internal set; }
@@ -272,6 +274,12 @@ namespace TRGE.Core
                                 MeshID = ReadInt("MeshId", sequenceData)
                             };
                             break;
+                        case LevelSequenceType.Setup_Bacon_Lara:
+                            sequence = new SetupBaconLaraSequence
+                            {
+                                AnchorRoom = ReadInt("AnchorRoom", sequenceData)
+                            };
+                            break;
                         default:
                             sequence = new BaseLevelSequence();
                             break;
@@ -355,6 +363,8 @@ namespace TRGE.Core
             EnableJumpTwists            = ReadBool(nameof(EnableJumpTwists), ConfigData, true);
             EnabledInvertedLook         = ReadBool(nameof(EnabledInvertedLook), ConfigData, false);
             CameraSpeed                 = ReadInt(nameof(CameraSpeed), ConfigData, 5);
+            EnableSwingCancel           = ReadBool(nameof(EnableSwingCancel), ConfigData, true);
+            EnableTr2Jumping            = ReadBool(nameof(EnableTr2Jumping), ConfigData, false);
         }
 
         private string ReadString(string key, JObject data)
@@ -653,6 +663,8 @@ namespace TRGE.Core
             Write(nameof(EnableJumpTwists), EnableJumpTwists, data);
             Write(nameof(EnabledInvertedLook), EnabledInvertedLook, data);
             Write(nameof(CameraSpeed), CameraSpeed, data);
+            Write(nameof(EnableSwingCancel), EnableSwingCancel, data);
+            Write(nameof(EnableTr2Jumping), EnableTr2Jumping, data);
 
             // The existing data will have been re-read at this stage (T1M stores runtime config
             // in the same file so this may well have changed between saves in TRGE). Re-scan this
