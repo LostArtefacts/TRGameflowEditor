@@ -27,6 +27,7 @@
         Give_Item,
         Play_Synced_Audio,
         Mesh_Swap,
-        Fix_Pyramid_Secret
+        Fix_Pyramid_Secret,
+        Setup_Bacon_Lara,
     }
 }

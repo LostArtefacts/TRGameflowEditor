@@ -131,6 +131,8 @@ namespace TRGE.Core
             EnableJumpTwists = config.GetBool(nameof(EnableJumpTwists), true);
             EnableInvertedLook = config.GetBool(nameof(EnableInvertedLook), false);
             CameraSpeed = config.GetInt(nameof(CameraSpeed), 5);
+            EnableSwingCancel = config.GetBool(nameof(EnableSwingCancel), true);
+            EnableTr2Jumping = config.GetBool(nameof(EnableTr2Jumping), false);
         }
 
         protected override void SaveImpl()
@@ -232,6 +234,8 @@ namespace TRGE.Core
             _config[nameof(EnableJumpTwists)] = EnableJumpTwists;
             _config[nameof(EnableInvertedLook)] = EnableInvertedLook;
             _config[nameof(CameraSpeed)] = CameraSpeed;
+            _config[nameof(EnableSwingCancel)] = EnableSwingCancel;
+            _config[nameof(EnableTr2Jumping)] = EnableTr2Jumping;
 
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
@@ -874,6 +878,18 @@ namespace TRGE.Core
         {
             get => (Script as TR1Script).CameraSpeed;
             set => (Script as TR1Script).CameraSpeed = value;
+        }
+
+        public bool EnableSwingCancel
+        {
+            get => (Script as TR1Script).EnableSwingCancel;
+            set => (Script as TR1Script).EnableSwingCancel = value;
+        }
+
+        public bool EnableTr2Jumping
+        {
+            get => (Script as TR1Script).EnableTr2Jumping;
+            set => (Script as TR1Script).EnableTr2Jumping = value;
         }
     }
 }
