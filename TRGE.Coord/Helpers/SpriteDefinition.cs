@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using TRGE.Coord.Properties;
 using TRGE.Core;
-using TRLevelReader.Model;
+using TRLevelControl.Model;
 
 namespace TRGE.Coord
 {

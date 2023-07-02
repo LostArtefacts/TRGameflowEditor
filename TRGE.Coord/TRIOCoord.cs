@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using TRGE.Coord.Helpers;
 using TRGE.Core;
-using TRLevelReader.Helpers;
+using TRLevelControl.Helpers;
 
 namespace TRGE.Coord
 {

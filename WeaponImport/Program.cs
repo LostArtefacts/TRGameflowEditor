@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using TRGE.Coord;
-using TRLevelReader.Model;
+using TRLevelControl.Model;
 using TRTexture16Importer;
 
 namespace WeaponImport
