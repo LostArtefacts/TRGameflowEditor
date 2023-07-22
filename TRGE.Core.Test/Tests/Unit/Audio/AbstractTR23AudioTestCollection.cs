@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
-using System.Media;
 using TRGE.Coord;
 
 namespace TRGE.Core.Test
@@ -43,7 +42,7 @@ namespace TRGE.Core.Test
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
             using (MemoryStream ms = new MemoryStream(sm.GetTrackData(SampleTrack)))
             {
-                new SoundPlayer(ms).PlaySync();
+                //new SoundPlayer(ms).PlaySync();
             }
         }
 

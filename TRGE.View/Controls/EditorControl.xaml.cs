@@ -1,4 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -193,21 +193,21 @@ namespace TRGE.View.Controls
 
         public void ImportSettings()
         {
-            using (CommonOpenFileDialog dlg = new CommonOpenFileDialog())
+            OpenFileDialog dlg = new()
             {
-                dlg.Filters.Add(new CommonFileDialogFilter("TRGE Files", "trge"));
-                dlg.Title = "TRGE : Import Settings";
-                if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
+                Filter = "TRGE Files|*.trge",
+                Title = "TRGE : Import Settings"
+            };
+            if (dlg.ShowDialog(WindowUtils.GetActiveWindow()) ?? false)
+            {
+                try
                 {
-                    try
-                    {
-                        Editor.ImportSettings(dlg.FileName);
-                        _options.Load(Editor.ScriptEditor as TR23ScriptEditor);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageWindow.ShowError(e.Message);
-                    }
+                    Editor.ImportSettings(dlg.FileName);
+                    _options.Load(Editor.ScriptEditor as TR23ScriptEditor);
+                }
+                catch (Exception e)
+                {
+                    MessageWindow.ShowError(e.Message);
                 }
             }
         }
@@ -219,23 +219,21 @@ namespace TRGE.View.Controls
                 return;
             }
 
-            using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
+            SaveFileDialog dlg = new()
             {
-                dlg.DefaultFileName = Edition.ToSafeFileName() + ".trge";
-                dlg.DefaultExtension = ".trge";
-                dlg.Filters.Add(new CommonFileDialogFilter("TRGE Files", "trge"));
-                dlg.OverwritePrompt = true;
-                dlg.Title = "TRGE : Export Settings";
-                if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
+                Filter = "TRGE Files|*.trge",
+                Title = "TRGE : Export Settings",
+                FileName = Edition.ToSafeFileName() + ".trge",
+            };
+            if (dlg.ShowDialog(WindowUtils.GetActiveWindow()) ?? false)
+            {
+                try
                 {
-                    try
-                    {
-                        Editor.ExportSettings(dlg.FileName);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageWindow.ShowError(e.Message);
-                    }
+                    Editor.ExportSettings(dlg.FileName);
+                }
+                catch (Exception e)
+                {
+                    MessageWindow.ShowError(e.Message);
                 }
             }
         }
