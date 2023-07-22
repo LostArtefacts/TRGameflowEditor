@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using TRGE.Coord.Properties;
 using TRGE.Core;
-using TRLevelReader;
-using TRLevelReader.Helpers;
-using TRLevelReader.Model;
-using TRLevelReader.Model.Enums;
+using TRLevelControl;
+using TRLevelControl.Helpers;
+using TRLevelControl.Model;
+using TRLevelControl.Model.Enums;
 using TRModelTransporter.Transport;
 
 namespace TRGE.Coord

@@ -9,8 +9,8 @@
     <ProjectReference Include="..\TRGE.Coord\TRGE.Coord.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="TRLevelReader">
-      <HintPath>..\Dependencies\TRLevelReader.dll</HintPath>
+    <Reference Include="TRLevelControl">
+      <HintPath>..\Dependencies\TRLevelControl.dll</HintPath>
     </Reference>
     <Reference Include="TRTexture16Importer">
       <HintPath>..\Dependencies\TRTexture16Importer.dll</HintPath>
