@@ -1,10 +1,11 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using TRGE.Coord;
 using TRGE.Core;
 using TRGE.View.Model.Audio;
 using TRGE.View.Model.Data;
@@ -131,17 +132,15 @@ namespace TRGE.View.Windows
         {
             if (trackData != null && trackData.Length > 0)
             {
-                using (CommonSaveFileDialog dlg = new CommonSaveFileDialog())
+                SaveFileDialog dlg = new()
                 {
-                    dlg.DefaultFileName = e.Track.Name.ToSafeFileName() + ".wav";
-                    dlg.DefaultExtension = ".wav";
-                    dlg.Filters.Add(new CommonFileDialogFilter("WAV Files", "wav"));
-                    dlg.OverwritePrompt = true;
-                    dlg.Title = "TRGE : Save Audio Track";
-                    if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
-                    {
-                        File.WriteAllBytes(dlg.FileName, trackData);
-                    }
+                    Filter = "WAV Files|*.wav",
+                    Title = "TRGE : Save Audio Track",
+                    FileName = e.Track.Name.ToSafeFileName() + ".wav",
+                };
+                if (dlg.ShowDialog(WindowUtils.GetActiveWindow()) ?? false)
+                {
+                    File.WriteAllBytes(dlg.FileName, trackData);
                 }
             }
 

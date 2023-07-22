@@ -1,5 +1,4 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,6 +7,7 @@ using TRGE.Core;
 using TRGE.View.Model;
 using TRGE.View.Utils;
 using TRGE.View.Windows;
+using SWF = System.Windows.Forms;
 
 namespace TRGE.View.Controls
 {
@@ -75,14 +75,14 @@ namespace TRGE.View.Controls
 
         public void OpenDataFolder()
         {
-            using (CommonOpenFileDialog dlg = new CommonOpenFileDialog())
+            using SWF.FolderBrowserDialog dlg = new()
             {
-                dlg.IsFolderPicker = true;
-                dlg.Title = "TRGE : Select Data Folder";
-                if (dlg.ShowDialog(WindowUtils.GetActiveWindowHandle()) == CommonFileDialogResult.Ok)
-                {
-                    OpenDataFolder(dlg.FileName);
-                }
+                Description = "TRGE : Select Data Folder",
+                UseDescriptionForTitle = true,
+            };
+            if (dlg.ShowDialog() == SWF.DialogResult.OK)
+            {
+                OpenDataFolder(dlg.SelectedPath);
             }
         }
 

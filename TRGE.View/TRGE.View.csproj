@@ -2,8 +2,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWpf>true</UseWpf>
+    <UseWindowsForms>true</UseWindowsForms>
 
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyName>TRGE</AssemblyName>
@@ -24,8 +25,7 @@
     <None Remove="Resources\up.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
-    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TRGE.Coord\TRGE.Coord.csproj" />
@@ -36,10 +36,4 @@
     <Resource Include="Resources\shuffle.png" />
     <Resource Include="Resources\up.png" />
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="rmdir /S /Q $(TargetDir)\Lib" />
-  </Target>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir $(TargetDir)Lib&#xD;&#xA;move /Y $(TargetDir)\*.dll $(TargetDir)\Lib" />
-  </Target>
 </Project>
