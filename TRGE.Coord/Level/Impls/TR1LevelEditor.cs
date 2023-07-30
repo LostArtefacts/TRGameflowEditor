@@ -21,7 +21,7 @@ namespace TRGE.Coord
             _writer = new TR1LevelWriter();
         }
 
-        private TRLevel ReadLevel(string lvl)
+        private TR1Level ReadLevel(string lvl)
         {
             string levelFile = GetReadLevelFilePath(lvl);
             if (!File.Exists(levelFile))
@@ -32,7 +32,7 @@ namespace TRGE.Coord
             return _reader.ReadLevel(levelFile);
         }
 
-        private void WriteLevel(TRLevel level, string lvl)
+        private void WriteLevel(TR1Level level, string lvl)
         {
             _writer.WriteLevelToFile(level, GetWriteLevelFilePath(lvl));
         }
@@ -73,7 +73,7 @@ namespace TRGE.Coord
                 return;
             }
 
-            TRLevel level = ReadLevel(args.LevelFileBaseName);
+            TR1Level level = ReadLevel(args.LevelFileBaseName);
             AbstractTRScriptedLevel scriptedLevel = args.ScriptedLevel;
 
             Location defaultLocation = GetDefaultUnarmedLocationForLevel(scriptedLevel);
@@ -94,7 +94,7 @@ namespace TRGE.Coord
             );
 
             // For HSC change the pistols into DEagle ammo if the level is no longer unarmed
-            if (scriptedLevel.Is(TRLevelNames.MINES))
+            if (scriptedLevel.Is(TR1LevelNames.MINES))
             {
                 TREntity shackEntity = existingInjections.FirstOrDefault();
                 if (shackEntity != null)

@@ -151,7 +151,7 @@ namespace TRGE.Coord
             {
                 // Check for TR1ATI
                 bool isAti = true;
-                foreach (string tr1Level in TRLevelNames.AsList)
+                foreach (string tr1Level in TR1LevelNames.AsList)
                 {
                     isAti &= File.Exists(Path.Combine(path, tr1Level));
                 }
