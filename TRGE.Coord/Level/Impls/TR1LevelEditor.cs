@@ -11,14 +11,12 @@ namespace TRGE.Coord
 {
     public class TR1LevelEditor : BaseTRLevelEditor
     {
-        private readonly TR1LevelReader _reader;
-        private readonly TR1LevelWriter _writer;
+        private readonly TR1LevelControl _control;
 
         public TR1LevelEditor(TRDirectoryIOArgs io, TREdition edition)
             : base(io, edition)
         {
-            _reader = new TR1LevelReader();
-            _writer = new TR1LevelWriter();
+            _control = new();
         }
 
         private TR1Level ReadLevel(string lvl)
@@ -29,12 +27,12 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
             }
 
-            return _reader.ReadLevel(levelFile);
+            return _control.Read(levelFile);
         }
 
         private void WriteLevel(TR1Level level, string lvl)
         {
-            _writer.WriteLevelToFile(level, GetWriteLevelFilePath(lvl));
+            _control.Write(level, GetWriteLevelFilePath(lvl));
         }
 
         protected override void PreSaveImpl(AbstractTRScriptEditor scriptEditor)

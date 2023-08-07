@@ -87,8 +87,8 @@ namespace TRGE.Coord
             }
             else
             {
-                TR2LevelReader reader = new TR2LevelReader();
-                TR2Level level = reader.ReadLevel(levelFile);
+                TR2LevelControl control = new();
+                TR2Level level = control.Read(levelFile);
 
                 SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
                 if ((e.ScriptedLevel as TR2ScriptedLevel).RequiresWeaponTextureInjection)
@@ -96,8 +96,7 @@ namespace TRGE.Coord
                     MaybeInjectWeaponTexture(level);
                 }
 
-                TR2LevelWriter writer = new TR2LevelWriter();
-                writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+                control.Write(level, GetWriteLevelFilePath(e.LevelFileBaseName));
             }
         }
 
@@ -315,8 +314,8 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
             }
 
-            TR2LevelReader reader = new TR2LevelReader();
-            TR2Level level = reader.ReadLevel(levelFile);
+            TR2LevelControl control = new();
+            TR2Level level = control.Read(levelFile);
 
             bool changesMade = false;
             foreach (TR2Room room in level.Rooms)
@@ -334,8 +333,7 @@ namespace TRGE.Coord
 
             if (changesMade)
             {
-                TR2LevelWriter writer = new TR2LevelWriter();
-                writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+                control.Write(level, GetWriteLevelFilePath(e.LevelFileBaseName));
             }
         }
 
@@ -347,8 +345,8 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
             }
 
-            TR2LevelReader reader = new TR2LevelReader();
-            TR2Level level = reader.ReadLevel(levelFile);
+            TR2LevelControl control = new();
+            TR2Level level = control.Read(levelFile);
 
             if (weaponsAvailable)
             {
@@ -359,8 +357,7 @@ namespace TRGE.Coord
                 });
             }
 
-            TR2LevelWriter writer = new TR2LevelWriter();
-            writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+            control.Write(level, GetWriteLevelFilePath(e.LevelFileBaseName));
         }
 
         protected virtual void HandleSkidooPresenceChanged(TRScriptedLevelEventArgs e, bool skidooAvailable)
@@ -371,8 +368,8 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("Missing level file {0}", levelFile));
             }
 
-            TR2LevelReader reader = new TR2LevelReader();
-            TR2Level level = reader.ReadLevel(levelFile);
+            TR2LevelControl control = new();
+            TR2Level level = control.Read(levelFile);
 
             string levelName = e.LevelFileBaseName.ToUpper();
             if
@@ -404,8 +401,7 @@ namespace TRGE.Coord
                 }
             }
 
-            TR2LevelWriter writer = new TR2LevelWriter();
-            writer.WriteLevelToFile(level, GetWriteLevelFilePath(e.LevelFileBaseName));
+            control.Write(level, GetWriteLevelFilePath(e.LevelFileBaseName));
         }
 
         private void ImportModels(TR2Level level, string lvlName, List<TR2Entities> entities)
