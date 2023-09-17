@@ -164,7 +164,7 @@ namespace TRGE.Core
             set => SetFlag(Flag.DozyEnabled, DozyViable && value);
         }
 
-        public bool DozyViable => Edition.Equals(TREdition.TR2PSXBeta);
+        public bool DozyViable => Edition.Equals(TREdition.TR2PSXBeta) || Edition.IsCommunityPatch;
 
         public bool GymEnabled
         {
