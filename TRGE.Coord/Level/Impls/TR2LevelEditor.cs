@@ -117,7 +117,7 @@ namespace TRGE.Coord
                     e.Y == defaultLocation.Y &&
                     e.Z == defaultLocation.Z &&
                     (
-                        e.TypeID == (short)TR2Entities.Pistols_S_P || TR2EntityUtilities.IsGunType((TR2Entities)e.TypeID) || TR2EntityUtilities.IsAmmoType((TR2Entities)e.TypeID)
+                        e.TypeID == (short)TR2Type.Pistols_S_P || TR2TypeUtilities.IsGunType((TR2Type)e.TypeID) || TR2TypeUtilities.IsAmmoType((TR2Type)e.TypeID)
                     )
             );
 
@@ -131,19 +131,19 @@ namespace TRGE.Coord
                 {
                     if (scriptedLevel.RemovesWeapons)
                     {
-                        cargoEntity.TypeID = (short)TR2Entities.Pistols_S_P;
+                        cargoEntity.TypeID = (short)TR2Type.Pistols_S_P;
                     }
                     else
                     {
-                        cargoEntity.TypeID = (short)TR2Entities.UziAmmo_S_P; //need a way to be able to define this somewhere
+                        cargoEntity.TypeID = (short)TR2Type.UziAmmo_S_P; //need a way to be able to define this somewhere
                     }
                 }
                 else if (!scriptedLevel.RemovesWeapons)
                 {
-                    cargoEntity = entities.Find(e => e.Room == 1 && e.TypeID == (short)TR2Entities.Pistols_S_P);
+                    cargoEntity = entities.Find(e => e.Room == 1 && e.TypeID == (short)TR2Type.Pistols_S_P);
                     if (cargoEntity != null)
                     {
-                        cargoEntity.TypeID = (short)TR2Entities.UziAmmo_S_P;
+                        cargoEntity.TypeID = (short)TR2Type.UziAmmo_S_P;
                     }
                 }
             }
@@ -155,7 +155,7 @@ namespace TRGE.Coord
                     defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
                     entities.Add(new TR2Entity
                     {
-                        TypeID = (short)TR2Entities.Pistols_S_P,
+                        TypeID = (short)TR2Type.Pistols_S_P,
                         Room = defaultLocation.Room,
                         X = defaultLocation.X,
                         Y = defaultLocation.Y,
@@ -287,7 +287,7 @@ namespace TRGE.Coord
 
         protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
         {
-            int pistolIndex = level.SpriteSequences.ToList().FindIndex(e => e.SpriteID == (short)TR2Entities.Pistols_S_P);
+            int pistolIndex = level.SpriteSequences.ToList().FindIndex(e => e.SpriteID == (short)TR2Type.Pistols_S_P);
             if (pistolIndex == -1)
             {
                 SpriteDefinition.LoadWeaponsIntoLevel(level);
@@ -350,10 +350,10 @@ namespace TRGE.Coord
 
             if (weaponsAvailable)
             {
-                ImportModels(level, e.LevelFileBaseName, new List<TR2Entities>
+                ImportModels(level, e.LevelFileBaseName, new List<TR2Type>
                 {
-                    TR2Entities.Pistols_M_H, TR2Entities.Shotgun_M_H, TR2Entities.Autos_M_H, TR2Entities.Uzi_M_H,
-                    TR2Entities.Harpoon_M_H, TR2Entities.M16_M_H, TR2Entities.GrenadeLauncher_M_H
+                    TR2Type.Pistols_M_H, TR2Type.Shotgun_M_H, TR2Type.Autos_M_H, TR2Type.Uzi_M_H,
+                    TR2Type.Harpoon_M_H, TR2Type.M16_M_H, TR2Type.GrenadeLauncher_M_H
                 });
             }
 
@@ -378,15 +378,15 @@ namespace TRGE.Coord
                 _defaultVehicleLocations.ContainsKey(levelName)
             )
             {
-                Location location = _defaultVehicleLocations[levelName].Find(l => l.TargetType == (short)TR2Entities.RedSnowmobile);
+                Location location = _defaultVehicleLocations[levelName].Find(l => l.TargetType == (short)TR2Type.RedSnowmobile);
                 if (location != null)
                 {
-                    ImportModels(level, e.LevelFileBaseName, new List<TR2Entities> { TR2Entities.RedSnowmobile });
+                    ImportModels(level, e.LevelFileBaseName, new List<TR2Type> { TR2Type.RedSnowmobile });
 
                     List<TR2Entity> entities = level.Entities.ToList();
                     entities.Add(new TR2Entity
                     {
-                        TypeID = (short)TR2Entities.RedSnowmobile,
+                        TypeID = (short)TR2Type.RedSnowmobile,
                         Room = location.Room,
                         X = location.X,
                         Y = location.Y,
@@ -404,7 +404,7 @@ namespace TRGE.Coord
             control.Write(level, GetWriteLevelFilePath(e.LevelFileBaseName));
         }
 
-        private void ImportModels(TR2Level level, string lvlName, List<TR2Entities> entities)
+        private void ImportModels(TR2Level level, string lvlName, List<TR2Type> entities)
         {
             TR2ModelImporter importer = new TR2ModelImporter
             {

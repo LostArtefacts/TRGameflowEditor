@@ -88,7 +88,7 @@ namespace TRGE.Coord
                     e.X == defaultLocation.X &&
                     e.Y == defaultLocation.Y &&
                     e.Z == defaultLocation.Z &&
-                    e.TypeID == (short)TREntities.Pistols_S_P
+                    e.TypeID == (short)TR1Type.Pistols_S_P
             );
 
             // For HSC change the pistols into DEagle ammo if the level is no longer unarmed
@@ -99,7 +99,7 @@ namespace TRGE.Coord
                 {
                     if (!scriptedLevel.RemovesWeapons)
                     {
-                        shackEntity.TypeID = (short)TREntities.MagnumAmmo_S_P;
+                        shackEntity.TypeID = (short)TR1Type.MagnumAmmo_S_P;
                     }
                 }
             }
@@ -108,7 +108,7 @@ namespace TRGE.Coord
                 defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
                 entities.Add(new TREntity
                 {
-                    TypeID = (short)TREntities.Pistols_S_P,
+                    TypeID = (short)TR1Type.Pistols_S_P,
                     Room = defaultLocation.Room,
                     X = defaultLocation.X,
                     Y = defaultLocation.Y,

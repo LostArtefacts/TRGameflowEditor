@@ -95,7 +95,7 @@ namespace TRGE.Coord
                     e.X == defaultLocation.X &&
                     e.Y == defaultLocation.Y &&
                     e.Z == defaultLocation.Z &&
-                    e.TypeID == (short)TR3Entities.Pistols_P
+                    e.TypeID == (short)TR3Type.Pistols_P
             );
 
             // For HSC change the pistols into DEagle ammo if the level is no longer unarmed
@@ -106,7 +106,7 @@ namespace TRGE.Coord
                 {
                     if (!scriptedLevel.RemovesWeapons)
                     {
-                        armouryEntity.TypeID = (short)TR3Entities.DeagleAmmo_P;
+                        armouryEntity.TypeID = (short)TR3Type.DeagleAmmo_P;
                     }
                 }
             }
@@ -115,7 +115,7 @@ namespace TRGE.Coord
                 defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
                 entities.Add(new TR2Entity
                 {
-                    TypeID = (short)TR3Entities.Pistols_P,
+                    TypeID = (short)TR3Type.Pistols_P,
                     Room = defaultLocation.Room,
                     X = defaultLocation.X,
                     Y = defaultLocation.Y,
@@ -172,7 +172,7 @@ namespace TRGE.Coord
         private bool IsTargetFish(TR2Entity e)
         {
             return e.X != 0 && e.Y != 0 && e.Z != 0 &&
-                (e.TypeID == (short)TR3Entities.Fish || e.TypeID == (short)TR3Entities.Piranhas_N);
+                (e.TypeID == (short)TR3Type.Fish || e.TypeID == (short)TR3Type.Piranhas_N);
         }
 
         protected override int GetSaveTarget(int numLevels)
