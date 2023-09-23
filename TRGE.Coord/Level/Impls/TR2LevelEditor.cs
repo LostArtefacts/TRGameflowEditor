@@ -108,8 +108,7 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
             }
 
-            List<TR2Entity> entities = level.Entities.ToList();
-            IEnumerable<TR2Entity> existingInjections = entities.Where
+            IEnumerable<TR2Entity> existingInjections = level.Entities.Where
             (
                 e =>
                     e.Room == defaultLocation.Room &&
@@ -117,7 +116,7 @@ namespace TRGE.Coord
                     e.Y == defaultLocation.Y &&
                     e.Z == defaultLocation.Z &&
                     (
-                        e.TypeID == (short)TR2Type.Pistols_S_P || TR2TypeUtilities.IsGunType((TR2Type)e.TypeID) || TR2TypeUtilities.IsAmmoType((TR2Type)e.TypeID)
+                        e.TypeID == TR2Type.Pistols_S_P || TR2TypeUtilities.IsGunType(e.TypeID) || TR2TypeUtilities.IsAmmoType(e.TypeID)
                     )
             );
 
@@ -131,19 +130,19 @@ namespace TRGE.Coord
                 {
                     if (scriptedLevel.RemovesWeapons)
                     {
-                        cargoEntity.TypeID = (short)TR2Type.Pistols_S_P;
+                        cargoEntity.TypeID = TR2Type.Pistols_S_P;
                     }
                     else
                     {
-                        cargoEntity.TypeID = (short)TR2Type.UziAmmo_S_P; //need a way to be able to define this somewhere
+                        cargoEntity.TypeID = TR2Type.UziAmmo_S_P; //need a way to be able to define this somewhere
                     }
                 }
                 else if (!scriptedLevel.RemovesWeapons)
                 {
-                    cargoEntity = entities.Find(e => e.Room == 1 && e.TypeID == (short)TR2Type.Pistols_S_P);
+                    cargoEntity = level.Entities.Find(e => e.Room == 1 && e.TypeID == TR2Type.Pistols_S_P);
                     if (cargoEntity != null)
                     {
-                        cargoEntity.TypeID = (short)TR2Type.UziAmmo_S_P;
+                        cargoEntity.TypeID = TR2Type.UziAmmo_S_P;
                     }
                 }
             }
@@ -153,9 +152,9 @@ namespace TRGE.Coord
                 if (existingInjections.Count() == 0)
                 {
                     defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
-                    entities.Add(new TR2Entity
+                    level.Entities.Add(new()
                     {
-                        TypeID = (short)TR2Type.Pistols_S_P,
+                        TypeID = TR2Type.Pistols_S_P,
                         Room = defaultLocation.Room,
                         X = defaultLocation.X,
                         Y = defaultLocation.Y,
@@ -165,16 +164,12 @@ namespace TRGE.Coord
                         Intensity2 = -1,
                         Flags = 0
                     });
-                    level.NumEntities++;
                 }
             }
             else if (existingInjections.Count() > 0)
             {
-                entities.RemoveAll(e => existingInjections.Contains(e));
-                level.NumEntities = (uint)entities.Count();
+                level.Entities.RemoveAll(e => existingInjections.Contains(e));
             }
-
-            level.Entities = entities.ToArray();
         }
 
         protected virtual void CheckFloaterBackup()
@@ -383,10 +378,9 @@ namespace TRGE.Coord
                 {
                     ImportModels(level, e.LevelFileBaseName, new List<TR2Type> { TR2Type.RedSnowmobile });
 
-                    List<TR2Entity> entities = level.Entities.ToList();
-                    entities.Add(new TR2Entity
+                    level.Entities.Add(new TR2Entity
                     {
-                        TypeID = (short)TR2Type.RedSnowmobile,
+                        TypeID = TR2Type.RedSnowmobile,
                         Room = location.Room,
                         X = location.X,
                         Y = location.Y,
@@ -396,8 +390,6 @@ namespace TRGE.Coord
                         Intensity1 = -1,
                         Intensity2 = -1
                     });
-                    level.Entities = entities.ToArray();
-                    level.NumEntities++;
                 }
             }
 

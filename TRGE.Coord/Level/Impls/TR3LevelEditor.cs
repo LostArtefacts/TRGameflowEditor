@@ -87,35 +87,34 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
             }
 
-            List<TR2Entity> entities = level.Entities.ToList();
-            IEnumerable<TR2Entity> existingInjections = entities.Where
+            IEnumerable<TR3Entity> existingInjections = level.Entities.Where
             (
                 e =>
                     e.Room == defaultLocation.Room &&
                     e.X == defaultLocation.X &&
                     e.Y == defaultLocation.Y &&
                     e.Z == defaultLocation.Z &&
-                    e.TypeID == (short)TR3Type.Pistols_P
+                    e.TypeID == TR3Type.Pistols_P
             );
 
             // For HSC change the pistols into DEagle ammo if the level is no longer unarmed
             if (scriptedLevel.Is(TR3LevelNames.HSC))
             {
-                TR2Entity armouryEntity = existingInjections.FirstOrDefault();
+                TR3Entity armouryEntity = existingInjections.FirstOrDefault();
                 if (armouryEntity != null)
                 {
                     if (!scriptedLevel.RemovesWeapons)
                     {
-                        armouryEntity.TypeID = (short)TR3Type.DeagleAmmo_P;
+                        armouryEntity.TypeID = TR3Type.DeagleAmmo_P;
                     }
                 }
             }
             else if (scriptedLevel.RemovesWeapons)
             {
                 defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
-                entities.Add(new TR2Entity
+                level.Entities.Add(new()
                 {
-                    TypeID = (short)TR3Type.Pistols_P,
+                    TypeID = TR3Type.Pistols_P,
                     Room = defaultLocation.Room,
                     X = defaultLocation.X,
                     Y = defaultLocation.Y,
@@ -125,9 +124,6 @@ namespace TRGE.Coord
                     Intensity2 = -1,
                     Flags = 0
                 });
-
-                level.Entities = entities.ToArray();
-                level.NumEntities++;
             }
 
             WriteLevel(level, args.LevelFileBaseName);
@@ -149,16 +145,15 @@ namespace TRGE.Coord
 
             TR3Level level = ReadLevel(args.LevelFileBaseName);
 
-            List<TR2Entity> entities = level.Entities.ToList();
-            List<TR2Entity> fishies = entities.FindAll(e => IsTargetFish(e));
+            List<TR3Entity> fishies = level.Entities.FindAll(e => IsTargetFish(e));
             if (fishies.Count > 0)
             {
                 FDControl control = new FDControl();
                 control.ParseFromLevel(level);
 
-                foreach (TR2Entity fish in fishies)
+                foreach (TR3Entity fish in fishies)
                 {
-                    FDUtilities.RemoveEntityTriggers(level, entities.IndexOf(fish), control);
+                    FDUtilities.RemoveEntityTriggers(level, level.Entities.IndexOf(fish), control);
 
                     fish.X = fish.Y = fish.Z = 0;
                 }
@@ -169,10 +164,10 @@ namespace TRGE.Coord
             WriteLevel(level, args.LevelFileBaseName);
         }
 
-        private bool IsTargetFish(TR2Entity e)
+        private bool IsTargetFish(TR3Entity e)
         {
             return e.X != 0 && e.Y != 0 && e.Z != 0 &&
-                (e.TypeID == (short)TR3Type.Fish || e.TypeID == (short)TR3Type.Piranhas_N);
+                (e.TypeID == TR3Type.Fish || e.TypeID == TR3Type.Piranhas_N);
         }
 
         protected override int GetSaveTarget(int numLevels)
