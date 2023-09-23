@@ -80,35 +80,34 @@ namespace TRGE.Coord
                 throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
             }
 
-            List<TREntity> entities = level.Entities.ToList();
-            IEnumerable<TREntity> existingInjections = entities.Where
+            IEnumerable<TR1Entity> existingInjections = level.Entities.Where
             (
                 e =>
                     e.Room == defaultLocation.Room &&
                     e.X == defaultLocation.X &&
                     e.Y == defaultLocation.Y &&
                     e.Z == defaultLocation.Z &&
-                    e.TypeID == (short)TREntities.Pistols_S_P
+                    e.TypeID == TR1Type.Pistols_S_P
             );
 
             // For HSC change the pistols into DEagle ammo if the level is no longer unarmed
             if (scriptedLevel.Is(TR1LevelNames.MINES))
             {
-                TREntity shackEntity = existingInjections.FirstOrDefault();
+                TR1Entity shackEntity = existingInjections.FirstOrDefault();
                 if (shackEntity != null)
                 {
                     if (!scriptedLevel.RemovesWeapons)
                     {
-                        shackEntity.TypeID = (short)TREntities.MagnumAmmo_S_P;
+                        shackEntity.TypeID = TR1Type.MagnumAmmo_S_P;
                     }
                 }
             }
             else if (scriptedLevel.RemovesWeapons)
             {
                 defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
-                entities.Add(new TREntity
+                level.Entities.Add(new()
                 {
-                    TypeID = (short)TREntities.Pistols_S_P,
+                    TypeID = TR1Type.Pistols_S_P,
                     Room = defaultLocation.Room,
                     X = defaultLocation.X,
                     Y = defaultLocation.Y,
@@ -117,9 +116,6 @@ namespace TRGE.Coord
                     Intensity = 6400,
                     Flags = 0
                 });
-
-                level.Entities = entities.ToArray();
-                level.NumEntities++;
             }
 
             WriteLevel(level, args.LevelFileBaseName);

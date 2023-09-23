@@ -29,20 +29,14 @@ namespace TRGE.Coord
                 throw new IOException("Failed to load default weapon textures.");
             }
 
-            List<TRTexImage8> spriteTiles8 = level.Images8.ToList();
-            spriteTiles8.Add(img8);
-            level.Images8 = spriteTiles8.ToArray();
-
-            List<TRTexImage16> spriteTiles16 = level.Images16.ToList();
-            spriteTiles16.Add(img16);
-            level.Images16 = spriteTiles16.ToArray();
-            level.NumImages++;
+            level.Images8.Add(img8);
+            level.Images16.Add(img16);
 
             List<TRSpriteTexture> spriteTextures = level.SpriteTextures.ToList();
             List<TRSpriteSequence> spriteSequences = level.SpriteSequences.ToList();
             foreach (SpriteDefinition def in loadedDefinitions)
             {
-                def.Texture.Atlas = (ushort)(spriteTiles16.Count - 1);
+                def.Texture.Atlas = (ushort)(level.Images16.Count - 1);
                 spriteTextures.Add(def.Texture);
                 
                 def.Sequence.Offset = (short)(spriteTextures.Count - 1);
