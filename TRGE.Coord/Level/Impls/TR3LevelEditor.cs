@@ -137,15 +137,11 @@ namespace TRGE.Coord
             }
 
             // Fish cause the game to crash if levels are off-sequence due to hardcoded offsets.
-            // So we just move the fish to 0,0,0 and remove their triggers, unless TR3Main is being used.
-            if (_scriptEditor.Edition.IsCommunityPatch)
-            {
-                return;
-            }
+            // So we just remove their triggers.
 
             TR3Level level = ReadLevel(args.LevelFileBaseName);
 
-            List<TR3Entity> fishies = level.Entities.FindAll(e => IsTargetFish(e));
+            List<TR3Entity> fishies = level.Entities.FindAll(e => e.TypeID == TR3Type.Fish || e.TypeID == TR3Type.Piranhas_N);
             if (fishies.Count > 0)
             {
                 FDControl control = new FDControl();
@@ -154,20 +150,12 @@ namespace TRGE.Coord
                 foreach (TR3Entity fish in fishies)
                 {
                     FDUtilities.RemoveEntityTriggers(level, level.Entities.IndexOf(fish), control);
-
-                    fish.X = fish.Y = fish.Z = 0;
                 }
 
                 control.WriteToLevel(level);
             }
 
             WriteLevel(level, args.LevelFileBaseName);
-        }
-
-        private bool IsTargetFish(TR3Entity e)
-        {
-            return e.X != 0 && e.Y != 0 && e.Z != 0 &&
-                (e.TypeID == TR3Type.Fish || e.TypeID == TR3Type.Piranhas_N);
         }
 
         protected override int GetSaveTarget(int numLevels)

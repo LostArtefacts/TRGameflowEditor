@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace TRGE.Core
 {
@@ -61,8 +62,18 @@ namespace TRGE.Core
         {
             try
             {
+                string version = versionInfo.ProductVersion;
+                if (version != null)
+                {
+                    Match m = new Regex(@"\d+\.").Match(version);
+                    if (m.Success)
+                    {
+                        version = version[m.Index..].Trim();
+                    }
+                }
+
                 int[] parts = new int[] { 0, 0, 0 };
-                string[] productParts = versionInfo.ProductVersion.Split('.');
+                string[] productParts = version.Split('.');
                 for (int i = 0; i < productParts.Length; i++)
                 {
                     int j = 0;
