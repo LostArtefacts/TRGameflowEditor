@@ -23,8 +23,6 @@ namespace TRGE.Core
         public string MainMenuPicture { get; set; }
         public string SavegameFmtLegacy { get; set; }
         public string SavegameFmtBson { get; set; }
-        public bool EnableGameModes { get; set; }
-        public bool EnableSaveCrystals { get; set; }
         public double DemoDelay { get; set; }
         public double[] WaterColor { get; set; }
         public double DrawDistanceFade { get; set; }
@@ -112,6 +110,12 @@ namespace TRGE.Core
         public int CameraSpeed { get; set; }
         public bool EnableSwingCancel { get; set; }
         public bool EnableTr2Jumping { get; set; }
+        public bool EnableGameModes { get; set; }
+        public bool EnableSaveCrystals { get; set; }
+        public bool FixBearAi { get; set; }
+        public bool LoadCurrentMusic { get; set; }
+        public bool LoadMusicTriggers { get; set; }
+
         #endregion
 
         public JObject GameflowData { get; internal set; }
@@ -125,8 +129,6 @@ namespace TRGE.Core
             MainMenuPicture = ReadString(nameof(MainMenuPicture), GameflowData);
             SavegameFmtLegacy = ReadString(nameof(SavegameFmtLegacy), GameflowData);
             SavegameFmtBson = ReadString(nameof(SavegameFmtBson), GameflowData);
-            EnableGameModes = ReadBool(nameof(EnableGameModes), GameflowData);
-            EnableSaveCrystals = ReadBool(nameof(EnableSaveCrystals), GameflowData);
             DemoDelay = ReadDouble(nameof(DemoDelay), GameflowData);
             WaterColor = ReadArray<double>(nameof(WaterColor), GameflowData);
             DrawDistanceFade = ReadDouble(nameof(DrawDistanceFade), GameflowData);
@@ -365,6 +367,12 @@ namespace TRGE.Core
             CameraSpeed                 = ReadInt(nameof(CameraSpeed), ConfigData, 5);
             EnableSwingCancel           = ReadBool(nameof(EnableSwingCancel), ConfigData, true);
             EnableTr2Jumping            = ReadBool(nameof(EnableTr2Jumping), ConfigData, false);
+
+            EnableGameModes             = ReadBool(nameof(EnableGameModes), ConfigData, true);
+            EnableSaveCrystals          = ReadBool(nameof(EnableSaveCrystals), ConfigData, false);
+            LoadMusicTriggers           = ReadBool(nameof(LoadMusicTriggers), ConfigData, true);
+            LoadCurrentMusic            = ReadBool(nameof(LoadCurrentMusic), ConfigData, true);
+            FixBearAi                   = ReadBool(nameof(FixBearAi), ConfigData, true);
         }
 
         private string ReadString(string key, JObject data)
@@ -575,8 +583,6 @@ namespace TRGE.Core
             Write(nameof(MainMenuPicture), MainMenuPicture, data);
             Write(nameof(SavegameFmtLegacy), SavegameFmtLegacy, data);
             Write(nameof(SavegameFmtBson), SavegameFmtBson, data);
-            Write(nameof(EnableGameModes), EnableGameModes, data);
-            Write(nameof(EnableSaveCrystals), EnableSaveCrystals, data);
             Write(nameof(DemoDelay), DemoDelay, data);
             Write(nameof(WaterColor), WaterColor, data);
             Write(nameof(DrawDistanceFade), DrawDistanceFade, data);
@@ -665,6 +671,11 @@ namespace TRGE.Core
             Write(nameof(CameraSpeed), CameraSpeed, data);
             Write(nameof(EnableSwingCancel), EnableSwingCancel, data);
             Write(nameof(EnableTr2Jumping), EnableTr2Jumping, data);
+            Write(nameof(EnableGameModes), EnableGameModes, data);
+            Write(nameof(EnableSaveCrystals), EnableSaveCrystals, data);
+            Write(nameof(FixBearAi), FixBearAi, data);
+            Write(nameof(LoadCurrentMusic), LoadCurrentMusic, data);
+            Write(nameof(LoadMusicTriggers), LoadMusicTriggers, data);
 
             // The existing data will have been re-read at this stage (T1M stores runtime config
             // in the same file so this may well have changed between saves in TRGE). Re-scan this

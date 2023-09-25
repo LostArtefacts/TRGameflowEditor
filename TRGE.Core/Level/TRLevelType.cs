@@ -6,6 +6,6 @@
         Gym,
         Normal,
         Cutscene,
-        Current
+        Current,
     }
 }

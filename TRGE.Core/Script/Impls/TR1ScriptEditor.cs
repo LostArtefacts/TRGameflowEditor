@@ -133,6 +133,9 @@ namespace TRGE.Core
             CameraSpeed = config.GetInt(nameof(CameraSpeed), 5);
             EnableSwingCancel = config.GetBool(nameof(EnableSwingCancel), true);
             EnableTr2Jumping = config.GetBool(nameof(EnableTr2Jumping), false);
+            FixBearAi = config.GetBool(nameof(FixBearAi), true);
+            LoadCurrentMusic = config.GetBool(nameof(LoadCurrentMusic), true);
+            LoadMusicTriggers = config.GetBool(nameof(LoadMusicTriggers), true);
         }
 
         protected override void SaveImpl()
@@ -236,6 +239,9 @@ namespace TRGE.Core
             _config[nameof(CameraSpeed)] = CameraSpeed;
             _config[nameof(EnableSwingCancel)] = EnableSwingCancel;
             _config[nameof(EnableTr2Jumping)] = EnableTr2Jumping;
+            _config[nameof(FixBearAi)] = FixBearAi;
+            _config[nameof(LoadCurrentMusic)] = LoadCurrentMusic;
+            _config[nameof(LoadMusicTriggers)] = LoadMusicTriggers;
 
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
@@ -890,6 +896,24 @@ namespace TRGE.Core
         {
             get => (Script as TR1Script).EnableTr2Jumping;
             set => (Script as TR1Script).EnableTr2Jumping = value;
+        }
+
+        public bool FixBearAi
+        {
+            get => (Script as TR1Script).FixBearAi;
+            set => (Script as TR1Script).FixBearAi = value;
+        }
+
+        public bool LoadCurrentMusic
+        {
+            get => (Script as TR1Script).LoadCurrentMusic;
+            set => (Script as TR1Script).LoadCurrentMusic = value;
+        }
+
+        public bool LoadMusicTriggers
+        {
+            get => (Script as TR1Script).LoadMusicTriggers;
+            set => (Script as TR1Script).LoadMusicTriggers = value;
         }
     }
 }
