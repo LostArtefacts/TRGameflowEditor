@@ -62,7 +62,7 @@ namespace TRGE.View.Windows
             }
             else
             {
-                AppTitle = Path.GetFileNameWithoutExtension(assembly.CodeBase);
+                AppTitle = "TRGE";
             }
 
             Version = ((App)Application.Current).TaggedVersion;
