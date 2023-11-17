@@ -55,7 +55,7 @@ public abstract class AbstractTRLevelManager
         return GetLevelSequencing(Levels);
     }
 
-    private List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRScriptedLevel> levels)
+    private static List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRScriptedLevel> levels)
     {
         List<Tuple<string, string>> data = new();
         foreach (AbstractTRScriptedLevel level in levels)

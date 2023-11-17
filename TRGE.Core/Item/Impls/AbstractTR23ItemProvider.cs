@@ -89,7 +89,7 @@ internal abstract class AbstractTR23ItemProvider : AbstractTRItemProvider
         return null;
     }
 
-    protected Dictionary<TRItemCategory, ISet<TRItem>> VerifyBonusExclusions(Dictionary<TRItemCategory, ISet<TRItem>> exclusions)
+    protected static Dictionary<TRItemCategory, ISet<TRItem>> VerifyBonusExclusions(Dictionary<TRItemCategory, ISet<TRItem>> exclusions)
     {
         if (exclusions == null)
         {
@@ -106,7 +106,7 @@ internal abstract class AbstractTR23ItemProvider : AbstractTRItemProvider
         return exclusions;
     }
 
-    protected List<TRItem> GetRandomItems(Random rand, int numItems, int maxItems, List<TRItem> itemList, ISet<TRItem> exclusions)
+    protected static List<TRItem> GetRandomItems(Random rand, int numItems, int maxItems, List<TRItem> itemList, ISet<TRItem> exclusions)
     {
         List<TRItem> items = new();
         if (maxItems > 0)

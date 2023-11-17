@@ -16,7 +16,7 @@ public class TR23ScriptManagementTests : BaseTestCollection
         }
     }
 
-    private void TestCreateScriptManager(FileInfo file)
+    private static void TestCreateScriptManager(FileInfo file)
     {
         AbstractTRScriptEditor scriptMan = TRCoord.Instance.Open(file).ScriptEditor;
         Assert.IsFalse(scriptMan == null);

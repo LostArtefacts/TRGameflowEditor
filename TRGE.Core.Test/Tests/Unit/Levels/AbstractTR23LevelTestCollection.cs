@@ -73,7 +73,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
         TestForFinalLevel(levels, sm.Edition);
     }
 
-    private void TestForFinalLevel(List<AbstractTRScriptedLevel> levels, TREdition edition)
+    private static void TestForFinalLevel(List<AbstractTRScriptedLevel> levels, TREdition edition)
     {
         int expectedIndex = levels.Count - edition.LevelCompleteOffset - 1;
         for (int i = 0; i < levels.Count; i++)

@@ -392,7 +392,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
         control.Write(level, GetWriteLevelFilePath(e.LevelFileBaseName));
     }
 
-    private void ImportModels(TR2Level level, string lvlName, List<TR2Type> entities)
+    private static void ImportModels(TR2Level level, string lvlName, List<TR2Type> entities)
     {
         TR2ModelImporter importer = new()
         {

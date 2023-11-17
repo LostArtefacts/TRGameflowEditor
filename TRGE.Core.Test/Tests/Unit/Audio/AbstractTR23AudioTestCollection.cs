@@ -64,7 +64,7 @@ public abstract class AbstractTR23AudioTestCollection : BaseTestCollection
         CompareTrackData(sm.GameTrackData, NewLevelTracks);
     }
 
-    private void CompareTrackData(List<MutableTuple<string, string, ushort>> trackData, Dictionary<string, ushort> expectedResults)
+    private static void CompareTrackData(List<MutableTuple<string, string, ushort>> trackData, Dictionary<string, ushort> expectedResults)
     {
         Dictionary<string, ushort> trackMap = new();
         foreach (MutableTuple<string, string, ushort> levelData in trackData)

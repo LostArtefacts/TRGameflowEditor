@@ -80,7 +80,7 @@ public class GameStamp
         return sb.ToString();
     }
 
-    private string Normalise(char c)
+    private static string Normalise(char c)
     {
         StringBuilder sb = new();
         string data = c.ToString().Normalize(NormalizationForm.FormD);

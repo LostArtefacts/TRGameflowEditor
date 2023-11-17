@@ -135,7 +135,7 @@ public partial class FolderLoadControl : UserControl, IRecentFolderOpener
         }
     }
 
-    public void EmptyRecentFolders()
+    public static void EmptyRecentFolders()
     {
         string msg = string.Format
         (

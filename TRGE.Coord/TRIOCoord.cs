@@ -141,7 +141,7 @@ internal class TRIOCoord : ITRConfigProvider
         return TRLevelEditorFactory.GetLevelEditor(io, scriptEditor.Edition);
     }
 
-    private string FindScriptFile(string path)
+    private static string FindScriptFile(string path)
     {
         FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path));
         if (fi == null)
@@ -163,7 +163,7 @@ internal class TRIOCoord : ITRConfigProvider
         return fi.FullName;
     }
 
-    private string FindConfigFile(string path)
+    private static string FindConfigFile(string path)
     {
         FileInfo fi = TRScriptFactory.FindConfigFile(new DirectoryInfo(path));
         return fi?.FullName;

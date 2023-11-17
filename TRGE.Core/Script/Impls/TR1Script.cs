@@ -402,7 +402,7 @@ public class TR1Script : AbstractTRScript
         EnableConsole               = ReadBool(nameof(EnableConsole), ConfigData, true);
     }
 
-    private string ReadString(string key, JObject data)
+    private static string ReadString(string key, JObject data)
     {
         string result = ReadString(key, data, null);
         if (result == null)
@@ -412,7 +412,7 @@ public class TR1Script : AbstractTRScript
         return result;
     }
 
-    private string ReadString(string key, JObject data, string defaultValue)
+    private static string ReadString(string key, JObject data, string defaultValue)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -425,7 +425,7 @@ public class TR1Script : AbstractTRScript
         return result;
     }
 
-    private int ReadInt(string key, JObject data)
+    private static int ReadInt(string key, JObject data)
     {
         int result = ReadInt(key, data, int.MinValue);
         if (result == int.MinValue)
@@ -435,7 +435,7 @@ public class TR1Script : AbstractTRScript
         return result;
     }
 
-    private int? ReadNullableInt(string key, JObject data)
+    private static int? ReadNullableInt(string key, JObject data)
     {
         int result = ReadInt(key, data, int.MinValue);
         if (result == int.MinValue)
@@ -445,7 +445,7 @@ public class TR1Script : AbstractTRScript
         return result;
     }
 
-    private int ReadInt(string key, JObject data, int defaultValue)
+    private static int ReadInt(string key, JObject data, int defaultValue)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -459,7 +459,7 @@ public class TR1Script : AbstractTRScript
         return int.TryParse(result, out int value) ? value : defaultValue;
     }
 
-    private bool ReadBool(string key, JObject data)
+    private static bool ReadBool(string key, JObject data)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -470,7 +470,7 @@ public class TR1Script : AbstractTRScript
         return ReadBool(key, data, false);
     }
 
-    private bool? ReadNullableBool(string key, JObject data)
+    private static bool? ReadNullableBool(string key, JObject data)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -481,7 +481,7 @@ public class TR1Script : AbstractTRScript
         return ReadBool(key, data, false);
     }
 
-    private bool ReadBool(string key, JObject data, bool defaultValue)
+    private static bool ReadBool(string key, JObject data, bool defaultValue)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -495,7 +495,7 @@ public class TR1Script : AbstractTRScript
         return bool.TryParse(result, out bool value) ? value : defaultValue;
     }
 
-    private double ReadDouble(string key, JObject data)
+    private static double ReadDouble(string key, JObject data)
     {
         double result = ReadDouble(key, data, double.NaN);
         if (double.IsNaN(result))
@@ -505,7 +505,7 @@ public class TR1Script : AbstractTRScript
         return result;
     }
 
-    private double? ReadNullableDouble(string key, JObject data)
+    private static double? ReadNullableDouble(string key, JObject data)
     {
         double result = ReadDouble(key, data, double.MinValue);
         if (result == double.MinValue)
@@ -515,7 +515,7 @@ public class TR1Script : AbstractTRScript
         return result;
     }
 
-    private double ReadDouble(string key, JObject data, double defaultValue)
+    private static double ReadDouble(string key, JObject data, double defaultValue)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -529,7 +529,7 @@ public class TR1Script : AbstractTRScript
         return double.TryParse(result, out double value) ? value : defaultValue;
     }
 
-    private T ReadEnum<T>(string key, JObject data)
+    private static T ReadEnum<T>(string key, JObject data)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -540,7 +540,7 @@ public class TR1Script : AbstractTRScript
         return ReadEnum(key, data, default(T));
     }
 
-    private T ReadEnum<T>(string key, JObject data, T defaultValue)
+    private static T ReadEnum<T>(string key, JObject data, T defaultValue)
     {
         key = key.ToLowerSnake();
         if (!data.ContainsKey(key))
@@ -555,13 +555,13 @@ public class TR1Script : AbstractTRScript
         return (T)Enum.Parse(typeof(T), result, true);
     }
 
-    private T[] ReadArray<T>(string key, JObject data)
+    private static T[] ReadArray<T>(string key, JObject data)
     {
         string a = ReadString(key, data, string.Empty);
         return a.Length == 0 ? null : JsonConvert.DeserializeObject<T[]>(a);
     }
 
-    private T[] ReadNullableArray<T>(string key, JObject data)
+    private static T[] ReadNullableArray<T>(string key, JObject data)
     {
         string arr = ReadString(key, data, null);
         if (arr == null)
@@ -571,7 +571,7 @@ public class TR1Script : AbstractTRScript
         return arr.Length == 0 ? null : JsonConvert.DeserializeObject<T[]>(arr);
     }
 
-    private Dictionary<K, V> ReadDictionary<K, V>(string key, JObject data)
+    private static Dictionary<K, V> ReadDictionary<K, V>(string key, JObject data)
     {
         string d = ReadString(key, data, string.Empty);
         return d.Length == 0 ? null : JsonConvert.DeserializeObject<Dictionary<K, V>>(d);
@@ -727,7 +727,7 @@ public class TR1Script : AbstractTRScript
         return JsonConvert.SerializeObject(data, Formatting.Indented);
     }
 
-    private JObject GetExistingExternalData(JObject convertedData, string externalJsonData)
+    private static JObject GetExistingExternalData(JObject convertedData, string externalJsonData)
     {
         try
         {
@@ -747,7 +747,7 @@ public class TR1Script : AbstractTRScript
         }
     }
 
-    private void Write<T>(string key, T value, JObject data)
+    private static void Write<T>(string key, T value, JObject data)
     {
         key = key.ToLowerSnake();
         if (value is Enum)
@@ -760,7 +760,7 @@ public class TR1Script : AbstractTRScript
         }
     }
 
-    private void WriteKebab<T>(string key, T value, JObject data)
+    private static void WriteKebab<T>(string key, T value, JObject data)
     {
         key = key.ToLowerSnake();
         data[key] = JToken.FromObject(value.ToString().ToLowerKebab());

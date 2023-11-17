@@ -134,7 +134,7 @@ public class TR23AudioExtractor
         }
     }
 
-    private Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>> GetTR2Map()
+    private static Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>> GetTR2Map()
     {
         return new Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>>
         {
@@ -201,7 +201,7 @@ public class TR23AudioExtractor
         };
     }
 
-    private Dictionary<ushort, Tuple<string, TRAudioCategory[]>> GetTR3Map()
+    private static Dictionary<ushort, Tuple<string, TRAudioCategory[]>> GetTR3Map()
     {
         return new Dictionary<ushort, Tuple<string, TRAudioCategory[]>>
         {

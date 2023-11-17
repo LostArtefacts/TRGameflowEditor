@@ -47,7 +47,7 @@ public class TR23MiscTests : BaseTestCollection
         Assert.AreEqual(reloadedScript.NumPlayableLevels, levels.Count);
     }
 
-    private void TestDisableDemos(string scriptFile)
+    private static void TestDisableDemos(string scriptFile)
     {
         TREditor editor = TRCoord.Instance.Open(scriptFile);
         TR23ScriptEditor scriptEditor = editor.ScriptEditor as TR23ScriptEditor;

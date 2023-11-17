@@ -127,7 +127,7 @@ public partial class AudioWindow : Window
         Dispatcher.Invoke(new Action(() => ExportAudio(e, trackData)));
     }
 
-    private void ExportAudio(PlayAudioEventArgs e, byte[] trackData)
+    private static void ExportAudio(PlayAudioEventArgs e, byte[] trackData)
     {
         if (trackData != null && trackData.Length > 0)
         {

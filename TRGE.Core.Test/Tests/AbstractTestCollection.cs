@@ -54,17 +54,17 @@ public abstract class AbstractTestCollection
         return result;
     }
 
-    protected void CompareUShorts(List<ushort> list, IReadOnlyList<ushort> compareWith)
+    protected static void CompareUShorts(List<ushort> list, IReadOnlyList<ushort> compareWith)
     {
         CollectionAssert.AreEqual(list, new List<ushort>(compareWith));
     }
 
-    protected void CompareUShorts(List<ushort> list, IReadOnlyList<ushort> compareWith, string message)
+    protected static void CompareUShorts(List<ushort> list, IReadOnlyList<ushort> compareWith, string message)
     {
         CollectionAssert.AreEqual(list, new List<ushort>(compareWith), message);
     }
 
-    protected void CompareUShortArrays(List<ushort[]> list, IReadOnlyList<ushort[]> compareWith)
+    protected static void CompareUShortArrays(List<ushort[]> list, IReadOnlyList<ushort[]> compareWith)
     {
         if (list.Count != compareWith.Count)
         {
@@ -90,7 +90,7 @@ public abstract class AbstractTestCollection
         }
     }
 
-    protected void CompareUIntArrays(List<uint[]> list, IReadOnlyList<uint[]> compareWith)
+    protected static void CompareUIntArrays(List<uint[]> list, IReadOnlyList<uint[]> compareWith)
     {
         if (list.Count != compareWith.Count)
         {
@@ -116,12 +116,12 @@ public abstract class AbstractTestCollection
         }
     }
 
-    protected void CompareStrings(List<string> list, IReadOnlyList<string> compareWith)
+    protected static void CompareStrings(List<string> list, IReadOnlyList<string> compareWith)
     {
         CollectionAssert.AreEqual(list, new List<string>(compareWith));
     }
 
-    protected void CompareStrings(List<string> list, IReadOnlyList<string> compareWith, string message)
+    protected static void CompareStrings(List<string> list, IReadOnlyList<string> compareWith, string message)
     {
         CollectionAssert.AreEqual(list, new List<string>(compareWith), message);
     }
