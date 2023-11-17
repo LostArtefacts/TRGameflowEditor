@@ -18,7 +18,7 @@ public partial class NumericUpDown : UserControl
 
     public static readonly DependencyProperty MinValueProperty = DependencyProperty.Register
     (
-        "MinValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(1)
+        "MinValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(0)
     );
 
     public static readonly DependencyProperty MaxValueProperty = DependencyProperty.Register
@@ -29,7 +29,7 @@ public partial class NumericUpDown : UserControl
     public int Value
     {
         get => (int)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, AdjustValue(value));
+        set => SetValue(ValueProperty, Clamp(value));
     }
 
     public int MinValue
@@ -38,7 +38,7 @@ public partial class NumericUpDown : UserControl
         set
         {
             SetValue(MinValueProperty, value);
-            Value = Value;
+            Value = Clamp(Value);
         }
     }
 
@@ -48,7 +48,7 @@ public partial class NumericUpDown : UserControl
         set
         {
             SetValue(MaxValueProperty, value);
-            Value = Value;
+            Value = Clamp(Value);
         }
     }
     #endregion
@@ -111,7 +111,7 @@ public partial class NumericUpDown : UserControl
         else
         {
             e.Handled = true;
-            
+            _textBox.Text = v.ToString();
         }
         Value = v;
     }
@@ -121,7 +121,7 @@ public partial class NumericUpDown : UserControl
         return int.TryParse(text, out int _);
     }
 
-    private int AdjustValue(int value)
+    private int Clamp(int value)
     {
         return Math.Min(MaxValue, Math.Max(MinValue, value));
     }
