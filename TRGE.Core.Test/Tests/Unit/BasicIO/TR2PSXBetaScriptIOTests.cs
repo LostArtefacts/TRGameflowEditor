@@ -55,7 +55,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestCutSceneData()
         {
-            List<string> expectedCutScenes = new List<string>
+            List<string> expectedCutScenes = new()
             {
                 @"data\cut1.PSX", @"data\cut2.PSX", @"data\cut3.PSX", @"data\cut4.PSX"
             };
@@ -77,7 +77,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestFMVData()
         {
-            List<uint[]> excpectedFMVData = new List<uint[]>
+            List<uint[]> excpectedFMVData = new()
             {
                 new uint[] { 1, 880 },
                 new uint[] { 1, 4370 },
@@ -93,7 +93,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestGameStringData()
         {
-            List<string> expectedStrings1 = new List<string>
+            List<string> expectedStrings1 = new()
             {
                 "INVENTORY","OPTION","ITEMS","GAME OVER","Load Game","Save Game","New Game","Restart Level","Exit to Title","Exit Demo",
                 "Exit Game","Select Level","Save Position","Select Detail","High","Medium","Low","Walk","Roll","Run","Left","Right","Back",
@@ -104,7 +104,7 @@ namespace TRGE.Core.Test
                 "spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare","spare"
             };
 
-            List<string> expectedStrings2 = new List<string>
+            List<string> expectedStrings2 = new()
             {
                 "Screen Adjust","DEMO MODE","Sound","Controls","Gamma","Set Volumes","Control Method","The file could not be saved!",
                 "Try Again?","YES","NO","Save Complete!","No save games!","None valid","Save Game?","- EMPTY SLOT -",
@@ -128,25 +128,25 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestKeyStringData()
         {
-            List<string> expectedKeys1 = new List<string>
+            List<string> expectedKeys1 = new()
             {
                 "Key1 0","Guardhouse Key","Boathouse Key","Library Key","Ornate Key","Red Pass Card","Red Pass Card","Key1 7","Rest Room Key",
                 "Theatre Key","Key1 10","Drawbridge Key","Strongroom Key","Key1 13","Key1 14","Key1 15","Key1 16","Key1 17","Gun Cupboard Key"
             };
 
-            List<string> expectedKeys2 = new List<string>
+            List<string> expectedKeys2 = new()
             {
                 "Key2 0","Rusty Key","Steel Key","Detonator Key","Key2 4","Yellow Pass Card","Key2 6","Key2 7","Rusty Key","Key2 9","Stern Key",
                 "Hut Key","Trapdoor Key","Key2 13","Gong Hammer","Gold Key","Key2 16","Key2 17","Key2 18"
             };
 
-            List<string> expectedKeys3 = new List<string>
+            List<string> expectedKeys3 = new()
             {
                 "Key3 0","Key3 1","Iron Key","Key3 3","Key3 4","Green Pass Card","Key3 6","Key3 7","The Bridge Key","Key3 9","Storage Key","Key3 11",
                 "Rooftops Key","Key3 13","Key3 14","Silver Key","Key3 16","Key3 17","Key3 18"
             };
 
-            List<string> expectedKeys4 = new List<string>
+            List<string> expectedKeys4 = new()
             {
                 "Key4 0","Key4 1","Key4 2","Key4 3","Key4 4","Key4 5","Blue Pass Card","Key4 7","Key4 8","Key4 9","Cabin Key","Key4 11","Main Hall Key",
                 "Key4 13","Key4 14","Main Chamber Key","Key4 16","Key4 17","Key4 18"
@@ -161,7 +161,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestLevelData()
         {
-            List<string> expectedLevelNames = new List<string>
+            List<string> expectedLevelNames = new()
             {
                 "Lara's Home A",
                 "The Great Wall W", "Venice B", "Bartoli's Hideout V", "Opera House O", "Offshore Rig R",
@@ -170,7 +170,7 @@ namespace TRGE.Core.Test
                 "Ice Palace I", "Temple of Xian E", "Floating Islands F", "Dragon's Lair X", "Home Sweet Home H"
             };
 
-            List<string> expectedLevelFileNames = new List<string>
+            List<string> expectedLevelFileNames = new()
             {
                 @"data\assault.PSX",
                 @"data\wall.PSX", @"data\boat.PSX", @"data\venice.PSX", @"data\opera.PSX", @"data\rig.PSX",
@@ -205,13 +205,13 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPickupStringData()
         {
-            List<string> expectedPickups1 = new List<string>
+            List<string> expectedPickups1 = new()
             {
                 "Pick1 0","Pick1 1","Pick1 2","Pick1 3","Pick1 4","Pick1 5","Pick1 6","Pick1 7","Pick1 8","Pick1 9",
                 "Pick1 10","Pick1 11","Pick1 12","Pick1 13","Pick1 14","Pick1 15","Pick1 16","Pick1 17","Pick1 18"
             };
 
-            List<string> expectedPickups2 = new List<string>
+            List<string> expectedPickups2 = new()
             {
                 "Pick2 0","Pick2 1","Pick2 2","Pick2 3","Pick2 4","Pick2 5","Pick2 6","Pick2 7","Pick2 8","Pick2 9",
                 "Pick2 10","Pick2 11","Pick2 12","Pick2 13","Talion","Pick2 15","Pick2 16","Pick2 17","Pick2 18"
@@ -224,7 +224,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPictureData()
         {
-            List<string> expectedPictures = new List<string>
+            List<string> expectedPictures = new()
             {
                 @"pix\assault.raw",@"pix\wall.raw",@"pix\boat.raw",@"pix\venice.raw",@"pix\opera.raw",@"pix\rig.raw",@"pix\platform.raw",
                 @"pix\unwater.raw",@"pix\keel.raw",@"pix\living.raw",@"pix\deck.raw",@"pix\skidoo.raw",@"pix\monastry.raw",@"pix\catacomb.raw",
@@ -238,25 +238,25 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPuzzleStringData()
         {
-            List<string> expectedPuzzles1 = new List<string>
+            List<string> expectedPuzzles1 = new()
             {
                 "Puz1 0","Puz1 1","Puz1 2","Puz1 3","Relay Box","Puz1 5","Machine Chip","Puz1 7","Circuit Breaker","Puz1 9","Puz1 10","Puz1 11",
                 "Prayer Wheels","Tibetan Mask","Tibetan Mask","The Dragon Seal","Mystic Plaque","Puz1 17","Puz1 18"
             };
 
-            List<string> expectedPuzzles2 = new List<string>
+            List<string> expectedPuzzles2 = new()
             {
                 "Puz2 0","Puz2 1","Puz2 2","Puz2 3","Circuit Board","Puz2 5","Puz2 6","Puz2 7","Puz2 8","Puz2 9","Puz2 10","Puz2 11","Gemstones",
                 "Puz2 13","Puz2 14","Puz2 15","Mystic Plaque","Puz2 17","Puz2 18"
             };
 
-            List<string> expectedPuzzles3 = new List<string>
+            List<string> expectedPuzzles3 = new()
             {
                 "Puz3 0","Puz3 1","Puz3 2","Puz3 3","Puz3 4","Puz3 5","Puz3 6","Puz3 7","Puz3 8","Puz3 9","Puz3 10",
                 "Puz3 11","Puz3 12","Puz3 13","Puz3 14","Puz3 15","Puz3 16","Puz3 17","Puz3 18"
             };
 
-            List<string> expectedPuzzles4 = new List<string>
+            List<string> expectedPuzzles4 = new()
             {
                 "Puz4 0","Puz4 1","Puz4 2","Puz4 3","Puz4 4","Puz4 5","Puz4 6","Puz4 7","Puz4 8","Puz4 9","Puz4 10","The Seraph",
                 "The Seraph","Puz4 13","Puz4 14","Puz4 15","Puz4 16","Puz4 17","Puz4 18"
@@ -271,7 +271,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestRPLData()
         {
-            List<string> expectedRPLs = new List<string>
+            List<string> expectedRPLs = new()
             {
                 @"\FMV\LOGO.FMV", @"\FMV\ANCIENT.FMV", @"\FMV\MODERN.FMV", @"\FMV\LANDING.FMV",
                 @"\FMV\MS.FMV", @"\FMV\JEEP.FMV"
@@ -284,25 +284,25 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestSecretStringData()
         {
-            List<string> expectedSecrets1 = new List<string>
+            List<string> expectedSecrets1 = new()
             {
                 "Sec1 0","Sec1 1","Sec1 2","Sec1 3","Sec1 4","Sec1 5","Sec1 6","Sec1 7","Sec1 8","Sec1 9",
                 "Sec1 10","Sec1 11","Sec1 12","Sec1 13","Sec1 14","Sec1 15","Sec1 16","Sec1 17","Sec1 18"
             };
 
-            List<string> expectedSecrets2 = new List<string>
+            List<string> expectedSecrets2 = new()
             {
                 "Sec2 0","Sec2 1","Sec2 2","Sec2 3","Sec2 4","Sec2 5","Sec2 6","Sec2 7","Sec2 8","Sec2 9",
                 "Sec2 10","Sec2 11","Sec2 12","Sec2 13","Sec2 14","Sec2 15","Sec2 16","Sec2 17","Sec2 18"
             };
 
-            List<string> expectedSecrets3 = new List<string>
+            List<string> expectedSecrets3 = new()
             {
                 "Sec3 0","Sec3 1","Sec3 2","Sec3 3","Sec3 4","Sec3 5","Sec3 6","Sec3 7","Sec3 8","Sec3 9",
                 "Sec3 10","Sec3 11","Sec3 12","Sec3 13","Sec3 14","Sec3 15","Sec3 16","Sec3 17","Sec3 18"
             };
 
-            List<string> expectedSecrets4 = new List<string>
+            List<string> expectedSecrets4 = new()
             {
                 "Sec4 0","Sec4 1","Sec4 2","Sec4 3","Sec4 4","Sec4 5","Sec4 6","Sec4 7","Sec4 8",
                 "Sec4 9","Sec4 10","Sec4 11","Sec4 12","Sec4 13","Sec4 14","Sec4 15","Sec4 16","Sec4 17","Sec4 18"
@@ -317,7 +317,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestScriptData()
         {
-            List<ushort[]> expectedScriptData = new List<ushort[]>
+            List<ushort[]> expectedScriptData = new()
             {
                 new ushort[] { 3, 0, 3, 1, 9 },
                 new ushort[] { 20, 0, 12, 0, 10, 33, 4, 0, 9 },
@@ -347,13 +347,13 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestSpecialStringData()
         {
-            List<string> expectedSpecial1 = new List<string>
+            List<string> expectedSpecial1 = new()
             {
                 "Spe1 0","Spe1 1","Spe1 2","Spe1 3","Spe1 4","Spe1 5","Spe1 6","Spe1 7","Spe1 8","Spe1 9",
                 "Spe1 10","Spe1 11","Spe1 12","Spe1 13","Spe1 14","Spe1 15","Spe1 16","Spe1 17","Spe1 18"
             };
 
-            List<string> expectedSpecial2 = new List<string>
+            List<string> expectedSpecial2 = new()
             {
                 "Spe2 0","Spe2 1","Spe2 2","Spe2 3","Spe2 4","Spe2 5","Spe2 6","Spe2 7","Spe2 8","Spe2 9",
                 "Spe2 10","Spe2 11","Spe2 12","Spe2 13","Spe2 14","Spe2 15","Spe2 16","Spe2 17","Spe2 18"
@@ -366,7 +366,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestTitleData()
         {
-            List<string> expectedTitles = new List<string>
+            List<string> expectedTitles = new()
             {
                 @"data\title.PSX", @"pix\title.raw", @"pix\bull.raw"
             };

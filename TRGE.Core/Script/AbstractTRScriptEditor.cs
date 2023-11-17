@@ -397,7 +397,7 @@ namespace TRGE.Core
             {
                 // Store sequencing data for third-party tools to access/compare differences
                 string sequenceData = Path.Combine(Path.GetDirectoryName(OriginalFile.FullName), "../", "LEVELINFO.DAT");
-                using (BinaryWriter bw = new BinaryWriter(new FileStream(sequenceData, FileMode.Create)))
+                using (BinaryWriter bw = new(new FileStream(sequenceData, FileMode.Create)))
                 {
                     byte levelCount = (byte)LevelManager.EnabledLevelCount;
                     AbstractTRScriptedLevel assaultLevel = null;// AssaultLevel;

@@ -10,7 +10,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void BuildAudioJson()
         {
-            TR23AudioExtractor ext = new TR23AudioExtractor("audiostuff");
+            TR23AudioExtractor ext = new("audiostuff");
             ext.BuildTR3AudioJson();
         }
     }

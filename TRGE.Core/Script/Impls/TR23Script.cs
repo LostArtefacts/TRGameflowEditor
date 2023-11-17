@@ -314,7 +314,7 @@ namespace TRGE.Core
             get
             {
                 int count = NumLevels - NumDemoLevels;
-                List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(count);
+                List<AbstractTRScriptedLevel> levels = new(count);
                 for (ushort i = 1; i < count; i++) //skip assault and however many demos there are
                 {
                     levels.Add(CreateLevel(i, false));
@@ -323,7 +323,7 @@ namespace TRGE.Core
             }
             set
             {
-                List<int> disabledIndices = new List<int>();
+                List<int> disabledIndices = new();
 
                 int enabledLevelCount = 0;
                 for (int i = 0, j = 1; i < value.Count; i++, j++)
@@ -374,7 +374,7 @@ namespace TRGE.Core
         {
             get
             {
-                List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(NumDemoLevels);
+                List<AbstractTRScriptedLevel> levels = new(NumDemoLevels);
                 for (ushort i = NumPlayableLevels; i < NumPlayableLevels + NumDemoLevels; i++) //skip assault and main levels
                 {
                     levels.Add(CreateLevel(i, true));
@@ -655,7 +655,7 @@ namespace TRGE.Core
 
         private List<string> ReadStringData(BinaryReader br, ushort size)
         {
-            List<string> stringData = new List<string>(size);
+            List<string> stringData = new(size);
             if (size == 0)
             {
                 br.ReadUInt16(); //0
@@ -672,7 +672,7 @@ namespace TRGE.Core
                 {
 
                     int target = offsets[i + 1] - offsets[i] - 1;
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new();
                     for (int k = 0; k < target; k++)
                     {
                         sb.Append((char)(br.ReadByte() ^ Xor));
@@ -693,7 +693,7 @@ namespace TRGE.Core
                 offsets[i] = (ushort)(br.ReadUInt16() / 2U);
             }
 
-            List<ushort[]> scriptData = new List<ushort[]>(NumLevels + 1);
+            List<ushort[]> scriptData = new(NumLevels + 1);
             for (int i = 0; i < NumLevels + 1; i++)
             {
                 scriptData.Add(new ushort[offsets[i + 1] - offsets[i]]);
@@ -708,7 +708,7 @@ namespace TRGE.Core
 
         private List<ushort> ReadDemoData(BinaryReader br)
         {
-            List<ushort> demoData = new List<ushort>(NumDemoLevels);
+            List<ushort> demoData = new(NumDemoLevels);
             for (int i = 0; i < NumDemoLevels; i++)
             {
                 demoData.Add(br.ReadUInt16());
@@ -719,7 +719,7 @@ namespace TRGE.Core
 
         private List<uint[]> ReadPSXFMVData(BinaryReader br)
         {
-            List<uint[]> fmvData = new List<uint[]>(NumRPLs);
+            List<uint[]> fmvData = new(NumRPLs);
             if (Edition.Hardware == Hardware.PSX)
             {
                 for (int i = 0; i < NumRPLs; i++)
@@ -735,8 +735,8 @@ namespace TRGE.Core
 
         public override byte[] SerialiseScriptToBin()
         {
-            using (MemoryStream ms = new MemoryStream())
-            using (BinaryWriter bw = new BinaryWriter(ms))
+            using (MemoryStream ms = new())
+            using (BinaryWriter bw = new(ms))
             {
                 bw.Write(Version);
 
@@ -826,7 +826,7 @@ namespace TRGE.Core
             ushort runningOffset = 0;
             bw.Write(runningOffset);
 
-            List<byte> encodedStringData = new List<byte>();
+            List<byte> encodedStringData = new();
             for (int i = 0; i < stringData.Count; i++)
             {
                 char[] chars = stringData[i].ToCharArray();
@@ -854,7 +854,7 @@ namespace TRGE.Core
 
             ushort runningOffset = 0;
             bw.Write(runningOffset);
-            List<ushort> collectedScriptData = new List<ushort>();
+            List<ushort> collectedScriptData = new();
 
             for (int i = 0; i < _scriptData.Count; i++)
             {

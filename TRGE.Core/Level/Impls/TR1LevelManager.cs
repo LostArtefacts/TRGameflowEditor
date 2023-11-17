@@ -73,7 +73,7 @@ namespace TRGE.Core
             TR1ScriptedLevel oldLevel = (oldFinalLevel.HasCutScene ? oldFinalLevel.CutSceneLevel : oldFinalLevel) as TR1ScriptedLevel;
             TR1ScriptedLevel newLevel = (newFinalLevel.HasCutScene ? newFinalLevel.CutSceneLevel : newFinalLevel) as TR1ScriptedLevel;
 
-            List<BaseLevelSequence> endSequences = new List<BaseLevelSequence>();
+            List<BaseLevelSequence> endSequences = new();
             int statsIndex = oldLevel.Sequences.FindIndex(s => s.Type == LevelSequenceType.Level_Stats);
             for (int i = oldLevel.Sequences.Count - 1; i > statsIndex; i--)
             {
@@ -119,7 +119,7 @@ namespace TRGE.Core
 
         private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> data = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 TR1ScriptedLevel level = GetLevel(originalLevel.ID) as TR1ScriptedLevel;
@@ -143,7 +143,7 @@ namespace TRGE.Core
 
         internal void RandomiseAmmolessLevels(List<AbstractTRScriptedLevel> basisLevels)
         {
-            List<AbstractTRScriptedLevel> enabledLevels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> enabledLevels = new();
             foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
             {
                 AbstractTRScriptedLevel lvl = GetLevel(originalLevel.ID);
@@ -183,7 +183,7 @@ namespace TRGE.Core
 
         private List<MutableTuple<string, string, bool>> GetMedilessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> data = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 TR1ScriptedLevel level = GetLevel(originalLevel.ID) as TR1ScriptedLevel;
@@ -207,7 +207,7 @@ namespace TRGE.Core
 
         internal void RandomiseMedilessLevels(List<AbstractTRScriptedLevel> basisLevels)
         {
-            List<AbstractTRScriptedLevel> enabledLevels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> enabledLevels = new();
             foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
             {
                 AbstractTRScriptedLevel lvl = GetLevel(originalLevel.ID);
@@ -227,7 +227,7 @@ namespace TRGE.Core
 
         internal void RandomiseUnarmedLevels(List<AbstractTRScriptedLevel> basisLevels)
         {
-            List<AbstractTRScriptedLevel> enabledLevels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> enabledLevels = new();
             foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
             {
                 AbstractTRScriptedLevel lvl = GetLevel(originalLevel.ID);
@@ -264,7 +264,7 @@ namespace TRGE.Core
 
         private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> data = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 TR1ScriptedLevel level = GetLevel(originalLevel.ID) as TR1ScriptedLevel;
@@ -401,7 +401,7 @@ namespace TRGE.Core
         internal override void RandomiseGameTracksImpl(Random rand)
         {
             IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
-            HashSet<TRAudioTrack> exclusions = new HashSet<TRAudioTrack>
+            HashSet<TRAudioTrack> exclusions = new()
             {
                 AudioProvider.GetBlankTrack()
             };

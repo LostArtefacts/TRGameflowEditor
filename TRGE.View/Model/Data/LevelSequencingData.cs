@@ -23,7 +23,7 @@ namespace TRGE.View.Model.Data
 
         public List<Tuple<string, string>> ToSequenceTupleList()
         {
-            List<Tuple<string, string>> result = new List<Tuple<string, string>>();
+            List<Tuple<string, string>> result = new();
             foreach (SequencedLevel level in this)
             {
                 result.Add(level.ToSequenceTuple());
@@ -33,7 +33,7 @@ namespace TRGE.View.Model.Data
 
         public List<MutableTuple<string, string, bool>> ToEnabledTupleList()
         {
-            List<MutableTuple<string, string, bool>> result = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> result = new();
             foreach (SequencedLevel level in this)
             {
                 result.Add(level.ToEnabledTuple());

@@ -9,8 +9,8 @@ namespace WeaponImport
     {
         static void Main(string[] args)
         {
-            TRTexImage8 img8 = new TRTexImage8 { Pixels = new byte[256 * 256] };
-            TRTexImage16 img16 = new TRTexImage16
+            TRTexImage8 img8 = new() { Pixels = new byte[256 * 256] };
+            TRTexImage16 img16 = new()
             {
                 Pixels = TextureUtilities.ImportFromBitmap(new Bitmap(@"Guns.png"))
             };

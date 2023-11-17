@@ -16,7 +16,7 @@ namespace TRGE.Core
             using (MD5 md5 = MD5.Create())
             {
                 byte[] hash = md5.ComputeHash(encoding.GetBytes(str));
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 for (int i = 0; i < hash.Length; i++)
                 {
                     sb.Append(hash[i].ToString("x2"));
@@ -31,7 +31,7 @@ namespace TRGE.Core
             using (FileStream stream = File.OpenRead(file.FullName))
             {
                 byte[] hash = md5.ComputeHash(stream);
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 for (int i = 0; i < hash.Length; i++)
                 {
                     sb.Append(hash[i].ToString("x2"));

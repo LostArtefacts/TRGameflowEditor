@@ -34,7 +34,7 @@ namespace TRGE.Core
 
         public string Encode(TRLanguage language)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (char c in this[language])
             {
                 char d = char.ToUpper(c);
@@ -83,7 +83,7 @@ namespace TRGE.Core
 
         private string Normalise(char c)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             string data = c.ToString().Normalize(NormalizationForm.FormD);
             foreach (char d in data)
             {

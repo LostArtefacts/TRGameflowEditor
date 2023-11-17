@@ -9,7 +9,7 @@ namespace TRGE.Core
 {
     public class TR1Script : AbstractTRScript
     {
-        private static readonly JsonSerializer _mainSerializer = new JsonSerializer
+        private static readonly JsonSerializer _mainSerializer = new()
         {
             ContractResolver = new BaseFirstContractResolver
             {
@@ -152,7 +152,7 @@ namespace TRGE.Core
             foreach (JToken levelToken in levels)
             {
                 JObject levelData = levelToken as JObject;
-                TR1ScriptedLevel level = new TR1ScriptedLevel();
+                TR1ScriptedLevel level = new();
 
                 level.Type = ReadEnum<LevelType>(nameof(level.Type), levelData);
                 switch (level.Type)
@@ -607,7 +607,7 @@ namespace TRGE.Core
 
         public override string SerialiseScriptToJson()
         {
-            JObject data = new JObject();
+            JObject data = new();
 
             Write(nameof(MainMenuPicture), MainMenuPicture, data);
             Write(nameof(SavegameFmtLegacy), SavegameFmtLegacy, data);
@@ -634,7 +634,7 @@ namespace TRGE.Core
 
         public override string SerialiseConfigToJson(string existingData)
         {
-            JObject data = new JObject();
+            JObject data = new();
 
             Write(nameof(StartLaraHitpoints), StartLaraHitpoints, data);
             Write(nameof(DisableHealingBetweenLevels), DisableHealingBetweenLevels, data);
@@ -770,11 +770,11 @@ namespace TRGE.Core
 
         private JArray BuildLevels()
         {
-            JArray levels = new JArray();
+            JArray levels = new();
             levels.Add(SerializeLevel(AssaultLevel as TR1ScriptedLevel));
 
             List<AbstractTRScriptedLevel> enabledLevels = Levels.FindAll(l => l.Enabled);
-            List<AbstractTRScriptedLevel> cutsceneLevels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> cutsceneLevels = new();
 
             int cutsceneLevelID = enabledLevels.Count;
             foreach (TR1ScriptedLevel level in enabledLevels.Cast<TR1ScriptedLevel>())
@@ -801,7 +801,7 @@ namespace TRGE.Core
 
         private JObject SerializeLevel(TR1ScriptedLevel level)
         {
-            JObject levelObj = new JObject();
+            JObject levelObj = new();
 
             Write("Title", level.Name, levelObj);
             Write("File", level.LevelFile, levelObj);
@@ -835,7 +835,7 @@ namespace TRGE.Core
 
             Write("Sequence", BuildSequences(level), levelObj);
 
-            JObject strings = new JObject();
+            JObject strings = new();
             for (int i = 0; i < level.Keys.Count; i++)
             {
                 Write("key" + (i + 1), level.Keys[i], strings);
@@ -885,7 +885,7 @@ namespace TRGE.Core
 
         private JArray BuildSequences(TR1ScriptedLevel level)
         {
-            JArray sequences = new JArray();
+            JArray sequences = new();
 
             foreach (BaseLevelSequence sequence in level.Sequences)
             {

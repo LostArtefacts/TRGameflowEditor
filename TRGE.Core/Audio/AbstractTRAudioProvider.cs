@@ -49,7 +49,7 @@ namespace TRGE.Core
 
         public IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> GetCategorisedTracks()
         {
-            Dictionary<TRAudioCategory, List<TRAudioTrack>> data = new Dictionary<TRAudioCategory, List<TRAudioTrack>>();
+            Dictionary<TRAudioCategory, List<TRAudioTrack>> data = new();
             foreach (TRAudioCategory category in (TRAudioCategory[])Enum.GetValues(typeof(TRAudioCategory)))
             {
                 data.Add(category, new List<TRAudioTrack>());

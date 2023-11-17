@@ -144,7 +144,7 @@ namespace TRGE.Coord
             List<TR3Entity> fishies = level.Entities.FindAll(e => e.TypeID == TR3Type.Fish || e.TypeID == TR3Type.Piranhas_N);
             if (fishies.Count > 0)
             {
-                FDControl control = new FDControl();
+                FDControl control = new();
                 control.ParseFromLevel(level);
 
                 foreach (TR3Entity fish in fishies)

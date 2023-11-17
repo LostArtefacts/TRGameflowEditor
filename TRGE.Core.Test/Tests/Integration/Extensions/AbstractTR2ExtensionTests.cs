@@ -72,7 +72,7 @@ namespace TRGE.Core.Test
         protected void TestExtensionPostRando()
         {
             TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
-            List<string> initialLevels = new List<string>();
+            List<string> initialLevels = new();
             foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.LevelManager.Levels)
             {
                 initialLevels.Add(level.ID);
@@ -83,7 +83,7 @@ namespace TRGE.Core.Test
 
             editor.Save();
 
-            List<string> postLevels = new List<string>();
+            List<string> postLevels = new();
             foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.Levels)
             {
                 postLevels.Add(level.ID);

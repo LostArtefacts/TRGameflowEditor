@@ -40,7 +40,7 @@ namespace TRGE.Core.Test
         protected void TestPlayTrack()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-            using (MemoryStream ms = new MemoryStream(sm.GetTrackData(SampleTrack)))
+            using (MemoryStream ms = new(sm.GetTrackData(SampleTrack)))
             {
                 //new SoundPlayer(ms).PlaySync();
             }
@@ -70,7 +70,7 @@ namespace TRGE.Core.Test
 
         private void CompareTrackData(List<MutableTuple<string, string, ushort>> trackData, Dictionary<string, ushort> expectedResults)
         {
-            Dictionary<string, ushort> trackMap = new Dictionary<string, ushort>();
+            Dictionary<string, ushort> trackMap = new();
             foreach (MutableTuple<string, string, ushort> levelData in trackData)
             {
                 trackMap.Add(levelData.Item1, levelData.Item3);

@@ -71,7 +71,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestGameStringData()
         {
-            List<string> expectedStrings1 = new List<string>
+            List<string> expectedStrings1 = new()
             {
                 "INVENTORY","OPTION","ITEMS","GAME OVER","Load Game","Save Game","New Game","Restart Level","Exit to Title","Exit Demo",
                 "Exit Game","Select Level","Save Position","Select Detail","High","Medium","Low","Walk","Roll","Run",
@@ -84,7 +84,7 @@ namespace TRGE.Core.Test
                 "Hand of Rathmore","Hand of Rathmore","Savegame Crystal","London","Nevada","South Pacific Islands","Antarctica","Peru","Adventure", "s"
             };
 
-            List<string> expectedStrings2 = new List<string>
+            List<string> expectedStrings2 = new()
             {
                 "Detail Levels","Demo Mode","Sound","Controls","Gamma","Set Volumes","User Keys","The file could not be saved!","Try Again?","YES",
                 "NO","Save Complete!","No save games!","None valid","Save Game?","- Empty Slot -","OFF","ON","Setup Sound Card","Default Keys",
@@ -102,22 +102,22 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestKeyStringData()
         {
-            List<string> expectedKeys1 = new List<string>
+            List<string> expectedKeys1 = new()
             {
                 "Racetrack Key","K1","Cairn Key","Drill Activator Card","K1","Zoo Key","K1"
             };
 
-            List<string> expectedKeys2 = new List<string>
+            List<string> expectedKeys2 = new()
             {
                 "K2","K2","K2","K2","K2","K2","K2"
             };
 
-            List<string> expectedKeys3 = new List<string>
+            List<string> expectedKeys3 = new()
             {
                 "K3","K3","K3","K3","K3","K3","K3"
             };
 
-            List<string> expectedKeys4 = new List<string>
+            List<string> expectedKeys4 = new()
             {
                 "K4","K4","K4","K4","K4","Aviary Key","K4"
             };
@@ -131,14 +131,14 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestLevelData()
         {
-            List<string> expectedLevelNames = new List<string>
+            List<string> expectedLevelNames = new()
             {
                 "Lara's House",
                 "Highland Fling", "Willard's Lair", "Shakespeare Cliff", "Sleeping with the Fishes",
                 "It's a Madhouse!", "Reunion"
             };
 
-            List<string> expectedLevelFileNames = new List<string>
+            List<string> expectedLevelFileNames = new()
             {
                 @"data\house.TR2",
                 @"data\scotland.TR2", @"data\willsden.TR2", @"data\chunnel.TR2", @"data\undersea.TR2",
@@ -171,12 +171,12 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPickupStringData()
         {
-            List<string> expectedPickups1 = new List<string>
+            List<string> expectedPickups1 = new()
             {
                 "P1","P1","P1","P1","The Hand Of Rathmore","P1","P1"
             };
 
-            List<string> expectedPickups2 = new List<string>
+            List<string> expectedPickups2 = new()
             {
                 "P2","P2","P2","P2","P2","P2","P2"
             };
@@ -188,7 +188,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPictureData()
         {
-            List<string> expectedPictures = new List<string>
+            List<string> expectedPictures = new()
             {
                 @"pix\house.bmp",
                 @"pix\highland.bmp",@"pix\willard.bmp",@"pix\chunnel.bmp",@"pix\undersea.bmp",
@@ -202,22 +202,22 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPuzzleStringData()
         {
-            List<string> expectedPuzzles1 = new List<string>
+            List<string> expectedPuzzles1 = new()
             {
                 "P1","Crowbar","Crowbar","Pump Access Disk","Circuit Bulb","The Hand Of Rathmore","The Hand Of Rathmore"
             };
 
-            List<string> expectedPuzzles2 = new List<string>
+            List<string> expectedPuzzles2 = new()
             {
                 "P2","Thistle Stone","P2","P2","Mutant Sample","P2","P2"
             };
 
-            List<string> expectedPuzzles3 = new List<string>
+            List<string> expectedPuzzles3 = new()
             {
                 "P3","P3","P3","P3","Mutant Sample","P3","P3"
             };
 
-            List<string> expectedPuzzles4 = new List<string>
+            List<string> expectedPuzzles4 = new()
             {
                 "P4","P4","P4","P4","Circuit Bulb","P4","P4"
             };
@@ -231,7 +231,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestRPLData()
         {
-            List<string> expectedRPLs = new List<string>
+            List<string> expectedRPLs = new()
             {
                 @"FMV\LOGO.RPL"
             };
@@ -243,7 +243,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestScriptData()
         {
-            List<ushort[]> expectedScriptData = new List<ushort[]>
+            List<ushort[]> expectedScriptData = new()
             {
                 new ushort[] { 3, 0, 9 },
                 new ushort[] { 12, 0, 10, 2, 4, 0, 9 },
@@ -261,7 +261,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestTitleData()
         {
-            List<string> expectedTitles = new List<string>
+            List<string> expectedTitles = new()
             {
                 @"data\title.TR2", @"pix\titleuk.bmp", @"pix\copyrus.bmp", @"data\titleUS.pcx",
                 @"data\legalUS.pcx", @"data\titleJAP.pcx", @"data\legalJAP.pcx"

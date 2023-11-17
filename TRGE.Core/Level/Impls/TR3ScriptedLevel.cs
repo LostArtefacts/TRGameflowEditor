@@ -14,9 +14,9 @@ namespace TRGE.Core
             0, 6, 4, 5, 0, 3, 3, 3, 1, 5, 5, 6, 1, 3, 2, 3, 3, 3, 3, 0, 0
         };
 
-        private static readonly List<ushort> _ogRainLevels = new List<ushort> { 1, 3, 9, 12, 20 };
-        private static readonly List<ushort> _ogSnowLevels = new List<ushort> { 16, 19 };
-        private static readonly List<ushort> _ogColdLevels = new List<ushort> { 16, 17 };
+        private static readonly List<ushort> _ogRainLevels = new() { 1, 3, 9, 12, 20 };
+        private static readonly List<ushort> _ogSnowLevels = new() { 16, 19 };
+        private static readonly List<ushort> _ogColdLevels = new() { 16, 17 };
 
         public override bool HasSecrets
         {

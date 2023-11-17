@@ -144,7 +144,7 @@ namespace TRGE.Coord
 
         protected Dictionary<string, string> GetRestoreFiles()
         {
-            Dictionary<string, string> files = new Dictionary<string, string>();
+            Dictionary<string, string> files = new();
             foreach (AbstractTRScriptedLevel level in _scriptEditor.Levels)
             {
                 string backup = Path.Combine(_io.BackupDirectory.FullName, level.LevelFileBaseName);
@@ -254,7 +254,7 @@ namespace TRGE.Coord
         /// </summary>
         internal static void ValidateCompatibility(List<AbstractTRScriptedLevel> levels, string folderPath)
         {
-            List<AbstractTRScriptedLevel> faults = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> faults = new();
             foreach (AbstractTRScriptedLevel level in levels)
             {
                 if (!File.Exists(Path.Combine(folderPath, level.LevelFileBaseName)))

@@ -166,7 +166,7 @@ namespace TRGE.Core.Test
 
         private static void WriteHeader(string header)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < header.Length + 4; i++)
             {
                 sb.Append("*");

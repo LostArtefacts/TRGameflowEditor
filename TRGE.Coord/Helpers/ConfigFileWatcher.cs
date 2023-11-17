@@ -5,7 +5,7 @@ namespace TRGE.Coord
 {
     internal class ConfigFileWatcher
     {
-        private static readonly DateTime _never = new DateTime(1970, 1, 1);
+        private static readonly DateTime _never = new(1970, 1, 1);
 
         private readonly FileSystemWatcher _watcher;
         private readonly string _filePath;
@@ -28,7 +28,7 @@ namespace TRGE.Coord
 
         internal ConfigFileWatcher(string filePath)
         {
-            FileInfo fi = new FileInfo(_filePath = filePath);
+            FileInfo fi = new(_filePath = filePath);
             _lastModified = File.Exists(_filePath) ? fi.LastWriteTime : _never;
 
             _watcher = new FileSystemWatcher
@@ -51,7 +51,7 @@ namespace TRGE.Coord
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            FileInfo fi = new FileInfo(e.FullPath);
+            FileInfo fi = new(e.FullPath);
             DateTime lastModified = fi.LastWriteTime;
             if (!lastModified.Equals(_lastModified))
             {

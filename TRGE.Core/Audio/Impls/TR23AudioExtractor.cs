@@ -21,8 +21,8 @@ namespace TRGE.Core
             Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>> mp3Map = GetTR2Map();
             string dir = Path.Combine(_localWavFolder, "TR2Audio");
 
-            List<TRAudioTrack> tracks = new List<TRAudioTrack>();
-            Dictionary<string, object> output = new Dictionary<string, object>
+            List<TRAudioTrack> tracks = new();
+            Dictionary<string, object> output = new()
             {
                 ["WAD"] = "tr2audio.wad",
                 ["Tracks"] = tracks
@@ -31,7 +31,7 @@ namespace TRGE.Core
             uint offset = 0;
             foreach (int key in mp3Map.Keys)
             {
-                TRAudioTrack track = new TRAudioTrack
+                TRAudioTrack track = new()
                 {
                     ID = mp3Map[key].Item1,
                     Name = mp3Map[key].Item2
@@ -53,7 +53,7 @@ namespace TRGE.Core
         {
             Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>> mp3Map = GetTR2Map();
             string dir = Path.Combine(_localWavFolder, "TR2Audio");
-            using (BinaryWriter bw = new BinaryWriter(new FileStream("tr2audio.wad", FileMode.Create, FileAccess.Write)))
+            using (BinaryWriter bw = new(new FileStream("tr2audio.wad", FileMode.Create, FileAccess.Write)))
             {
                 foreach (int key in mp3Map.Keys)
                 {
@@ -64,9 +64,9 @@ namespace TRGE.Core
 
         public void ExtractTR3Audio(string originalWadPath)
         {
-            List<TRAudioTrack> tracks = new List<TRAudioTrack>();
+            List<TRAudioTrack> tracks = new();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");
-            using (BinaryReader br = new BinaryReader(new FileStream(originalWadPath, FileMode.Open)))
+            using (BinaryReader br = new(new FileStream(originalWadPath, FileMode.Open)))
             {
                 for (ushort i = 0; i < 130; i++)
                 {
@@ -101,8 +101,8 @@ namespace TRGE.Core
             Dictionary<ushort, Tuple<string, TRAudioCategory[]>> tr3Map = GetTR3Map();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");
 
-            List<TRAudioTrack> tracks = new List<TRAudioTrack>();
-            Dictionary<string, object> output = new Dictionary<string, object>
+            List<TRAudioTrack> tracks = new();
+            Dictionary<string, object> output = new()
             {
                 ["WAD"] = "tr3audio.wad",
                 ["Tracks"] = tracks
@@ -111,7 +111,7 @@ namespace TRGE.Core
             uint offset = 0;
             foreach (ushort key in tr3Map.Keys)
             {
-                TRAudioTrack track = new TRAudioTrack
+                TRAudioTrack track = new()
                 {
                     ID = key,
                     Name = tr3Map[key].Item1
@@ -134,7 +134,7 @@ namespace TRGE.Core
             Dictionary<ushort, Tuple<string, TRAudioCategory[]>> tr3Map = GetTR3Map();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");
 
-            using (BinaryWriter bw = new BinaryWriter(new FileStream("tr3audio.wad", FileMode.Create, FileAccess.Write)))
+            using (BinaryWriter bw = new(new FileStream("tr3audio.wad", FileMode.Create, FileAccess.Write)))
             {
                 foreach (int key in tr3Map.Keys)
                 {

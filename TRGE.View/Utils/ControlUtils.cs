@@ -84,7 +84,7 @@ namespace TRGE.View.Utils
 
             private static Icon GetStockIcon(uint type, uint size)
             {
-                SHSTOCKICONINFO info = new SHSTOCKICONINFO();
+                SHSTOCKICONINFO info = new();
                 info.cbSize = (uint)Marshal.SizeOf(info);
 
                 SHGetStockIconInfo(type, SHGSI_ICON | size, ref info);

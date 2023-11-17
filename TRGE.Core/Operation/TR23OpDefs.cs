@@ -2,41 +2,41 @@
 {
     internal static class TR23OpDefs
     {
-        internal static readonly TROpDef Picture        = new TROpDef(0, true);
-        internal static readonly TROpDef ListStart      = new TROpDef(1, true);
-        internal static readonly TROpDef ListEnd        = new TROpDef(2, true);
-        internal static readonly TROpDef FMV            = new TROpDef(3, true);
-        internal static readonly TROpDef Level          = new TROpDef(4, true);
-        internal static readonly TROpDef Cinematic      = new TROpDef(5, true);
-        internal static readonly TROpDef Complete       = new TROpDef(6, false);
-        internal static readonly TROpDef Demo           = new TROpDef(7, true);
-        internal static readonly TROpDef JumpToSequence = new TROpDef(8, true);
-        internal static readonly TROpDef End            = new TROpDef(9, false);
-        internal static readonly TROpDef Track          = new TROpDef(10, true);
-        internal static readonly TROpDef Sunset         = new TROpDef(11, false, Track);
-        internal static readonly TROpDef LoadPic        = new TROpDef(12, true);
-        internal static readonly TROpDef DeadlyWater    = new TROpDef(13, false);
-        internal static readonly TROpDef RemoveWeapons  = new TROpDef(14, false, Track);
-        internal static readonly TROpDef GameComplete   = new TROpDef(15, false);
-        internal static readonly TROpDef CutAngle       = new TROpDef(16, true);
-        internal static readonly TROpDef NoFloor        = new TROpDef(17, true);
-        internal static readonly TROpDef StartInvBonus  = new TROpDef(18, true, Track);
-        internal static readonly TROpDef StartAnimation = new TROpDef(19, true);
-        internal static readonly TROpDef Secrets        = new TROpDef(20, true, Track);
-        internal static readonly TROpDef KillToComplete = new TROpDef(21, false);
-        internal static readonly TROpDef RemoveAmmo     = new TROpDef(22, false, Track);
+        internal static readonly TROpDef Picture        = new(0, true);
+        internal static readonly TROpDef ListStart      = new(1, true);
+        internal static readonly TROpDef ListEnd        = new(2, true);
+        internal static readonly TROpDef FMV            = new(3, true);
+        internal static readonly TROpDef Level          = new(4, true);
+        internal static readonly TROpDef Cinematic      = new(5, true);
+        internal static readonly TROpDef Complete       = new(6, false);
+        internal static readonly TROpDef Demo           = new(7, true);
+        internal static readonly TROpDef JumpToSequence = new(8, true);
+        internal static readonly TROpDef End            = new(9, false);
+        internal static readonly TROpDef Track          = new(10, true);
+        internal static readonly TROpDef Sunset         = new(11, false, Track);
+        internal static readonly TROpDef LoadPic        = new(12, true);
+        internal static readonly TROpDef DeadlyWater    = new(13, false);
+        internal static readonly TROpDef RemoveWeapons  = new(14, false, Track);
+        internal static readonly TROpDef GameComplete   = new(15, false);
+        internal static readonly TROpDef CutAngle       = new(16, true);
+        internal static readonly TROpDef NoFloor        = new(17, true);
+        internal static readonly TROpDef StartInvBonus  = new(18, true, Track);
+        internal static readonly TROpDef StartAnimation = new(19, true);
+        internal static readonly TROpDef Secrets        = new(20, true, Track);
+        internal static readonly TROpDef KillToComplete = new(21, false);
+        internal static readonly TROpDef RemoveAmmo     = new(22, false, Track);
 
         // tomb3
-        internal static readonly TROpDef HasRain = new TROpDef(23, false, Track);
-        internal static readonly TROpDef HasSnow = new TROpDef(24, false, Track);
-        internal static readonly TROpDef WaterParts = new TROpDef(25, false, Track);
-        internal static readonly TROpDef IsCold = new TROpDef(26, false, Track);
+        internal static readonly TROpDef HasRain = new(23, false, Track);
+        internal static readonly TROpDef HasSnow = new(24, false, Track);
+        internal static readonly TROpDef WaterParts = new(25, false, Track);
+        internal static readonly TROpDef IsCold = new(26, false, Track);
         // 0 = lava
         // 1 = rapids
         // 2 = electricity
-        internal static readonly TROpDef DeathTile = new TROpDef(27, true, Track);
+        internal static readonly TROpDef DeathTile = new(27, true, Track);
         // 2 operands - 32-bit RGB
-        internal static readonly TROpDef WaterColour = new TROpDef(28, true, Track);
+        internal static readonly TROpDef WaterColour = new(28, true, Track);
 
         private static readonly TROpDef[] All = new TROpDef[]
         {

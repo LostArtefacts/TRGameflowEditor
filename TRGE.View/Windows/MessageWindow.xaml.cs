@@ -135,7 +135,7 @@ namespace TRGE.View.Windows
 
         private static MessageBoxResult Show(string message, Icon icon, MessageBoxButton buttons)
         {
-            MessageWindow mw = new MessageWindow(message, icon, buttons);
+            MessageWindow mw = new(message, icon, buttons);
             mw.ShowDialog();
             return mw._result;
         }

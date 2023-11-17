@@ -55,7 +55,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestCutSceneData()
         {
-            List<string> expectedCutScenes = new List<string>
+            List<string> expectedCutScenes = new()
             {
                 @"cuts\cut6.PSX", @"cuts\cut9.PSX", @"cuts\cut1.PSX", @"cuts\cut4.PSX",  @"cuts\cut2.PSX", @"cuts\cut5.PSX",
                 @"cuts\cut11.PSX", @"cuts\cut7.PSX", @"cuts\cut8.PSX", @"cuts\cut3.PSX", @"cuts\cut12.PSX"
@@ -68,7 +68,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestDemoData()
         {
-            List<ushort> expectedDemoData = new List<ushort>
+            List<ushort> expectedDemoData = new()
             {
                 21, 22, 23
             };
@@ -84,7 +84,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestFMVData()
         {
-            List<uint[]> excpectedFMVData = new List<uint[]>
+            List<uint[]> excpectedFMVData = new()
             {
                 new uint[] { 1, 817 },
                 new uint[] { 1, 4510 },
@@ -99,7 +99,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestGameStringData()
         {
-            List<string> expectedStrings1 = new List<string>
+            List<string> expectedStrings1 = new()
             {
                 "INVENTORY","OPTION","ITEMS","GAME OVER","Load Game","Save Game","New Game","Restart Level","Exit to Title","Exit Demo",
                 "Exit Game","Select Level","Save Position","Select Detail","High","Medium","Low","Walk","Roll","Run",
@@ -112,7 +112,7 @@ namespace TRGE.Core.Test
                 "The Eye Of Isis","Ora Dagger","Savegame Crystal","London","Nevada","South Pacific Islands","Antarctica","Peru","NEXT ADVENTURE", "s"
             };
 
-            List<string> expectedStrings2 = new List<string>
+            List<string> expectedStrings2 = new()
             {
                 "Screen Adjust","DEMO MODE","Sound","Controls","Gamma","Set Volumes","Control Method","The file could not be saved!","Try Again?","YES","NO",
                 "Save Complete!","No save games!","None valid","Save Game?","- EMPTY SLOT -","Press any button to quit","Use directional buttons","to adjust screen position",
@@ -135,24 +135,24 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestKeyStringData()
         {
-            List<string> expectedKeys1 = new List<string>
+            List<string> expectedKeys1 = new()
             {
                 "Racetrack Key","K1","Key Of Ganesha","Gate Key","K1","Smuggler's Key","Commander Bishop's Key","K1","K1","Flue Room Key","Maintenance Key",
                 "Boiler Room Key","K1","Generator Access","Keycard Type A","Launch Code Pass","Hut Key","K1","Uli Key","K1","Vault Key","K1","K1","K1"
             };
 
-            List<string> expectedKeys2 = new List<string>
+            List<string> expectedKeys2 = new()
             {
                 "K2","K2","Key Of Ganesha","K2","K2","K2","Lt. Tuckerman's Key","K2","K2","Cathedral Key","Solomon's Key","K2","K2","Detonator Switch",
                 "Keycard Type B","K2","K2","K2","K2","K2","K2","K2","K2","K2"
             };
 
-            List<string> expectedKeys3 = new List<string>
+            List<string> expectedKeys3 = new()
             {
                 "K3","K3","Key Of Ganesha","K3","K3","K3","K3","K3","K3","K3","Solomon's Key","K3","K3","K3","K3","K3","K3","K3","K3","K3","K3","K3","K3","K3"
             };
 
-            List<string> expectedKeys4 = new List<string>
+            List<string> expectedKeys4 = new()
             {
                 "K4","Indra Key","Key Of Ganesha","K4","K4","K4","K4","K4","K4","K4","Solomon's Key","K4","K4","K4","K4","K4","K4","K4","K4","K4","K4","K4","K4","K4"
             };
@@ -166,7 +166,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestLevelData()
         {
-            List<string> expectedLevelNames = new List<string>
+            List<string> expectedLevelNames = new()
             {
                 "Lara's House",
                 "Jungle", "Temple Ruins", "The River Ganges", "Caves Of Kaliya",
@@ -178,7 +178,7 @@ namespace TRGE.Core.Test
                 "1", "2", "3" //demos
             };
 
-            List<string> expectedLevelFileNames = new List<string>
+            List<string> expectedLevelFileNames = new()
             {
                 @"data\house.PSX",
                 @"data\jungle.PSX", @"data\temple.PSX", @"data\quadchas.PSX", @"data\tonyboss.PSX",
@@ -216,13 +216,13 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPickupStringData()
         {
-            List<string> expectedPickups1 = new List<string>
+            List<string> expectedPickups1 = new()
             {
                 "P1","P1","P1","P1","P1","P1","Swamp Map","P1","P1","P1","P1",
                 "P1","P1","P1","P1","P1","P1","P1","P1","P1","P1","P1","P1","P1"
             };
 
-            List<string> expectedPickups2 = new List<string>
+            List<string> expectedPickups2 = new()
             {
                 "P2","P2","P2","P2","P2","P2","P2","P2","P2","P2","P2","P2",
                 "P2","P2","P2","P2","P2","P2","P2","P2","P2","P2","P2","P2"
@@ -235,7 +235,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPictureData()
         {
-            List<string> expectedPictures = new List<string>
+            List<string> expectedPictures = new()
             {
                 @"pix\house.raw",
                 @"pix\india.raw",@"pix\india.raw",@"pix\india.raw",@"pix\india.raw",
@@ -254,25 +254,25 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestPuzzleStringData()
         {
-            List<string> expectedPuzzles1 = new List<string>
+            List<string> expectedPuzzles1 = new()
             {
                 "P1","P1","Scimitar","P1","P1","Serpent Stone","P1","P1","P1","P1","Old Penny","Embalming Fluid","P1","P1",
                 "Blue Security Pass","Tower Access Key","Crowbar","Crowbar","Oceanic Mask","P1","P1","P1","P1","P1"
             };
 
-            List<string> expectedPuzzles2 = new List<string>
+            List<string> expectedPuzzles2 = new()
             {
                 "P2","P2","Scimitar","P2","P2","P2","P2","P2","P2","P2","Ticket","P2","P2","P2","Yellow Security Pass",
                 "Code Clearance Disk","Gate Control Key","Lead Acid Battery","P2","P2","P2","P2","P2","P2"
             };
 
-            List<string> expectedPuzzles3 = new List<string>
+            List<string> expectedPuzzles3 = new()
             {
                 "P3","P3","P3","P3","P3","P3","P3","P3","P3","P3","Masonic Mallet","P3","P3","P3","P3",
                 "Code Clearance Disk","P3","Winch Starter","P3","P3","P3","P3","P3","P3"
             };
 
-            List<string> expectedPuzzles4 = new List<string>
+            List<string> expectedPuzzles4 = new()
             {
                 "P4","P4","P4","P4","P4","P4","P4","P4","P4","P4","Ornate Star","P4","P4","P4","P4",
                 "Hangar Access Key","P4","P4","P4","P4","P4","P4","P4","P4"
@@ -287,7 +287,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestRPLData()
         {
-            List<string> expectedRPLs = new List<string>
+            List<string> expectedRPLs = new()
             {
                 @"\FMV\LOGO.FMV", @"\FMV\INTRO.FMV", @"\FMV\LAGOON.FMV", @"\FMV\HUEY.FMV", @"\FMV\END.FMV"
             };
@@ -299,7 +299,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestScriptData()
         {
-            List<ushort[]> expectedScriptData = new List<ushort[]>
+            List<ushort[]> expectedScriptData = new()
             {
                 new ushort[] { 3, 0, 3, 1, 9 },
                 new ushort[] { 12, 0, 10, 2, 4, 0, 18, 1029, 9 },
@@ -334,7 +334,7 @@ namespace TRGE.Core.Test
         [TestMethod]
         protected void TestTitleData()
         {
-            List<string> expectedTitles = new List<string>
+            List<string> expectedTitles = new()
             {
                 @"data\title.PSX", @"pixUK\titleuk.raw", @"pixUK\legaluk.raw", @"pixUS\titleUS.raw",
                 @"pixUS\legalUS.raw", @"pixJAP\titleJAP.raw", @"pixJAP\legalJAP.raw"

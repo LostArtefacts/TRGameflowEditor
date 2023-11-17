@@ -7,7 +7,7 @@ namespace TRGE.Core
 {
     public abstract class BaseTRAudioProvider : AbstractTRAudioProvider
     {
-        protected static readonly TRAudioTrack _emptyTrack = new TRAudioTrack
+        protected static readonly TRAudioTrack _emptyTrack = new()
         {
             ID = 0,
             Name = "Blank"
@@ -36,7 +36,7 @@ namespace TRGE.Core
                 return null;
             }
 
-            using (BinaryReader br = new BinaryReader(new FileStream(wadFile, FileMode.Open)))
+            using (BinaryReader br = new(new FileStream(wadFile, FileMode.Open)))
             {
                 br.BaseStream.Position = track.Offset;
                 return br.ReadBytes(Convert.ToInt32(track.Length));

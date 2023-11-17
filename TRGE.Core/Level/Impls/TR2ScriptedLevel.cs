@@ -279,7 +279,7 @@ namespace TRGE.Core
 
         internal List<TRItem> GetBonusItems(AbstractTRItemProvider itemProvider, bool startInv = false)
         {
-            List<TRItem> ret = new List<TRItem>();
+            List<TRItem> ret = new();
             foreach (TROperation opcmd in _operations)
             {
                 if (opcmd.Definition == TR23OpDefs.StartInvBonus)
@@ -348,7 +348,7 @@ namespace TRGE.Core
 
         public Dictionary<ushort, int> GetStartInventoryItems()
         {
-            Dictionary<ushort, int> items = new Dictionary<ushort, int>();
+            Dictionary<ushort, int> items = new();
 
             foreach (TROperation opcmd in _operations)
             {

@@ -41,7 +41,7 @@ namespace TRGE.Core.Test
         protected void TestRandomiseLevels()
         {
             InitialiseLevels();
-            RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
+            RandomGenerator rng = new(RandomGenerator.Type.Date);
             _expectedLevels.Randomise(rng.Create());
 
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;

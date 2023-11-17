@@ -398,7 +398,7 @@ namespace TRGE.Coord
 
         private void ImportModels(TR2Level level, string lvlName, List<TR2Type> entities)
         {
-            TR2ModelImporter importer = new TR2ModelImporter
+            TR2ModelImporter importer = new()
             {
                 DataFolder = @"Resources\TR2\Models",
                 Level = level,

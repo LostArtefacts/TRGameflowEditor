@@ -6,7 +6,7 @@ namespace TRGE.Core.Test
 {
     public abstract class AbstractTR3ItemTestCollection : AbstractTR23ItemTestCollection
     {
-        internal override List<TRItem> ExpectedItems => new List<TRItem>
+        internal override List<TRItem> ExpectedItems => new()
         {
             new TRItem(0,  TRItemCategory.Weapon, "Pistols"),
             new TRItem(1,  TRItemCategory.Weapon, "Shotgun"),

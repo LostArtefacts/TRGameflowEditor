@@ -7,7 +7,7 @@ namespace TRGE.Core
 {
     public class TR1ScriptedLevel : AbstractTRScriptedLevel
     {
-        private static readonly Dictionary<ushort, ushort> _levelSecrets = new Dictionary<ushort, ushort>
+        private static readonly Dictionary<ushort, ushort> _levelSecrets = new()
         {
             // Gym
             [0] = 0,
@@ -208,7 +208,7 @@ namespace TRGE.Core
 
         public List<GiveItemLevelSequence> GetStartInventoryItems()
         {
-            List<GiveItemLevelSequence> items = new List<GiveItemLevelSequence>();
+            List<GiveItemLevelSequence> items = new();
             foreach (BaseLevelSequence sequence in Sequences)
             {
                 if (sequence is GiveItemLevelSequence giver)

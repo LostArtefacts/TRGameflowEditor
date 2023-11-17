@@ -60,7 +60,7 @@ namespace TRGE.Core
 
         private List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRScriptedLevel> levels)
         {
-            List<Tuple<string, string>> data = new List<Tuple<string, string>>();
+            List<Tuple<string, string>> data = new();
             foreach (AbstractTRScriptedLevel level in levels)
             {
                 data.Add(new Tuple<string, string>(level.ID, level.Name));
@@ -70,7 +70,7 @@ namespace TRGE.Core
 
         internal virtual void SetSequencing(List<Tuple<string, string>> data)
         {
-            List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> newLevels = new();
             foreach (Tuple<string, string> item in data)
             {
                 AbstractTRScriptedLevel level = GetLevel(item.Item1);
@@ -87,10 +87,10 @@ namespace TRGE.Core
 
         internal virtual void RandomiseSequencing(List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<AbstractTRScriptedLevel> shuffledLevels = new List<AbstractTRScriptedLevel>(originalLevels);
+            List<AbstractTRScriptedLevel> shuffledLevels = new(originalLevels);
             shuffledLevels.Randomise(SequencingRNG.Create());
 
-            List<AbstractTRScriptedLevel> newLevels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> newLevels = new();
             foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
             {
                 AbstractTRScriptedLevel level = GetLevel(shfLevel.ID);
@@ -173,7 +173,7 @@ namespace TRGE.Core
 
         internal List<AbstractTRScriptedLevel> GetOriginalSequencedLevels(List<AbstractTRScriptedLevel> originalLevels, bool enabledLevelsOnly = false)
         {
-            List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(Levels.Count);
+            List<AbstractTRScriptedLevel> levels = new(Levels.Count);
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
@@ -192,7 +192,7 @@ namespace TRGE.Core
 
         internal List<MutableTuple<string, string, bool>> GetEnabledLevelStatus()
         {
-            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> data = new();
             foreach (AbstractTRScriptedLevel level in Levels)
             {
                 data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.Enabled));
@@ -238,7 +238,7 @@ namespace TRGE.Core
 
         internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRScriptedLevel> basisLevels, TROperation operation)
         {
-            List<AbstractTRScriptedLevel> enabledLevels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> enabledLevels = new();
             foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
             {
                 AbstractTRScriptedLevel lvl = GetLevel(originalLevel.ID);
@@ -266,7 +266,7 @@ namespace TRGE.Core
 
         internal List<AbstractTRScriptedLevel> GetLevelsWithOperation(TROpDef opDef, bool activeOnly)
         {
-            List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>();
+            List<AbstractTRScriptedLevel> levels = new();
             foreach (AbstractTRScriptedLevel level in Levels)
             {
                 if (activeOnly)
@@ -286,7 +286,7 @@ namespace TRGE.Core
 
         internal List<Tuple<ushort, string>> GetAllGameTracks()
         {
-            List<Tuple<ushort, string>> tracks = new List<Tuple<ushort, string>>();
+            List<Tuple<ushort, string>> tracks = new();
             foreach (TRAudioTrack track in AudioProvider.Tracks)
             {
                 tracks.Add(new Tuple<ushort, string>(track.ID, track.Name));
@@ -296,7 +296,7 @@ namespace TRGE.Core
 
         internal List<MutableTuple<string, string, ushort>> GetTrackData(List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, ushort>> ret = new List<MutableTuple<string, string, ushort>>();
+            List<MutableTuple<string, string, ushort>> ret = new();
 
             TRAudioTrack track = AudioProvider.GetTrack(TitleSoundID);
             if (track != null)
@@ -371,7 +371,7 @@ namespace TRGE.Core
             IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
             Random rand = GameTrackRNG.Create();
 
-            HashSet<TRAudioTrack> exclusions = new HashSet<TRAudioTrack>();
+            HashSet<TRAudioTrack> exclusions = new();
             if (!RandomGameTracksIncludeBlank)
             {
                 exclusions.Add(AudioProvider.GetBlankTrack());
@@ -443,7 +443,7 @@ namespace TRGE.Core
 
         internal List<MutableTuple<string, string, bool>> GetSecretSupport(List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, bool>> support = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> support = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
@@ -501,7 +501,7 @@ namespace TRGE.Core
 
         internal List<MutableTuple<string, string, bool>> GetSunsetData(List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> data = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);

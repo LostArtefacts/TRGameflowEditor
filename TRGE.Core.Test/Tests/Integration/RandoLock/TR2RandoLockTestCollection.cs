@@ -30,7 +30,7 @@ namespace TRGE.Core.Test
             scriptEditor.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
             editor.Save();
 
-            TR23Script script = new TR23Script();
+            TR23Script script = new();
             script.Read(_validScripts[0]);
             TR23LevelManager lm = TRScriptedLevelFactory.GetLevelManager(script) as TR23LevelManager;
             var levels1 = lm.GetSequencing();

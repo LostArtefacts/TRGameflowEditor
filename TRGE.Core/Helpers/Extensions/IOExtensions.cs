@@ -26,7 +26,7 @@ namespace TRGE.Core
             }
             else
             {
-                List<FileInfo> files = new List<FileInfo>();
+                List<FileInfo> files = new();
                 foreach (string ext in extensions)
                 {
                     files.AddRange(directory.GetFiles(ext, SearchOption.TopDirectoryOnly));
@@ -41,7 +41,7 @@ namespace TRGE.Core
             targetDirectory.Create();
             foreach (FileInfo fi in files)
             {
-                FileInfo targetFile = new FileInfo(Path.Combine(targetDirectory.FullName, fi.Name));
+                FileInfo targetFile = new(Path.Combine(targetDirectory.FullName, fi.Name));
                 if (overwrite || !targetFile.Exists)
                 {
                     File.Copy(fi.FullName, targetFile.FullName, true);
@@ -73,10 +73,10 @@ namespace TRGE.Core
 
         internal static void ClearExcept(this DirectoryInfo directory, List<string> fileNames, string[] extensions)
         {
-            List<string> compNames = new List<string>();
+            List<string> compNames = new();
             fileNames.ForEach(e => compNames.Add(e.ToLower()));
 
-            List<FileInfo> files = new List<FileInfo>();
+            List<FileInfo> files = new();
             foreach (string ext in extensions)
             {
                 files.AddRange(directory.GetFiles(ext, SearchOption.TopDirectoryOnly));
@@ -157,8 +157,8 @@ namespace TRGE.Core
             }
 
             using (FileStream fs = fileInfo.OpenRead())
-            using (GZipStream zs = new GZipStream(fs, CompressionMode.Decompress))
-            using (MemoryStream ms = new MemoryStream())
+            using (GZipStream zs = new(fs, CompressionMode.Decompress))
+            using (MemoryStream ms = new())
             {
                 zs.CopyTo(ms);
                 return encoding.GetString(ms.ToArray());
@@ -177,7 +177,7 @@ namespace TRGE.Core
             
             byte[] data = encoding.GetBytes(text);
             using (FileStream fs = fileInfo.Create())
-            using (GZipStream zs = new GZipStream(fs, CompressionMode.Compress))
+            using (GZipStream zs = new(fs, CompressionMode.Compress))
             {
                 zs.Write(data, 0, data.Length);
             }
@@ -189,8 +189,8 @@ namespace TRGE.Core
         internal static byte[] ReadCompressedBinary(this FileInfo fileInfo)
         {
             using (FileStream fs = fileInfo.OpenRead())
-            using (GZipStream zs = new GZipStream(fs, CompressionMode.Decompress))
-            using (MemoryStream ms = new MemoryStream())
+            using (GZipStream zs = new(fs, CompressionMode.Decompress))
+            using (MemoryStream ms = new())
             {
                 zs.CopyTo(ms);
                 return ms.ToArray();
@@ -203,7 +203,7 @@ namespace TRGE.Core
         internal static void WriteCompressedBinary(this FileInfo fileInfo, byte[] data)
         {
             using (FileStream fs = fileInfo.Create())
-            using (GZipStream zs = new GZipStream(fs, CompressionMode.Compress))
+            using (GZipStream zs = new(fs, CompressionMode.Compress))
             {
                 zs.Write(data, 0, data.Length);
             }

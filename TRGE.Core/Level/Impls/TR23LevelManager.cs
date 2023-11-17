@@ -94,7 +94,7 @@ namespace TRGE.Core
 
         private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> data = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 TR2ScriptedLevel level = GetLevel(originalLevel.ID) as TR2ScriptedLevel;
@@ -160,7 +160,7 @@ namespace TRGE.Core
 
         private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, bool>> data = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> data = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 TR2ScriptedLevel level = GetLevel(originalLevel.ID) as TR2ScriptedLevel;
@@ -196,7 +196,7 @@ namespace TRGE.Core
 
             TRItem shotgun = (ItemProvider as TR2ItemProvider).Shotgun;
             TRItem flare = (ItemProvider as TR2ItemProvider).Flare;
-            Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>
+            Dictionary<TRItemCategory, ISet<TRItem>> exclusions = new()
             {
                 { TRItemCategory.Weapon, new HashSet<TRItem> { shotgun } },
                 { TRItemCategory.Misc, new HashSet<TRItem> { flare } }
@@ -238,13 +238,13 @@ namespace TRGE.Core
 
         private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
         {
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data = new();
             foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
             {
                 TR2ScriptedLevel level = GetLevel(originalLevel.ID) as TR2ScriptedLevel;
                 if (level.HasSecrets)
                 {
-                    List<MutableTuple<ushort, TRItemCategory, string, int>> items = new List<MutableTuple<ushort, TRItemCategory, string, int>>();
+                    List<MutableTuple<ushort, TRItemCategory, string, int>> items = new();
                     foreach (TRItem item in ItemProvider.BonusItems)
                     {
                         int count = level.GetBonusItemCount(item, ItemProvider);
@@ -269,7 +269,7 @@ namespace TRGE.Core
                 TR2ScriptedLevel level = (TR2ScriptedLevel)GetLevel(levelData.Item1);
                 if (level != null)
                 {
-                    List<TRItem> bonuses = new List<TRItem>();
+                    List<TRItem> bonuses = new();
                     foreach (var n in levelData.Item3)
                     {
                         TRItem item = ItemProvider.GetItem(n.Item1);
@@ -286,7 +286,7 @@ namespace TRGE.Core
 
         internal Dictionary<string, List<TRItem>> GetLevelBonusItems()
         {
-            Dictionary<string, List<TRItem>> ret = new Dictionary<string, List<TRItem>>();
+            Dictionary<string, List<TRItem>> ret = new();
             foreach (TR2ScriptedLevel level in _levels)
             {
                 if (level.HasSecrets)

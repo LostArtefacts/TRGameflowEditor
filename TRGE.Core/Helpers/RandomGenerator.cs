@@ -5,7 +5,7 @@ namespace TRGE.Core
 {
     public class RandomGenerator
     {
-        private static readonly DateTime UNIX_EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime UNIX_EPOCH = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
         public enum Type
         {

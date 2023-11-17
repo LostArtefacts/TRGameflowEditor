@@ -9,7 +9,7 @@ namespace TRGE.Core.Test
     {
         internal abstract Dictionary<string, List<TRItem>> ManualBonusData { get; }
 
-        internal override List<TRItem> ExpectedItems => new List<TRItem>
+        internal override List<TRItem> ExpectedItems => new()
         {
             new TRItem(0,  TRItemCategory.Weapon, "Pistols"),
             new TRItem(1,  TRItemCategory.Weapon, "Shotgun"),
@@ -64,7 +64,7 @@ namespace TRGE.Core.Test
             List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> bonusData = sm.LevelSecretBonusData;
             CollectionAssert.AreNotEqual(originalBonusData, bonusData);
 
-            HashSet<ushort> weapons = new HashSet<ushort>();
+            HashSet<ushort> weapons = new();
             foreach (MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>> levelBonusData in bonusData)
             {
                 foreach (MutableTuple<ushort, TRItemCategory, string, int> bonusItem in levelBonusData.Item3)
@@ -153,10 +153,10 @@ namespace TRGE.Core.Test
 
         private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ConvertManualBonusData(TR23ScriptEditor sm)
         {
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ret = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ret = new();
             foreach (string levelFile in ManualBonusData.Keys)
             {
-                List<MutableTuple<ushort, TRItemCategory, string, int>> levelData = new List<MutableTuple<ushort, TRItemCategory, string, int>>();
+                List<MutableTuple<ushort, TRItemCategory, string, int>> levelData = new();
                 foreach (TRItem item in ManualBonusData[levelFile])
                 {
                     levelData.Add(new MutableTuple<ushort, TRItemCategory, string, int>(item.ID, item.Category, item.Name, 1));

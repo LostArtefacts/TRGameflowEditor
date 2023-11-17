@@ -61,7 +61,7 @@ namespace TRGE.Core
 
         protected override List<TRItem> GetBonusItems()
         {
-            List<TRItem> bonuses = new List<TRItem>();
+            List<TRItem> bonuses = new();
             bonuses.AddRange(_weapons);
             bonuses.AddRange(_ammo);
             bonuses.AddRange(_miscItems);
@@ -79,7 +79,7 @@ namespace TRGE.Core
             exclusions = VerifyBonusExclusions(exclusions);
             BaseTRItemBroker broker = dealer.Get(rand);
 
-            List<TRItem> bonuses = new List<TRItem>();
+            List<TRItem> bonuses = new();
             bonuses.AddRange(_weapons.RandomSelection(rand, Convert.ToUInt32(broker.WeaponCount), false, exclusions[TRItemCategory.Weapon]));
             bonuses.AddRange(GetRandomItems(rand, broker.AmmoTypeCount, broker.MaxAmmoCount, _ammo, exclusions[TRItemCategory.Ammo]));
             bonuses.AddRange(GetRandomItems(rand, broker.MiscTypeCount, broker.MaxMiscCount, _miscItems, exclusions[TRItemCategory.Misc]));
@@ -111,7 +111,7 @@ namespace TRGE.Core
 
         protected List<TRItem> GetRandomItems(Random rand, int numItems, int maxItems, List<TRItem> itemList, ISet<TRItem> exclusions)
         {
-            List<TRItem> items = new List<TRItem>();
+            List<TRItem> items = new();
             if (maxItems > 0)
             {
                 for (int i = 0; i < numItems; i++)

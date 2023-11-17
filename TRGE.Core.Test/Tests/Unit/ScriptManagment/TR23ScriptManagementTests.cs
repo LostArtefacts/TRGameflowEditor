@@ -49,7 +49,7 @@ namespace TRGE.Core.Test
         {
             TRCoord.Instance.ClearHistory();
 
-            List<FileInfo> openedScripts = new List<FileInfo>();
+            List<FileInfo> openedScripts = new();
             TRCoord.Instance.HistoryAdded += delegate (object sender, TRHistoryEventArgs e)
             {
                 openedScripts.Add(new FileInfo(e.Path));

@@ -82,7 +82,7 @@ namespace TRGE.Coord
 
         private void StoreConfig()
         {
-            Dictionary<string, object> config = new Dictionary<string, object>
+            Dictionary<string, object> config = new()
             {
                 ["History"] = _trioCoord.GetConfig()
             };

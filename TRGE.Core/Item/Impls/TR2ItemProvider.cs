@@ -109,8 +109,7 @@ namespace TRGE.Core
             return new TRItemBrokerDealer<BaseTRItemBroker>
             {
                 //tightest
-                new BaseTRItemBroker
-                {
+                new() {
                     WeaponCount = 0,
                     AmmoTypeCount = 1,
                     MaxAmmoCount = rand.Next(1, 3),
@@ -119,8 +118,7 @@ namespace TRGE.Core
                     Weight = 8
                 },
                 //tight
-                new BaseTRItemBroker
-                {
+                new() {
                     WeaponCount = 0,
                     AmmoTypeCount = rand.Next(1, 2),
                     MaxAmmoCount = rand.Next(1, 3),
@@ -129,8 +127,7 @@ namespace TRGE.Core
                     Weight = 12 // #73 reduce weight to make more fair
                 },
                 //default...ish?
-                new BaseTRItemBroker
-                {
+                new() {
                     WeaponCount = rand.Next(0, 2),
                     AmmoTypeCount = 1,
                     MaxAmmoCount = 2 * rand.Next(2, 5), //4, 6, 8
@@ -139,8 +136,7 @@ namespace TRGE.Core
                     Weight = 50
                 },
                 //generous
-                new BaseTRItemBroker
-                {
+                new() {
                     WeaponCount = rand.Next(1, 3),
                     AmmoTypeCount = rand.Next(1, 5),
                     MaxAmmoCount = rand.Next(0, 9),
@@ -149,8 +145,7 @@ namespace TRGE.Core
                     Weight = 22 // #73 increase weight to make more fair
                 },
                 //generous++
-                new BaseTRItemBroker
-                {
+                new() {
                     WeaponCount = rand.Next(1, 4),
                     AmmoTypeCount = rand.Next(2, 5),
                     MaxAmmoCount = rand.Next(2, 5),

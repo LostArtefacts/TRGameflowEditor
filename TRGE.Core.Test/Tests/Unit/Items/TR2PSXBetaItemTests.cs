@@ -7,7 +7,7 @@ namespace TRGE.Core.Test
     public class TR2PSXBetaItemTests : AbstractTR2ItemTestCollection
     {
         protected override int ScriptFileIndex => 3;
-        internal override Dictionary<string, List<TRItem>> ManualBonusData => new Dictionary<string, List<TRItem>>
+        internal override Dictionary<string, List<TRItem>> ManualBonusData => new()
         {
             {
                 AbstractTRScriptedLevel.CreateID(@"data\venice.PSX"), new List<TRItem>

@@ -27,7 +27,7 @@ namespace TRGE.Core
 
         internal ushort[] TranslateOperations()
         {
-            List<ushort> ret = new List<ushort>();
+            List<ushort> ret = new();
             foreach (TROperation op in _operations)
             {
                 if (op.IsActive)
@@ -46,7 +46,7 @@ namespace TRGE.Core
 
         internal virtual TROperation AddOperation(TROpDef opDef, ushort operand = ushort.MaxValue, bool isActive = true)
         {
-            TROperation op = new TROperation(opDef, operand, isActive);
+            TROperation op = new(opDef, operand, isActive);
             _operations.Add(op);
             return op;
         }
@@ -126,7 +126,7 @@ namespace TRGE.Core
                 }
             }
 
-            TROperation operation = new TROperation(opDef, operand, isActive);
+            TROperation operation = new(opDef, operand, isActive);
             if (pos >= _operations.Count)
             {
                 _operations.Add(operation);

@@ -266,7 +266,7 @@ namespace TRGE.View.Model
 
         public LevelSequencingData LevelSequencing
         {
-            get => new LevelSequencingData(_levelSequencing, _enabledLevelStatus);
+            get => new(_levelSequencing, _enabledLevelStatus);
             set
             {
                 _levelSequencing = value.ToSequenceTupleList();
@@ -307,7 +307,7 @@ namespace TRGE.View.Model
 
         public FlaggedLevelData UnarmedLevelData
         {
-            get => new FlaggedLevelData(_unarmedLevelData);
+            get => new(_unarmedLevelData);
             set
             {
                 _unarmedLevelData = value.ToTupleList();
@@ -347,7 +347,7 @@ namespace TRGE.View.Model
 
         public FlaggedLevelData AmmolessLevelData
         {
-            get => new FlaggedLevelData(_ammolessLevelData);
+            get => new(_ammolessLevelData);
             set
             {
                 _ammolessLevelData = value.ToTupleList();
@@ -397,7 +397,7 @@ namespace TRGE.View.Model
 
         public GlobalSecretBonusData SecretBonusData
         {
-            get => new GlobalSecretBonusData(_secretBonusData);
+            get => new(_secretBonusData);
             set
             {
                 _secretBonusData = value.ToTupleList();
@@ -447,7 +447,7 @@ namespace TRGE.View.Model
 
         public FlaggedLevelData SunsetLevelData
         {
-            get => new FlaggedLevelData(_sunsetLevelData);
+            get => new(_sunsetLevelData);
             set
             {
                 _sunsetLevelData = value.ToTupleList();
@@ -487,7 +487,7 @@ namespace TRGE.View.Model
 
         public AudioData GlobalAudioData
         {
-            get => new AudioData(_audioData, _allAudioTracks);
+            get => new(_audioData, _allAudioTracks);
             set
             {
                 _audioData = value.ToTupleList();

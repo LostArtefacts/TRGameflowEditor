@@ -48,7 +48,7 @@ namespace TRGE.View.Model.Data
 
         public List<MutableTuple<string, string, ushort>> ToTupleList()
         {
-            List<MutableTuple<string, string, ushort>> result = new List<MutableTuple<string, string, ushort>>();
+            List<MutableTuple<string, string, ushort>> result = new();
             foreach (AudioLevelData levelData in this)
             {
                 result.Add(levelData.ToTuple());
@@ -75,7 +75,7 @@ namespace TRGE.View.Model.Data
 
     public class AudioTrack : IComparable<AudioTrack>
     {
-        private static readonly Regex _compRegex = new Regex(@"(\d+)$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex _compRegex = new(@"(\d+)$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         public ushort ID { get; private set; }
         public string Name { get; private set; }

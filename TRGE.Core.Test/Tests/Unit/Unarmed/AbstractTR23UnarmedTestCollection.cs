@@ -29,7 +29,7 @@ namespace TRGE.Core.Test
         protected void TestRandomiseAmmolessLevels()
         {
             InitialiseLevels();
-            RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
+            RandomGenerator rng = new(RandomGenerator.Type.Date);
             List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
@@ -45,7 +45,7 @@ namespace TRGE.Core.Test
         protected void TestRandomiseUnarmedLevels()
         {
             InitialiseLevels();
-            RandomGenerator rng = new RandomGenerator(RandomGenerator.Type.Date);
+            RandomGenerator rng = new(RandomGenerator.Type.Date);
             List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
@@ -61,7 +61,7 @@ namespace TRGE.Core.Test
         protected void TestReorganiseAmmolessLevels()
         {
             InitialiseLevels();
-            List<AbstractTRScriptedLevel> expectedLevels = new List<AbstractTRScriptedLevel>
+            List<AbstractTRScriptedLevel> expectedLevels = new()
             {
                 _expectedLevels[0],
                 _expectedLevels[1]
@@ -82,7 +82,7 @@ namespace TRGE.Core.Test
         protected void TestReorganiseUnarmedLevels()
         {
             InitialiseLevels();
-            List<AbstractTRScriptedLevel> expectedLevels = new List<AbstractTRScriptedLevel>
+            List<AbstractTRScriptedLevel> expectedLevels = new()
             {
                 _expectedLevels[0],
                 _expectedLevels[1]

@@ -16,7 +16,7 @@ namespace TRGE.View.Model.Data
 
         public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ToTupleList()
         {
-            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> result = new List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>>();
+            List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> result = new();
             foreach (LevelSecretBonusData data in this)
             {
                 result.Add(data.ToTuple());
@@ -65,7 +65,7 @@ namespace TRGE.View.Model.Data
 
         public List<MutableTuple<ushort, TRItemCategory, string, int>> ToTuple()
         {
-            List<MutableTuple<ushort, TRItemCategory, string, int>> result = new List<MutableTuple<ushort, TRItemCategory, string, int>>();
+            List<MutableTuple<ushort, TRItemCategory, string, int>> result = new();
             foreach (SecretBonusItem item in this)
             {
                 result.Add(item.ToTuple());

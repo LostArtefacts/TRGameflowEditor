@@ -78,8 +78,8 @@ namespace TRGE.Core.Test
 
         private Dictionary<string, string> GetChecksums()
         {
-            DirectoryInfo dataDir = new DirectoryInfo(_dataDirectory);
-            Dictionary<string, string> checksums = new Dictionary<string, string>();
+            DirectoryInfo dataDir = new(_dataDirectory);
+            Dictionary<string, string> checksums = new();
             foreach (FileInfo fi in dataDir.GetFiles())
             {
                 checksums.Add(fi.Name, fi.Checksum());

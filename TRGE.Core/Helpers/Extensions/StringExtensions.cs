@@ -16,7 +16,7 @@ namespace TRGE.Core
 
         private static string Convert(string str, char separator)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             bool prev = false;
             for (int i = 0; i < str.Length; i++)
             {

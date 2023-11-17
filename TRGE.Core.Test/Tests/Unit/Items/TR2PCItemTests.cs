@@ -10,7 +10,7 @@ namespace TRGE.Core.Test
     {
         protected override int ScriptFileIndex => 0;
 
-        internal override Dictionary<string, List<TRItem>> ManualBonusData => new Dictionary<string, List<TRItem>>
+        internal override Dictionary<string, List<TRItem>> ManualBonusData => new()
         {
             { 
                 AbstractTRScriptedLevel.CreateID(@"data\wall.TR2"), new List<TRItem>
@@ -36,7 +36,7 @@ namespace TRGE.Core.Test
             sm.SecretBonusRNG.RNGType = RandomGenerator.Type.Custom;
             sm.SecretBonusRNG.Value = r;
 
-            List<string> output = new List<string>
+            List<string> output = new()
             {
                 "Index,Level,Item Type,Item,Quantity"
             };

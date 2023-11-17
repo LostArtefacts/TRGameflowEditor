@@ -7,7 +7,7 @@ namespace TRGE.Core.Test
         protected override int ScriptFileIndex => 1;
         protected override ushort SampleTrack => 47;
 
-        internal override Dictionary<string, ushort> ExpectedLevelTracks => new Dictionary<string, ushort>
+        internal override Dictionary<string, ushort> ExpectedLevelTracks => new()
         {
             ["TITLE"] = 64,
             ["SECRET"] = 47,
@@ -21,7 +21,7 @@ namespace TRGE.Core.Test
 
         internal override Dictionary<string, ushort> NewLevelTracks => _newTracks;
 
-        protected Dictionary<string, ushort> _newTracks = new Dictionary<string, ushort>
+        protected Dictionary<string, ushort> _newTracks = new()
         {
             ["SECRET"] = 50,
             [AbstractTRScriptedLevel.CreateID(@"data\level1.TR2")] = 35,

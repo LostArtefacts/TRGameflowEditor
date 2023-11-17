@@ -28,7 +28,7 @@ namespace TRGE.Core
             switch (ext)
             {
                 case ".DAT":
-                    using (BinaryReader br = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+                    using (BinaryReader br = new(new FileStream(filePath, FileMode.Open)))
                     {
                         ReadScriptBin(br);
                     }
@@ -68,7 +68,7 @@ namespace TRGE.Core
             switch (ext)
             {
                 case ".DAT":
-                    using (BinaryWriter bw = new BinaryWriter(new FileStream(filePath, FileMode.Create)))
+                    using (BinaryWriter bw = new(new FileStream(filePath, FileMode.Create)))
                     {
                         bw.Write(SerialiseScriptToBin());
                     }
@@ -143,6 +143,6 @@ namespace TRGE.Core
         public List<string> GetAdditionalBackupFiles() => _additionalFiles;
         public virtual void AddAdditionalBackupFile(string file) => _additionalFiles.Add(file);
 
-        protected List<string> _additionalFiles = new List<string>();
+        protected List<string> _additionalFiles = new();
     }
 }

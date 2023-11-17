@@ -7,7 +7,7 @@ namespace TRGE.Core.Test
     public class TR2PCGItemTests : AbstractTR2ItemTestCollection
     {
         protected override int ScriptFileIndex => 1;
-        internal override Dictionary<string, List<TRItem>> ManualBonusData => new Dictionary<string, List<TRItem>>
+        internal override Dictionary<string, List<TRItem>> ManualBonusData => new()
         {
             { 
                 AbstractTRScriptedLevel.CreateID(@"data\level1.TR2"), new List<TRItem>

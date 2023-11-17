@@ -100,7 +100,7 @@ namespace TRGE.Coord
         /// </summary>
         public void Save()
         {
-            DirectoryInfo wipDirectory = new DirectoryInfo(_wipOutputDirectory);
+            DirectoryInfo wipDirectory = new(_wipOutputDirectory);
             wipDirectory.Create();
             wipDirectory.Clear();
 
@@ -115,7 +115,7 @@ namespace TRGE.Coord
 
                 ScriptEditor.Save();
 
-                TRSaveMonitor monitor = new TRSaveMonitor(new TRSaveEventArgs
+                TRSaveMonitor monitor = new(new TRSaveEventArgs
                 {
                     ProgressTarget = ScriptEditor.GetSaveTargetCount() +
                     (LevelEditor == null ? 0 : LevelEditor.GetSaveTargetCount())
@@ -140,7 +140,7 @@ namespace TRGE.Coord
                     }
 
                     // Copy everything from WIP into the Output folder.
-                    DirectoryInfo outputDirectory = new DirectoryInfo(_outputDirectory);
+                    DirectoryInfo outputDirectory = new(_outputDirectory);
                     wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
 
                     // Finally, copy everything to the target folder.
@@ -168,7 +168,7 @@ namespace TRGE.Coord
 
         private void LogException(Exception e)
         {
-            Config config = new Config
+            Config config = new()
             {
                 ["Trace"] = e.ToString(),
                 ["TRGE"] = ScriptEditor.ExportConfig()
@@ -178,7 +178,7 @@ namespace TRGE.Coord
                 config["TRLE"] = LevelEditor.ExportConfig();
             }
 
-            Dictionary<string, string> checksums = new Dictionary<string, string>();
+            Dictionary<string, string> checksums = new();
             foreach (FileInfo fi in new DirectoryInfo(BackupDirectory).GetFiles())
             {
                 checksums[fi.Name] = fi.Checksum();
@@ -203,7 +203,7 @@ namespace TRGE.Coord
                 IOExtensions.CopyFile(ScriptEditor.GetConfigOutputPath(), new DirectoryInfo(targetScriptFolder), true);
             }
 
-            List<AbstractTRScriptedLevel> levels = new List<AbstractTRScriptedLevel>(ScriptEditor.Levels);
+            List<AbstractTRScriptedLevel> levels = new(ScriptEditor.Levels);
             if (ScriptEditor.Edition.AssaultCourseSupported)
             {
                 levels.Add(ScriptEditor.AssaultLevel);
@@ -285,7 +285,7 @@ namespace TRGE.Coord
                 throw new InvalidOperationException();
             }
 
-            Config config = new Config
+            Config config = new()
             {
                 ["TRGE"] = ScriptEditor.ExportConfig()
             };

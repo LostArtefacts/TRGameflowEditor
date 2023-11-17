@@ -8,7 +8,7 @@ namespace TRGE.Core
 {
     public class TREdition : ICloneable
     {
-        internal static readonly TREdition GenericPC = new TREdition
+        internal static readonly TREdition GenericPC = new()
         {
             Title = "Unknown (PC)",
             Version = TRVersion.Unknown,
@@ -23,7 +23,7 @@ namespace TRGE.Core
             SunsetLevelCount = 0
         };
 
-        internal static readonly TREdition GenericPSX = new TREdition
+        internal static readonly TREdition GenericPSX = new()
         {
             Title = "Unknown (PSX)",
             Version = TRVersion.Unknown,
@@ -38,7 +38,7 @@ namespace TRGE.Core
             SunsetLevelCount = 0
         };
 
-        internal static readonly TREdition TR1PC = new TREdition
+        internal static readonly TREdition TR1PC = new()
         {
             Title = "Tomb Raider I (PC)",
             Version = TRVersion.TR1,
@@ -56,7 +56,7 @@ namespace TRGE.Core
             SunsetLevelCount = 0
         };
 
-        internal static readonly TREdition TR2PC = new TREdition
+        internal static readonly TREdition TR2PC = new()
         {
             Title = "Tomb Raider II (PC)",
             Version = TRVersion.TR2,
@@ -72,7 +72,7 @@ namespace TRGE.Core
             SunsetLevelCount = 1
         };
 
-        internal static readonly TREdition TR2PSX = new TREdition
+        internal static readonly TREdition TR2PSX = new()
         {
             Title = "Tomb Raider II (PSX)",
             Version = TRVersion.TR2,
@@ -88,7 +88,7 @@ namespace TRGE.Core
             SunsetLevelCount = 1
         };
 
-        internal static readonly TREdition TR2PSXBeta = new TREdition
+        internal static readonly TREdition TR2PSXBeta = new()
         {
             Title = "Tomb Raider II (PSX BETA)",
             Version = TRVersion.TR2,
@@ -104,7 +104,7 @@ namespace TRGE.Core
             SunsetLevelCount = 1
         };
 
-        internal static readonly TREdition TR2G = new TREdition
+        internal static readonly TREdition TR2G = new()
         {
             Title = "Tomb Raider II Gold",
             Version = TRVersion.TR2G,
@@ -120,7 +120,7 @@ namespace TRGE.Core
             SunsetLevelCount = 0
         };
 
-        internal static readonly TREdition TR3PC = new TREdition
+        internal static readonly TREdition TR3PC = new()
         {
             Title = "Tomb Raider III (PC)",
             Version = TRVersion.TR3,
@@ -136,7 +136,7 @@ namespace TRGE.Core
             SunsetLevelCount = 0
         };
 
-        internal static readonly TREdition TR3PSX = new TREdition
+        internal static readonly TREdition TR3PSX = new()
         {
             Title = "Tomb Raider III (PSX)",
             Version = TRVersion.TR3,
@@ -152,7 +152,7 @@ namespace TRGE.Core
             SunsetLevelCount = 0
         };
 
-        internal static readonly TREdition TR3G = new TREdition
+        internal static readonly TREdition TR3G = new()
         {
             Title = "Tomb Raider III Gold",
             Version = TRVersion.TR3G,

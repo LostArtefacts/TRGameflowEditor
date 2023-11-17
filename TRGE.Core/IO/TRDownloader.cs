@@ -15,7 +15,7 @@ namespace TRGE.Core
         {
             string url = string.Format(_resourceURL, TRInterop.TaggedVersion, urlPath);
 
-            TRDownloadEventArgs args = new TRDownloadEventArgs
+            TRDownloadEventArgs args = new()
             {
                 URL = url,
                 TargetFile = targetFile

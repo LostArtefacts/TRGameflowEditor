@@ -19,7 +19,7 @@ namespace TRGE.Core.Test
         {
             RootSetup();
 
-            List<MethodInfo> methods = new List<MethodInfo>(GetType().GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance));
+            List<MethodInfo> methods = new(GetType().GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance));
             methods.Sort(delegate (MethodInfo m1, MethodInfo m2)
             {
                 TestSequenceAttribute tseq1 = (TestSequenceAttribute)m1.GetCustomAttribute(typeof(TestSequenceAttribute));
@@ -35,7 +35,7 @@ namespace TRGE.Core.Test
                 return m1.Name.CompareTo(m2.Name);
             });
 
-            Dictionary<string, Exception> result = new Dictionary<string, Exception>();
+            Dictionary<string, Exception> result = new();
             foreach (MethodInfo mi in methods)
             {
                 if (mi.GetCustomAttribute(typeof(TestMethodAttribute)) != null)

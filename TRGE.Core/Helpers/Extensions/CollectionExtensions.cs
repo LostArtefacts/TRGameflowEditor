@@ -8,7 +8,7 @@ namespace TRGE.Core
     {
         internal static void Randomise<T>(this List<T> list, Random rand)
         {
-            SortedDictionary<int, T> map = new SortedDictionary<int, T>();
+            SortedDictionary<int, T> map = new();
             foreach (T item in list)
             {
                 int r;
@@ -36,7 +36,7 @@ namespace TRGE.Core
                 return list;
             }
 
-            List<T> iterList = new List<T>(list);
+            List<T> iterList = new(list);
             if (exclusions != null && exclusions.Count > 0)
             {
                 foreach (T excludeItem in exclusions)
@@ -45,7 +45,7 @@ namespace TRGE.Core
                 }
             }
 
-            List<T> resultSet = new List<T>();
+            List<T> resultSet = new();
             if (iterList.Count > 0)
             {
                 int icount = Convert.ToInt32(count);
@@ -67,9 +67,9 @@ namespace TRGE.Core
 
         internal static void Sort<T1, T2>(this Dictionary<T1, T2> dict, Comparison<T1> comp)
         {
-            List<T1> keys = new List<T1>(dict.Keys);
+            List<T1> keys = new(dict.Keys);
             keys.Sort(comp);
-            Dictionary<T1, T2> result = new Dictionary<T1, T2>();
+            Dictionary<T1, T2> result = new();
             foreach (T1 key in keys)
             {
                 result.Add(key, dict[key]);

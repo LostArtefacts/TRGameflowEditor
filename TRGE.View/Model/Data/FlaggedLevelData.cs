@@ -15,7 +15,7 @@ namespace TRGE.View.Model.Data
 
         public List<MutableTuple<string, string, bool>> ToTupleList()
         {
-            List<MutableTuple<string, string, bool>> result = new List<MutableTuple<string, string, bool>>();
+            List<MutableTuple<string, string, bool>> result = new();
             foreach (FlaggedLevel level in this)
             {
                 result.Add(level.ToTuple());

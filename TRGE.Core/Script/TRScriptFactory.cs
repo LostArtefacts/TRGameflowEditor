@@ -105,7 +105,7 @@ namespace TRGE.Core
             switch (ext)
             {
                 case ".DAT":
-                    using (BinaryReader br = new BinaryReader(new FileStream(filePath, FileMode.Open)))
+                    using (BinaryReader br = new(new FileStream(filePath, FileMode.Open)))
                     {
                         return br.ReadUInt32();
                     }

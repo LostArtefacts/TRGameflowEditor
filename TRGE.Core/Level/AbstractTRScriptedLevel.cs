@@ -118,7 +118,7 @@ namespace TRGE.Core
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(base.ToString());
+            StringBuilder sb = new(base.ToString());
 
             sb.Append(" Name: " + Name);
             sb.Append(", File: " + LevelFileBaseName.ToUpper());

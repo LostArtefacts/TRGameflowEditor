@@ -136,7 +136,7 @@ namespace TRGE.View.Controls
 
         public bool Save()
         {
-            SaveProgressWindow spw = new SaveProgressWindow(Editor, _options);
+            SaveProgressWindow spw = new(Editor, _options);
             if (spw.ShowDialog() ?? false)
             {
                 _dirty = false;
@@ -171,7 +171,7 @@ namespace TRGE.View.Controls
         {
             if (MessageWindow.ShowConfirm("The files that were backed up when this folder was first opened will be copied back to the original directory.\n\nDo you wish to proceed?"))
             {
-                RestoreProgressWindow rpw = new RestoreProgressWindow(Editor);
+                RestoreProgressWindow rpw = new(Editor);
                 try
                 {
                     if (rpw.ShowDialog() ?? false)
@@ -243,7 +243,7 @@ namespace TRGE.View.Controls
             int unviableCount = _options.GetUnviableCount();
             if (unviableCount > 0)
             {
-                StringBuilder sb = new StringBuilder("As the following items have been edited externally, they will be reset to default in the exported file.");
+                StringBuilder sb = new("As the following items have been edited externally, they will be reset to default in the exported file.");
                 sb.Append(Environment.NewLine);
                 if (!_options.LevelSequencingViable)
                 {
@@ -278,7 +278,7 @@ namespace TRGE.View.Controls
 
         private void LevelSequencing_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            LevelSequenceWindow lsw = new LevelSequenceWindow(_options.LevelSequencing);
+            LevelSequenceWindow lsw = new(_options.LevelSequencing);
             if (lsw.ShowDialog() ?? false)
             {
                 _options.LevelSequencing = lsw.LevelSequencingData;
@@ -287,7 +287,7 @@ namespace TRGE.View.Controls
 
         private void UnarmedLevels_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            UnarmedLevelsWindow ulw = new UnarmedLevelsWindow(_options.UnarmedLevelData);
+            UnarmedLevelsWindow ulw = new(_options.UnarmedLevelData);
             if (ulw.ShowDialog() ?? false)
             {
                 _options.UnarmedLevelData = ulw.LevelData;
@@ -296,7 +296,7 @@ namespace TRGE.View.Controls
 
         private void AmmolessLevels_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            AmmolessLevelsWindow alw = new AmmolessLevelsWindow(_options.AmmolessLevelData);
+            AmmolessLevelsWindow alw = new(_options.AmmolessLevelData);
             if (alw.ShowDialog() ?? false)
             {
                 _options.AmmolessLevelData = alw.LevelData;
@@ -305,7 +305,7 @@ namespace TRGE.View.Controls
 
         private void SecretRewards_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            BonusItemsWindow biw = new BonusItemsWindow(_options.SecretBonusData);
+            BonusItemsWindow biw = new(_options.SecretBonusData);
             if (biw.ShowDialog() ?? false)
             {
                 _options.SecretBonusData = biw.SecretBonusData;
@@ -314,7 +314,7 @@ namespace TRGE.View.Controls
 
         private void Sunsets_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            SunsetLevelsWindow slw = new SunsetLevelsWindow(_options.SunsetLevelData);
+            SunsetLevelsWindow slw = new(_options.SunsetLevelData);
             if (slw.ShowDialog() ?? false)
             {
                 _options.SunsetLevelData = slw.LevelData;
@@ -323,7 +323,7 @@ namespace TRGE.View.Controls
 
         private void Audio_ManualConfigure(object sender, RoutedEventArgs e)
         {
-            AudioWindow aw = new AudioWindow(_options);
+            AudioWindow aw = new(_options);
             if (aw.ShowDialog() ?? false)
             {
                 _options.GlobalAudioData = aw.AudioData;

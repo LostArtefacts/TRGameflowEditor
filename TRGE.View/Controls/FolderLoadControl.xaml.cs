@@ -93,7 +93,7 @@ namespace TRGE.View.Controls
 
         public void OpenDataFolder(string folderPath, TRScriptOpenOption openOption = TRScriptOpenOption.Default)
         {
-            OpenProgressWindow opw = new OpenProgressWindow(folderPath, openOption);
+            OpenProgressWindow opw = new(folderPath, openOption);
             try
             {
                 if (opw.ShowDialog() ?? false)
@@ -123,7 +123,7 @@ namespace TRGE.View.Controls
         private void HandleChecksumMismatch(string folderPath)
         {
             TRScriptOpenOption option = TRScriptOpenOption.Default;
-            ScriptOptionWindow sow = new ScriptOptionWindow();
+            ScriptOptionWindow sow = new();
             if (sow.ShowDialog() ?? false)
             {
                 option = sow.Option;

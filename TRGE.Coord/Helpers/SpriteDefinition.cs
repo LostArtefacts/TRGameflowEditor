@@ -51,12 +51,11 @@ namespace TRGE.Coord
 
         public static void WriteWeaponDefinitions(TRTexImage8 img8, TRTexImage16 img16, string jsonPath)
         {
-            Dictionary<string, object> output = new Dictionary<string, object>
+            Dictionary<string, object> output = new()
             {
                 ["Weapons"] = new List<SpriteDefinition>
                 {
-                    new SpriteDefinition
-                    {
+                    new() {
                         Sequence = new TRSpriteSequence { SpriteID = 135, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
@@ -66,8 +65,7 @@ namespace TRGE.Coord
                             TopSide = -102, BottomSide = 11
                         }
                     },
-                    new SpriteDefinition
-                    {
+                    new() {
                         Sequence = new TRSpriteSequence { SpriteID = 136, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
@@ -77,8 +75,7 @@ namespace TRGE.Coord
                             TopSide = -64, BottomSide = 32
                         }
                     },
-                    new SpriteDefinition
-                    {
+                    new() {
                         Sequence = new TRSpriteSequence { SpriteID = 137, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
@@ -88,8 +85,7 @@ namespace TRGE.Coord
                             TopSide = -76, BottomSide = 7
                         }
                     },
-                    new SpriteDefinition
-                    {
+                    new() {
                         Sequence = new TRSpriteSequence { SpriteID = 138, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
@@ -99,8 +95,7 @@ namespace TRGE.Coord
                             TopSide = -56, BottomSide = 56
                         }
                     },
-                    new SpriteDefinition
-                    {
+                    new() {
                         Sequence = new TRSpriteSequence { SpriteID = 139, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
@@ -110,8 +105,7 @@ namespace TRGE.Coord
                             TopSide = -76, BottomSide = 3
                         }
                     },
-                    new SpriteDefinition
-                    {
+                    new() {
                         Sequence = new TRSpriteSequence { SpriteID = 140, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {
@@ -121,8 +115,7 @@ namespace TRGE.Coord
                             TopSide = -80, BottomSide = 3
                         }
                     },
-                    new SpriteDefinition
-                    {
+                    new() {
                         Sequence = new TRSpriteSequence { SpriteID = 141, NegativeLength = -1 },
                         Texture = new TRSpriteTexture
                         {

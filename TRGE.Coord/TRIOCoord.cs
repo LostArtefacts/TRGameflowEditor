@@ -106,7 +106,7 @@ namespace TRGE.Coord
 
         internal AbstractTRScriptEditor GetScriptEditor(TRScriptOpenOption openOption)
         {
-            TRScriptIOArgs io = new TRScriptIOArgs
+            TRScriptIOArgs io = new()
             {
                 TRScriptFile = _orignalScriptFile == null ? null : new FileInfo(_orignalScriptFile),
                 TRScriptBackupFile = _backupScriptFile == null ? null : new FileInfo(_backupScriptFile),
@@ -132,7 +132,7 @@ namespace TRGE.Coord
                 return null;
             }
 
-            TRDirectoryIOArgs io = new TRDirectoryIOArgs
+            TRDirectoryIOArgs io = new()
             {
                 OriginalDirectory = new DirectoryInfo(_originalDirectory),
                 BackupDirectory = new DirectoryInfo(GetBackupDirectory()),
@@ -178,10 +178,10 @@ namespace TRGE.Coord
             string outputDirectory = GetOutputDirectory();
             if (_mode == OperationMode.Directory)
             {
-                DirectoryInfo backupDI = new DirectoryInfo(backupDirectory);
-                DirectoryInfo outputDI = new DirectoryInfo(outputDirectory);
+                DirectoryInfo backupDI = new(backupDirectory);
+                DirectoryInfo outputDI = new(outputDirectory);
 
-                List<string> filesToBackup = new List<string>();
+                List<string> filesToBackup = new();
                 if (_orignalScriptFile != null)
                 {
                     filesToBackup.Add(_orignalScriptFile);
@@ -216,8 +216,8 @@ namespace TRGE.Coord
                     _backupArgs.ProgressTarget += filesToBackup.Count;
                     FireBackupProgressChanged();
 
-                    List<string> failures = new List<string>();
-                    List<string> exts = new List<string>{ ".PHD", ".TR2", ".TR4", ".TRC" };
+                    List<string> failures = new();
+                    List<string> exts = new() { ".PHD", ".TR2", ".TR4", ".TRC" };
                     foreach (string file in filesToBackup)
                     {
                         if (!exts.Contains(Path.GetExtension(file).ToUpper()))
@@ -270,7 +270,7 @@ namespace TRGE.Coord
             }
             else
             {
-                FileInfo fi = new FileInfo(_orignalScriptFile);
+                FileInfo fi = new(_orignalScriptFile);
                 _backupScriptFile = Path.Combine(backupDirectory, fi.Name);
                 if (!File.Exists(_backupScriptFile))
                 {
@@ -301,9 +301,9 @@ namespace TRGE.Coord
 
         protected void TidyBackup(AbstractTRScriptEditor scriptEditor)
         {
-            DirectoryInfo backupDI = new DirectoryInfo(GetBackupDirectory());
-            DirectoryInfo outputDI = new DirectoryInfo(GetOutputDirectory());
-            List<string> expectedFiles = new List<string>();
+            DirectoryInfo backupDI = new(GetBackupDirectory());
+            DirectoryInfo outputDI = new(GetOutputDirectory());
+            List<string> expectedFiles = new();
             if (_orignalScriptFile != null)
             {
                 expectedFiles.Add(scriptEditor.BackupFile.Name);
@@ -354,19 +354,19 @@ namespace TRGE.Coord
 
         internal string GetBackupDirectory()
         {
-            DirectoryInfo editDirectory = new DirectoryInfo(GetEditDirectory());
+            DirectoryInfo editDirectory = new(GetEditDirectory());
             return editDirectory.CreateSubdirectory(_backupDirectoryName).FullName;
         }
 
         internal string GetWIPOutputDirectory()
         {
-            DirectoryInfo outputDirectory = new DirectoryInfo(GetOutputDirectory());
+            DirectoryInfo outputDirectory = new(GetOutputDirectory());
             return outputDirectory.CreateSubdirectory(_wipDirectoryName).FullName;
         }
 
         internal string GetOutputDirectory()
         {
-            DirectoryInfo editDirectory = new DirectoryInfo(GetEditDirectory());
+            DirectoryInfo editDirectory = new(GetEditDirectory());
             return editDirectory.CreateSubdirectory(_outputDirectoryName).FullName;
         }
 
