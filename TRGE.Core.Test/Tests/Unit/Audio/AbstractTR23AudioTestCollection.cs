@@ -40,10 +40,8 @@ namespace TRGE.Core.Test
         protected void TestPlayTrack()
         {
             TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-            using (MemoryStream ms = new(sm.GetTrackData(SampleTrack)))
-            {
-                //new SoundPlayer(ms).PlaySync();
-            }
+            using MemoryStream ms = new(sm.GetTrackData(SampleTrack));
+            //new SoundPlayer(ms).PlaySync();
         }
 
         [TestMethod]

@@ -735,84 +735,82 @@ namespace TRGE.Core
 
         public override byte[] SerialiseScriptToBin()
         {
-            using (MemoryStream ms = new())
-            using (BinaryWriter bw = new(ms))
+            using MemoryStream ms = new();
+            using BinaryWriter bw = new(ms);
+            bw.Write(Version);
+
+            byte[] description = Encoding.ASCII.GetBytes(_description);
+            Array.Resize(ref description, 256);
+            bw.Write(description);
+
+            bw.Write(GameflowSize);
+            bw.Write(FirstOption);
+            bw.Write(TitleReplace);
+            bw.Write(DeathDemoMode);
+            bw.Write(DeathInGame);
+            bw.Write(DemoTime);
+            bw.Write(DemoInterrupt);
+            bw.Write(DemoEnd);
+            bw.Write(_padding1);
+
+            bw.Write(NumLevels);
+            bw.Write(NumPictures);
+            bw.Write(NumTitles);
+            bw.Write(NumRPLs);
+            bw.Write(NumCutScenes);
+            bw.Write(NumDemoLevels);
+            bw.Write(TitleSoundID);
+            bw.Write(SingleLevel);
+            bw.Write(_padding2);
+
+            bw.Write(Flags);
+            bw.Write(_padding3);
+
+            bw.Write(Xor);
+            bw.Write(Language);
+            bw.Write(SecretSound);
+            bw.Write(_padding4);
+
+            WriteStringData(bw, _levelNames);
+            WriteStringData(bw, _pictureNames);
+            WriteStringData(bw, _titleFileNames);
+            WriteStringData(bw, _rplFileNames);
+            WriteStringData(bw, _levelFileNames);
+            WriteStringData(bw, _cutSceneFileNames);
+
+            WriteScriptData(bw);
+            WriteDemoData(bw);
+            WritePSXFMVData(bw);
+
+            bw.Write(NumGameStrings1);
+            WriteStringData(bw, _gameStrings1);
+            WriteStringData(bw, _gameStrings2);
+
+            WriteStringData(bw, _puzzleNames1);
+            WriteStringData(bw, _puzzleNames2);
+            WriteStringData(bw, _puzzleNames3);
+            WriteStringData(bw, _puzzleNames4);
+
+            if (Edition.Equals(TREdition.TR2PSXBeta))
             {
-                bw.Write(Version);
+                WriteStringData(bw, _secretNames1);
+                WriteStringData(bw, _secretNames2);
+                WriteStringData(bw, _secretNames3);
+                WriteStringData(bw, _secretNames4);
 
-                byte[] description = Encoding.ASCII.GetBytes(_description);
-                Array.Resize(ref description, 256);
-                bw.Write(description);
-
-                bw.Write(GameflowSize);
-                bw.Write(FirstOption);
-                bw.Write(TitleReplace);
-                bw.Write(DeathDemoMode);
-                bw.Write(DeathInGame);
-                bw.Write(DemoTime);
-                bw.Write(DemoInterrupt);
-                bw.Write(DemoEnd);
-                bw.Write(_padding1);
-
-                bw.Write(NumLevels);
-                bw.Write(NumPictures);
-                bw.Write(NumTitles);
-                bw.Write(NumRPLs);
-                bw.Write(NumCutScenes);
-                bw.Write(NumDemoLevels);
-                bw.Write(TitleSoundID);
-                bw.Write(SingleLevel);
-                bw.Write(_padding2);
-
-                bw.Write(Flags);
-                bw.Write(_padding3);
-
-                bw.Write(Xor);
-                bw.Write(Language);
-                bw.Write(SecretSound);
-                bw.Write(_padding4);
-
-                WriteStringData(bw, _levelNames);
-                WriteStringData(bw, _pictureNames);
-                WriteStringData(bw, _titleFileNames);
-                WriteStringData(bw, _rplFileNames);
-                WriteStringData(bw, _levelFileNames);
-                WriteStringData(bw, _cutSceneFileNames);
-
-                WriteScriptData(bw);
-                WriteDemoData(bw);
-                WritePSXFMVData(bw);
-
-                bw.Write(NumGameStrings1);
-                WriteStringData(bw, _gameStrings1);
-                WriteStringData(bw, _gameStrings2);
-
-                WriteStringData(bw, _puzzleNames1);
-                WriteStringData(bw, _puzzleNames2);
-                WriteStringData(bw, _puzzleNames3);
-                WriteStringData(bw, _puzzleNames4);
-
-                if (Edition.Equals(TREdition.TR2PSXBeta))
-                {
-                    WriteStringData(bw, _secretNames1);
-                    WriteStringData(bw, _secretNames2);
-                    WriteStringData(bw, _secretNames3);
-                    WriteStringData(bw, _secretNames4);
-
-                    WriteStringData(bw, _specialNames1);
-                    WriteStringData(bw, _specialNames2);
-                }
-
-                WriteStringData(bw, _pickupNames1);
-                WriteStringData(bw, _pickupNames2);
-
-                WriteStringData(bw, _keyNames1);
-                WriteStringData(bw, _keyNames2);
-                WriteStringData(bw, _keyNames3);
-                WriteStringData(bw, _keyNames4);
-
-                return ms.ToArray();
+                WriteStringData(bw, _specialNames1);
+                WriteStringData(bw, _specialNames2);
             }
+
+            WriteStringData(bw, _pickupNames1);
+            WriteStringData(bw, _pickupNames2);
+
+            WriteStringData(bw, _keyNames1);
+            WriteStringData(bw, _keyNames2);
+            WriteStringData(bw, _keyNames3);
+            WriteStringData(bw, _keyNames4);
+
+            return ms.ToArray();
         }
 
         private void WriteStringData(BinaryWriter bw, List<string> stringData)

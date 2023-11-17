@@ -53,12 +53,10 @@ namespace TRGE.Core
         {
             Dictionary<int, Tuple<ushort, string, TRAudioCategory[]>> mp3Map = GetTR2Map();
             string dir = Path.Combine(_localWavFolder, "TR2Audio");
-            using (BinaryWriter bw = new(new FileStream("tr2audio.wad", FileMode.Create, FileAccess.Write)))
+            using BinaryWriter bw = new(new FileStream("tr2audio.wad", FileMode.Create, FileAccess.Write));
+            foreach (int key in mp3Map.Keys)
             {
-                foreach (int key in mp3Map.Keys)
-                {
-                    bw.Write(File.ReadAllBytes(Path.Combine(dir, key + ".wav")));
-                }
+                bw.Write(File.ReadAllBytes(Path.Combine(dir, key + ".wav")));
             }
         }
 
@@ -66,30 +64,28 @@ namespace TRGE.Core
         {
             List<TRAudioTrack> tracks = new();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");
-            using (BinaryReader br = new(new FileStream(originalWadPath, FileMode.Open)))
+            using BinaryReader br = new(new FileStream(originalWadPath, FileMode.Open));
+            for (ushort i = 0; i < 130; i++)
             {
-                for (ushort i = 0; i < 130; i++)
+                byte[] name = br.ReadBytes(260);
+                uint length = br.ReadUInt32();
+                uint offset = br.ReadUInt32();
+                if (length > 0)
                 {
-                    byte[] name = br.ReadBytes(260);
-                    uint length = br.ReadUInt32();
-                    uint offset = br.ReadUInt32();
-                    if (length > 0)
+                    tracks.Add(new TRAudioTrack
                     {
-                        tracks.Add(new TRAudioTrack
-                        {
-                            ID = i,
-                            Name = Encoding.ASCII.GetString(name).TrimEnd((char)0),
-                            Length = length,
-                            Offset = offset
-                        });
-                    }
+                        ID = i,
+                        Name = Encoding.ASCII.GetString(name).TrimEnd((char)0),
+                        Length = length,
+                        Offset = offset
+                    });
                 }
+            }
 
-                foreach (TRAudioTrack track in tracks)
-                {
-                    br.BaseStream.Position = track.Offset;
-                    File.WriteAllBytes(Path.Combine(dir, track.ID + "_.wav"), br.ReadBytes(Convert.ToInt32(track.Length)));
-                }
+            foreach (TRAudioTrack track in tracks)
+            {
+                br.BaseStream.Position = track.Offset;
+                File.WriteAllBytes(Path.Combine(dir, track.ID + "_.wav"), br.ReadBytes(Convert.ToInt32(track.Length)));
             }
 
             //use ffmpeg at this point to compress the files a bit e.g.
@@ -134,12 +130,10 @@ namespace TRGE.Core
             Dictionary<ushort, Tuple<string, TRAudioCategory[]>> tr3Map = GetTR3Map();
             string dir = Path.Combine(_localWavFolder, "TR3Audio");
 
-            using (BinaryWriter bw = new(new FileStream("tr3audio.wad", FileMode.Create, FileAccess.Write)))
+            using BinaryWriter bw = new(new FileStream("tr3audio.wad", FileMode.Create, FileAccess.Write));
+            foreach (int key in tr3Map.Keys)
             {
-                foreach (int key in tr3Map.Keys)
-                {
-                    bw.Write(File.ReadAllBytes(Path.Combine(dir, key + ".wav")));
-                }
+                bw.Write(File.ReadAllBytes(Path.Combine(dir, key + ".wav")));
             }
         }
 

@@ -13,31 +13,27 @@ namespace TRGE.Core
                 encoding = Encoding.Default;
             }
 
-            using (MD5 md5 = MD5.Create())
+            using MD5 md5 = MD5.Create();
+            byte[] hash = md5.ComputeHash(encoding.GetBytes(str));
+            StringBuilder sb = new();
+            for (int i = 0; i < hash.Length; i++)
             {
-                byte[] hash = md5.ComputeHash(encoding.GetBytes(str));
-                StringBuilder sb = new();
-                for (int i = 0; i < hash.Length; i++)
-                {
-                    sb.Append(hash[i].ToString("x2"));
-                }
-                return sb.ToString();
+                sb.Append(hash[i].ToString("x2"));
             }
+            return sb.ToString();
         }
 
         public static string Checksum(this FileInfo file)
         {
-            using (MD5 md5 = MD5.Create())
-            using (FileStream stream = File.OpenRead(file.FullName))
+            using MD5 md5 = MD5.Create();
+            using FileStream stream = File.OpenRead(file.FullName);
+            byte[] hash = md5.ComputeHash(stream);
+            StringBuilder sb = new();
+            for (int i = 0; i < hash.Length; i++)
             {
-                byte[] hash = md5.ComputeHash(stream);
-                StringBuilder sb = new();
-                for (int i = 0; i < hash.Length; i++)
-                {
-                    sb.Append(hash[i].ToString("x2"));
-                }
-                return sb.ToString();
+                sb.Append(hash[i].ToString("x2"));
             }
+            return sb.ToString();
         }
     }
 }

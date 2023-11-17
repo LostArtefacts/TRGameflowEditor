@@ -36,11 +36,9 @@ namespace TRGE.Core
                 return null;
             }
 
-            using (BinaryReader br = new(new FileStream(wadFile, FileMode.Open)))
-            {
-                br.BaseStream.Position = track.Offset;
-                return br.ReadBytes(Convert.ToInt32(track.Length));
-            }
+            using BinaryReader br = new(new FileStream(wadFile, FileMode.Open));
+            br.BaseStream.Position = track.Offset;
+            return br.ReadBytes(Convert.ToInt32(track.Length));
         }
 
         public override TRAudioTrack GetBlankTrack()

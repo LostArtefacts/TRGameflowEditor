@@ -156,13 +156,11 @@ namespace TRGE.Core
                 encoding = Encoding.Default;
             }
 
-            using (FileStream fs = fileInfo.OpenRead())
-            using (GZipStream zs = new(fs, CompressionMode.Decompress))
-            using (MemoryStream ms = new())
-            {
-                zs.CopyTo(ms);
-                return encoding.GetString(ms.ToArray());
-            }
+            using FileStream fs = fileInfo.OpenRead();
+            using GZipStream zs = new(fs, CompressionMode.Decompress);
+            using MemoryStream ms = new();
+            zs.CopyTo(ms);
+            return encoding.GetString(ms.ToArray());
         }
 
         /// <summary>
@@ -176,11 +174,9 @@ namespace TRGE.Core
             }
             
             byte[] data = encoding.GetBytes(text);
-            using (FileStream fs = fileInfo.Create())
-            using (GZipStream zs = new(fs, CompressionMode.Compress))
-            {
-                zs.Write(data, 0, data.Length);
-            }
+            using FileStream fs = fileInfo.Create();
+            using GZipStream zs = new(fs, CompressionMode.Compress);
+            zs.Write(data, 0, data.Length);
         }
 
         /// <summary>
@@ -188,13 +184,11 @@ namespace TRGE.Core
         /// </summary>
         internal static byte[] ReadCompressedBinary(this FileInfo fileInfo)
         {
-            using (FileStream fs = fileInfo.OpenRead())
-            using (GZipStream zs = new(fs, CompressionMode.Decompress))
-            using (MemoryStream ms = new())
-            {
-                zs.CopyTo(ms);
-                return ms.ToArray();
-            }
+            using FileStream fs = fileInfo.OpenRead();
+            using GZipStream zs = new(fs, CompressionMode.Decompress);
+            using MemoryStream ms = new();
+            zs.CopyTo(ms);
+            return ms.ToArray();
         }
 
         /// <summary>
@@ -202,11 +196,9 @@ namespace TRGE.Core
         /// </summary>
         internal static void WriteCompressedBinary(this FileInfo fileInfo, byte[] data)
         {
-            using (FileStream fs = fileInfo.Create())
-            using (GZipStream zs = new(fs, CompressionMode.Compress))
-            {
-                zs.Write(data, 0, data.Length);
-            }
+            using FileStream fs = fileInfo.Create();
+            using GZipStream zs = new(fs, CompressionMode.Compress);
+            zs.Write(data, 0, data.Length);
         }
 
         private static readonly string[] _sizeSuffixes =
