@@ -317,7 +317,7 @@ public class TR1Script : AbstractTRScript
             ++levelID;
         }
 
-        Levels[Levels.Count - 1].IsFinalLevel = true;
+        Levels[^1].IsFinalLevel = true;
     }
 
     public override void ReadConfigJson(string json)
