@@ -238,77 +238,50 @@ public class TR1Script : AbstractTRScript
                 JObject sequenceData = levelSequence as JObject;
                 BaseLevelSequence sequence;
                 LevelSequenceType sequenceType = ReadEnum<LevelSequenceType>(nameof(sequence.Type), sequenceData);
-                switch (sequenceType)
+                sequence = sequenceType switch
                 {
-                    case LevelSequenceType.Play_FMV:
-                        sequence = new FMVLevelSequence
-                        {
-                            FmvPath = ReadString("FmvPath", sequenceData)
-                        };
-                        break;
-                    case LevelSequenceType.Display_Picture:
-                        sequence = new DisplayPictureLevelSequence
-                        {
-                            PicturePath = ReadString("PicturePath", sequenceData),
-                            DisplayTime = ReadDouble("DisplayTime", sequenceData)
-                        };
-                        break;
-                    case LevelSequenceType.Total_Stats:
-                        sequence = new TotalStatsLevelSequence
-                        {
-                            PicturePath = ReadString("PicturePath", sequenceData)
-                        };
-                        break;
-                    case LevelSequenceType.Level_Stats:
-                    case LevelSequenceType.Exit_To_Level:
-                    case LevelSequenceType.Exit_To_Cine:
-                        sequence = new LevelExitLevelSequence
-                        {
-                            LevelId = ReadInt("LevelId", sequenceData)
-                        };
-                        break;                        
-                    
-                    case LevelSequenceType.Set_Cam_X:
-                    case LevelSequenceType.Set_Cam_Y:
-                    case LevelSequenceType.Set_Cam_Z:
-                    case LevelSequenceType.Set_Cam_Angle:
-                        sequence = new SetCamLevelSequence
-                        {
-                            Value = ReadInt("Value", sequenceData)
-                        };
-                        break;                        
-                    case LevelSequenceType.Give_Item:
-                        sequence = new GiveItemLevelSequence
-                        {
-                            ObjectId = (TR1Items)ReadInt("ObjectId", sequenceData),
-                            Quantity = ReadInt("Quantity", sequenceData)
-                        };
-                        break;
-                    case LevelSequenceType.Play_Synced_Audio:
-                        sequence = new PlaySyncedAudioLevelSequence
-                        {
-                            AudioId = ReadInt("AudioId", sequenceData)
-                        };
-                        break;
-                    case LevelSequenceType.Mesh_Swap:
-                        sequence = new MeshSwapLevelSequence
-                        {
-                            Object1ID = ReadInt("Object1Id", sequenceData),
-                            Object2ID = ReadInt("Object2Id", sequenceData),
-                            MeshID = ReadInt("MeshId", sequenceData)
-                        };
-                        break;
-                    case LevelSequenceType.Setup_Bacon_Lara:
-                        sequence = new SetupBaconLaraSequence
-                        {
-                            AnchorRoom = ReadInt("AnchorRoom", sequenceData)
-                        };
-                        break;
-                    default:
-                        sequence = new BaseLevelSequence();
-                        break;
-                }
-
+                    LevelSequenceType.Play_FMV => new FMVLevelSequence
+                    {
+                        FmvPath = ReadString("FmvPath", sequenceData)
+                    },
+                    LevelSequenceType.Display_Picture => new DisplayPictureLevelSequence
+                    {
+                        PicturePath = ReadString("PicturePath", sequenceData),
+                        DisplayTime = ReadDouble("DisplayTime", sequenceData)
+                    },
+                    LevelSequenceType.Total_Stats => new TotalStatsLevelSequence
+                    {
+                        PicturePath = ReadString("PicturePath", sequenceData)
+                    },
+                    LevelSequenceType.Level_Stats or LevelSequenceType.Exit_To_Level or LevelSequenceType.Exit_To_Cine => new LevelExitLevelSequence
+                    {
+                        LevelId = ReadInt("LevelId", sequenceData)
+                    },
+                    LevelSequenceType.Set_Cam_X or LevelSequenceType.Set_Cam_Y or LevelSequenceType.Set_Cam_Z or LevelSequenceType.Set_Cam_Angle => new SetCamLevelSequence
+                    {
+                        Value = ReadInt("Value", sequenceData)
+                    },
+                    LevelSequenceType.Give_Item => new GiveItemLevelSequence
+                    {
+                        ObjectId = (TR1Items)ReadInt("ObjectId", sequenceData),
+                        Quantity = ReadInt("Quantity", sequenceData)
+                    },
+                    LevelSequenceType.Play_Synced_Audio => new PlaySyncedAudioLevelSequence
+                    {
+                        AudioId = ReadInt("AudioId", sequenceData)
+                    },
+                    LevelSequenceType.Mesh_Swap => new MeshSwapLevelSequence
+                    {
+                        Object1ID = ReadInt("Object1Id", sequenceData),
+                        Object2ID = ReadInt("Object2Id", sequenceData),
+                        MeshID = ReadInt("MeshId", sequenceData)
+                    },
+                    LevelSequenceType.Setup_Bacon_Lara => new SetupBaconLaraSequence
+                    {
+                        AnchorRoom = ReadInt("AnchorRoom", sequenceData)
+                    },
+                    _ => new BaseLevelSequence(),
+                };
                 sequence.Type = sequenceType;
                 level.Sequences.Add(sequence);
             }

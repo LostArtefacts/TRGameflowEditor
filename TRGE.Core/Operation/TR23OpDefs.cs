@@ -59,68 +59,38 @@ internal static class TR23OpDefs
 
     internal static string GetName(TROpDef def)
     {
-        switch (def.OpCode)
+        return def.OpCode switch
         {
-            case 0:
-                return nameof(Picture);
-            case 1:
-                return nameof(ListStart);
-            case 2:
-                return nameof(ListEnd);
-            case 3:
-                return nameof(FMV);
-            case 4:
-                return nameof(Level);
-            case 5:
-                return nameof(Cinematic);
-            case 6:
-                return nameof(Complete);
-            case 7:
-                return nameof(Demo);
-            case 8:
-                return nameof(JumpToSequence);
-            case 9:
-                return nameof(End);
-            case 10:
-                return nameof(Track);
-            case 11:
-                return nameof(Sunset);
-            case 12:
-                return nameof(LoadPic);
-            case 13:
-                return nameof(DeadlyWater);
-            case 14:
-                return nameof(RemoveWeapons);
-            case 15:
-                return nameof(GameComplete);
-            case 16:
-                return nameof(CutAngle);
-            case 17:
-                return nameof(NoFloor);
-            case 18:
-                return nameof(StartInvBonus);
-            case 19:
-                return nameof(StartAnimation);
-            case 20:
-                return nameof(Secrets);
-            case 21:
-                return nameof(KillToComplete);
-            case 22:
-                return nameof(RemoveAmmo);
-            case 23:
-                return nameof(HasRain);
-            case 24:
-                return nameof(HasSnow);
-            case 25:
-                return nameof(WaterParts);
-            case 26:
-                return nameof(IsCold);
-            case 27:
-                return nameof(DeathTile);
-            case 28:
-                return nameof(WaterColour);
-            default:
-                return "Unknown";
-        }
+            0 => nameof(Picture),
+            1 => nameof(ListStart),
+            2 => nameof(ListEnd),
+            3 => nameof(FMV),
+            4 => nameof(Level),
+            5 => nameof(Cinematic),
+            6 => nameof(Complete),
+            7 => nameof(Demo),
+            8 => nameof(JumpToSequence),
+            9 => nameof(End),
+            10 => nameof(Track),
+            11 => nameof(Sunset),
+            12 => nameof(LoadPic),
+            13 => nameof(DeadlyWater),
+            14 => nameof(RemoveWeapons),
+            15 => nameof(GameComplete),
+            16 => nameof(CutAngle),
+            17 => nameof(NoFloor),
+            18 => nameof(StartInvBonus),
+            19 => nameof(StartAnimation),
+            20 => nameof(Secrets),
+            21 => nameof(KillToComplete),
+            22 => nameof(RemoveAmmo),
+            23 => nameof(HasRain),
+            24 => nameof(HasSnow),
+            25 => nameof(WaterParts),
+            26 => nameof(IsCold),
+            27 => nameof(DeathTile),
+            28 => nameof(WaterColour),
+            _ => "Unknown",
+        };
     }
 }

@@ -35,13 +35,11 @@ public class TR3LevelEditor : BaseTRLevelEditor
 
     internal override bool ShouldHandleModification(TRScriptedLevelEventArgs e)
     {
-        switch (e.Modification)
+        return e.Modification switch
         {
-            case TRScriptedLevelModification.SequenceChanged:
-                return true;
-            default:
-                return base.ShouldHandleModification(e);
-        }
+            TRScriptedLevelModification.SequenceChanged => true,
+            _ => base.ShouldHandleModification(e),
+        };
     }
 
     internal override void ProcessModification(TRScriptedLevelEventArgs e)

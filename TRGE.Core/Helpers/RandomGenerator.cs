@@ -37,16 +37,12 @@ public class RandomGenerator
     {
         get
         {
-            switch (RNGType)
+            return RNGType switch
             {
-                case Type.UnixTime:
-                default:
-                    return Convert.ToInt32((DateTime.Now.ToUniversalTime() - UNIX_EPOCH).TotalSeconds);
-                case Type.Date:
-                    return int.Parse(DateTime.Now.ToString("yyyyMMdd"));
-                case Type.Custom:
-                    return CustomValue;
-            }
+                Type.Date => int.Parse(DateTime.Now.ToString("yyyyMMdd")),
+                Type.Custom => CustomValue,
+                _ => Convert.ToInt32((DateTime.Now.ToUniversalTime() - UNIX_EPOCH).TotalSeconds),
+            };
         }
         set
         {

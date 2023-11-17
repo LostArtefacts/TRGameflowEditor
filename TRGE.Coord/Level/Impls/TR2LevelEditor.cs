@@ -26,17 +26,11 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     internal override bool ShouldHandleModification(TRScriptedLevelEventArgs e)
     {
-        switch (e.Modification)
+        return e.Modification switch
         {
-            case TRScriptedLevelModification.SunsetChanged:
-            case TRScriptedLevelModification.StartingWeaponsAdded:
-            case TRScriptedLevelModification.StartingWeaponsRemoved:
-            case TRScriptedLevelModification.SkidooAdded:
-            case TRScriptedLevelModification.SkidooRemoved:
-                return true;
-            default:
-                return base.ShouldHandleModification(e);
-        }
+            TRScriptedLevelModification.SunsetChanged or TRScriptedLevelModification.StartingWeaponsAdded or TRScriptedLevelModification.StartingWeaponsRemoved or TRScriptedLevelModification.SkidooAdded or TRScriptedLevelModification.SkidooRemoved => true,
+            _ => base.ShouldHandleModification(e),
+        };
     }
 
     internal override void ProcessModification(TRScriptedLevelEventArgs e)

@@ -4,16 +4,11 @@ internal static class TRItemFactory
 {
     internal static AbstractTRItemProvider GetProvider(TREdition edition, IReadOnlyList<string> gameStrings)
     {
-        switch (edition.Version)
+        return edition.Version switch
         {
-            case TRVersion.TR2:
-            case TRVersion.TR2G:
-                return new TR2ItemProvider(edition, gameStrings);
-            case TRVersion.TR3:
-            case TRVersion.TR3G:
-                return new TR3ItemProvider(edition, gameStrings);
-            default:
-                return null;
-        }
+            TRVersion.TR2 or TRVersion.TR2G => new TR2ItemProvider(edition, gameStrings),
+            TRVersion.TR3 or TRVersion.TR3G => new TR3ItemProvider(edition, gameStrings),
+            _ => null,
+        };
     }
 }

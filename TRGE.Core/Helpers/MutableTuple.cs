@@ -14,15 +14,12 @@ public class MutableTuple<T1, T2> : ITuple
     {
         get
         {
-            switch (index)
+            return index switch
             {
-                case 0:
-                    return Item1;
-                case 1:
-                    return Item2;
-                default:
-                    throw new IndexOutOfRangeException();
-            }
+                0 => Item1,
+                1 => Item2,
+                _ => throw new IndexOutOfRangeException(),
+            };
         }
         set
         {
@@ -76,17 +73,13 @@ public class MutableTuple<T1, T2, T3> : ITuple
     {
         get
         {
-            switch (index)
+            return index switch
             {
-                case 0:
-                    return Item1;
-                case 1:
-                    return Item2;
-                case 2:
-                    return Item3;
-                default:
-                    throw new IndexOutOfRangeException();
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                _ => throw new IndexOutOfRangeException(),
+            };
         }
         set
         {
@@ -146,19 +139,14 @@ public class MutableTuple<T1, T2, T3, T4> : ITuple
     {
         get
         {
-            switch (index)
+            return index switch
             {
-                case 0:
-                    return Item1;
-                case 1:
-                    return Item2;
-                case 2:
-                    return Item3;
-                case 3:
-                    return Item4;
-                default:
-                    throw new IndexOutOfRangeException();
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                _ => throw new IndexOutOfRangeException(),
+            };
         }
         set
         {

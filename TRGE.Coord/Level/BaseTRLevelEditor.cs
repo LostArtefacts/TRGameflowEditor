@@ -17,13 +17,11 @@ public class BaseTRLevelEditor : AbstractTRLevelEditor
 
     internal override bool ShouldHandleModification(TRScriptedLevelEventArgs e)
     {
-        switch (e.Modification)
+        return e.Modification switch
         {
-            case TRScriptedLevelModification.WeaponlessStateChanged:
-                return true;
-            default:
-                return false;
-        }
+            TRScriptedLevelModification.WeaponlessStateChanged => true,
+            _ => false,
+        };
     }
 
     internal override void ProcessModification(TRScriptedLevelEventArgs e)

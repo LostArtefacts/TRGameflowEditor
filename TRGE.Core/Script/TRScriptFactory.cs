@@ -5,17 +5,13 @@ public static class TRScriptFactory
     public static AbstractTRScriptEditor GetScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
     {
         uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile == null ? null : ioArgs.TRScriptFile.FullName);
-        switch (scriptVersion)
+        return scriptVersion switch
         {
-            case TR1ATIScript.Version:
-                return new TR1ATIScriptEditor(ioArgs, openOption);
-            case TR1Script.Version:
-                return new TR1ScriptEditor(ioArgs, openOption);
-            case TR23Script.Version:
-                return new TR23ScriptEditor(ioArgs, openOption);
-            default:
-                throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, ioArgs.TRScriptFile.Name));
-        }
+            TR1ATIScript.Version => new TR1ATIScriptEditor(ioArgs, openOption),
+            TR1Script.Version => new TR1ScriptEditor(ioArgs, openOption),
+            TR23Script.Version => new TR23ScriptEditor(ioArgs, openOption),
+            _ => throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, ioArgs.TRScriptFile.Name)),
+        };
     }
 
     public static FileInfo FindScriptFile(DirectoryInfo directory)
@@ -71,22 +67,13 @@ public static class TRScriptFactory
 
     public static AbstractTRScript OpenScript(string filePath)
     {
-        AbstractTRScript script;
-        switch (GetDatFileVersion(filePath))
+        AbstractTRScript script = GetDatFileVersion(filePath) switch
         {
-            case TR1ATIScript.Version:
-                script = new TR1ATIScript();
-                break;
-            case TR1Script.Version:
-                script = new TR1Script();
-                break;
-            case TR23Script.Version:
-                script = new TR23Script();
-                break;
-            default:
-                throw new UnsupportedScriptException();
-        }
-
+            TR1ATIScript.Version => new TR1ATIScript(),
+            TR1Script.Version => new TR1Script(),
+            TR23Script.Version => new TR23Script(),
+            _ => throw new UnsupportedScriptException(),
+        };
         script.Read(filePath);
         return script;
     }
