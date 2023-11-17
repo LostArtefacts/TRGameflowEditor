@@ -2,69 +2,68 @@
 using System.Collections.Generic;
 using TRGE.Core;
 
-namespace TRGE.View.Model.Data
+namespace TRGE.View.Model.Data;
+
+public class LevelSequencingData : List<SequencedLevel>
 {
-    public class LevelSequencingData : List<SequencedLevel>
+    public LevelSequencingData(List<Tuple<string, string>> levelData, List<MutableTuple<string, string, bool>> enabledStatus)
     {
-        public LevelSequencingData(List<Tuple<string, string>> levelData, List<MutableTuple<string, string, bool>> enabledStatus)
+        if (enabledStatus.Count != levelData.Count)
         {
-            if (enabledStatus.Count != levelData.Count)
-            {
-                throw new ArgumentException("Level sequence data and enabled status data do not match.");
-            }
-
-            for (int i = 0; i < levelData.Count; i++)
-            {
-                Tuple<string, string> data = levelData[i];
-                MutableTuple<string, string, bool> enabledData = enabledStatus.Find(m => m.Item1 == data.Item1);
-                Add(new SequencedLevel(enabledData.Item3, data.Item1, data.Item2, i + 1));
-            }
+            throw new ArgumentException("Level sequence data and enabled status data do not match.");
         }
 
-        public List<Tuple<string, string>> ToSequenceTupleList()
+        for (int i = 0; i < levelData.Count; i++)
         {
-            List<Tuple<string, string>> result = new();
-            foreach (SequencedLevel level in this)
-            {
-                result.Add(level.ToSequenceTuple());
-            }
-            return result;
-        }
-
-        public List<MutableTuple<string, string, bool>> ToEnabledTupleList()
-        {
-            List<MutableTuple<string, string, bool>> result = new();
-            foreach (SequencedLevel level in this)
-            {
-                result.Add(level.ToEnabledTuple());
-            }
-            return result;
+            Tuple<string, string> data = levelData[i];
+            MutableTuple<string, string, bool> enabledData = enabledStatus.Find(m => m.Item1 == data.Item1);
+            Add(new SequencedLevel(enabledData.Item3, data.Item1, data.Item2, i + 1));
         }
     }
 
-    public class SequencedLevel : FlaggedLevel, IComparable<SequencedLevel>
+    public List<Tuple<string, string>> ToSequenceTupleList()
     {
-        public int DisplaySequence { get; set; }
-
-        public SequencedLevel(bool levelEnabled, string levelID, string levelName, int sequence)
-            : base(levelID, levelName, levelEnabled)
+        List<Tuple<string, string>> result = new();
+        foreach (SequencedLevel level in this)
         {
-            DisplaySequence = sequence;
+            result.Add(level.ToSequenceTuple());
         }
+        return result;
+    }
 
-        public Tuple<string, string> ToSequenceTuple()
+    public List<MutableTuple<string, string, bool>> ToEnabledTupleList()
+    {
+        List<MutableTuple<string, string, bool>> result = new();
+        foreach (SequencedLevel level in this)
         {
-            return new Tuple<string, string>(LevelID, LevelName);
+            result.Add(level.ToEnabledTuple());
         }
+        return result;
+    }
+}
 
-        public MutableTuple<string, string, bool> ToEnabledTuple()
-        {
-            return new MutableTuple<string, string, bool>(LevelID, LevelName, Flag);
-        }
+public class SequencedLevel : FlaggedLevel, IComparable<SequencedLevel>
+{
+    public int DisplaySequence { get; set; }
 
-        public int CompareTo(SequencedLevel other)
-        {
-            return DisplaySequence.CompareTo(other.DisplaySequence);
-        }
+    public SequencedLevel(bool levelEnabled, string levelID, string levelName, int sequence)
+        : base(levelID, levelName, levelEnabled)
+    {
+        DisplaySequence = sequence;
+    }
+
+    public Tuple<string, string> ToSequenceTuple()
+    {
+        return new Tuple<string, string>(LevelID, LevelName);
+    }
+
+    public MutableTuple<string, string, bool> ToEnabledTuple()
+    {
+        return new MutableTuple<string, string, bool>(LevelID, LevelName, Flag);
+    }
+
+    public int CompareTo(SequencedLevel other)
+    {
+        return DisplaySequence.CompareTo(other.DisplaySequence);
     }
 }

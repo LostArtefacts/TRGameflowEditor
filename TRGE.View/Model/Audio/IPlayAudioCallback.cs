@@ -1,11 +1,10 @@
 ﻿using TRGE.View.Model.Data;
 
-namespace TRGE.View.Model.Audio
+namespace TRGE.View.Model.Audio;
+
+public interface IPlayAudioCallback
 {
-    public interface IPlayAudioCallback
-    {
-        void AudioStarted(AudioTrack track);
-        void AudioFinished(AudioTrack track);
-        void AudioExportComplete(AudioTrack track);
-    }
+    void AudioStarted(AudioTrack track);
+    void AudioFinished(AudioTrack track);
+    void AudioExportComplete(AudioTrack track);
 }

@@ -1,10 +1,9 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRAirbarMode
 {
-    public enum TRAirbarMode
-    {
-        Default,
-        FlashingOnly,
-        Never,
-        PS1
-    }
+    Default,
+    FlashingOnly,
+    Never,
+    PS1
 }

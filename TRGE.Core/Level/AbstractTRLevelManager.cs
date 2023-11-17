@@ -1,457 +1,356 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public abstract class AbstractTRLevelManager
 {
-    public abstract class AbstractTRLevelManager
+    public abstract AbstractTRAudioProvider AudioProvider { get; }
+    protected abstract ushort TitleSoundID { get; set; }
+    protected abstract ushort SecretSoundID { get; set; }
+    internal abstract AbstractTRItemProvider ItemProvider { get; }
+    internal abstract AbstractTRScriptedLevel AssaultLevel { get; }
+    internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
+    internal abstract int LevelCount { get; }
+    internal int EnabledLevelCount => Levels.FindAll(l => l.Enabled).Count;
+
+    internal Organisation SequencingOrganisation { get; set; }
+    internal RandomGenerator SequencingRNG { get; set; }
+    internal Organisation EnabledOrganisation { get; set; }
+    internal RandomGenerator EnabledRNG { get; set; }
+    internal uint RandomEnabledCount { get; set; }
+    internal Organisation GameTrackOrganisation { get; set; }
+    internal RandomGenerator GameTrackRNG { get; set; }
+    internal bool RandomGameTracksIncludeBlank { get; set; }
+    internal Organisation SecretSupportOrganisation { get; set; }
+    internal Organisation SunsetOrganisation { get; set; }
+    internal RandomGenerator SunsetRNG { get; set; }
+    internal uint RandomSunsetCount { get; set; }
+
+    internal TREdition Edition { get; private set; }
+
+    internal bool CanSetSunsets => Edition.SunsetsSupported;
+
+    internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
+
+    internal AbstractTRLevelManager(TREdition edition)
     {
-        public abstract AbstractTRAudioProvider AudioProvider { get; }
-        protected abstract ushort TitleSoundID { get; set; }
-        protected abstract ushort SecretSoundID { get; set; }
-        internal abstract AbstractTRItemProvider ItemProvider { get; }
-        internal abstract AbstractTRScriptedLevel AssaultLevel { get; }
-        internal abstract List<AbstractTRScriptedLevel> Levels { get; set; }
-        internal abstract int LevelCount { get; }
-        internal int EnabledLevelCount => Levels.FindAll(l => l.Enabled).Count;
+        Edition = edition;
+    }
 
-        internal Organisation SequencingOrganisation { get; set; }
-        internal RandomGenerator SequencingRNG { get; set; }
-        internal Organisation EnabledOrganisation { get; set; }
-        internal RandomGenerator EnabledRNG { get; set; }
-        internal uint RandomEnabledCount { get; set; }
-        internal Organisation GameTrackOrganisation { get; set; }
-        internal RandomGenerator GameTrackRNG { get; set; }
-        internal bool RandomGameTracksIncludeBlank { get; set; }
-        internal Organisation SecretSupportOrganisation { get; set; }
-        internal Organisation SunsetOrganisation { get; set; }
-        internal RandomGenerator SunsetRNG { get; set; }
-        internal uint RandomSunsetCount { get; set; }
+    internal abstract void Save();
+    internal abstract void UpdateScript();
 
-        internal TREdition Edition { get; private set; }
-
-        internal bool CanSetSunsets => Edition.SunsetsSupported;
-
-        internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
-
-        internal AbstractTRLevelManager(TREdition edition)
+    internal virtual AbstractTRScriptedLevel GetLevel(string id)
+    {
+        foreach (AbstractTRScriptedLevel level in Levels)
         {
-            Edition = edition;
+            if (level.ID.Equals(id))
+            {
+                return level;
+            }
+        }
+        return null;
+    }
+
+    internal virtual List<Tuple<string, string>> GetSequencing()
+    {
+        return GetLevelSequencing(Levels);
+    }
+
+    private List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRScriptedLevel> levels)
+    {
+        List<Tuple<string, string>> data = new();
+        foreach (AbstractTRScriptedLevel level in levels)
+        {
+            data.Add(new Tuple<string, string>(level.ID, level.Name));
+        }
+        return data;
+    }
+
+    internal virtual void SetSequencing(List<Tuple<string, string>> data)
+    {
+        List<AbstractTRScriptedLevel> newLevels = new();
+        foreach (Tuple<string, string> item in data)
+        {
+            AbstractTRScriptedLevel level = GetLevel(item.Item1);
+            if (level == null)
+            {
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
+            }
+            newLevels.Add(level);
         }
 
-        internal abstract void Save();
-        internal abstract void UpdateScript();
+        Levels = newLevels;
+        SetLevelSequencing();
+    }
 
-        internal virtual AbstractTRScriptedLevel GetLevel(string id)
+    internal virtual void RandomiseSequencing(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        List<AbstractTRScriptedLevel> shuffledLevels = new(originalLevels);
+        shuffledLevels.Randomise(SequencingRNG.Create());
+
+        List<AbstractTRScriptedLevel> newLevels = new();
+        foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
         {
-            foreach (AbstractTRScriptedLevel level in Levels)
+            AbstractTRScriptedLevel level = GetLevel(shfLevel.ID);
+            if (level == null)
             {
-                if (level.ID.Equals(id))
-                {
-                    return level;
-                }
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
             }
-            return null;
+            newLevels.Add(level);
         }
 
-        internal virtual List<Tuple<string, string>> GetSequencing()
+        Levels = newLevels;
+        SetLevelSequencing();
+    }
+
+    internal void SetLevelSequencing()
+    {
+        AbstractTRScriptedLevel currentFinalLevel = Levels.Find(l => l.IsFinalLevel);
+
+        // Set enabled levels first
+        ushort newSeq = 1;
+        foreach (AbstractTRScriptedLevel level in Levels)
         {
-            return GetLevelSequencing(Levels);
-        }
-
-        private List<Tuple<string, string>> GetLevelSequencing(List<AbstractTRScriptedLevel> levels)
-        {
-            List<Tuple<string, string>> data = new();
-            foreach (AbstractTRScriptedLevel level in levels)
+            if (level.Enabled)
             {
-                data.Add(new Tuple<string, string>(level.ID, level.Name));
-            }
-            return data;
-        }
-
-        internal virtual void SetSequencing(List<Tuple<string, string>> data)
-        {
-            List<AbstractTRScriptedLevel> newLevels = new();
-            foreach (Tuple<string, string> item in data)
-            {
-                AbstractTRScriptedLevel level = GetLevel(item.Item1);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-                }
-                newLevels.Add(level);
-            }
-
-            Levels = newLevels;
-            SetLevelSequencing();
-        }
-
-        internal virtual void RandomiseSequencing(List<AbstractTRScriptedLevel> originalLevels)
-        {
-            List<AbstractTRScriptedLevel> shuffledLevels = new(originalLevels);
-            shuffledLevels.Randomise(SequencingRNG.Create());
-
-            List<AbstractTRScriptedLevel> newLevels = new();
-            foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
-            {
-                AbstractTRScriptedLevel level = GetLevel(shfLevel.ID);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
-                }
-                newLevels.Add(level);
-            }
-
-            Levels = newLevels;
-            SetLevelSequencing();
-        }
-
-        internal void SetLevelSequencing()
-        {
-            AbstractTRScriptedLevel currentFinalLevel = Levels.Find(l => l.IsFinalLevel);
-
-            // Set enabled levels first
-            ushort newSeq = 1;
-            foreach (AbstractTRScriptedLevel level in Levels)
-            {
-                if (level.Enabled)
-                {
-                    SetSequence(level, newSeq++);
-                }
-            }
-
-            // Then the others. The script will actually delete the disabled levels when it comes
-            // to saving but we need to retain them here in case of further edits.
-            foreach (AbstractTRScriptedLevel level in Levels)
-            {
-                if (!level.Enabled)
-                {
-                    SetSequence(level, newSeq++);
-                }
-            }
-
-            ushort finalSequence = (ushort)(LevelCount - Edition.LevelCompleteOffset);
-            finalSequence -= (ushort)(LevelCount - EnabledLevelCount);
-
-            AbstractTRScriptedLevel newFinalLevel = Levels.Find(l => l.Sequence == finalSequence);
-            if (currentFinalLevel != newFinalLevel)
-            {
-                currentFinalLevel.IsFinalLevel = false;
-                newFinalLevel.IsFinalLevel = true;
-
-                FinalLevelChanged(currentFinalLevel, newFinalLevel);
-
-                FireLevelModificationEvent(currentFinalLevel, TRScriptedLevelModification.SequenceChanged);
-                FireLevelModificationEvent(newFinalLevel, TRScriptedLevelModification.SequenceChanged);
+                SetSequence(level, newSeq++);
             }
         }
 
-        protected virtual void FinalLevelChanged(AbstractTRScriptedLevel oldFinalLevel, AbstractTRScriptedLevel newFinalLevel) { }
-
-        private void SetSequence(AbstractTRScriptedLevel level, ushort newSeq)
+        // Then the others. The script will actually delete the disabled levels when it comes
+        // to saving but we need to retain them here in case of further edits.
+        foreach (AbstractTRScriptedLevel level in Levels)
         {
-            bool modified = false;
-            if (level.Sequence != newSeq)
+            if (!level.Enabled)
             {
-                level.Sequence = newSeq;
-                modified = true;
-            }
-
-            if (modified)
-            {
-                // Inform all levels that the overall sequencing has changed.
-                foreach (AbstractTRScriptedLevel lvl in Levels)
-                {
-                    FireLevelModificationEvent(lvl, TRScriptedLevelModification.SequenceChanged);
-                }
+                SetSequence(level, newSeq++);
             }
         }
 
-        internal void RestoreSequencing(List<AbstractTRScriptedLevel> originalLevels)
+        ushort finalSequence = (ushort)(LevelCount - Edition.LevelCompleteOffset);
+        finalSequence -= (ushort)(LevelCount - EnabledLevelCount);
+
+        AbstractTRScriptedLevel newFinalLevel = Levels.Find(l => l.Sequence == finalSequence);
+        if (currentFinalLevel != newFinalLevel)
         {
-            SetSequencing(GetLevelSequencing(originalLevels));
+            currentFinalLevel.IsFinalLevel = false;
+            newFinalLevel.IsFinalLevel = true;
+
+            FinalLevelChanged(currentFinalLevel, newFinalLevel);
+
+            FireLevelModificationEvent(currentFinalLevel, TRScriptedLevelModification.SequenceChanged);
+            FireLevelModificationEvent(newFinalLevel, TRScriptedLevelModification.SequenceChanged);
+        }
+    }
+
+    protected virtual void FinalLevelChanged(AbstractTRScriptedLevel oldFinalLevel, AbstractTRScriptedLevel newFinalLevel) { }
+
+    private void SetSequence(AbstractTRScriptedLevel level, ushort newSeq)
+    {
+        bool modified = false;
+        if (level.Sequence != newSeq)
+        {
+            level.Sequence = newSeq;
+            modified = true;
         }
 
-        internal List<AbstractTRScriptedLevel> GetOriginalSequencedLevels(List<AbstractTRScriptedLevel> originalLevels, bool enabledLevelsOnly = false)
+        if (modified)
         {
-            List<AbstractTRScriptedLevel> levels = new(Levels.Count);
-            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            // Inform all levels that the overall sequencing has changed.
+            foreach (AbstractTRScriptedLevel lvl in Levels)
             {
-                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
-                }
-
-                if (!enabledLevelsOnly || level.Enabled)
-                {
-                    levels.Add(level);
-                }
-            }
-            return levels;
-        }
-
-        internal List<MutableTuple<string, string, bool>> GetEnabledLevelStatus()
-        {
-            List<MutableTuple<string, string, bool>> data = new();
-            foreach (AbstractTRScriptedLevel level in Levels)
-            {
-                data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.Enabled));
-            }
-            return data;
-        }
-
-        internal void SetEnabledLevelStatus(List<MutableTuple<string, string, bool>> data)
-        {
-            foreach (MutableTuple<string, string, bool> item in data)
-            {
-                AbstractTRScriptedLevel level = GetLevel(item.Item1);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-                }
-                level.Enabled = item.Item3;
-            }
-            SetLevelSequencing();
-        }
-
-        internal void RandomiseEnabledLevels()
-        {
-            List<AbstractTRScriptedLevel> enabledLevels = Levels.RandomSelection(EnabledRNG.Create(), RandomEnabledCount);
-            foreach (AbstractTRScriptedLevel level in Levels)
-            {
-                level.Enabled = enabledLevels.Contains(level);
-            }
-            SetLevelSequencing();
-        }
-
-        protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TROpDef opDef)
-        {
-            FireLevelModificationEvent(level, OpDefToModification(opDef));
-        }
-
-        protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TRScriptedLevelModification modification)
-        {
-            LevelModified?.Invoke(this, TRScriptedLevelEventArgs.Create(level, modification));
-        }
-
-        protected abstract TRScriptedLevelModification OpDefToModification(TROpDef opDef);
-
-        internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRScriptedLevel> basisLevels, TROperation operation)
-        {
-            List<AbstractTRScriptedLevel> enabledLevels = new();
-            foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
-            {
-                AbstractTRScriptedLevel lvl = GetLevel(originalLevel.ID);
-                if (lvl.Enabled)
-                {
-                    enabledLevels.Add(originalLevel);
-                }
-            }
-
-            List<AbstractTRScriptedLevel> levelSet = /*basisLevels*/enabledLevels.RandomSelection(rng.Create(), levelCount);
-            foreach (AbstractTRScriptedLevel level in Levels)
-            {
-                if (levelSet.Contains(level))
-                {
-                    level.EnsureOperation(operation);
-                }
-                else
-                {
-                    level.RemoveOperation(operation.Definition);
-                }
-
-                FireLevelModificationEvent(level, operation.Definition);
+                FireLevelModificationEvent(lvl, TRScriptedLevelModification.SequenceChanged);
             }
         }
+    }
 
-        internal List<AbstractTRScriptedLevel> GetLevelsWithOperation(TROpDef opDef, bool activeOnly)
+    internal void RestoreSequencing(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        SetSequencing(GetLevelSequencing(originalLevels));
+    }
+
+    internal List<AbstractTRScriptedLevel> GetOriginalSequencedLevels(List<AbstractTRScriptedLevel> originalLevels, bool enabledLevelsOnly = false)
+    {
+        List<AbstractTRScriptedLevel> levels = new(Levels.Count);
+        foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
-            List<AbstractTRScriptedLevel> levels = new();
-            foreach (AbstractTRScriptedLevel level in Levels)
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+            if (level == null)
             {
-                if (activeOnly)
-                {
-                    if (level.HasActiveOperation(opDef))
-                    {
-                        levels.Add(level);
-                    }
-                }
-                else if (level.HasOperation(opDef))
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+            }
+
+            if (!enabledLevelsOnly || level.Enabled)
+            {
+                levels.Add(level);
+            }
+        }
+        return levels;
+    }
+
+    internal List<MutableTuple<string, string, bool>> GetEnabledLevelStatus()
+    {
+        List<MutableTuple<string, string, bool>> data = new();
+        foreach (AbstractTRScriptedLevel level in Levels)
+        {
+            data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.Enabled));
+        }
+        return data;
+    }
+
+    internal void SetEnabledLevelStatus(List<MutableTuple<string, string, bool>> data)
+    {
+        foreach (MutableTuple<string, string, bool> item in data)
+        {
+            AbstractTRScriptedLevel level = GetLevel(item.Item1);
+            if (level == null)
+            {
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
+            }
+            level.Enabled = item.Item3;
+        }
+        SetLevelSequencing();
+    }
+
+    internal void RandomiseEnabledLevels()
+    {
+        List<AbstractTRScriptedLevel> enabledLevels = Levels.RandomSelection(EnabledRNG.Create(), RandomEnabledCount);
+        foreach (AbstractTRScriptedLevel level in Levels)
+        {
+            level.Enabled = enabledLevels.Contains(level);
+        }
+        SetLevelSequencing();
+    }
+
+    protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TROpDef opDef)
+    {
+        FireLevelModificationEvent(level, OpDefToModification(opDef));
+    }
+
+    protected virtual void FireLevelModificationEvent(AbstractTRScriptedLevel level, TRScriptedLevelModification modification)
+    {
+        LevelModified?.Invoke(this, TRScriptedLevelEventArgs.Create(level, modification));
+    }
+
+    protected abstract TRScriptedLevelModification OpDefToModification(TROpDef opDef);
+
+    internal virtual void RandomiseLevelsWithOperation(RandomGenerator rng, uint levelCount, List<AbstractTRScriptedLevel> basisLevels, TROperation operation)
+    {
+        List<AbstractTRScriptedLevel> enabledLevels = new();
+        foreach (AbstractTRScriptedLevel originalLevel in basisLevels)
+        {
+            AbstractTRScriptedLevel lvl = GetLevel(originalLevel.ID);
+            if (lvl.Enabled)
+            {
+                enabledLevels.Add(originalLevel);
+            }
+        }
+
+        List<AbstractTRScriptedLevel> levelSet = /*basisLevels*/enabledLevels.RandomSelection(rng.Create(), levelCount);
+        foreach (AbstractTRScriptedLevel level in Levels)
+        {
+            if (levelSet.Contains(level))
+            {
+                level.EnsureOperation(operation);
+            }
+            else
+            {
+                level.RemoveOperation(operation.Definition);
+            }
+
+            FireLevelModificationEvent(level, operation.Definition);
+        }
+    }
+
+    internal List<AbstractTRScriptedLevel> GetLevelsWithOperation(TROpDef opDef, bool activeOnly)
+    {
+        List<AbstractTRScriptedLevel> levels = new();
+        foreach (AbstractTRScriptedLevel level in Levels)
+        {
+            if (activeOnly)
+            {
+                if (level.HasActiveOperation(opDef))
                 {
                     levels.Add(level);
                 }
             }
-            return levels;
-        }
-
-        internal List<Tuple<ushort, string>> GetAllGameTracks()
-        {
-            List<Tuple<ushort, string>> tracks = new();
-            foreach (TRAudioTrack track in AudioProvider.Tracks)
+            else if (level.HasOperation(opDef))
             {
-                tracks.Add(new Tuple<ushort, string>(track.ID, track.Name));
+                levels.Add(level);
             }
-            return tracks;
+        }
+        return levels;
+    }
+
+    internal List<Tuple<ushort, string>> GetAllGameTracks()
+    {
+        List<Tuple<ushort, string>> tracks = new();
+        foreach (TRAudioTrack track in AudioProvider.Tracks)
+        {
+            tracks.Add(new Tuple<ushort, string>(track.ID, track.Name));
+        }
+        return tracks;
+    }
+
+    internal List<MutableTuple<string, string, ushort>> GetTrackData(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        List<MutableTuple<string, string, ushort>> ret = new();
+
+        TRAudioTrack track = AudioProvider.GetTrack(TitleSoundID);
+        if (track != null)
+        {
+            ret.Add(new MutableTuple<string, string, ushort>("TITLE", "Title Screen", TitleSoundID));
         }
 
-        internal List<MutableTuple<string, string, ushort>> GetTrackData(List<AbstractTRScriptedLevel> originalLevels)
+        if (Edition.AssaultCourseSupported)
         {
-            List<MutableTuple<string, string, ushort>> ret = new();
+            ret.Add(new MutableTuple<string, string, ushort>("ASSAULT", AssaultLevel.Name, AssaultLevel.TrackID));
+        }
 
-            TRAudioTrack track = AudioProvider.GetTrack(TitleSoundID);
+        if (Edition.SecretSoundSupported)
+        {
+            track = AudioProvider.GetTrack(SecretSoundID);
             if (track != null)
             {
-                ret.Add(new MutableTuple<string, string, ushort>("TITLE", "Title Screen", TitleSoundID));
-            }
-
-            if (Edition.AssaultCourseSupported)
-            {
-                ret.Add(new MutableTuple<string, string, ushort>("ASSAULT", AssaultLevel.Name, AssaultLevel.TrackID));
-            }
-
-            if (Edition.SecretSoundSupported)
-            {
-                track = AudioProvider.GetTrack(SecretSoundID);
-                if (track != null)
-                {
-                    ret.Add(new MutableTuple<string, string, ushort>("SECRET", "Secret Found", SecretSoundID));
-                }
-            }
-
-            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
-            {
-                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-                track = AudioProvider.GetTrack(level.TrackID);
-                if (track == null)
-                {
-                    track = AudioProvider.GetBlankTrack();
-                }
-                ret.Add(new MutableTuple<string, string, ushort>(level.ID, level.Name, track.ID));
-            }
-            return ret;
-        }
-
-        internal void SetTrackData(List<MutableTuple<string, string, ushort>> data)
-        {
-            foreach (MutableTuple<string, string, ushort> item in data)
-            {
-                if (item.Item1.Equals("TITLE"))
-                {
-                    TitleSoundID = item.Item3;
-                }
-                else if (item.Item1.Equals("ASSAULT"))
-                {
-                    if (Edition.AssaultCourseSupported)
-                    {
-                        AssaultLevel.TrackID = item.Item3;
-                    }
-                }
-                else if (item.Item1.Equals("SECRET"))
-                {
-                    if (Edition.SecretSoundSupported)
-                    {
-                        SecretSoundID = item.Item3;
-                    }
-                }
-                else
-                {
-                    AbstractTRScriptedLevel level = GetLevel(item.Item1);
-                    if (level == null)
-                    {
-                        throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-                    }
-
-                    level.TrackID = item.Item3;
-                }
+                ret.Add(new MutableTuple<string, string, ushort>("SECRET", "Secret Found", SecretSoundID));
             }
         }
 
-        internal void RandomiseGameTracks(List<AbstractTRScriptedLevel> originalLevels)
+        foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
-            IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
-            Random rand = GameTrackRNG.Create();
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+            track = AudioProvider.GetTrack(level.TrackID);
+            if (track == null)
+            {
+                track = AudioProvider.GetBlankTrack();
+            }
+            ret.Add(new MutableTuple<string, string, ushort>(level.ID, level.Name, track.ID));
+        }
+        return ret;
+    }
 
-            HashSet<TRAudioTrack> exclusions = new();
-            if (!RandomGameTracksIncludeBlank)
+    internal void SetTrackData(List<MutableTuple<string, string, ushort>> data)
+    {
+        foreach (MutableTuple<string, string, ushort> item in data)
+        {
+            if (item.Item1.Equals("TITLE"))
             {
-                exclusions.Add(AudioProvider.GetBlankTrack());
+                TitleSoundID = item.Item3;
             }
-
-            if (tracks[TRAudioCategory.Title].Count > 0)
+            else if (item.Item1.Equals("ASSAULT"))
             {
-                TitleSoundID = tracks[TRAudioCategory.Title].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
-            }
-            if (tracks[TRAudioCategory.Secret].Count > 0)
-            {
-                SecretSoundID = tracks[TRAudioCategory.Secret].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
-            }
-            if (tracks[TRAudioCategory.Ambient].Count > 0)
-            {
-                uint count = Convert.ToUInt32(/*Levels.Count*/EnabledLevelCount);
                 if (Edition.AssaultCourseSupported)
                 {
-                    count++;
-                }
-
-                List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, count, true, exclusions);
-                int nextTrack = 0;
-                for (int i = 0; i < originalLevels.Count; i++)
-                {
-                    AbstractTRScriptedLevel level = GetLevel(originalLevels[i].ID);
-                    if (level == null)
-                    {
-                        throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevels[i].ID));
-                    }
-
-                    if (level.Enabled)
-                    {
-                        //level.TrackID = levelTracks[i].ID;
-                        level.TrackID = levelTracks[nextTrack++].ID;
-                    }
-                }
-
-                if (Edition.AssaultCourseSupported)
-                {
-                    //AssaultLevel.TrackID = levelTracks[levelTracks.Count - 1].ID;
-                    AssaultLevel.TrackID = levelTracks[nextTrack++].ID;
+                    AssaultLevel.TrackID = item.Item3;
                 }
             }
-            RandomiseGameTracksImpl(rand);
-        }
-
-        internal virtual void RandomiseGameTracksImpl(Random rand) { }
-
-        internal void RestoreGameTracks(AbstractTRScript originalScript)
-        {
-            TitleSoundID = originalScript.TitleSoundID;
-            SecretSoundID = originalScript.SecretSoundID;
-            if (Edition.AssaultCourseSupported)
+            else if (item.Item1.Equals("SECRET"))
             {
-                AssaultLevel.TrackID = originalScript.AssaultLevel.TrackID;
-            }
-
-            foreach (AbstractTRScriptedLevel originalLevel in originalScript.Levels)
-            {
-                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-                if (level == null)
+                if (Edition.SecretSoundSupported)
                 {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+                    SecretSoundID = item.Item3;
                 }
-                level.TrackID = originalLevel.TrackID;
             }
-        }
-
-        internal List<MutableTuple<string, string, bool>> GetSecretSupport(List<AbstractTRScriptedLevel> originalLevels)
-        {
-            List<MutableTuple<string, string, bool>> support = new();
-            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
-            {
-                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-                support.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSecrets));
-            }
-            return support;
-        }
-
-        internal void SetSecretSupport(List<MutableTuple<string, string, bool>> secretSupport)
-        {
-            foreach (MutableTuple<string, string, bool> item in secretSupport)
+            else
             {
                 AbstractTRScriptedLevel level = GetLevel(item.Item1);
                 if (level == null)
@@ -459,103 +358,203 @@
                     throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
                 }
 
-                level.HasSecrets = item.Item3;
+                level.TrackID = item.Item3;
             }
         }
+    }
 
-        internal void RestoreSecretSupport(List<AbstractTRScriptedLevel> originalLevels)
+    internal void RandomiseGameTracks(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
+        Random rand = GameTrackRNG.Create();
+
+        HashSet<TRAudioTrack> exclusions = new();
+        if (!RandomGameTracksIncludeBlank)
         {
-            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            exclusions.Add(AudioProvider.GetBlankTrack());
+        }
+
+        if (tracks[TRAudioCategory.Title].Count > 0)
+        {
+            TitleSoundID = tracks[TRAudioCategory.Title].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
+        }
+        if (tracks[TRAudioCategory.Secret].Count > 0)
+        {
+            SecretSoundID = tracks[TRAudioCategory.Secret].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
+        }
+        if (tracks[TRAudioCategory.Ambient].Count > 0)
+        {
+            uint count = Convert.ToUInt32(/*Levels.Count*/EnabledLevelCount);
+            if (Edition.AssaultCourseSupported)
             {
-                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+                count++;
+            }
+
+            List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, count, true, exclusions);
+            int nextTrack = 0;
+            for (int i = 0; i < originalLevels.Count; i++)
+            {
+                AbstractTRScriptedLevel level = GetLevel(originalLevels[i].ID);
                 if (level == null)
                 {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevels[i].ID));
                 }
-                level.HasSecrets = originalLevel.HasSecrets;
-            }
-        }
 
-        internal bool GetAllLevelsHaveSecrets()
-        {
-            foreach (AbstractTRScriptedLevel level in Levels)
-            {
-                if (!level.HasSecrets)
+                if (level.Enabled)
                 {
-                    return false;
+                    //level.TrackID = levelTracks[i].ID;
+                    level.TrackID = levelTracks[nextTrack++].ID;
                 }
             }
-            return true;
-        }
 
-        internal void SetAllLevelsHaveSecrets(bool secretSupport)
-        {
-            foreach (AbstractTRScriptedLevel level in Levels)
+            if (Edition.AssaultCourseSupported)
             {
-                level.HasSecrets = secretSupport;
+                //AssaultLevel.TrackID = levelTracks[levelTracks.Count - 1].ID;
+                AssaultLevel.TrackID = levelTracks[nextTrack++].ID;
             }
         }
+        RandomiseGameTracksImpl(rand);
+    }
 
-        internal List<MutableTuple<string, string, bool>> GetSunsetData(List<AbstractTRScriptedLevel> originalLevels)
+    internal virtual void RandomiseGameTracksImpl(Random rand) { }
+
+    internal void RestoreGameTracks(AbstractTRScript originalScript)
+    {
+        TitleSoundID = originalScript.TitleSoundID;
+        SecretSoundID = originalScript.SecretSoundID;
+        if (Edition.AssaultCourseSupported)
         {
-            List<MutableTuple<string, string, bool>> data = new();
-            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            AssaultLevel.TrackID = originalScript.AssaultLevel.TrackID;
+        }
+
+        foreach (AbstractTRScriptedLevel originalLevel in originalScript.Levels)
+        {
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+            if (level == null)
             {
-                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-                data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSunset));
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
             }
-            return data;
+            level.TrackID = originalLevel.TrackID;
         }
+    }
 
-        internal void SetSunsetData(List<MutableTuple<string, string, bool>> data)
+    internal List<MutableTuple<string, string, bool>> GetSecretSupport(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        List<MutableTuple<string, string, bool>> support = new();
+        foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+            support.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSecrets));
+        }
+        return support;
+    }
 
-            foreach (MutableTuple<string, string, bool> item in data)
+    internal void SetSecretSupport(List<MutableTuple<string, string, bool>> secretSupport)
+    {
+        foreach (MutableTuple<string, string, bool> item in secretSupport)
+        {
+            AbstractTRScriptedLevel level = GetLevel(item.Item1);
+            if (level == null)
             {
-                AbstractTRScriptedLevel level = GetLevel(item.Item1);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-                }
-
-                level.HasSunset = item.Item3;
-                FireLevelModificationEvent(level, TRScriptedLevelModification.SunsetChanged);
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
             }
-        }
 
-        internal void RestoreSunsetData(List<AbstractTRScriptedLevel> originalLevels)
+            level.HasSecrets = item.Item3;
+        }
+    }
+
+    internal void RestoreSecretSupport(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
-            foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+            if (level == null)
             {
-                AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
-                }
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+            }
+            level.HasSecrets = originalLevel.HasSecrets;
+        }
+    }
 
-                level.HasSunset = originalLevel.HasSunset;
+    internal bool GetAllLevelsHaveSecrets()
+    {
+        foreach (AbstractTRScriptedLevel level in Levels)
+        {
+            if (!level.HasSecrets)
+            {
+                return false;
             }
         }
+        return true;
+    }
 
-        internal void RandomiseSunsets(List<AbstractTRScriptedLevel> basisLevels)
+    internal void SetAllLevelsHaveSecrets(bool secretSupport)
+    {
+        foreach (AbstractTRScriptedLevel level in Levels)
         {
-            RandomiseLevelsWithOperation
-            (
-                SunsetRNG,
-                RandomSunsetCount,
-                basisLevels,
-                new TROperation(TR23OpDefs.Sunset, ushort.MaxValue, true)
-            );
+            level.HasSecrets = secretSupport;
         }
+    }
 
-        internal List<AbstractTRScriptedLevel> GetSunsetLevels()
+    internal List<MutableTuple<string, string, bool>> GetSunsetData(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        List<MutableTuple<string, string, bool>> data = new();
+        foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
-            return GetLevelsWithOperation(TR23OpDefs.Sunset, true);
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+            data.Add(new MutableTuple<string, string, bool>(level.ID, level.Name, level.HasSunset));
         }
+        return data;
+    }
 
-        internal uint GetSunsetLevelCount()
+    internal void SetSunsetData(List<MutableTuple<string, string, bool>> data)
+    {
+
+        foreach (MutableTuple<string, string, bool> item in data)
         {
-            return Convert.ToUInt32(GetSunsetLevels().Count);
+            AbstractTRScriptedLevel level = GetLevel(item.Item1);
+            if (level == null)
+            {
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
+            }
+
+            level.HasSunset = item.Item3;
+            FireLevelModificationEvent(level, TRScriptedLevelModification.SunsetChanged);
         }
+    }
+
+    internal void RestoreSunsetData(List<AbstractTRScriptedLevel> originalLevels)
+    {
+        foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
+        {
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
+            if (level == null)
+            {
+                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
+            }
+
+            level.HasSunset = originalLevel.HasSunset;
+        }
+    }
+
+    internal void RandomiseSunsets(List<AbstractTRScriptedLevel> basisLevels)
+    {
+        RandomiseLevelsWithOperation
+        (
+            SunsetRNG,
+            RandomSunsetCount,
+            basisLevels,
+            new TROperation(TR23OpDefs.Sunset, ushort.MaxValue, true)
+        );
+    }
+
+    internal List<AbstractTRScriptedLevel> GetSunsetLevels()
+    {
+        return GetLevelsWithOperation(TR23OpDefs.Sunset, true);
+    }
+
+    internal uint GetSunsetLevelCount()
+    {
+        return Convert.ToUInt32(GetSunsetLevels().Count);
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public interface ITRSaveProgressProvider
 {
-    public interface ITRSaveProgressProvider
-    {
-        int GetSaveTargetCount();
-    }
+    int GetSaveTargetCount();
 }

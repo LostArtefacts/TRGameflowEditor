@@ -1,16 +1,15 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRScriptedLevelModification
 {
-    public enum TRScriptedLevelModification
-    {
-        Generic, 
-        SequenceChanged, 
-        AmmolessStateChanged, 
-        WeaponlessStateChanged, 
-        SunsetChanged,
-        StartingWeaponsAdded,
-        StartingWeaponsRemoved,
-        SkidooAdded,
-        SkidooRemoved,
-        MedilessStateChanged
-    }
+    Generic, 
+    SequenceChanged, 
+    AmmolessStateChanged, 
+    WeaponlessStateChanged, 
+    SunsetChanged,
+    StartingWeaponsAdded,
+    StartingWeaponsRemoved,
+    SkidooAdded,
+    SkidooRemoved,
+    MedilessStateChanged
 }

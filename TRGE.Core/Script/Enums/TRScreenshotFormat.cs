@@ -1,8 +1,7 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRScreenshotFormat
 {
-    public enum TRScreenshotFormat
-    {
-        JPG,
-        PNG
-    }
+    JPG,
+    PNG
 }

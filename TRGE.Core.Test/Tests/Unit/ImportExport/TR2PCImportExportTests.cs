@@ -1,10 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace TRGE.Core.Test
+namespace TRGE.Core.Test;
+
+[TestClass]
+public class TR2PCImportExportTests : AbstractTR23ImportExportTestCollection
 {
-    [TestClass]
-    public class TR2PCImportExportTests : AbstractTR23ImportExportTestCollection
-    {
-        protected override string DataDirectory => @"ImportExport\TR2PC";
-    }
+    protected override string DataDirectory => @"ImportExport\TR2PC";
 }

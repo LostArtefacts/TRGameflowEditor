@@ -3,134 +3,133 @@ using System.Windows;
 using TRGE.Core;
 using TRGE.View.Utils;
 
-namespace TRGE.View.Windows
+namespace TRGE.View.Windows;
+
+/// <summary>
+/// Interaction logic for DownloadingWindow.xaml
+/// </summary>
+public partial class DownloadingWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for DownloadingWindow.xaml
-    /// </summary>
-    public partial class DownloadingWindow : Window
+    #region Dependency Properties
+    public static readonly DependencyProperty ProgressValueProperty = DependencyProperty.Register
+    (
+        "ProgressValue", typeof(int), typeof(DownloadingWindow), new PropertyMetadata(0)
+    );
+
+    public static readonly DependencyProperty ProgressTargetProperty = DependencyProperty.Register
+    (
+        "ProgressTarget", typeof(int), typeof(DownloadingWindow), new PropertyMetadata(100)
+    );
+
+    public static readonly DependencyProperty ProgressDescriptionProperty = DependencyProperty.Register
+    (
+        "ProgressDescription", typeof(string), typeof(DownloadingWindow), new PropertyMetadata("Downloading - please wait")
+    );
+
+    public static readonly DependencyProperty LengthDescriptionProperty = DependencyProperty.Register
+    (
+        "LengthDescription", typeof(string), typeof(DownloadingWindow), new PropertyMetadata(string.Empty)
+    );
+
+    public int ProgressValue
     {
-        #region Dependency Properties
-        public static readonly DependencyProperty ProgressValueProperty = DependencyProperty.Register
-        (
-            "ProgressValue", typeof(int), typeof(DownloadingWindow), new PropertyMetadata(0)
-        );
+        get => (int)GetValue(ProgressValueProperty);
+        set => SetValue(ProgressValueProperty, value);
+    }
 
-        public static readonly DependencyProperty ProgressTargetProperty = DependencyProperty.Register
-        (
-            "ProgressTarget", typeof(int), typeof(DownloadingWindow), new PropertyMetadata(100)
-        );
+    public int ProgressTarget
+    {
+        get => (int)GetValue(ProgressTargetProperty);
+        set => SetValue(ProgressTargetProperty, value);
+    }
 
-        public static readonly DependencyProperty ProgressDescriptionProperty = DependencyProperty.Register
-        (
-            "ProgressDescription", typeof(string), typeof(DownloadingWindow), new PropertyMetadata("Downloading - please wait")
-        );
+    public string ProgressDescription
+    {
+        get => (string)GetValue(ProgressDescriptionProperty);
+        set => SetValue(ProgressDescriptionProperty, value);
+    }
 
-        public static readonly DependencyProperty LengthDescriptionProperty = DependencyProperty.Register
-        (
-            "LengthDescription", typeof(string), typeof(DownloadingWindow), new PropertyMetadata(string.Empty)
-        );
+    public string LengthDescription
+    {
+        get => (string)GetValue(LengthDescriptionProperty);
+        set => SetValue(LengthDescriptionProperty, value);
+    }
+    #endregion
 
-        public int ProgressValue
+    private bool _cancelPending;
+
+    public DownloadingWindow()
+    {
+        InitializeComponent();
+        Owner = WindowUtils.GetActiveWindow(this);
+        DataContext = this;
+        _cancelPending = false;
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        WindowUtils.TidyMenu(this);
+    }
+
+    public void HandleDownloadEvent(TRDownloadEventArgs e)
+    {
+        if (e.Status == TRDownloadStatus.Failed)
         {
-            get => (int)GetValue(ProgressValueProperty);
-            set => SetValue(ProgressValueProperty, value);
+            MessageWindow.ShowError(e.Exception.Message);
+            WindowUtils.EnableCloseButton(this, true);
+            DialogResult = false;
         }
-
-        public int ProgressTarget
+        else if (e.Status == TRDownloadStatus.Completed)
         {
-            get => (int)GetValue(ProgressTargetProperty);
-            set => SetValue(ProgressTargetProperty, value);
+            WindowUtils.EnableCloseButton(this, true);
+            DialogResult = true;
         }
-
-        public string ProgressDescription
+        else if (e.Status == TRDownloadStatus.Downloading)
         {
-            get => (string)GetValue(ProgressDescriptionProperty);
-            set => SetValue(ProgressDescriptionProperty, value);
-        }
-
-        public string LengthDescription
-        {
-            get => (string)GetValue(LengthDescriptionProperty);
-            set => SetValue(LengthDescriptionProperty, value);
-        }
-        #endregion
-
-        private bool _cancelPending;
-
-        public DownloadingWindow()
-        {
-            InitializeComponent();
-            Owner = WindowUtils.GetActiveWindow(this);
-            DataContext = this;
-            _cancelPending = false;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowUtils.TidyMenu(this);
-        }
-
-        public void HandleDownloadEvent(TRDownloadEventArgs e)
-        {
-            if (e.Status == TRDownloadStatus.Failed)
+            if (_cancelPending)
             {
-                MessageWindow.ShowError(e.Exception.Message);
-                WindowUtils.EnableCloseButton(this, true);
-                DialogResult = false;
+                e.IsCancelled = true;
+                _cancelPending = false;
             }
-            else if (e.Status == TRDownloadStatus.Completed)
+            else
             {
-                WindowUtils.EnableCloseButton(this, true);
-                DialogResult = true;
-            }
-            else if (e.Status == TRDownloadStatus.Downloading)
-            {
-                if (_cancelPending)
-                {
-                    e.IsCancelled = true;
-                    _cancelPending = false;
-                }
-                else
-                {
-                    ProgressTarget = (int)e.DownloadLength;
-                    ProgressValue = (int)e.DownloadProgress;
-                    ProgressDescription = e.URL;
-                    LengthDescription = e.DownloadProgress.ToDescriptiveSize() + " / " + e.DownloadLength.ToDescriptiveSize();
-                }
-            }
-            else if (e.Status == TRDownloadStatus.Committing)
-            {
-                ProgressDescription = "Storing resource file";
-                _cancelButton.IsEnabled = false;
-                WindowUtils.EnableCloseButton(this, false);
-            }
-            else if (e.IsCancelled)
-            {
-                WindowUtils.EnableCloseButton(this, true);
-                DialogResult = false;
+                ProgressTarget = (int)e.DownloadLength;
+                ProgressValue = (int)e.DownloadProgress;
+                ProgressDescription = e.URL;
+                LengthDescription = e.DownloadProgress.ToDescriptiveSize() + " / " + e.DownloadLength.ToDescriptiveSize();
             }
         }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        else if (e.Status == TRDownloadStatus.Committing)
         {
-            Cancel();
-        }
-
-        private void Cancel()
-        {
-            _cancelPending = true;
+            ProgressDescription = "Storing resource file";
             _cancelButton.IsEnabled = false;
             WindowUtils.EnableCloseButton(this, false);
         }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
+        else if (e.IsCancelled)
         {
-            if (!_cancelPending && DialogResult == null)
-            {
-                Cancel();
-                e.Cancel = true;
-            }
+            WindowUtils.EnableCloseButton(this, true);
+            DialogResult = false;
+        }
+    }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        Cancel();
+    }
+
+    private void Cancel()
+    {
+        _cancelPending = true;
+        _cancelButton.IsEnabled = false;
+        WindowUtils.EnableCloseButton(this, false);
+    }
+
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        if (!_cancelPending && DialogResult == null)
+        {
+            Cancel();
+            e.Cancel = true;
         }
     }
 }

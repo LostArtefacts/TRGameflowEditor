@@ -1,15 +1,14 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRUIColour
 {
-    public enum TRUIColour
-    {
-        Gold,
-        Red,
-        Grey,
-        Blue,
-        Silver,
-        Green,
-        Gold2,
-        Blue2,
-        Pink
-    }
+    Gold,
+    Red,
+    Grey,
+    Blue,
+    Silver,
+    Green,
+    Gold2,
+    Blue2,
+    Pink
 }

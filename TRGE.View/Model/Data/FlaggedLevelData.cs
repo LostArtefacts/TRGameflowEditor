@@ -1,42 +1,41 @@
 ﻿using System.Collections.Generic;
 using TRGE.Core;
 
-namespace TRGE.View.Model.Data
-{
-    public class FlaggedLevelData : List<FlaggedLevel>
-    {
-        public FlaggedLevelData(List<MutableTuple<string, string, bool>> unarmedLevels)
-        {
-            foreach (MutableTuple<string, string, bool> data in unarmedLevels)
-            {
-                Add(new FlaggedLevel(data.Item1, data.Item2, data.Item3));
-            }
-        }
+namespace TRGE.View.Model.Data;
 
-        public List<MutableTuple<string, string, bool>> ToTupleList()
+public class FlaggedLevelData : List<FlaggedLevel>
+{
+    public FlaggedLevelData(List<MutableTuple<string, string, bool>> unarmedLevels)
+    {
+        foreach (MutableTuple<string, string, bool> data in unarmedLevels)
         {
-            List<MutableTuple<string, string, bool>> result = new();
-            foreach (FlaggedLevel level in this)
-            {
-                result.Add(level.ToTuple());
-            }
-            return result;
+            Add(new FlaggedLevel(data.Item1, data.Item2, data.Item3));
         }
     }
 
-    public class FlaggedLevel : BaseLevelData
+    public List<MutableTuple<string, string, bool>> ToTupleList()
     {
-        public bool Flag { get; set; }
-
-        public FlaggedLevel(string levelID, string levelName, bool flag)
-            :base(levelID, levelName)
+        List<MutableTuple<string, string, bool>> result = new();
+        foreach (FlaggedLevel level in this)
         {
-            Flag = flag;
+            result.Add(level.ToTuple());
         }
+        return result;
+    }
+}
 
-        public MutableTuple<string, string, bool> ToTuple()
-        {
-            return new MutableTuple<string, string, bool>(LevelID, LevelName, Flag);
-        }
+public class FlaggedLevel : BaseLevelData
+{
+    public bool Flag { get; set; }
+
+    public FlaggedLevel(string levelID, string levelName, bool flag)
+        :base(levelID, levelName)
+    {
+        Flag = flag;
+    }
+
+    public MutableTuple<string, string, bool> ToTuple()
+    {
+        return new MutableTuple<string, string, bool>(LevelID, LevelName, Flag);
     }
 }

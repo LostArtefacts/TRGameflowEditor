@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json.Serialization;
 
-namespace TRGE.Core
+namespace TRGE.Core;
+
+internal class LowerCaseNamingStrategy : DefaultNamingStrategy
 {
-    internal class LowerCaseNamingStrategy : DefaultNamingStrategy
+    protected override string ResolvePropertyName(string name)
     {
-        protected override string ResolvePropertyName(string name)
-        {
-            return base.ResolvePropertyName(name).ToLower();
-        }
+        return base.ResolvePropertyName(name).ToLower();
     }
 }

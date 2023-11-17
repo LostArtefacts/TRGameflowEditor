@@ -2,341 +2,340 @@
 using System.Runtime.ExceptionServices;
 using TRGE.Core;
 
-namespace TRGE.Coord
+namespace TRGE.Coord;
+
+public class TREditor
 {
-    public class TREditor
+    public static readonly string[] TargetFileExtensions = new string[] { "*.dat", "*.tr2", "*.psx", "*.phd", "*.json5", "*.png" };
+
+    private AbstractTRScriptEditor _scriptEditor;
+    public AbstractTRScriptEditor ScriptEditor
     {
-        public static readonly string[] TargetFileExtensions = new string[] { "*.dat", "*.tr2", "*.psx", "*.phd", "*.json5", "*.png" };
-
-        private AbstractTRScriptEditor _scriptEditor;
-        public AbstractTRScriptEditor ScriptEditor
+        get => _scriptEditor;
+        internal set
         {
-            get => _scriptEditor;
-            internal set
+            if ((_scriptEditor = value) != null)
             {
-                if ((_scriptEditor = value) != null)
-                {
-                    _scriptEditor.LevelModified += ScriptEditorLevelModified;
-                    ConfigureWatcher();
-                }
+                _scriptEditor.LevelModified += ScriptEditorLevelModified;
+                ConfigureWatcher();
             }
         }
+    }
 
-        private AbstractTRLevelEditor _levelEditor;
-        public AbstractTRLevelEditor LevelEditor
+    private AbstractTRLevelEditor _levelEditor;
+    public AbstractTRLevelEditor LevelEditor
+    {
+        get => _levelEditor;
+        internal set
         {
-            get => _levelEditor;
-            internal set
+            if ((_levelEditor = value) != null)
             {
-                if ((_levelEditor = value) != null)
-                {
-                    _levelEditor.Initialise(ScriptEditor);
-                    ConfigureWatcher();
-                }
+                _levelEditor.Initialise(ScriptEditor);
+                ConfigureWatcher();
             }
         }
+    }
 
-        public TREdition Edition => _scriptEditor.Edition;
-        public string BackupDirectory => _scriptEditor.BackupDirectory.FullName;
-        public string ErrorDirectory => Path.GetFullPath(Path.Combine(BackupDirectory, @"..\Errors"));
-        public string OutputDirectory => _outputDirectory;
-        public string TargetDirectory => _targetDirectory;
-        private readonly string _wipOutputDirectory;
-        private readonly string _outputDirectory;
-        private readonly string _targetDirectory;
+    public TREdition Edition => _scriptEditor.Edition;
+    public string BackupDirectory => _scriptEditor.BackupDirectory.FullName;
+    public string ErrorDirectory => Path.GetFullPath(Path.Combine(BackupDirectory, @"..\Errors"));
+    public string OutputDirectory => _outputDirectory;
+    public string TargetDirectory => _targetDirectory;
+    private readonly string _wipOutputDirectory;
+    private readonly string _outputDirectory;
+    private readonly string _targetDirectory;
 
-        public event EventHandler<TRSaveEventArgs> SaveProgressChanged;
+    public event EventHandler<TRSaveEventArgs> SaveProgressChanged;
 
-        private ConfigFileWatcher _watcher;
-        public event EventHandler<FileSystemEventArgs> ConfigExternallyChanged;
+    private ConfigFileWatcher _watcher;
+    public event EventHandler<FileSystemEventArgs> ConfigExternallyChanged;
 
-        public event EventHandler<TRBackupRestoreEventArgs> RestoreProgressChanged;
-        private TRBackupRestoreEventArgs _restoreArgs;
+    public event EventHandler<TRBackupRestoreEventArgs> RestoreProgressChanged;
+    private TRBackupRestoreEventArgs _restoreArgs;
 
-        public bool IsExportPossible => ScriptEditor.IsExportPossible && (LevelEditor == null || LevelEditor.IsExportPossible);
+    public bool IsExportPossible => ScriptEditor.IsExportPossible && (LevelEditor == null || LevelEditor.IsExportPossible);
 
-        internal TREditor(string wipOutputDirectory, string outputDirectory, string targetDirectory)
+    internal TREditor(string wipOutputDirectory, string outputDirectory, string targetDirectory)
+    {
+        _wipOutputDirectory = wipOutputDirectory;
+        _outputDirectory = outputDirectory;
+        _targetDirectory = targetDirectory;
+    }
+
+    internal static void ValidateCompatibility(AbstractTRScript script, string directoryPath)
+    {
+        if (TRLevelEditorFactory.EditionSupportsLevelEditing(script.Edition))
         {
-            _wipOutputDirectory = wipOutputDirectory;
-            _outputDirectory = outputDirectory;
-            _targetDirectory = targetDirectory;
+            AbstractTRLevelEditor.ValidateCompatibility(script.Levels, directoryPath);
         }
+    }
 
-        internal static void ValidateCompatibility(AbstractTRScript script, string directoryPath)
+    private void ScriptEditorLevelModified(object sender, TRScriptedLevelEventArgs e)
+    {
+        if (LevelEditor != null)
         {
-            if (TRLevelEditorFactory.EditionSupportsLevelEditing(script.Edition))
-            {
-                AbstractTRLevelEditor.ValidateCompatibility(script.Levels, directoryPath);
-            }
+            LevelEditor.ScriptedLevelModified(e);
         }
+    }
 
-        private void ScriptEditorLevelModified(object sender, TRScriptedLevelEventArgs e)
+    private void Editor_SaveStateChanged(object sender, TRSaveEventArgs e)
+    {
+        FireSaveProgressChanged(e);
+    }
+
+    private void FireSaveProgressChanged(TRSaveEventArgs e)
+    {
+        SaveProgressChanged?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// The ScriptEditor and LevelEditor will be directed to save all output to the temporary
+    /// WIP directory. Provided no errors occur, or the save transaction is not cancelled, the
+    /// contents of the WIP directory will be moved to the Output and Target directories. Both
+    /// editors will then be re-initialised. Any subscribers to SaveProgressChanged can monitor
+    /// save progress and optionally cancel the task before the Commit stage is reached.
+    /// </summary>
+    public void Save()
+    {
+        DirectoryInfo wipDirectory = new(_wipOutputDirectory);
+        wipDirectory.Create();
+        wipDirectory.Clear();
+
+        _watcher.Enabled = false;
+
+        try
         {
             if (LevelEditor != null)
             {
-                LevelEditor.ScriptedLevelModified(e);
+                LevelEditor.PreSave(ScriptEditor);
+            }
+
+            ScriptEditor.Save();
+
+            TRSaveMonitor monitor = new(new TRSaveEventArgs
+            {
+                ProgressTarget = ScriptEditor.GetSaveTargetCount() +
+                (LevelEditor == null ? 0 : LevelEditor.GetSaveTargetCount())
+            });
+            monitor.SaveStateChanged += Editor_SaveStateChanged;
+            monitor.FireSaveStateBeginning(TRSaveCategory.Scripting);
+            monitor.FireSaveStateChanged(1);
+
+            if (LevelEditor != null)
+            {
+                LevelEditor.Save(ScriptEditor, monitor);
+            }
+
+            if (!monitor.IsCancelled)
+            {
+                monitor.FireSaveStateChanged(0, TRSaveCategory.Commit);
+
+                ScriptEditor.SaveComplete();
+                if (LevelEditor != null)
+                {
+                    LevelEditor.SaveComplete();
+                }
+
+                // Copy everything from WIP into the Output folder.
+                DirectoryInfo outputDirectory = new(_outputDirectory);
+                wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
+
+                // Finally, copy everything to the target folder.
+                CopyOutputToTarget();
             }
         }
-
-        private void Editor_SaveStateChanged(object sender, TRSaveEventArgs e)
+        catch (Exception e)
         {
-            FireSaveProgressChanged(e);
+            LogException(e);
+            ExceptionDispatchInfo.Capture(e).Throw();
         }
-
-        private void FireSaveProgressChanged(TRSaveEventArgs e)
+        finally
         {
-            SaveProgressChanged?.Invoke(this, e);
-        }
+            // Reinitialise regardless of whether the process completed or not
+            ScriptEditor.Initialise();
+            if (LevelEditor != null)
+            {
+                LevelEditor.Initialise(ScriptEditor);
+            }
 
-        /// <summary>
-        /// The ScriptEditor and LevelEditor will be directed to save all output to the temporary
-        /// WIP directory. Provided no errors occur, or the save transaction is not cancelled, the
-        /// contents of the WIP directory will be moved to the Output and Target directories. Both
-        /// editors will then be re-initialised. Any subscribers to SaveProgressChanged can monitor
-        /// save progress and optionally cancel the task before the Commit stage is reached.
-        /// </summary>
-        public void Save()
-        {
-            DirectoryInfo wipDirectory = new(_wipOutputDirectory);
-            wipDirectory.Create();
+            _watcher.Enabled = true;
             wipDirectory.Clear();
+        }
+    }
 
-            _watcher.Enabled = false;
+    private void LogException(Exception e)
+    {
+        Config config = new()
+        {
+            ["Trace"] = e.ToString(),
+            ["TRGE"] = ScriptEditor.ExportConfig()
+        };
+        if (LevelEditor != null)
+        {
+            config["TRLE"] = LevelEditor.ExportConfig();
+        }
 
-            try
+        Dictionary<string, string> checksums = new();
+        foreach (FileInfo fi in new DirectoryInfo(BackupDirectory).GetFiles())
+        {
+            checksums[fi.Name] = fi.Checksum();
+        }
+        config["BackupChecksums"] = checksums;
+
+        Directory.CreateDirectory(ErrorDirectory);
+        config.Write(Path.Combine(ErrorDirectory, DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".err"), true, Formatting.Indented);
+    }
+
+    private void CopyOutputToTarget()
+    {
+        if (ScriptEditor.Edition.HasScript)
+        {
+            string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ScriptName)));
+            IOExtensions.CopyFile(ScriptEditor.GetScriptOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+        }
+
+        if (ScriptEditor.Edition.HasConfig)
+        {
+            string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ConfigName)));
+            IOExtensions.CopyFile(ScriptEditor.GetConfigOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+        }
+
+        List<AbstractTRScriptedLevel> levels = new(ScriptEditor.Levels);
+        if (ScriptEditor.Edition.AssaultCourseSupported)
+        {
+            levels.Add(ScriptEditor.AssaultLevel);
+        }
+
+        foreach (AbstractTRScriptedLevel level in levels)
+        {
+            // Check if it's been generated in the output folder
+            // If so, move it to its target directory
+            CopyLevelToTarget(level);
+            if (level.HasCutScene)
             {
-                if (LevelEditor != null)
-                {
-                    LevelEditor.PreSave(ScriptEditor);
-                }
-
-                ScriptEditor.Save();
-
-                TRSaveMonitor monitor = new(new TRSaveEventArgs
-                {
-                    ProgressTarget = ScriptEditor.GetSaveTargetCount() +
-                    (LevelEditor == null ? 0 : LevelEditor.GetSaveTargetCount())
-                });
-                monitor.SaveStateChanged += Editor_SaveStateChanged;
-                monitor.FireSaveStateBeginning(TRSaveCategory.Scripting);
-                monitor.FireSaveStateChanged(1);
-
-                if (LevelEditor != null)
-                {
-                    LevelEditor.Save(ScriptEditor, monitor);
-                }
-
-                if (!monitor.IsCancelled)
-                {
-                    monitor.FireSaveStateChanged(0, TRSaveCategory.Commit);
-
-                    ScriptEditor.SaveComplete();
-                    if (LevelEditor != null)
-                    {
-                        LevelEditor.SaveComplete();
-                    }
-
-                    // Copy everything from WIP into the Output folder.
-                    DirectoryInfo outputDirectory = new(_outputDirectory);
-                    wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
-
-                    // Finally, copy everything to the target folder.
-                    CopyOutputToTarget();
-                }
-            }
-            catch (Exception e)
-            {
-                LogException(e);
-                ExceptionDispatchInfo.Capture(e).Throw();
-            }
-            finally
-            {
-                // Reinitialise regardless of whether the process completed or not
-                ScriptEditor.Initialise();
-                if (LevelEditor != null)
-                {
-                    LevelEditor.Initialise(ScriptEditor);
-                }
-
-                _watcher.Enabled = true;
-                wipDirectory.Clear();
+                CopyLevelToTarget(level.CutSceneLevel);
             }
         }
 
-        private void LogException(Exception e)
+        foreach (string additionalFile in ScriptEditor.Script.GetAdditionalBackupFiles())
         {
-            Config config = new()
-            {
-                ["Trace"] = e.ToString(),
-                ["TRGE"] = ScriptEditor.ExportConfig()
-            };
-            if (LevelEditor != null)
-            {
-                config["TRLE"] = LevelEditor.ExportConfig();
-            }
+            string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, @"..\", additionalFile)));
+            string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(additionalFile));
+            IOExtensions.CopyFile(outputFile, new DirectoryInfo(targetFolder), true);
+        }
+    }
 
-            Dictionary<string, string> checksums = new();
-            foreach (FileInfo fi in new DirectoryInfo(BackupDirectory).GetFiles())
-            {
-                checksums[fi.Name] = fi.Checksum();
-            }
-            config["BackupChecksums"] = checksums;
+    private void CopyLevelToTarget(AbstractTRScriptedLevel level)
+    {
+        string outputLevel = Path.Combine(_outputDirectory, level.LevelFileBaseName);
+        if (File.Exists(outputLevel))
+        {
+            string targetFile = Path.GetFullPath(Path.Combine(_targetDirectory, @"..\", level.LevelFile));
+            IOExtensions.CopyFile(outputLevel, targetFile, true);
+        }
+    }
 
-            Directory.CreateDirectory(ErrorDirectory);
-            config.Write(Path.Combine(ErrorDirectory, DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".err"), true, Formatting.Indented);
+    public void Restore()
+    {
+        _restoreArgs = new TRBackupRestoreEventArgs
+        {
+            ProgressValue = 0,
+            ProgressTarget = 1
+        };
+
+        if (LevelEditor != null)
+        {
+            _restoreArgs.ProgressTarget += LevelEditor.GetRestoreTarget();
+            LevelEditor.RestoreProgressChanged += LevelEditor_RestoreProgressChanged;
         }
 
-        private void CopyOutputToTarget()
+        FireRestoreProgressChanged();
+
+        try
         {
-            if (ScriptEditor.Edition.HasScript)
-            {
-                string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ScriptName)));
-                IOExtensions.CopyFile(ScriptEditor.GetScriptOutputPath(), new DirectoryInfo(targetScriptFolder), true);
-            }
-
-            if (ScriptEditor.Edition.HasConfig)
-            {
-                string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ConfigName)));
-                IOExtensions.CopyFile(ScriptEditor.GetConfigOutputPath(), new DirectoryInfo(targetScriptFolder), true);
-            }
-
-            List<AbstractTRScriptedLevel> levels = new(ScriptEditor.Levels);
-            if (ScriptEditor.Edition.AssaultCourseSupported)
-            {
-                levels.Add(ScriptEditor.AssaultLevel);
-            }
-
-            foreach (AbstractTRScriptedLevel level in levels)
-            {
-                // Check if it's been generated in the output folder
-                // If so, move it to its target directory
-                CopyLevelToTarget(level);
-                if (level.HasCutScene)
-                {
-                    CopyLevelToTarget(level.CutSceneLevel);
-                }
-            }
-
-            foreach (string additionalFile in ScriptEditor.Script.GetAdditionalBackupFiles())
-            {
-                string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, @"..\", additionalFile)));
-                string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(additionalFile));
-                IOExtensions.CopyFile(outputFile, new DirectoryInfo(targetFolder), true);
-            }
-        }
-
-        private void CopyLevelToTarget(AbstractTRScriptedLevel level)
-        {
-            string outputLevel = Path.Combine(_outputDirectory, level.LevelFileBaseName);
-            if (File.Exists(outputLevel))
-            {
-                string targetFile = Path.GetFullPath(Path.Combine(_targetDirectory, @"..\", level.LevelFile));
-                IOExtensions.CopyFile(outputLevel, targetFile, true);
-            }
-        }
-
-        public void Restore()
-        {
-            _restoreArgs = new TRBackupRestoreEventArgs
-            {
-                ProgressValue = 0,
-                ProgressTarget = 1
-            };
-
-            if (LevelEditor != null)
-            {
-                _restoreArgs.ProgressTarget += LevelEditor.GetRestoreTarget();
-                LevelEditor.RestoreProgressChanged += LevelEditor_RestoreProgressChanged;
-            }
-
-            FireRestoreProgressChanged();
-
-            try
-            {
-                ScriptEditor.Restore();
-                FireRestoreProgressChanged(1);
-
-                if (LevelEditor != null) LevelEditor.Restore();
-            }
-            finally
-            {
-                if (LevelEditor != null) LevelEditor.RestoreProgressChanged -= LevelEditor_RestoreProgressChanged;
-            }
-        }
-
-        private void LevelEditor_RestoreProgressChanged(object sender, EventArgs e)
-        {
+            ScriptEditor.Restore();
             FireRestoreProgressChanged(1);
-        }
 
-        private void FireRestoreProgressChanged(int progress = 0)
+            if (LevelEditor != null) LevelEditor.Restore();
+        }
+        finally
         {
-            _restoreArgs.ProgressValue += progress;
-            RestoreProgressChanged?.Invoke(this, _restoreArgs);
+            if (LevelEditor != null) LevelEditor.RestoreProgressChanged -= LevelEditor_RestoreProgressChanged;
         }
+    }
 
-        public void ExportSettings(string filePath)
+    private void LevelEditor_RestoreProgressChanged(object sender, EventArgs e)
+    {
+        FireRestoreProgressChanged(1);
+    }
+
+    private void FireRestoreProgressChanged(int progress = 0)
+    {
+        _restoreArgs.ProgressValue += progress;
+        RestoreProgressChanged?.Invoke(this, _restoreArgs);
+    }
+
+    public void ExportSettings(string filePath)
+    {
+        if (!IsExportPossible)
         {
-            if (!IsExportPossible)
-            {
-                throw new InvalidOperationException();
-            }
-
-            Config config = new()
-            {
-                ["TRGE"] = ScriptEditor.ExportConfig()
-            };
-            if (LevelEditor != null)
-            {
-                config["TRLE"] = LevelEditor.ExportConfig();
-            }
-
-            config.Write(filePath);
+            throw new InvalidOperationException();
         }
 
-        public void ImportSettings(string filePath)
+        Config config = new()
         {
-            Config config = Config.Read(filePath);
-            if (config.ContainsKey("TRGE"))
-            {
-                ScriptEditor.ImportConfig(config.GetSubConfig("TRGE"));
-            }
-            if (config.ContainsKey("TRLE") && LevelEditor != null)
-            {
-                LevelEditor.ImportConfig(config.GetSubConfig("TRLE"));
-            }
-        }
-
-        public void ResetSettings()
+            ["TRGE"] = ScriptEditor.ExportConfig()
+        };
+        if (LevelEditor != null)
         {
-            ScriptEditor.ResetConfig();
-            LevelEditor?.ResetConfig();
+            config["TRLE"] = LevelEditor.ExportConfig();
         }
 
-        private void ConfigureWatcher()
+        config.Write(filePath);
+    }
+
+    public void ImportSettings(string filePath)
+    {
+        Config config = Config.Read(filePath);
+        if (config.ContainsKey("TRGE"))
         {
-            if (_watcher != null || ScriptEditor == null)
-            {
-                return;
-            }
-
-            _watcher = new ConfigFileWatcher(ScriptEditor.ConfigFilePath);
-            _watcher.Changed += delegate (object sender, FileSystemEventArgs e)
-            {
-                ConfigExternallyChanged?.Invoke(this, e);
-            };
+            ScriptEditor.ImportConfig(config.GetSubConfig("TRGE"));
         }
-
-        public void Unload()
+        if (config.ContainsKey("TRLE") && LevelEditor != null)
         {
-            if (_watcher != null)
-            {
-                _watcher.Enabled = false;
-                _watcher = null;
-            }
-
-            ScriptEditor = null;
-            LevelEditor = null;
+            LevelEditor.ImportConfig(config.GetSubConfig("TRLE"));
         }
+    }
+
+    public void ResetSettings()
+    {
+        ScriptEditor.ResetConfig();
+        LevelEditor?.ResetConfig();
+    }
+
+    private void ConfigureWatcher()
+    {
+        if (_watcher != null || ScriptEditor == null)
+        {
+            return;
+        }
+
+        _watcher = new ConfigFileWatcher(ScriptEditor.ConfigFilePath);
+        _watcher.Changed += delegate (object sender, FileSystemEventArgs e)
+        {
+            ConfigExternallyChanged?.Invoke(this, e);
+        };
+    }
+
+    public void Unload()
+    {
+        if (_watcher != null)
+        {
+            _watcher.Enabled = false;
+            _watcher = null;
+        }
+
+        ScriptEditor = null;
+        LevelEditor = null;
     }
 }

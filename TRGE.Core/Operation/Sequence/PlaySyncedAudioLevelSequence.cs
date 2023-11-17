@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class PlaySyncedAudioLevelSequence : BaseLevelSequence
 {
-    public class PlaySyncedAudioLevelSequence : BaseLevelSequence
-    {
-        public int AudioId { get; set; }
-    }
+    public int AudioId { get; set; }
 }

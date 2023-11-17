@@ -1,97 +1,96 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace TRGE.Core
+namespace TRGE.Core;
+
+public class GameStamp
 {
-    public class GameStamp
+    private readonly Dictionary<TRLanguage, string> _langMap;
+
+    public string DefaultStamp
     {
-        private readonly Dictionary<TRLanguage, string> _langMap;
+        get => this[TRLanguage.English];
+        set => this[TRLanguage.English] = value;
+    }
 
-        public string DefaultStamp
+    public string this[TRLanguage lang]
+    { 
+        get
         {
-            get => this[TRLanguage.English];
-            set => this[TRLanguage.English] = value;
+            return _langMap.ContainsKey(lang) ? _langMap[lang] : DefaultStamp;
         }
-
-        public string this[TRLanguage lang]
-        { 
-            get
-            {
-                return _langMap.ContainsKey(lang) ? _langMap[lang] : DefaultStamp;
-            }
-            set
-            {
-                _langMap[lang] = value;
-            }
-        }
-
-        public GameStamp()
+        set
         {
-            _langMap = new Dictionary<TRLanguage, string>();
-            this[TRLanguage.English] = string.Empty;
+            _langMap[lang] = value;
         }
+    }
 
-        public string Encode(TRLanguage language)
-        {
-            StringBuilder sb = new();
-            foreach (char c in this[language])
-            {
-                char d = char.ToUpper(c);
-                switch (d)
-                {
-                    case 'À':
-                    case 'È':
-                    case 'Ì':
-                    case 'Ò':
-                    case 'Ù':
-                        sb.Append("$").Append(Normalise(c));
-                        break;
-                    case 'Á':
-                    case 'É':
-                    case 'Í':
-                    case 'Ó':
-                    case 'Ú':
-                    case 'Ý':
-                        sb.Append(")").Append(Normalise(c));
-                        break;
-                    case 'Â':
-                    case 'Ê':
-                    case 'Î':
-                    case 'Ô':
-                    case 'Û':
-                        sb.Append("(").Append(Normalise(c));
-                        break;
-                    case 'Ä':
-                    case 'Ë':
-                    case 'Ï':
-                    case 'Ö':
-                    case 'Ü':
-                    case 'Ÿ':
-                        sb.Append("~").Append(Normalise(c));
-                        break;
-                    case 'ß':
-                        sb.Append('=');
-                        break;
-                    default:
-                        sb.Append(c);
-                        break;
-                }
-            }
-            return sb.ToString();
-        }
+    public GameStamp()
+    {
+        _langMap = new Dictionary<TRLanguage, string>();
+        this[TRLanguage.English] = string.Empty;
+    }
 
-        private string Normalise(char c)
+    public string Encode(TRLanguage language)
+    {
+        StringBuilder sb = new();
+        foreach (char c in this[language])
         {
-            StringBuilder sb = new();
-            string data = c.ToString().Normalize(NormalizationForm.FormD);
-            foreach (char d in data)
+            char d = char.ToUpper(c);
+            switch (d)
             {
-                if (CharUnicodeInfo.GetUnicodeCategory(d) != UnicodeCategory.NonSpacingMark)
-                {
-                    sb.Append(d);
-                }
+                case 'À':
+                case 'È':
+                case 'Ì':
+                case 'Ò':
+                case 'Ù':
+                    sb.Append("$").Append(Normalise(c));
+                    break;
+                case 'Á':
+                case 'É':
+                case 'Í':
+                case 'Ó':
+                case 'Ú':
+                case 'Ý':
+                    sb.Append(")").Append(Normalise(c));
+                    break;
+                case 'Â':
+                case 'Ê':
+                case 'Î':
+                case 'Ô':
+                case 'Û':
+                    sb.Append("(").Append(Normalise(c));
+                    break;
+                case 'Ä':
+                case 'Ë':
+                case 'Ï':
+                case 'Ö':
+                case 'Ü':
+                case 'Ÿ':
+                    sb.Append("~").Append(Normalise(c));
+                    break;
+                case 'ß':
+                    sb.Append('=');
+                    break;
+                default:
+                    sb.Append(c);
+                    break;
             }
-            return sb.ToString();
         }
+        return sb.ToString();
+    }
+
+    private string Normalise(char c)
+    {
+        StringBuilder sb = new();
+        string data = c.ToString().Normalize(NormalizationForm.FormD);
+        foreach (char d in data)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(d) != UnicodeCategory.NonSpacingMark)
+            {
+                sb.Append(d);
+            }
+        }
+        return sb.ToString();
     }
 }

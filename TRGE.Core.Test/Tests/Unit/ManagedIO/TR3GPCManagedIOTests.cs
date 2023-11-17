@@ -1,10 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace TRGE.Core.Test
+namespace TRGE.Core.Test;
+
+[TestClass]
+public class TR3GPCManagedIOTests : AbstractTR23ManagedIOTestCollection
 {
-    [TestClass]
-    public class TR3GPCManagedIOTests : AbstractTR23ManagedIOTestCollection
-    {
-        protected override int ScriptFileIndex => 6;
-    }
+    protected override int ScriptFileIndex => 6;
 }

@@ -1,11 +1,10 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class TRDirectoryIOArgs
 {
-    public class TRDirectoryIOArgs
-    {
-        public DirectoryInfo OriginalDirectory { get; set; }
-        public DirectoryInfo BackupDirectory { get; set; }
-        public FileInfo ConfigFile { get; set; }
-        public DirectoryInfo WIPOutputDirectory { get; set; }
-        public DirectoryInfo OutputDirectory { get; set; }
-    }
+    public DirectoryInfo OriginalDirectory { get; set; }
+    public DirectoryInfo BackupDirectory { get; set; }
+    public FileInfo ConfigFile { get; set; }
+    public DirectoryInfo WIPOutputDirectory { get; set; }
+    public DirectoryInfo OutputDirectory { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public abstract class AbstractTRFrontEnd : AbstractTROperationContainer
 {
-    public abstract class AbstractTRFrontEnd : AbstractTROperationContainer
-    {
-        public abstract bool HasFMV { get; set; }
-    }
+    public abstract bool HasFMV { get; set; }
 }

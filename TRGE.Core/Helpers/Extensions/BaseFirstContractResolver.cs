@@ -1,26 +1,25 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace TRGE.Core
-{
-    public class BaseFirstContractResolver : DefaultContractResolver
-    {
-        protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-        {
-            return base.CreateProperties(type, memberSerialization)
-                ?.OrderBy(p => p.DeclaringType.BaseTypesAndSelf().Count()).ToList();
-        }
-    }
+namespace TRGE.Core;
 
-    public static class TypeExtensions
+public class BaseFirstContractResolver : DefaultContractResolver
+{
+    protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
     {
-        public static IEnumerable<Type> BaseTypesAndSelf(this Type type)
+        return base.CreateProperties(type, memberSerialization)
+            ?.OrderBy(p => p.DeclaringType.BaseTypesAndSelf().Count()).ToList();
+    }
+}
+
+public static class TypeExtensions
+{
+    public static IEnumerable<Type> BaseTypesAndSelf(this Type type)
+    {
+        while (type != null)
         {
-            while (type != null)
-            {
-                yield return type;
-                type = type.BaseType;
-            }
+            yield return type;
+            type = type.BaseType;
         }
     }
 }

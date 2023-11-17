@@ -1,12 +1,11 @@
-﻿namespace TRGE.Coord
-{
-    public class TRHistoryEventArgs : EventArgs
-    {
-        public string Path { get; private set; }
+﻿namespace TRGE.Coord;
 
-        public TRHistoryEventArgs(string path)
-        {
-            Path = path;
-        }
+public class TRHistoryEventArgs : EventArgs
+{
+    public string Path { get; private set; }
+
+    public TRHistoryEventArgs(string path)
+    {
+        Path = path;
     }
 }

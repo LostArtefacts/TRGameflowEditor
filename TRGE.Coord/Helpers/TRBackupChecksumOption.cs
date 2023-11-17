@@ -1,8 +1,7 @@
-﻿namespace TRGE.Coord.Helpers
+﻿namespace TRGE.Coord.Helpers;
+
+public enum TRBackupChecksumOption
 {
-    public enum TRBackupChecksumOption
-    {
-        PerformCheck,
-        IgnoreIssues
-    }
+    PerformCheck,
+    IgnoreIssues
 }

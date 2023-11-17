@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class LevelExitLevelSequence : BaseLevelSequence
 {
-    public class LevelExitLevelSequence : BaseLevelSequence
-    {
-        public int LevelId { get; set; }
-    }
+    public int LevelId { get; set; }
 }
