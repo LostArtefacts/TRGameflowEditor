@@ -7,6 +7,7 @@
     <Version>1.1.0</Version>
     <Product>TRGE Coord Library</Product>
     <Copyright>Copyright © Tomb Raider Community 2023</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\TRGE.Core\TRGE.Core.csproj" />
