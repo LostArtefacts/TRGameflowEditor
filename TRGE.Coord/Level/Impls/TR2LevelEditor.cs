@@ -145,7 +145,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
         else if (scriptedLevel.RemovesWeapons)
         {
             //only inject if it hasn't been done already i.e. no pistols, other weapon or ammo found in the default spot
-            if (existingInjections.Count() == 0)
+            if (!existingInjections.Any())
             {
                 defaultLocation = GetUnarmedLocationForLevel(scriptedLevel);
                 level.Entities.Add(new()
@@ -162,7 +162,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
                 });
             }
         }
-        else if (existingInjections.Count() > 0)
+        else if (existingInjections.Any())
         {
             level.Entities.RemoveAll(e => existingInjections.Contains(e));
         }

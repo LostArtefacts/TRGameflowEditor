@@ -502,7 +502,7 @@ public class TR23Script : AbstractTRScript
                     LevelFile = dataFile
                 };
             default:
-                throw new ArgumentException();
+                throw new ArgumentException("Unsupported game type.");
         }
     }
 

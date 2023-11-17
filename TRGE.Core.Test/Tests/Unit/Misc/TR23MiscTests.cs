@@ -35,7 +35,6 @@ public class TR23MiscTests : BaseTestCollection
 
     private void TestDemoLevels(TR23Script script)
     {
-        List<AbstractTRScriptedLevel> demos = script.DemoLevels;
         List<AbstractTRScriptedLevel> levels = script.Levels;
         levels.Insert(0, script.AssaultLevel);
 

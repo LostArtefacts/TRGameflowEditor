@@ -498,7 +498,7 @@ public class TR1Script : AbstractTRScript
     private double ReadDouble(string key, JObject data)
     {
         double result = ReadDouble(key, data, double.NaN);
-        if (result == double.NaN)
+        if (double.IsNaN(result))
         {
             throw new ArgumentException("Invalid/missing value for " + key);
         }
@@ -768,8 +768,10 @@ public class TR1Script : AbstractTRScript
 
     private JArray BuildLevels()
     {
-        JArray levels = new();
-        levels.Add(SerializeLevel(AssaultLevel as TR1ScriptedLevel));
+        JArray levels = new()
+        {
+            SerializeLevel(AssaultLevel as TR1ScriptedLevel)
+        };
 
         List<AbstractTRScriptedLevel> enabledLevels = Levels.FindAll(l => l.Enabled);
         List<AbstractTRScriptedLevel> cutsceneLevels = new();

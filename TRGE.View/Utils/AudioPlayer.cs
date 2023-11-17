@@ -26,7 +26,7 @@ public class AudioPlayer : SoundPlayer
 
         if (trackData.Length < 32)
         {
-            throw new ArgumentException();
+            throw new ArgumentException("Unexpected track length.");
         }
 
         _duration = 1000 * (double)(trackData.Length - 8) / BitConverter.ToInt32(trackData, 28);
