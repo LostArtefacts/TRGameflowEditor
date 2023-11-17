@@ -213,10 +213,7 @@ public class TR2ScriptedLevel : AbstractTRScriptedLevel
                 if (gcOp == null)
                 {
                     gcOp = GetOperation(TR23OpDefs.Complete);
-                    if (gcOp == null)
-                    {
-                        gcOp = AddOperation(TR23OpDefs.GameComplete);
-                    }
+                    gcOp ??= AddOperation(TR23OpDefs.GameComplete);
                 }
                 gcOp.Definition = TR23OpDefs.GameComplete;
             }

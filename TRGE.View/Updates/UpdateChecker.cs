@@ -18,10 +18,7 @@ public class UpdateChecker
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = new UpdateChecker();
-            }
+            _instance ??= new UpdateChecker();
             return _instance;
         }
     }

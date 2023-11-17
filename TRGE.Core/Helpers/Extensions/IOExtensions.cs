@@ -148,10 +148,7 @@ public static class IOExtensions
     /// </summary>
     internal static string ReadCompressedText(this FileInfo fileInfo, Encoding encoding = null)
     {
-        if (encoding == null)
-        {
-            encoding = Encoding.Default;
-        }
+        encoding ??= Encoding.Default;
 
         using FileStream fs = fileInfo.OpenRead();
         using GZipStream zs = new(fs, CompressionMode.Decompress);
@@ -165,10 +162,7 @@ public static class IOExtensions
     /// </summary>
     internal static void WriteCompressedText(this FileInfo fileInfo, string text, Encoding encoding = null)
     {
-        if (encoding == null)
-        {
-            encoding = Encoding.Default;
-        }
+        encoding ??= Encoding.Default;
         
         byte[] data = encoding.GetBytes(text);
         using FileStream fs = fileInfo.Create();

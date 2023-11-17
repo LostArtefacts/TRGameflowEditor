@@ -319,10 +319,7 @@ public abstract class AbstractTRLevelManager
         {
             AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
             track = AudioProvider.GetTrack(level.TrackID);
-            if (track == null)
-            {
-                track = AudioProvider.GetBlankTrack();
-            }
+            track ??= AudioProvider.GetBlankTrack();
             ret.Add(new MutableTuple<string, string, ushort>(level.ID, level.Name, track.ID));
         }
         return ret;

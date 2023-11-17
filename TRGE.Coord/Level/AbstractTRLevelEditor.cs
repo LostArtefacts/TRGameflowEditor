@@ -25,7 +25,7 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
 
     protected sealed override void ReadConfig(Config config)
     {
-        config = config ?? new Config();
+        config ??= new Config();
         ApplyConfig(config);
     }
 

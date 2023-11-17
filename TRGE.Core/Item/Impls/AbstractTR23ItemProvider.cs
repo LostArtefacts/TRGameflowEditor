@@ -91,10 +91,7 @@ internal abstract class AbstractTR23ItemProvider : AbstractTRItemProvider
 
     protected static Dictionary<TRItemCategory, ISet<TRItem>> VerifyBonusExclusions(Dictionary<TRItemCategory, ISet<TRItem>> exclusions)
     {
-        if (exclusions == null)
-        {
-            exclusions = new Dictionary<TRItemCategory, ISet<TRItem>>();
-        }
+        exclusions ??= new Dictionary<TRItemCategory, ISet<TRItem>>();
         TRItemCategory[] cats = new TRItemCategory[] { TRItemCategory.Weapon, TRItemCategory.Ammo, TRItemCategory.Misc };
         foreach (TRItemCategory cat in cats)
         {

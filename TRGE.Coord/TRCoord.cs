@@ -13,10 +13,7 @@ public class TRCoord
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = new TRCoord();
-            }
+            _instance ??= new TRCoord();
             return _instance;
         }
     }

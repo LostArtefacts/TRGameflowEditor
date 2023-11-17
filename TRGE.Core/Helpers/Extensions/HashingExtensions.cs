@@ -7,10 +7,7 @@ public static class HashingExtensions
 {
     public static string CreateMD5(this string str, Encoding encoding = null)
     {
-        if (encoding == null)
-        {
-            encoding = Encoding.Default;
-        }
+        encoding ??= Encoding.Default;
 
         using MD5 md5 = MD5.Create();
         byte[] hash = md5.ComputeHash(encoding.GetBytes(str));
