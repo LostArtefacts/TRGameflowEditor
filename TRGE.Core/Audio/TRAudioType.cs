@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRAudioType
 {
-    public enum TRAudioType
-    {
-        WAV
-    }
+    WAV
 }

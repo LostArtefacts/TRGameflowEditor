@@ -1,183 +1,180 @@
-﻿using System.Collections.Generic;
+﻿namespace TRGE.Core;
 
-namespace TRGE.Core
+public abstract class AbstractTROperationContainer
 {
-    public abstract class AbstractTROperationContainer
+    protected readonly List<TROperation> _operations;
+    internal IReadOnlyList<TROperation> Operations => _operations.AsReadOnly();
+
+    internal AbstractTROperationContainer()
     {
-        protected readonly List<TROperation> _operations;
-        internal IReadOnlyList<TROperation> Operations => _operations.AsReadOnly();
+        _operations = new List<TROperation>();
+    }
 
-        internal AbstractTROperationContainer()
+    internal void BuildOperations(ushort[] scriptData)
+    {
+        for (ushort i = 0; i < scriptData.Length; i++)
         {
-            _operations = new List<TROperation>();
+            TROpDef opDef = GetOpDefFor(scriptData[i]);
+            if (opDef == null)
+                continue;
+
+            ushort operand = opDef.HasOperand ? scriptData[++i] : ushort.MaxValue;
+            AddOperation(opDef, operand);
         }
+    }
 
-        internal void BuildOperations(ushort[] scriptData)
+    internal ushort[] TranslateOperations()
+    {
+        List<ushort> ret = new();
+        foreach (TROperation op in _operations)
         {
-            for (ushort i = 0; i < scriptData.Length; i++)
+            if (op.IsActive)
             {
-                TROpDef opDef = GetOpDefFor(scriptData[i]);
-                if (opDef == null)
-                    continue;
-
-                ushort operand = opDef.HasOperand ? scriptData[++i] : ushort.MaxValue;
-                AddOperation(opDef, operand);
-            }
-        }
-
-        internal ushort[] TranslateOperations()
-        {
-            List<ushort> ret = new List<ushort>();
-            foreach (TROperation op in _operations)
-            {
-                if (op.IsActive)
+                ret.Add(op.OpCode);
+                if (op.HasOperand)
                 {
-                    ret.Add(op.OpCode);
-                    if (op.HasOperand)
-                    {
-                        ret.Add(op.Operand);
-                    }
+                    ret.Add(op.Operand);
                 }
             }
-            return ret.ToArray();
         }
+        return ret.ToArray();
+    }
 
-        protected abstract TROpDef GetOpDefFor(ushort scriptData);
+    protected abstract TROpDef GetOpDefFor(ushort scriptData);
 
-        internal virtual TROperation AddOperation(TROpDef opDef, ushort operand = ushort.MaxValue, bool isActive = true)
+    internal virtual TROperation AddOperation(TROpDef opDef, ushort operand = ushort.MaxValue, bool isActive = true)
+    {
+        TROperation op = new(opDef, operand, isActive);
+        _operations.Add(op);
+        return op;
+    }
+
+    internal bool HasOperation(TROpDef opDef)
+    {
+        return GetOperation(opDef) != null;
+    }
+
+    internal bool HasActiveOperation(TROpDef opDef)
+    {
+        return HasOperationStrict(opDef, true);
+    }
+
+    internal bool HasInactiveOperation(TROpDef opDef)
+    {
+        return HasOperationStrict(opDef, false);
+    }
+
+    private bool HasOperationStrict(TROpDef opDef, bool activeStatus)
+    {
+        foreach (TROperation op in _operations)
         {
-            TROperation op = new TROperation(opDef, operand, isActive);
-            _operations.Add(op);
-            return op;
-        }
-
-        internal bool HasOperation(TROpDef opDef)
-        {
-            return GetOperation(opDef) != null;
-        }
-
-        internal bool HasActiveOperation(TROpDef opDef)
-        {
-            return HasOperationStrict(opDef, true);
-        }
-
-        internal bool HasInactiveOperation(TROpDef opDef)
-        {
-            return HasOperationStrict(opDef, false);
-        }
-
-        private bool HasOperationStrict(TROpDef opDef, bool activeStatus)
-        {
-            foreach (TROperation op in _operations)
+            if (op.Definition == opDef && op.IsActive == activeStatus)
             {
-                if (op.Definition == opDef && op.IsActive == activeStatus)
-                {
-                    return true;
-                }
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 
-        internal TROperation GetOperation(TROpDef opDef)
+    internal TROperation GetOperation(TROpDef opDef)
+    {
+        foreach (TROperation op in _operations)
         {
-            foreach (TROperation op in _operations)
+            if (op.Definition == opDef)
             {
-                if (op.Definition == opDef)
-                {
-                    return op;
-                }
+                return op;
             }
-            return null;
         }
+        return null;
+    }
 
-        internal int GetOperationIndex(TROpDef opDef)
+    internal int GetOperationIndex(TROpDef opDef)
+    {
+        for (int i = 0; i < _operations.Count; i++)
         {
-            for (int i = 0; i < _operations.Count; i++)
+            if (_operations[i].Definition == opDef)
             {
-                if (_operations[i].Definition == opDef)
-                {
-                    return i;
-                }
+                return i;
             }
-            return -1;
         }
+        return -1;
+    }
 
-        internal int GetLastOperationIndex(TROpDef opDef)
+    internal int GetLastOperationIndex(TROpDef opDef)
+    {
+        for (int i = _operations.Count - 1; i >= 0; i--)
         {
-            for (int i = _operations.Count - 1; i >= 0; i--)
+            if (_operations[i].Definition == opDef)
             {
-                if (_operations[i].Definition == opDef)
-                {
-                    return i;
-                }
+                return i;
             }
-            return -1;
         }
+        return -1;
+    }
 
-        internal void InsertOperation(TROpDef opDef, ushort operand, TROpDef afterOpDef, bool isActive = true)
+    internal void InsertOperation(TROpDef opDef, ushort operand, TROpDef afterOpDef, bool isActive = true)
+    {
+        int pos = 0;
+        if (afterOpDef != null)
         {
-            int pos = 0;
-            if (afterOpDef != null)
+            TROperation op = GetOperation(afterOpDef);
+            if (op != null)
             {
-                TROperation op = GetOperation(afterOpDef);
-                if (op != null)
-                {
-                    pos = _operations.IndexOf(op) + 1;
-                }
-            }
-
-            TROperation operation = new TROperation(opDef, operand, isActive);
-            if (pos >= _operations.Count)
-            {
-                _operations.Add(operation);
-            }
-            else
-            {
-                _operations.Insert(pos, operation);
+                pos = _operations.IndexOf(op) + 1;
             }
         }
 
-        /// <summary>
-        /// If the provided operation exists but the operand and IsActive values, don't match, they
-        /// wiil be aligned. Otherwise, the operation will be inserted.
-        /// </summary>
-        internal void EnsureOperation(TROperation operation)
+        TROperation operation = new(opDef, operand, isActive);
+        if (pos >= _operations.Count)
         {
-            TROperation currentOp = GetOperation(operation.Definition);
-            if (currentOp != null)
-            {
-                currentOp.Operand = operation.Operand;
-                currentOp.IsActive = operation.IsActive;
-            }
-            else
-            {
-                InsertOperation(operation.Definition, operation.Operand, operation.Definition.Next, operation.IsActive);
-            }
+            _operations.Add(operation);
         }
+        else
+        {
+            _operations.Insert(pos, operation);
+        }
+    }
 
-        internal bool RemoveOperation(TROpDef opDef)
+    /// <summary>
+    /// If the provided operation exists but the operand and IsActive values, don't match, they
+    /// wiil be aligned. Otherwise, the operation will be inserted.
+    /// </summary>
+    internal void EnsureOperation(TROperation operation)
+    {
+        TROperation currentOp = GetOperation(operation.Definition);
+        if (currentOp != null)
         {
-            bool result = false;
-            TROperation op;
-            while ((op = GetOperation(opDef)) != null)
-            {
-                result = _operations.Remove(op);
-            }
-            return result;
+            currentOp.Operand = operation.Operand;
+            currentOp.IsActive = operation.IsActive;
         }
+        else
+        {
+            InsertOperation(operation.Definition, operation.Operand, operation.Definition.Next, operation.IsActive);
+        }
+    }
 
-        internal bool SetOperationActive(TROpDef opDef, bool isActive)
+    internal bool RemoveOperation(TROpDef opDef)
+    {
+        bool result = false;
+        TROperation op;
+        while ((op = GetOperation(opDef)) != null)
         {
-            bool found = false;
-            foreach (TROperation op in _operations)
-            {
-                if (op.Definition == opDef)
-                {
-                    op.IsActive = isActive;
-                    found = true;
-                }
-            }
-            return found;
+            result = _operations.Remove(op);
         }
+        return result;
+    }
+
+    internal bool SetOperationActive(TROpDef opDef, bool isActive)
+    {
+        bool found = false;
+        foreach (TROperation op in _operations)
+        {
+            if (op.Definition == opDef)
+            {
+                op.IsActive = isActive;
+                found = true;
+            }
+        }
+        return found;
     }
 }

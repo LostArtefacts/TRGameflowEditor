@@ -1,98 +1,93 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace TRGE.Core;
 
-namespace TRGE.Core
+internal static class CollectionExtensions
 {
-    internal static class CollectionExtensions
+    internal static void Randomise<T>(this List<T> list, Random rand)
     {
-        internal static void Randomise<T>(this List<T> list, Random rand)
+        SortedDictionary<int, T> map = new();
+        foreach (T item in list)
         {
-            SortedDictionary<int, T> map = new SortedDictionary<int, T>();
-            foreach (T item in list)
+            int r;
+            do
             {
-                int r;
+                r = rand.Next();
+            }
+            while (map.ContainsKey(r));
+            map.Add(r, item);
+        }
+
+        list.Clear();
+        list.AddRange(map.Values);
+    }
+
+    internal static List<T> RandomSelection<T>(this List<T> list, Random rand, uint count, bool allowDuplicates = false, ISet<T> exclusions = null)
+    {
+        if (count > list.Count && !allowDuplicates)
+        {
+            throw new ArgumentException(string.Format("The given count ({0}) is larger than that of the provided list {1}.", count, list.Count));
+        }
+
+        if (count == list.Count)
+        {
+            return list;
+        }
+
+        List<T> iterList = new(list);
+        if (exclusions != null && exclusions.Count > 0)
+        {
+            foreach (T excludeItem in exclusions)
+            {
+                iterList.Remove(excludeItem);
+            }
+        }
+
+        List<T> resultSet = new();
+        if (iterList.Count > 0)
+        {
+            int icount = Convert.ToInt32(count);
+            int maxIter = allowDuplicates ? icount : Math.Min(icount, iterList.Count);
+            for (int i = 0; i < maxIter; i++)
+            {
+                T item;
                 do
                 {
-                    r = rand.Next();
+                    item = iterList[rand.Next(0, iterList.Count)];
                 }
-                while (map.ContainsKey(r));
-                map.Add(r, item);
+                while (!allowDuplicates && resultSet.Contains(item));
+                resultSet.Add(item);
             }
+        }            
 
-            list.Clear();
-            list.AddRange(map.Values);
-        }
+        return resultSet;
+    }
 
-        internal static List<T> RandomSelection<T>(this List<T> list, Random rand, uint count, bool allowDuplicates = false, ISet<T> exclusions = null)
+    internal static void Sort<T1, T2>(this Dictionary<T1, T2> dict, Comparison<T1> comp)
+    {
+        List<T1> keys = new(dict.Keys);
+        keys.Sort(comp);
+        Dictionary<T1, T2> result = new();
+        foreach (T1 key in keys)
         {
-            if (count > list.Count && !allowDuplicates)
-            {
-                throw new ArgumentException(string.Format("The given count ({0}) is larger than that of the provided list {1}.", count, list.Count));
-            }
-
-            if (count == list.Count)
-            {
-                return list;
-            }
-
-            List<T> iterList = new List<T>(list);
-            if (exclusions != null && exclusions.Count > 0)
-            {
-                foreach (T excludeItem in exclusions)
-                {
-                    iterList.Remove(excludeItem);
-                }
-            }
-
-            List<T> resultSet = new List<T>();
-            if (iterList.Count > 0)
-            {
-                int icount = Convert.ToInt32(count);
-                int maxIter = allowDuplicates ? icount : Math.Min(icount, iterList.Count);
-                for (int i = 0; i < maxIter; i++)
-                {
-                    T item;
-                    do
-                    {
-                        item = iterList[rand.Next(0, iterList.Count)];
-                    }
-                    while (!allowDuplicates && resultSet.Contains(item));
-                    resultSet.Add(item);
-                }
-            }            
-
-            return resultSet;
+            result.Add(key, dict[key]);
         }
 
-        internal static void Sort<T1, T2>(this Dictionary<T1, T2> dict, Comparison<T1> comp)
+        dict.Clear();
+        foreach (T1 key in result.Keys)
         {
-            List<T1> keys = new List<T1>(dict.Keys);
-            keys.Sort(comp);
-            Dictionary<T1, T2> result = new Dictionary<T1, T2>();
-            foreach (T1 key in keys)
-            {
-                result.Add(key, dict[key]);
-            }
-
-            dict.Clear();
-            foreach (T1 key in result.Keys)
-            {
-                dict.Add(key, result[key]);
-            }
+            dict.Add(key, result[key]);
         }
+    }
 
-        internal static void AddOrIgnore<T1, T2>(this Dictionary<T1, T2> dict, T1 key, T2 val)
+    internal static void AddOrIgnore<T1, T2>(this Dictionary<T1, T2> dict, T1 key, T2 val)
+    {
+        if (!dict.ContainsKey(key))
         {
-            if (!dict.ContainsKey(key))
-            {
-                dict.Add(key, val);
-            }
+            dict.Add(key, val);
         }
+    }
 
-        internal static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dict)
-        {
-            return dict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
+    internal static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dict)
+    {
+        return dict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 }

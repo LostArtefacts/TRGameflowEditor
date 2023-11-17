@@ -1,28 +1,26 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
 
-namespace TRGE.Core.Test
+namespace TRGE.Core.Test;
+
+public class BaseTestCollection : AbstractTestCollection
 {
-    public class BaseTestCollection : AbstractTestCollection
+    protected string _testOutputPath;
+
+    [ClassInitialize]
+    protected override void Setup()
     {
-        protected string _testOutputPath;
+        _testOutputPath = @"scripts\SCRIPT_OUTPUT.dat";
+    }
 
-        [ClassInitialize]
-        protected override void Setup()
-        {
-            _testOutputPath = @"scripts\SCRIPT_OUTPUT.dat";
-        }
+    [ClassCleanup]
+    protected override void TearDown()
+    {
+        File.Delete(_testOutputPath);
+    }
 
-        [ClassCleanup]
-        protected override void TearDown()
-        {
-            File.Delete(_testOutputPath);
-        }
-
-        internal TR23Script SaveAndReload(TR23Script script)
-        {
-            File.WriteAllBytes(_testOutputPath, script.SerialiseScriptToBin());
-            return TRScriptFactory.OpenScript(_testOutputPath) as TR23Script;
-        }
+    internal TR23Script SaveAndReload(TR23Script script)
+    {
+        File.WriteAllBytes(_testOutputPath, script.SerialiseScriptToBin());
+        return TRScriptFactory.OpenScript(_testOutputPath) as TR23Script;
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class BaseLevelSequence
 {
-    public class BaseLevelSequence
-    {
-        public LevelSequenceType Type { get; set; }
-    }
+    public LevelSequenceType Type { get; set; }
 }

@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace TRGE.Coord;
 
-namespace TRGE.Coord
+public class TRBackupRestoreEventArgs : EventArgs
 {
-    public class TRBackupRestoreEventArgs : EventArgs
-    {
-        public int ProgressValue { get; internal set; }
-        public int ProgressTarget { get; internal set; }
+    public int ProgressValue { get; internal set; }
+    public int ProgressTarget { get; internal set; }
 
-        public bool IsComplete => ProgressValue >= ProgressTarget;
-    }
+    public bool IsComplete => ProgressValue >= ProgressTarget;
 }

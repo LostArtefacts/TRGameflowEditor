@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public interface IDemoEditor
 {
-    public interface IDemoEditor
-    {
-        bool DemosEnabled { get; set; }
-    }
+    bool DemosEnabled { get; set; }
 }

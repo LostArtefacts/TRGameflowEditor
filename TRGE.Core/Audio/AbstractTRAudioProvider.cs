@@ -1,69 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace TRGE.Core;
 
-namespace TRGE.Core
+public abstract class AbstractTRAudioProvider
 {
-    public abstract class AbstractTRAudioProvider
+    protected readonly List<TRAudioTrack> _tracks;
+    public IReadOnlyList<TRAudioTrack> Tracks => _tracks;
+
+    public abstract TRAudioType AudioType { get; }
+
+    public AbstractTRAudioProvider()
     {
-        protected readonly List<TRAudioTrack> _tracks;
-        public IReadOnlyList<TRAudioTrack> Tracks => _tracks;
+        _tracks = new List<TRAudioTrack>();
+    }
 
-        public abstract TRAudioType AudioType { get; }
+    public abstract TRAudioTrack GetBlankTrack();
+    public abstract byte[] GetTrackData(TRAudioTrack track);
 
-        public AbstractTRAudioProvider()
+    public byte[] GetTrackData(uint id)
+    {
+        TRAudioTrack track = GetTrack(id);
+        if (track != null)
         {
-            _tracks = new List<TRAudioTrack>();
+            return GetTrackData(track);
         }
 
-        public abstract TRAudioTrack GetBlankTrack();
-        public abstract byte[] GetTrackData(TRAudioTrack track);
+        return null;
+    }
 
-        public byte[] GetTrackData(uint id)
+    public TRAudioTrack GetTrack(uint id)
+    {
+        foreach (TRAudioTrack track in _tracks)
         {
-            TRAudioTrack track = GetTrack(id);
-            if (track != null)
+            if (track.ID == id)
             {
-                return GetTrackData(track);
+                return track;
             }
-
-            return null;
         }
 
-        public TRAudioTrack GetTrack(uint id)
+        TRAudioTrack blankTrack = GetBlankTrack();
+        if (id == blankTrack.ID)
         {
-            foreach (TRAudioTrack track in _tracks)
-            {
-                if (track.ID == id)
-                {
-                    return track;
-                }
-            }
+            return blankTrack;
+        }
+        return null;
+    }
 
-            TRAudioTrack blankTrack = GetBlankTrack();
-            if (id == blankTrack.ID)
-            {
-                return blankTrack;
-            }
-            return null;
+    public IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> GetCategorisedTracks()
+    {
+        Dictionary<TRAudioCategory, List<TRAudioTrack>> data = new();
+        foreach (TRAudioCategory category in (TRAudioCategory[])Enum.GetValues(typeof(TRAudioCategory)))
+        {
+            data.Add(category, new List<TRAudioTrack>());
         }
 
-        public IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> GetCategorisedTracks()
+        foreach (TRAudioTrack track in Tracks)
         {
-            Dictionary<TRAudioCategory, List<TRAudioTrack>> data = new Dictionary<TRAudioCategory, List<TRAudioTrack>>();
-            foreach (TRAudioCategory category in (TRAudioCategory[])Enum.GetValues(typeof(TRAudioCategory)))
+            foreach (TRAudioCategory category in track.Categories)
             {
-                data.Add(category, new List<TRAudioTrack>());
+                data[category].Add(track);
             }
-
-            foreach (TRAudioTrack track in Tracks)
-            {
-                foreach (TRAudioCategory category in track.Categories)
-                {
-                    data[category].Add(track);
-                }
-            }
-
-            return data;
         }
+
+        return data;
     }
 }

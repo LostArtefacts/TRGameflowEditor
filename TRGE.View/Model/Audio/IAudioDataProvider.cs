@@ -1,10 +1,9 @@
 ﻿using TRGE.View.Model.Data;
 
-namespace TRGE.View.Model.Audio
+namespace TRGE.View.Model.Audio;
+
+public interface IAudioDataProvider
 {
-    public interface IAudioDataProvider
-    {
-        AudioData GetAudioData();
-        byte[] GetAudioTrackData(AudioTrack track);
-    }
+    AudioData GetAudioData();
+    byte[] GetAudioTrackData(AudioTrack track);
 }

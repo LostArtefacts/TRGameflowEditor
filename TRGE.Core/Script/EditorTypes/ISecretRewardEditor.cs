@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
+﻿namespace TRGE.Core;
 
-namespace TRGE.Core
+public interface ISecretRewardEditor
 {
-    public interface ISecretRewardEditor
-    {
-        Organisation SecretBonusOrganisation { get; set; }
+    Organisation SecretBonusOrganisation { get; set; }
 
-        RandomGenerator SecretBonusRNG { get; set; }
+    RandomGenerator SecretBonusRNG { get; set; }
 
-        uint RandomAmmolessLevelCount { get; set; }
+    uint RandomAmmolessLevelCount { get; set; }
 
-        List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> LevelSecretBonusData { get; set; }
-    }
+    List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> LevelSecretBonusData { get; set; }
 }

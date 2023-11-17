@@ -1,436 +1,429 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TRGE.Core.Item.Enums;
+﻿using TRGE.Core.Item.Enums;
 
-namespace TRGE.Core
+namespace TRGE.Core;
+
+public class TR2ScriptedLevel : AbstractTRScriptedLevel
 {
-    public class TR2ScriptedLevel : AbstractTRScriptedLevel
+    private static readonly string[] _pistolInjectionLevels = new string[]
     {
-        private static readonly string[] _pistolInjectionLevels = new string[]
-        {
-            CreateID("FLOATING"), CreateID("XIAN")
-        };
+        CreateID("FLOATING"), CreateID("XIAN")
+    };
 
-        public override ushort Sequence
+    public override ushort Sequence
+    {
+        get => GetOperation(TR23OpDefs.Level).Operand;
+        set => GetOperation(TR23OpDefs.Level).Operand = value;
+    }
+
+    public override ushort TrackID
+    {
+        get => GetOperation(TR23OpDefs.Track).Operand;
+        set => GetOperation(TR23OpDefs.Track).Operand = value;
+    }
+
+    public override bool HasFMV
+    {
+        get => HasActiveOperation(TR23OpDefs.FMV);
+        set
         {
-            get => GetOperation(TR23OpDefs.Level).Operand;
-            set => GetOperation(TR23OpDefs.Level).Operand = value;
+            SetOperationActive(TR23OpDefs.FMV, value);
+            SetOperationActive(TR23OpDefs.ListStart, value);
+            SetOperationActive(TR23OpDefs.ListEnd, value);
         }
+    }
 
-        public override ushort TrackID
-        {
-            get => GetOperation(TR23OpDefs.Track).Operand;
-            set => GetOperation(TR23OpDefs.Track).Operand = value;
-        }
+    public override bool SupportsFMVs => HasOperation(TR23OpDefs.FMV);
 
-        public override bool HasFMV
+    public override bool HasStartAnimation
+    {
+        get => HasActiveOperation(TR23OpDefs.StartAnimation);
+        set => SetOperationActive(TR23OpDefs.StartAnimation, value);
+    }
+
+    public override bool SupportsStartAnimations => HasOperation(TR23OpDefs.StartAnimation);
+
+    public override short StartAnimationID
+    {
+        get
         {
-            get => HasActiveOperation(TR23OpDefs.FMV);
-            set
+            if (HasStartAnimation)
             {
-                SetOperationActive(TR23OpDefs.FMV, value);
-                SetOperationActive(TR23OpDefs.ListStart, value);
-                SetOperationActive(TR23OpDefs.ListEnd, value);
+                return Convert.ToInt16(GetOperation(TR23OpDefs.StartAnimation).Operand);
+            }
+            return -1;
+        }
+        set
+        {
+            if (value == -1)
+            {
+                HasStartAnimation = false;
+            }
+            else if (HasStartAnimation)
+            {
+                GetOperation(TR23OpDefs.StartAnimation).Operand = Convert.ToUInt16(value);
+            }
+            else
+            {
+                InsertOperation(TR23OpDefs.StartAnimation, Convert.ToUInt16(value), TR23OpDefs.StartAnimation.Next);
             }
         }
+    }
 
-        public override bool SupportsFMVs => HasOperation(TR23OpDefs.FMV);
-
-        public override bool HasStartAnimation
+    public override bool HasCutScene
+    {
+        get => HasActiveOperation(TR23OpDefs.Cinematic);
+        set
         {
-            get => HasActiveOperation(TR23OpDefs.StartAnimation);
-            set => SetOperationActive(TR23OpDefs.StartAnimation, value);
+            SetOperationActive(TR23OpDefs.Cinematic, value);
+            SetOperationActive(TR23OpDefs.CutAngle, value);
         }
+    }
 
-        public override bool SupportsStartAnimations => HasOperation(TR23OpDefs.StartAnimation);
+    public override bool SupportsCutScenes => HasOperation(TR23OpDefs.Cinematic);
 
-        public override short StartAnimationID
+    private TR2ScriptedLevel _cutSceneLevel;
+    public override AbstractTRScriptedLevel CutSceneLevel
+    {
+        get => _cutSceneLevel;
+        set => _cutSceneLevel = value as TR2ScriptedLevel;
+    }
+
+    public override bool HasSunset
+    {
+        get => HasActiveOperation(TR23OpDefs.Sunset);
+        set
         {
-            get
+            if (value)
             {
-                if (HasStartAnimation)
-                {
-                    return Convert.ToInt16(GetOperation(TR23OpDefs.StartAnimation).Operand);
-                }
-                return -1;
+                EnsureOperation(new TROperation(TR23OpDefs.Sunset, ushort.MaxValue, true));
             }
-            set
+            else
             {
-                if (value == -1)
-                {
-                    HasStartAnimation = false;
-                }
-                else if (HasStartAnimation)
-                {
-                    GetOperation(TR23OpDefs.StartAnimation).Operand = Convert.ToUInt16(value);
-                }
-                else
-                {
-                    InsertOperation(TR23OpDefs.StartAnimation, Convert.ToUInt16(value), TR23OpDefs.StartAnimation.Next);
-                }
+                SetOperationActive(TR23OpDefs.Sunset, value);
             }
         }
+    }
 
-        public override bool HasCutScene
+    public override bool HasDeadlyWater
+    {
+        get => HasActiveOperation(TR23OpDefs.DeadlyWater);
+        set => SetOperationActive(TR23OpDefs.DeadlyWater, value);
+    }
+
+    public override bool RemovesWeapons
+    {
+        get => HasActiveOperation(TR23OpDefs.RemoveWeapons);
+        set
         {
-            get => HasActiveOperation(TR23OpDefs.Cinematic);
-            set
+            if (value)
             {
-                SetOperationActive(TR23OpDefs.Cinematic, value);
-                SetOperationActive(TR23OpDefs.CutAngle, value);
+                EnsureOperation(new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true));
+            }
+            else
+            {
+                SetOperationActive(TR23OpDefs.RemoveWeapons, value);
             }
         }
+    }
 
-        public override bool SupportsCutScenes => HasOperation(TR23OpDefs.Cinematic);
-
-        private TR2ScriptedLevel _cutSceneLevel;
-        public override AbstractTRScriptedLevel CutSceneLevel
+    public bool RequiresWeaponTextureInjection
+    {
+        get
         {
-            get => _cutSceneLevel;
-            set => _cutSceneLevel = value as TR2ScriptedLevel;
+            return _pistolInjectionLevels.Contains(ID);
         }
+    }
 
-        public override bool HasSunset
+    public override bool RemovesAmmo
+    {
+        get => HasActiveOperation(TR23OpDefs.RemoveAmmo);
+        set
         {
-            get => HasActiveOperation(TR23OpDefs.Sunset);
-            set
+            if (value)
             {
-                if (value)
-                {
-                    EnsureOperation(new TROperation(TR23OpDefs.Sunset, ushort.MaxValue, true));
-                }
-                else
-                {
-                    SetOperationActive(TR23OpDefs.Sunset, value);
-                }
+                EnsureOperation(new TROperation(TR23OpDefs.RemoveAmmo, ushort.MaxValue, true));
+            }
+            else
+            {
+                SetOperationActive(TR23OpDefs.RemoveAmmo, value);
             }
         }
+    }
 
-        public override bool HasDeadlyWater
+    /// <summary>
+    /// In the script, the operand is either 0 for no secrets, or any non-zero value
+    /// means secrets will be counted. If it's left out, the default is 3 - TODO: test
+    /// what happens with anything other than 3.
+    /// </summary>
+    public override bool HasSecrets
+    {
+        get => !HasActiveOperation(TR23OpDefs.Secrets);
+        set
         {
-            get => HasActiveOperation(TR23OpDefs.DeadlyWater);
-            set => SetOperationActive(TR23OpDefs.DeadlyWater, value);
-        }
-
-        public override bool RemovesWeapons
-        {
-            get => HasActiveOperation(TR23OpDefs.RemoveWeapons);
-            set
+            if (value)
             {
-                if (value)
-                {
-                    EnsureOperation(new TROperation(TR23OpDefs.RemoveWeapons, ushort.MaxValue, true));
-                }
-                else
-                {
-                    SetOperationActive(TR23OpDefs.RemoveWeapons, value);
-                }
+                SetOperationActive(TR23OpDefs.Secrets, false);
+            }
+            else
+            {
+                EnsureOperation(new TROperation(TR23OpDefs.Secrets, 0, true));
             }
         }
+    }
 
-        public bool RequiresWeaponTextureInjection
+    /// <summary>
+    /// Although the script is defined to specify the number of secrets, it's all hard-coded in the game.
+    /// TR2 can have a maximum of 3 per level.
+    /// </summary>
+    public override ushort NumSecrets
+    {
+        get => (ushort)(HasSecrets ? 3 : 0);
+        set { }
+    }        
+
+    /// <summary>
+    /// This is set in HSH, although the game is hard-coded to complete after killing
+    /// all enemies so this flag actually has no purpose. Remains untested in other
+    /// levels.
+    /// </summary>
+    public override bool KillToComplete
+    {
+        get => HasOperation(TR23OpDefs.KillToComplete);
+        set
         {
-            get
+            if (value)
             {
-                return _pistolInjectionLevels.Contains(ID);
+                EnsureOperation(new TROperation(TR23OpDefs.KillToComplete, ushort.MaxValue, true));
+            }
+            else
+            {
+                SetOperationActive(TR23OpDefs.KillToComplete, value);
             }
         }
+    }
 
-        public override bool RemovesAmmo
+    public override bool IsFinalLevel
+    {
+        get => HasActiveOperation(TR23OpDefs.GameComplete);
+        set
         {
-            get => HasActiveOperation(TR23OpDefs.RemoveAmmo);
-            set
+            if (value)
             {
-                if (value)
+                TROperation gcOp = GetOperation(TR23OpDefs.GameComplete);
+                if (gcOp == null)
                 {
-                    EnsureOperation(new TROperation(TR23OpDefs.RemoveAmmo, ushort.MaxValue, true));
+                    gcOp = GetOperation(TR23OpDefs.Complete);
+                    gcOp ??= AddOperation(TR23OpDefs.GameComplete);
                 }
-                else
-                {
-                    SetOperationActive(TR23OpDefs.RemoveAmmo, value);
-                }
+                gcOp.Definition = TR23OpDefs.GameComplete;
             }
-        }
-
-        /// <summary>
-        /// In the script, the operand is either 0 for no secrets, or any non-zero value
-        /// means secrets will be counted. If it's left out, the default is 3 - TODO: test
-        /// what happens with anything other than 3.
-        /// </summary>
-        public override bool HasSecrets
-        {
-            get => !HasActiveOperation(TR23OpDefs.Secrets);
-            set
+            else
             {
-                if (value)
+                TROperation op = GetOperation(TR23OpDefs.GameComplete);
+                if (op != null)
                 {
-                    SetOperationActive(TR23OpDefs.Secrets, false);
-                }
-                else
-                {
-                    EnsureOperation(new TROperation(TR23OpDefs.Secrets, 0, true));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Although the script is defined to specify the number of secrets, it's all hard-coded in the game.
-        /// TR2 can have a maximum of 3 per level.
-        /// </summary>
-        public override ushort NumSecrets
-        {
-            get => (ushort)(HasSecrets ? 3 : 0);
-            set { }
-        }        
-
-        /// <summary>
-        /// This is set in HSH, although the game is hard-coded to complete after killing
-        /// all enemies so this flag actually has no purpose. Remains untested in other
-        /// levels.
-        /// </summary>
-        public override bool KillToComplete
-        {
-            get => HasOperation(TR23OpDefs.KillToComplete);
-            set
-            {
-                if (value)
-                {
-                    EnsureOperation(new TROperation(TR23OpDefs.KillToComplete, ushort.MaxValue, true));
-                }
-                else
-                {
-                    SetOperationActive(TR23OpDefs.KillToComplete, value);
+                    op.Definition = TR23OpDefs.Complete;
                 }
             }
         }
+    }
 
-        public override bool IsFinalLevel
+    protected override TROpDef GetOpDefFor(ushort scriptData)
+    {
+        return TR23OpDefs.Get(scriptData);
+    }
+
+    private void RemoveBonuses()
+    {
+        for (int i = _operations.Count - 1; i >= 0; i--)
         {
-            get => HasActiveOperation(TR23OpDefs.GameComplete);
-            set
+            if (_operations[i].Definition == TR23OpDefs.StartInvBonus && _operations[i].Operand < 1000)
             {
-                if (value)
+                _operations.RemoveAt(i);
+            }
+        }
+    }
+
+    public void SetBonuses(List<TRItem> items)
+    {
+        RemoveBonuses();
+        foreach (TRItem item in items)
+        {
+            AddBonusItem(item.ID);
+        }
+    }
+
+    public void AddBonusItem(ushort itemID)
+    {
+        _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
+    }
+
+    internal int GetBonusItemCount(TRItem item, AbstractTRItemProvider itemProvider)
+    {
+        int i = 0;
+        foreach (TRItem bonusItem in GetBonusItems(itemProvider))
+        {
+            if (bonusItem == item)
+            {
+                i++;
+            }
+        }
+        return i;
+    }
+
+    internal List<TRItem> GetBonusItems(AbstractTRItemProvider itemProvider, bool startInv = false)
+    {
+        List<TRItem> ret = new();
+        foreach (TROperation opcmd in _operations)
+        {
+            if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+            {
+                ushort itemID = opcmd.Operand;
+                if (startInv && itemID > 999)
                 {
-                    TROperation gcOp = GetOperation(TR23OpDefs.GameComplete);
-                    if (gcOp == null)
+                    itemID -= 1000;
+                    ret.Add(itemProvider.GetItem(itemID));
+                }
+                else if (!startInv && itemID < 1000)
+                {
+                    ret.Add(itemProvider.GetItem(itemID));
+                }
+            }
+        }
+        return ret;
+    }
+
+    public List<ushort> GetBonusItemIDs()
+    {
+        ISet<ushort> items = new SortedSet<ushort>();
+        foreach (TROperation opcmd in _operations)
+        {
+            if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+            {
+                ushort itemID = opcmd.Operand;
+                if (itemID < 1000)
+                {
+                    items.Add(itemID);
+                }
+            }
+        }
+        return items.ToList();
+    }
+
+    public List<ushort> GetStartInventoryItemIDs()
+    {
+        ISet<ushort> items = new SortedSet<ushort>();
+        foreach (TROperation opcmd in _operations)
+        {
+            if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+            {
+                ushort itemID = opcmd.Operand;
+                if (itemID > 999)
+                {
+                    items.Add((ushort)(itemID - 1000));
+                }
+            }
+        }
+        return items.ToList();
+    }
+
+    public int GetStartInventoryItemCount()
+    {
+        int count = 0;
+        foreach (TROperation op in _operations)
+        {
+            if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand > 999)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public Dictionary<ushort, int> GetStartInventoryItems()
+    {
+        Dictionary<ushort, int> items = new();
+
+        foreach (TROperation opcmd in _operations)
+        {
+            if (opcmd.Definition == TR23OpDefs.StartInvBonus)
+            {
+                ushort itemID = opcmd.Operand;
+                if (itemID > 999)
+                {
+                    ushort itemType = (ushort)(itemID - 1000);
+                    if (!items.ContainsKey(itemType))
                     {
-                        gcOp = GetOperation(TR23OpDefs.Complete);
-                        if (gcOp == null)
-                        {
-                            gcOp = AddOperation(TR23OpDefs.GameComplete);
-                        }
+                        items[itemType] = 0;
                     }
-                    gcOp.Definition = TR23OpDefs.GameComplete;
-                }
-                else
-                {
-                    TROperation op = GetOperation(TR23OpDefs.GameComplete);
-                    if (op != null)
-                    {
-                        op.Definition = TR23OpDefs.Complete;
-                    }
+                    items[itemType]++;
                 }
             }
         }
 
-        protected override TROpDef GetOpDefFor(ushort scriptData)
-        {
-            return TR23OpDefs.Get(scriptData);
-        }
+        return items;
+    }
 
-        private void RemoveBonuses()
-        {
-            for (int i = _operations.Count - 1; i >= 0; i--)
-            {
-                if (_operations[i].Definition == TR23OpDefs.StartInvBonus && _operations[i].Operand < 1000)
-                {
-                    _operations.RemoveAt(i);
-                }
-            }
-        }
+    public void SetStartInventoryItems(Dictionary<TR2Items, int> items)
+    {
+        SetStartInventoryItems(items.ToDictionary(item => (ushort)item.Key, item => item.Value));
+    }
 
-        public void SetBonuses(List<TRItem> items)
-        {
-            RemoveBonuses();
-            foreach (TRItem item in items)
-            {
-                AddBonusItem(item.ID);
-            }
-        }
+    public void SetStartInventoryItems(Dictionary<ushort, int> items)
+    {
+        ClearStartInventoryItems();
 
-        public void AddBonusItem(ushort itemID)
+        foreach (ushort item in items.Keys)
+        {
+            AddStartInventoryItem(item, (uint)items[item]);
+        }
+    }
+
+    public void AddStartInventoryItem(TR2Items item, uint count = 1)
+    {
+        AddStartInventoryItem((ushort)item, count);
+    }
+
+    public void RemoveStartInventoryItem(TR2Items item, bool removeAll = false)
+    {
+        RemoveStartInventoryItem((ushort)item, removeAll);
+    }
+
+    public void AddStartInventoryItem(ushort item, uint count = 1)
+    {
+        ushort itemID = (ushort)(1000 + item);
+        for (int i = 0; i < count; i++)
         {
             _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
         }
+    }
 
-        internal int GetBonusItemCount(TRItem item, AbstractTRItemProvider itemProvider)
+    public void RemoveStartInventoryItem(ushort item, bool removeAll = false)
+    {
+        ushort itemID = (ushort)(1000 + item);
+        for (int i = _operations.Count - 1; i >= 0; i--)
         {
-            int i = 0;
-            foreach (TRItem bonusItem in GetBonusItems(itemProvider))
+            TROperation op = _operations[i];
+            if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand == itemID)
             {
-                if (bonusItem == item)
+                _operations.RemoveAt(i);
+
+                if (!removeAll)
                 {
-                    i++;
-                }
-            }
-            return i;
-        }
-
-        internal List<TRItem> GetBonusItems(AbstractTRItemProvider itemProvider, bool startInv = false)
-        {
-            List<TRItem> ret = new List<TRItem>();
-            foreach (TROperation opcmd in _operations)
-            {
-                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
-                {
-                    ushort itemID = opcmd.Operand;
-                    if (startInv && itemID > 999)
-                    {
-                        itemID -= 1000;
-                        ret.Add(itemProvider.GetItem(itemID));
-                    }
-                    else if (!startInv && itemID < 1000)
-                    {
-                        ret.Add(itemProvider.GetItem(itemID));
-                    }
-                }
-            }
-            return ret;
-        }
-
-        public List<ushort> GetBonusItemIDs()
-        {
-            ISet<ushort> items = new SortedSet<ushort>();
-            foreach (TROperation opcmd in _operations)
-            {
-                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
-                {
-                    ushort itemID = opcmd.Operand;
-                    if (itemID < 1000)
-                    {
-                        items.Add(itemID);
-                    }
-                }
-            }
-            return items.ToList();
-        }
-
-        public List<ushort> GetStartInventoryItemIDs()
-        {
-            ISet<ushort> items = new SortedSet<ushort>();
-            foreach (TROperation opcmd in _operations)
-            {
-                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
-                {
-                    ushort itemID = opcmd.Operand;
-                    if (itemID > 999)
-                    {
-                        items.Add((ushort)(itemID - 1000));
-                    }
-                }
-            }
-            return items.ToList();
-        }
-
-        public int GetStartInventoryItemCount()
-        {
-            int count = 0;
-            foreach (TROperation op in _operations)
-            {
-                if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand > 999)
-                {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        public Dictionary<ushort, int> GetStartInventoryItems()
-        {
-            Dictionary<ushort, int> items = new Dictionary<ushort, int>();
-
-            foreach (TROperation opcmd in _operations)
-            {
-                if (opcmd.Definition == TR23OpDefs.StartInvBonus)
-                {
-                    ushort itemID = opcmd.Operand;
-                    if (itemID > 999)
-                    {
-                        ushort itemType = (ushort)(itemID - 1000);
-                        if (!items.ContainsKey(itemType))
-                        {
-                            items[itemType] = 0;
-                        }
-                        items[itemType]++;
-                    }
-                }
-            }
-
-            return items;
-        }
-
-        public void SetStartInventoryItems(Dictionary<TR2Items, int> items)
-        {
-            SetStartInventoryItems(items.ToDictionary(item => (ushort)item.Key, item => item.Value));
-        }
-
-        public void SetStartInventoryItems(Dictionary<ushort, int> items)
-        {
-            ClearStartInventoryItems();
-
-            foreach (ushort item in items.Keys)
-            {
-                AddStartInventoryItem(item, (uint)items[item]);
-            }
-        }
-
-        public void AddStartInventoryItem(TR2Items item, uint count = 1)
-        {
-            AddStartInventoryItem((ushort)item, count);
-        }
-
-        public void RemoveStartInventoryItem(TR2Items item, bool removeAll = false)
-        {
-            RemoveStartInventoryItem((ushort)item, removeAll);
-        }
-
-        public void AddStartInventoryItem(ushort item, uint count = 1)
-        {
-            ushort itemID = (ushort)(1000 + item);
-            for (int i = 0; i < count; i++)
-            {
-                _operations.Insert(GetLastOperationIndex(TR23OpDefs.Level), new TROperation(TR23OpDefs.StartInvBonus, itemID, true));
-            }
-        }
-
-        public void RemoveStartInventoryItem(ushort item, bool removeAll = false)
-        {
-            ushort itemID = (ushort)(1000 + item);
-            for (int i = _operations.Count - 1; i >= 0; i--)
-            {
-                TROperation op = _operations[i];
-                if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand == itemID)
-                {
-                    _operations.RemoveAt(i);
-
-                    if (!removeAll)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
         }
+    }
 
-        public void ClearStartInventoryItems()
+    public void ClearStartInventoryItems()
+    {
+        for (int i = _operations.Count - 1; i >= 0; i--)
         {
-            for (int i = _operations.Count - 1; i >= 0; i--)
+            TROperation op = _operations[i];
+            if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand > 999)
             {
-                TROperation op = _operations[i];
-                if (op.Definition == TR23OpDefs.StartInvBonus && op.Operand > 999)
-                {
-                    _operations.RemoveAt(i);
-                }
+                _operations.RemoveAt(i);
             }
         }
     }

@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class SetupBaconLaraSequence : BaseLevelSequence
 {
-    public class SetupBaconLaraSequence : BaseLevelSequence
-    {
-        public int AnchorRoom { get; set; }
-    }
+    public int AnchorRoom { get; set; }
 }

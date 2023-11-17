@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
+﻿namespace TRGE.Core;
 
-namespace TRGE.Core
+public interface IAmmolessEditor
 {
-    public interface IAmmolessEditor
-    {
-        Organisation AmmolessLevelOrganisation { get; set; }
+    Organisation AmmolessLevelOrganisation { get; set; }
 
-        RandomGenerator AmmolessLevelRNG { get; set; }
+    RandomGenerator AmmolessLevelRNG { get; set; }
 
-        uint RandomAmmolessLevelCount { get; set; }
+    uint RandomAmmolessLevelCount { get; set; }
 
-        List<MutableTuple<string, string, bool>> AmmolessLevelData { get; set; }
-    }
+    List<MutableTuple<string, string, bool>> AmmolessLevelData { get; set; }
 }

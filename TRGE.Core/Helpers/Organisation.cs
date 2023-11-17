@@ -1,9 +1,8 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum Organisation
 {
-    public enum Organisation
-    {
-        Default = 0,
-        Manual = 1,
-        Random = 2
-    }
+    Default = 0,
+    Manual = 1,
+    Random = 2
 }

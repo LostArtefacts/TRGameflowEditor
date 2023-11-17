@@ -1,12 +1,11 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRUILocation
 {
-    public enum TRUILocation
-    {
-        TopLeft,
-        TopCenter,
-        TopRight,
-        BottomLeft,
-        BottomCenter,
-        BottomRight
-    }
+    TopLeft,
+    TopCenter,
+    TopRight,
+    BottomLeft,
+    BottomCenter,
+    BottomRight
 }

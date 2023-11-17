@@ -1,12 +1,11 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRVersion
 {
-    public enum TRVersion
-    {
-        Unknown,
-        TR2,
-        TR2G,
-        TR3,
-        TR3G,
-        TR1
-    }
+    Unknown,
+    TR2,
+    TR2G,
+    TR3,
+    TR3G,
+    TR1
 }

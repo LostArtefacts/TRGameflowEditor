@@ -1,27 +1,20 @@
-﻿namespace TRGE.Core
-{
-    public static class TRAudioFactory
-    {
-        public static AbstractTRAudioProvider GetAudioProvider(TREdition edition)
-        {
-            return GetAudioProvider(edition.Version);
-        }
+﻿namespace TRGE.Core;
 
-        public static AbstractTRAudioProvider GetAudioProvider(TRVersion version)
+public static class TRAudioFactory
+{
+    public static AbstractTRAudioProvider GetAudioProvider(TREdition edition)
+    {
+        return GetAudioProvider(edition.Version);
+    }
+
+    public static AbstractTRAudioProvider GetAudioProvider(TRVersion version)
+    {
+        return version switch
         {
-            switch (version)
-            {
-                case TRVersion.TR1:
-                    return new TR1AudioProvider();
-                case TRVersion.TR2:
-                case TRVersion.TR2G:
-                    return new TR2AudioProvider();
-                case TRVersion.TR3:
-                case TRVersion.TR3G:
-                    return new TR3AudioProvider();
-                default:
-                    return null;
-            }
-        }
+            TRVersion.TR1 => new TR1AudioProvider(),
+            TRVersion.TR2 or TRVersion.TR2G => new TR2AudioProvider(),
+            TRVersion.TR3 or TRVersion.TR3G => new TR3AudioProvider(),
+            _ => null,
+        };
     }
 }

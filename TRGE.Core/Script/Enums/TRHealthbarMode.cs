@@ -1,12 +1,11 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRHealthbarMode
 {
-    public enum TRHealthbarMode
-    {
-        Default,
-        FlashingOrDefault,
-        FlashingOnly,
-        Always,
-        Never,
-        PS1
-    }
+    Default,
+    FlashingOrDefault,
+    FlashingOnly,
+    Always,
+    Never,
+    PS1
 }

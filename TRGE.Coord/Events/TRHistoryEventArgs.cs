@@ -1,15 +1,11 @@
-﻿using System;
-using System.IO;
+﻿namespace TRGE.Coord;
 
-namespace TRGE.Coord
+public class TRHistoryEventArgs : EventArgs
 {
-    public class TRHistoryEventArgs : EventArgs
-    {
-        public string Path { get; private set; }
+    public string Path { get; private set; }
 
-        public TRHistoryEventArgs(string path)
-        {
-            Path = path;
-        }
+    public TRHistoryEventArgs(string path)
+    {
+        Path = path;
     }
 }

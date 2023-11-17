@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRMenuStyle
 {
-    public enum TRMenuStyle
-    {
-        PC, PS1
-    }
+    PC, PS1
 }

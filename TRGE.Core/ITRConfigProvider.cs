@@ -1,8 +1,7 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public interface ITRConfigProvider
 {
-    public interface ITRConfigProvider
-    {
-        object GetConfig();
-        void SetConfig(object config);
-    }
+    object GetConfig();
+    void SetConfig(object config);
 }

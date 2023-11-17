@@ -1,10 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace TRGE.Core.Test
+namespace TRGE.Core.Test;
+
+[TestClass]
+public class TR3PCItemTests : AbstractTR3ItemTestCollection
 {
-    [TestClass]
-    public class TR3PCItemTests : AbstractTR3ItemTestCollection
-    {
-        protected override int ScriptFileIndex => 2;
-    }
+    protected override int ScriptFileIndex => 2;
 }

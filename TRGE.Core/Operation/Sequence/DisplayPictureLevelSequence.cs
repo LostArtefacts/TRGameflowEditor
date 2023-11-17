@@ -1,8 +1,7 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class DisplayPictureLevelSequence : BaseLevelSequence
 {
-    public class DisplayPictureLevelSequence : BaseLevelSequence
-    {
-        public string PicturePath { get; set; }
-        public double DisplayTime { get; set; }
-    }
+    public string PicturePath { get; set; }
+    public double DisplayTime { get; set; }
 }

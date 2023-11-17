@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum TRSaveCategory
 {
-    public enum TRSaveCategory
-    {
-        None, Scripting, LevelFile, Custom, Commit, Cancel, Warning
-    }
+    None, Scripting, LevelFile, Custom, Commit, Cancel, Warning
 }

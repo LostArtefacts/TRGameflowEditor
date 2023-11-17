@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class SetCamLevelSequence : BaseLevelSequence 
 {
-    public class SetCamLevelSequence : BaseLevelSequence 
-    {
-        public int Value { get; set; }
-    }
+    public int Value { get; set; }
 }

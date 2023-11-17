@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public class FMVLevelSequence : BaseLevelSequence
 {
-    public class FMVLevelSequence : BaseLevelSequence
-    {
-        public string FmvPath { get; set; }
-    }
+    public string FmvPath { get; set; }
 }

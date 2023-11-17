@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum Hardware
 {
-    public enum Hardware
-    {
-        PC, PSX
-    }
+    PC, PSX
 }

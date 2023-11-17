@@ -1,7 +1,6 @@
-﻿namespace TRGE.View.Model
+﻿namespace TRGE.View.Model;
+
+public interface IRecentFolderOpener
 {
-    public interface IRecentFolderOpener
-    {
-        void OpenDataFolder(RecentFolder folder);
-    }
+    void OpenDataFolder(RecentFolder folder);
 }

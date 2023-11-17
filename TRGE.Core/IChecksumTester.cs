@@ -1,7 +1,6 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public interface IChecksumTester
 {
-    public interface IChecksumTester
-    {
-        bool Test(string filePath);
-    }
+    bool Test(string filePath);
 }

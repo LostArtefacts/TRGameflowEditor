@@ -1,127 +1,124 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.IO;
 using TRGE.Coord;
 using TRGE.Extension;
 
-namespace TRGE.Core.Test
+namespace TRGE.Core.Test;
+
+[TestClass]
+public abstract class AbstractTRExtensionTests : BaseTestCollection
 {
-    [TestClass]
-    public abstract class AbstractTRExtensionTests : BaseTestCollection
+    protected abstract string DataDirectory { get; }
+    protected abstract TREdition Edition { get; }
+    protected string WorkingDirectory => DataDirectory + @"\WorkingDir";
+
+    private void PrepareDirectories()
     {
-        protected abstract string DataDirectory { get; }
-        protected abstract TREdition Edition { get; }
-        protected string WorkingDirectory => DataDirectory + @"\WorkingDir";
-
-        private void PrepareDirectories()
+        if (DataDirectory == null || !Directory.Exists(DataDirectory))
         {
-            if (DataDirectory == null || !Directory.Exists(DataDirectory))
-            {
-                Assert.Fail("Test cannot proceed - data directory not set or does not exit.");
-            }
-            new DirectoryInfo(DataDirectory + @"\Original").Copy(WorkingDirectory, true);
+            Assert.Fail("Test cannot proceed - data directory not set or does not exit.");
+        }
+        new DirectoryInfo(DataDirectory + @"\Original").Copy(WorkingDirectory, true);
+    }
+
+    [TestMethod]
+    [TestSequence(0)]
+    protected void TestExtensionSupported()
+    {
+        PrepareDirectories();
+
+        Assert.IsTrue(TRLevelEditorFactory.EditionSupportsLevelEditing(Edition));
+
+        TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
+        Assert.IsNotNull(editor.LevelEditor);
+        Assert.IsTrue(editor.LevelEditor is TRLevelEditorExtensionExample);
+    }
+
+    [TestMethod]
+    [TestSequence(1)]
+    protected void TestExtensionSaving()
+    {
+        TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
+        (editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool = true;
+
+        int expectedTarget = editor.ScriptEditor.GetSaveTargetCount() + editor.LevelEditor.GetSaveTargetCount();
+        int progress = 0;
+        editor.SaveProgressChanged += delegate(object sender, TRSaveEventArgs e)
+        {
+            progress = e.ProgressValue;
+        };
+        editor.Save();
+
+        Assert.AreEqual(expectedTarget, progress);
+    }
+
+    [TestMethod]
+    [TestSequence(2)]
+    protected void TestExtensionConfig()
+    {
+        TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
+        (editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool = true;
+        (editor.LevelEditor as TRLevelEditorExtensionExample).CustomInt = 300;
+        editor.Save();
+
+        editor = TRCoord.Instance.Open(WorkingDirectory);
+        Assert.IsTrue((editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool);
+        Assert.IsTrue((editor.LevelEditor as TRLevelEditorExtensionExample).CustomInt == 300);
+    }
+
+    [TestMethod]
+    [TestSequence(3)]
+    protected void TestExtensionPostRando()
+    {
+        TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
+        List<string> initialLevels = new();
+        foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.LevelManager.Levels)
+        {
+            initialLevels.Add(level.ID);
         }
 
-        [TestMethod]
-        [TestSequence(0)]
-        protected void TestExtensionSupported()
+        editor.ScriptEditor.LevelSequencingOrganisation = Organisation.Random;
+        editor.ScriptEditor.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
+
+        editor.Save();
+
+        List<string> postLevels = new();
+        foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.Levels)
         {
-            PrepareDirectories();
-
-            Assert.IsTrue(TRLevelEditorFactory.EditionSupportsLevelEditing(Edition));
-
-            TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
-            Assert.IsNotNull(editor.LevelEditor);
-            Assert.IsTrue(editor.LevelEditor is TRLevelEditorExtensionExample);
+            postLevels.Add(level.ID);
         }
 
-        [TestMethod]
-        [TestSequence(1)]
-        protected void TestExtensionSaving()
+        CollectionAssert.AreEqual(initialLevels, postLevels);
+    }
+
+    [TestMethod]
+    [TestSequence(4)]
+    protected void TestExtensionSavingLevelCount()
+    {
+        TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
+        (editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool = true;
+
+        var levels = editor.ScriptEditor.EnabledLevelStatus;
+        levels[0].Item3 = false;
+        editor.ScriptEditor.EnabledLevelOrganisation = Organisation.Manual;
+        editor.ScriptEditor.EnabledLevelStatus = levels;
+
+        int expectedTarget = editor.ScriptEditor.GetSaveTargetCount() + editor.LevelEditor.GetSaveTargetCount();
+        int progress = 0;
+        editor.SaveProgressChanged += delegate (object sender, TRSaveEventArgs e)
         {
-            TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
-            (editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool = true;
+            progress = e.ProgressValue;
+        };
+        editor.Save();
 
-            int expectedTarget = editor.ScriptEditor.GetSaveTargetCount() + editor.LevelEditor.GetSaveTargetCount();
-            int progress = 0;
-            editor.SaveProgressChanged += delegate(object sender, TRSaveEventArgs e)
-            {
-                progress = e.ProgressValue;
-            };
-            editor.Save();
+        Assert.AreEqual(expectedTarget, progress);
+    }
 
-            Assert.AreEqual(expectedTarget, progress);
-        }
-
-        [TestMethod]
-        [TestSequence(2)]
-        protected void TestExtensionConfig()
+    protected override void TearDown()
+    {
+        if (Directory.Exists(WorkingDirectory))
         {
-            TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
-            (editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool = true;
-            (editor.LevelEditor as TRLevelEditorExtensionExample).CustomInt = 300;
-            editor.Save();
-
-            editor = TRCoord.Instance.Open(WorkingDirectory);
-            Assert.IsTrue((editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool);
-            Assert.IsTrue((editor.LevelEditor as TRLevelEditorExtensionExample).CustomInt == 300);
+            Directory.Delete(WorkingDirectory, true);
         }
-
-        [TestMethod]
-        [TestSequence(3)]
-        protected void TestExtensionPostRando()
-        {
-            TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
-            List<string> initialLevels = new List<string>();
-            foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.LevelManager.Levels)
-            {
-                initialLevels.Add(level.ID);
-            }
-
-            editor.ScriptEditor.LevelSequencingOrganisation = Organisation.Random;
-            editor.ScriptEditor.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
-
-            editor.Save();
-
-            List<string> postLevels = new List<string>();
-            foreach (AbstractTRScriptedLevel level in editor.ScriptEditor.Levels)
-            {
-                postLevels.Add(level.ID);
-            }
-
-            CollectionAssert.AreEqual(initialLevels, postLevels);
-        }
-
-        [TestMethod]
-        [TestSequence(4)]
-        protected void TestExtensionSavingLevelCount()
-        {
-            TREditor editor = TRCoord.Instance.Open(WorkingDirectory);
-            (editor.LevelEditor as TRLevelEditorExtensionExample).CustomBool = true;
-
-            var levels = editor.ScriptEditor.EnabledLevelStatus;
-            levels[0].Item3 = false;
-            editor.ScriptEditor.EnabledLevelOrganisation = Organisation.Manual;
-            editor.ScriptEditor.EnabledLevelStatus = levels;
-
-            int expectedTarget = editor.ScriptEditor.GetSaveTargetCount() + editor.LevelEditor.GetSaveTargetCount();
-            int progress = 0;
-            editor.SaveProgressChanged += delegate (object sender, TRSaveEventArgs e)
-            {
-                progress = e.ProgressValue;
-            };
-            editor.Save();
-
-            Assert.AreEqual(expectedTarget, progress);
-        }
-
-        protected override void TearDown()
-        {
-            if (Directory.Exists(WorkingDirectory))
-            {
-                Directory.Delete(WorkingDirectory, true);
-            }
-            base.TearDown();
-        }
+        base.TearDown();
     }
 }

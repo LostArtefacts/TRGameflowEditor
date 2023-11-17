@@ -1,17 +1,14 @@
-﻿using System.Collections.Generic;
+﻿namespace TRGE.Core;
 
-namespace TRGE.Core
+public interface IHealthEditor
 {
-    public interface IHealthEditor
-    {
-        Organisation MedilessLevelOrganisation { get; set; }
+    Organisation MedilessLevelOrganisation { get; set; }
 
-        RandomGenerator MedilessLevelRNG { get; set; }
+    RandomGenerator MedilessLevelRNG { get; set; }
 
-        uint RandomMedilessLevelCount { get; set; }
+    uint RandomMedilessLevelCount { get; set; }
 
-        List<MutableTuple<string, string, bool>> MedilessLevelData { get; set; }
-        bool DisableHealingBetweenLevels { get; set; }
-        bool DisableMedpacks { get; set; }
-    }
+    List<MutableTuple<string, string, bool>> MedilessLevelData { get; set; }
+    bool DisableHealingBetweenLevels { get; set; }
+    bool DisableMedpacks { get; set; }
 }
