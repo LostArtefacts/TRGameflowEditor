@@ -252,7 +252,7 @@ public class TR23Script : AbstractTRScript
             TitleReplace = -1;
             if (_gameStrings2[^2].StartsWith("TRGE:"))
             {
-                _gameStrings1[8] = _gameStrings2[^2].Substring(5); //exit to title
+                _gameStrings1[8] = _gameStrings2[^2][5..]; //exit to title
                 _gameStrings2[^2] = _gameStrings2[^3]; //spare
             }
         }
@@ -562,7 +562,7 @@ public class TR23Script : AbstractTRScript
         int nt = _description.IndexOf('\0');
         if (nt != -1)
         {
-            _description = _description.Substring(0, nt);
+            _description = _description[..nt];
         }
 
         GameflowSize = br.ReadUInt16();

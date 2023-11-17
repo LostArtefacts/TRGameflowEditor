@@ -124,7 +124,7 @@ public abstract class AbstractTRScript
         int i;
         if ((i = gameString.IndexOf(" - ")) != -1)
         {
-            gameString = gameString.Substring(0, i);
+            gameString = gameString[..i];
         }
 
         string stamp = TRInterop.ScriptModificationStamp.Encode(TRLanguage);

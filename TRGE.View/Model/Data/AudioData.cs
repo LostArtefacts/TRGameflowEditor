@@ -105,8 +105,8 @@ public class AudioTrack : IComparable<AudioTrack>
         Match m2 = _compRegex.Match(name2);
         if (m1.Success && m2.Success)
         {
-            string name3 = name1.Substring(0, name1.LastIndexOf(m1.Value)).Trim();
-            string name4 = name2.Substring(0, name2.LastIndexOf(m2.Value)).Trim();
+            string name3 = name1[..name1.LastIndexOf(m1.Value)].Trim();
+            string name4 = name2[..name2.LastIndexOf(m2.Value)].Trim();
             if (name3.Equals(name4))
             {
                 return int.Parse(m1.Value).CompareTo(int.Parse(m2.Value));
