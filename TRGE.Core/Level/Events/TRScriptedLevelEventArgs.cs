@@ -44,10 +44,7 @@ namespace TRGE.Core
 
         public override int GetHashCode()
         {
-            int hashCode = 1415019149;
-            hashCode = hashCode * -1521134295 + Modification.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LevelID);
-            return hashCode;
+            return HashCode.Combine(Modification, LevelID);
         }
     }
 }

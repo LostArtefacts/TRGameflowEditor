@@ -254,10 +254,7 @@ namespace TRGE.Core
 
         public override int GetHashCode()
         {
-            int hashCode = 1948033000;
-            hashCode = hashCode * -1521134295 + Version.GetHashCode();
-            hashCode = hashCode * -1521134295 + Hardware.GetHashCode();
-            return hashCode;
+            return HashCode.Combine(Version, Hardware);
         }
 
         public TREdition Clone()

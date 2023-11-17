@@ -57,10 +57,7 @@ namespace TRGE.Core
 
         public override int GetHashCode()
         {
-            int hashCode = -1030903623;
-            hashCode = hashCode * -1521134295 + EqualityComparer<T1>.Default.GetHashCode(Item1);
-            hashCode = hashCode * -1521134295 + EqualityComparer<T2>.Default.GetHashCode(Item2);
-            return hashCode;
+            return HashCode.Combine(Item1, Item2);
         }
 
         public MutableTuple<T1, T2> DeepCopy()
@@ -129,11 +126,7 @@ namespace TRGE.Core
 
         public override int GetHashCode()
         {
-            int hashCode = 341329424;
-            hashCode = hashCode * -1521134295 + EqualityComparer<T1>.Default.GetHashCode(Item1);
-            hashCode = hashCode * -1521134295 + EqualityComparer<T2>.Default.GetHashCode(Item2);
-            hashCode = hashCode * -1521134295 + EqualityComparer<T3>.Default.GetHashCode(Item3);
-            return hashCode;
+            return HashCode.Combine(Item1, Item2, Item3);
         }
 
         public MutableTuple<T1, T2, T3> DeepCopy()
@@ -210,12 +203,7 @@ namespace TRGE.Core
 
         public override int GetHashCode()
         {
-            int hashCode = -1041475770;
-            hashCode = hashCode * -1521134295 + EqualityComparer<T1>.Default.GetHashCode(Item1);
-            hashCode = hashCode * -1521134295 + EqualityComparer<T2>.Default.GetHashCode(Item2);
-            hashCode = hashCode * -1521134295 + EqualityComparer<T3>.Default.GetHashCode(Item3);
-            hashCode = hashCode * -1521134295 + EqualityComparer<T4>.Default.GetHashCode(Item4);
-            return hashCode;
+            return HashCode.Combine(Item1, Item2, Item3, Item4);
         }
 
         public MutableTuple<T1, T2, T3, T4> DeepCopy()
