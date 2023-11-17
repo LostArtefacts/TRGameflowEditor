@@ -75,12 +75,7 @@ public class TR3LevelEditor : BaseTRLevelEditor
         TR3Level level = ReadLevel(args.LevelFileBaseName);
         AbstractTRScriptedLevel scriptedLevel = args.ScriptedLevel;
         
-        Location defaultLocation = GetDefaultUnarmedLocationForLevel(scriptedLevel);
-        if (defaultLocation == null)
-        {
-            throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
-        }
-
+        Location defaultLocation = GetDefaultUnarmedLocationForLevel(scriptedLevel) ?? throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
         IEnumerable<TR3Entity> existingInjections = level.Entities.Where
         (
             e =>

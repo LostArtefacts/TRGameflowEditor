@@ -377,11 +377,7 @@ public class TR1Script : AbstractTRScript
 
     private static string ReadString(string key, JObject data)
     {
-        string result = ReadString(key, data, null);
-        if (result == null)
-        {
-            throw new ArgumentException("Invalid/missing value for " + key);
-        }
+        string result = ReadString(key, data, null) ?? throw new ArgumentException("Invalid/missing value for " + key);
         return result;
     }
 
@@ -430,17 +426,6 @@ public class TR1Script : AbstractTRScript
         data.Remove(key);
 
         return int.TryParse(result, out int value) ? value : defaultValue;
-    }
-
-    private static bool ReadBool(string key, JObject data)
-    {
-        key = key.ToLowerSnake();
-        if (!data.ContainsKey(key))
-        {
-            throw new ArgumentException("Invalid/missing value for " + key);
-        }
-
-        return ReadBool(key, data, false);
     }
 
     private static bool? ReadNullableBool(string key, JObject data)

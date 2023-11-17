@@ -72,10 +72,7 @@ public class TREditor
 
     private void ScriptEditorLevelModified(object sender, TRScriptedLevelEventArgs e)
     {
-        if (LevelEditor != null)
-        {
-            LevelEditor.ScriptedLevelModified(e);
-        }
+        LevelEditor?.ScriptedLevelModified(e);
     }
 
     private void Editor_SaveStateChanged(object sender, TRSaveEventArgs e)
@@ -105,10 +102,7 @@ public class TREditor
 
         try
         {
-            if (LevelEditor != null)
-            {
-                LevelEditor.PreSave(ScriptEditor);
-            }
+            LevelEditor?.PreSave(ScriptEditor);
 
             ScriptEditor.Save();
 
@@ -121,20 +115,14 @@ public class TREditor
             monitor.FireSaveStateBeginning(TRSaveCategory.Scripting);
             monitor.FireSaveStateChanged(1);
 
-            if (LevelEditor != null)
-            {
-                LevelEditor.Save(ScriptEditor, monitor);
-            }
+            LevelEditor?.Save(ScriptEditor, monitor);
 
             if (!monitor.IsCancelled)
             {
                 monitor.FireSaveStateChanged(0, TRSaveCategory.Commit);
 
                 ScriptEditor.SaveComplete();
-                if (LevelEditor != null)
-                {
-                    LevelEditor.SaveComplete();
-                }
+                LevelEditor?.SaveComplete();
 
                 // Copy everything from WIP into the Output folder.
                 DirectoryInfo outputDirectory = new(_outputDirectory);
@@ -153,10 +141,7 @@ public class TREditor
         {
             // Reinitialise regardless of whether the process completed or not
             ScriptEditor.Initialise();
-            if (LevelEditor != null)
-            {
-                LevelEditor.Initialise(ScriptEditor);
-            }
+            LevelEditor?.Initialise(ScriptEditor);
 
             _watcher.Enabled = true;
             wipDirectory.Clear();
@@ -256,7 +241,7 @@ public class TREditor
             ScriptEditor.Restore();
             FireRestoreProgressChanged(1);
 
-            if (LevelEditor != null) LevelEditor.Restore();
+            LevelEditor?.Restore();
         }
         finally
         {

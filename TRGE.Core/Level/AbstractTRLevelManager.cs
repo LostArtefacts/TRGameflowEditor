@@ -70,11 +70,7 @@ public abstract class AbstractTRLevelManager
         List<AbstractTRScriptedLevel> newLevels = new();
         foreach (Tuple<string, string> item in data)
         {
-            AbstractTRScriptedLevel level = GetLevel(item.Item1);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-            }
+            AbstractTRScriptedLevel level = GetLevel(item.Item1) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
             newLevels.Add(level);
         }
 
@@ -90,11 +86,7 @@ public abstract class AbstractTRLevelManager
         List<AbstractTRScriptedLevel> newLevels = new();
         foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
         {
-            AbstractTRScriptedLevel level = GetLevel(shfLevel.ID);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
-            }
+            AbstractTRScriptedLevel level = GetLevel(shfLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
             newLevels.Add(level);
         }
 
@@ -173,12 +165,7 @@ public abstract class AbstractTRLevelManager
         List<AbstractTRScriptedLevel> levels = new(Levels.Count);
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
-            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
-            }
-
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
             if (!enabledLevelsOnly || level.Enabled)
             {
                 levels.Add(level);
@@ -201,11 +188,7 @@ public abstract class AbstractTRLevelManager
     {
         foreach (MutableTuple<string, string, bool> item in data)
         {
-            AbstractTRScriptedLevel level = GetLevel(item.Item1);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-            }
+            AbstractTRScriptedLevel level = GetLevel(item.Item1) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
             level.Enabled = item.Item3;
         }
         SetLevelSequencing();
@@ -349,12 +332,7 @@ public abstract class AbstractTRLevelManager
             }
             else
             {
-                AbstractTRScriptedLevel level = GetLevel(item.Item1);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-                }
-
+                AbstractTRScriptedLevel level = GetLevel(item.Item1) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
                 level.TrackID = item.Item3;
             }
         }
@@ -391,12 +369,7 @@ public abstract class AbstractTRLevelManager
             int nextTrack = 0;
             for (int i = 0; i < originalLevels.Count; i++)
             {
-                AbstractTRScriptedLevel level = GetLevel(originalLevels[i].ID);
-                if (level == null)
-                {
-                    throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevels[i].ID));
-                }
-
+                AbstractTRScriptedLevel level = GetLevel(originalLevels[i].ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevels[i].ID));
                 if (level.Enabled)
                 {
                     //level.TrackID = levelTracks[i].ID;
@@ -426,11 +399,7 @@ public abstract class AbstractTRLevelManager
 
         foreach (AbstractTRScriptedLevel originalLevel in originalScript.Levels)
         {
-            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
-            }
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
             level.TrackID = originalLevel.TrackID;
         }
     }
@@ -450,12 +419,7 @@ public abstract class AbstractTRLevelManager
     {
         foreach (MutableTuple<string, string, bool> item in secretSupport)
         {
-            AbstractTRScriptedLevel level = GetLevel(item.Item1);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-            }
-
+            AbstractTRScriptedLevel level = GetLevel(item.Item1) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
             level.HasSecrets = item.Item3;
         }
     }
@@ -464,11 +428,7 @@ public abstract class AbstractTRLevelManager
     {
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
-            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
-            }
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
             level.HasSecrets = originalLevel.HasSecrets;
         }
     }
@@ -509,12 +469,7 @@ public abstract class AbstractTRLevelManager
 
         foreach (MutableTuple<string, string, bool> item in data)
         {
-            AbstractTRScriptedLevel level = GetLevel(item.Item1);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
-            }
-
+            AbstractTRScriptedLevel level = GetLevel(item.Item1) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", item.Item1));
             level.HasSunset = item.Item3;
             FireLevelModificationEvent(level, TRScriptedLevelModification.SunsetChanged);
         }
@@ -524,12 +479,7 @@ public abstract class AbstractTRLevelManager
     {
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
         {
-            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID);
-            if (level == null)
-            {
-                throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
-            }
-
+            AbstractTRScriptedLevel level = GetLevel(originalLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", originalLevel.ID));
             level.HasSunset = originalLevel.HasSunset;
         }
     }

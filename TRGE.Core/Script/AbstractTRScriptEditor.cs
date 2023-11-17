@@ -231,7 +231,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
                 ["Version"] = TRInterop.ExecutingVersion
             },
             ["Edition"] = Edition.ToJson(),
-            ["Original"] = OriginalFile == null ? null : OriginalFile.FullName,
+            ["Original"] = OriginalFile?.FullName,
             ["CheckSumOnSave"] = string.Empty,
             ["FrontEndFMVOn"] = FrontEndHasFMV,
             ["LevelSequencing"] = new Config
@@ -402,10 +402,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
                 levelCount++;
             }
             bw.Write(levelCount);
-            if (assaultLevel != null)
-            {
-                assaultLevel.SerializeToMain(bw);
-            }
+            assaultLevel?.SerializeToMain(bw);
 
             foreach (AbstractTRScriptedLevel level in LevelManager.Levels)
             {
@@ -498,7 +495,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
 
     internal AbstractTRScript LoadBackupScript()
     {
-        AbstractTRScript script = LoadScript(BackupFile == null ? null : BackupFile.FullName);
+        AbstractTRScript script = LoadScript(BackupFile?.FullName);
         if (BackupTRConfigFile != null)
         {
             script.ReadConfig(BackupTRConfigFile);

@@ -108,10 +108,7 @@ public partial class AudioWindow : Window
 
     private void StopAudio()
     {
-        if (_audioPlayer != null)
-        {
-            _audioPlayer.StopAudio();
-        }
+        _audioPlayer?.StopAudio();
     }
 
     private void AudioControl_AudioSaveRequest(object sender, PlayAudioEventArgs e)

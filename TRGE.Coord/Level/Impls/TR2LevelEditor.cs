@@ -92,12 +92,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     protected virtual void SetDefaultWeaponsAvailable(TR2Level level, AbstractTRScriptedLevel scriptedLevel)
     {
-        Location defaultLocation = GetDefaultUnarmedLocationForLevel(scriptedLevel);
-        if (defaultLocation == null)
-        {
-            throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
-        }
-
+        Location defaultLocation = GetDefaultUnarmedLocationForLevel(scriptedLevel) ?? throw new IOException(string.Format("There is no default weapon location defined for {0} ({1})", scriptedLevel.Name, scriptedLevel.LevelFileBaseName));
         IEnumerable<TR2Entity> existingInjections = level.Entities.Where
         (
             e =>

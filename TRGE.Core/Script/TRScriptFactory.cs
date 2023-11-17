@@ -4,7 +4,7 @@ public static class TRScriptFactory
 {
     public static AbstractTRScriptEditor GetScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
     {
-        uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile == null ? null : ioArgs.TRScriptFile.FullName);
+        uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile?.FullName);
         return scriptVersion switch
         {
             TR1ATIScript.Version => new TR1ATIScriptEditor(ioArgs, openOption),

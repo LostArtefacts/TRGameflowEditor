@@ -6,7 +6,7 @@ public abstract class AbstractTRScript
 
     public void Read(FileInfo file)
     {
-        Read(file == null ? null : file.FullName);
+        Read(file?.FullName);
     }
 
     public void ReadConfig(FileInfo file)
