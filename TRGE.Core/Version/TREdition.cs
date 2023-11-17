@@ -1,10 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     public class TREdition : ICloneable
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     public class TRDownloadEventArgs : EventArgs
     {

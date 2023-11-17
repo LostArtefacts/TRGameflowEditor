@@ -7,7 +7,6 @@ using System.Windows.Navigation;
 using TRGE.Coord;
 using TRGE.View.Model;
 using TRGE.View.Updates;
-using TRGE.View.Utils;
 
 namespace TRGE.View.Windows
 {

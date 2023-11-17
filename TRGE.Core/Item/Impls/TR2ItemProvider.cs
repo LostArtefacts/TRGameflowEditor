@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     internal class TR2ItemProvider : AbstractTR23ItemProvider
     {

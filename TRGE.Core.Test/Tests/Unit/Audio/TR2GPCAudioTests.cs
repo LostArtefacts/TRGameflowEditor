@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TRGE.Core.Test
+﻿namespace TRGE.Core.Test
 {
     public class TR2GPCAudioTests : AbstractTR23AudioTestCollection
     {

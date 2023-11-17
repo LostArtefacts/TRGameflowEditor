@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace TRGE.Coord
+﻿namespace TRGE.Coord
 {
     internal class ConfigFileWatcher
     {

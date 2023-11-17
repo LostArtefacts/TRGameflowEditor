@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.Collections.Generic;
-using System;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     public abstract class AbstractTRScript
     {

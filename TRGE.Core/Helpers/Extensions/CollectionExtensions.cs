@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     internal static class CollectionExtensions
     {

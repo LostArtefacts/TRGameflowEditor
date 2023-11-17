@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     public class TRDirectoryIOArgs
     {

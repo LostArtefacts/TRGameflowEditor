@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TRGE.Coord
+﻿namespace TRGE.Coord
 {
     public class TRBackupRestoreEventArgs : EventArgs
     {

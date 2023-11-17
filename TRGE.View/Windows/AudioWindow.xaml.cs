@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
-using TRGE.Coord;
 using TRGE.Core;
 using TRGE.View.Model.Audio;
 using TRGE.View.Model.Data;

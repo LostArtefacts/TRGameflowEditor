@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class TestSequenceAttribute : Attribute

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using TRGE.Core.Item.Enums;
+﻿using TRGE.Core.Item.Enums;
 
 namespace TRGE.Core
 {

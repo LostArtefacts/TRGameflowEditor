@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace TRGE.Core
+﻿namespace TRGE.Core
 {
     public static class TRScriptFactory
     {
