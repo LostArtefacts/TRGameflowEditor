@@ -44,7 +44,7 @@ public class GameStamp
                 case 'Ì':
                 case 'Ò':
                 case 'Ù':
-                    sb.Append("$").Append(Normalise(c));
+                    sb.Append('$').Append(Normalise(c));
                     break;
                 case 'Á':
                 case 'É':
@@ -52,14 +52,14 @@ public class GameStamp
                 case 'Ó':
                 case 'Ú':
                 case 'Ý':
-                    sb.Append(")").Append(Normalise(c));
+                    sb.Append(')').Append(Normalise(c));
                     break;
                 case 'Â':
                 case 'Ê':
                 case 'Î':
                 case 'Ô':
                 case 'Û':
-                    sb.Append("(").Append(Normalise(c));
+                    sb.Append('(').Append(Normalise(c));
                     break;
                 case 'Ä':
                 case 'Ë':
@@ -67,7 +67,7 @@ public class GameStamp
                 case 'Ö':
                 case 'Ü':
                 case 'Ÿ':
-                    sb.Append("~").Append(Normalise(c));
+                    sb.Append('~').Append(Normalise(c));
                     break;
                 case 'ß':
                     sb.Append('=');

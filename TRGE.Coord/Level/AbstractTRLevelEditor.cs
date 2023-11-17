@@ -262,10 +262,10 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
 
         if (faults.Count > 0)
         {
-            StringBuilder sb = new StringBuilder("The following level files were not found in ").Append(folderPath).Append(".").AppendLine();
+            StringBuilder sb = new StringBuilder("The following level files were not found in ").Append(folderPath).Append('.').AppendLine();
             foreach (AbstractTRScriptedLevel level in faults)
             {
-                sb.AppendLine().Append(level.Name).Append(" (").Append(level.LevelFileBaseName).Append(")");
+                sb.AppendLine().Append(level.Name).Append(" (").Append(level.LevelFileBaseName).Append(')');
             }
             throw new ScriptedLevelMismatchException(sb.ToString());
         }

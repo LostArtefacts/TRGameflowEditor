@@ -167,7 +167,7 @@ class Program
         StringBuilder sb = new();
         for (int i = 0; i < header.Length + 4; i++)
         {
-            sb.Append("*");
+            sb.Append('*');
         }
 
         Console.WriteLine(sb);
