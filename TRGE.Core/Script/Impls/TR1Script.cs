@@ -777,7 +777,7 @@ namespace TRGE.Core
             List<AbstractTRScriptedLevel> cutsceneLevels = new List<AbstractTRScriptedLevel>();
 
             int cutsceneLevelID = enabledLevels.Count;
-            foreach (TR1ScriptedLevel level in enabledLevels)
+            foreach (TR1ScriptedLevel level in enabledLevels.Cast<TR1ScriptedLevel>())
             {
                 if (level.HasCutScene)
                 {
@@ -788,7 +788,7 @@ namespace TRGE.Core
                 levels.Add(SerializeLevel(level));
             }
 
-            foreach (TR1ScriptedLevel level in cutsceneLevels)
+            foreach (TR1ScriptedLevel level in cutsceneLevels.Cast<TR1ScriptedLevel>())
             {
                 levels.Add(SerializeLevel(level));
             }

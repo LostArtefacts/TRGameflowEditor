@@ -297,7 +297,7 @@ namespace TRGE.Core
         {
             // Add pistols to each level that follows one that's unarmed and remove
             // them if they're present and following a level that isn't uanarmed.
-            foreach (TR1ScriptedLevel level in Levels)
+            foreach (TR1ScriptedLevel level in Levels.Cast<TR1ScriptedLevel>())
             {
                 if (!level.Enabled || level.IsFinalLevel)
                 {
@@ -407,7 +407,7 @@ namespace TRGE.Core
             };
             if (tracks[TRAudioCategory.Credits].Count > 0)
             {
-                foreach (TR1ScriptedLevel level in Levels)
+                foreach (TR1ScriptedLevel level in Levels.Cast<TR1ScriptedLevel>())
                 {
                     if (level.IsFinalLevel && level.Sequences.Find(s => s is PlaySyncedAudioLevelSequence) is PlaySyncedAudioLevelSequence sequence)
                     {
