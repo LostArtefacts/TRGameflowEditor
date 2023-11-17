@@ -168,6 +168,7 @@ namespace TRGE.Core
         public double? DrawDistanceMax { get; set; }
         public int? UnobtainablePickups { get; set; }
         public int? UnobtainableKills { get; set; }
+        public List<TR1ItemDrop> ItemDrops { get; set; }
 
         public void ResetInjections()
         {
@@ -177,6 +178,27 @@ namespace TRGE.Core
             {
                 (CutSceneLevel as TR1ScriptedLevel).ResetInjections();
             }
+        }
+
+        public void AddItemDrops(int enemyNum, params TR1Items[] items)
+        {
+            AddItemDrops(enemyNum, (IEnumerable<TR1Items>)items);
+        }
+
+        public void AddItemDrops(int enemyNum, IEnumerable<TR1Items> items)
+        {
+            ItemDrops ??= new();
+            TR1ItemDrop drop = ItemDrops.Find(i => i.EnemyNum == enemyNum);
+            if (drop == null)
+            {
+                ItemDrops.Add(drop = new()
+                {
+                    EnemyNum = enemyNum,
+                    ObjectIds = new()
+                });
+            }
+
+            drop.ObjectIds.AddRange(items);
         }
 
         public bool HasSequence(LevelSequenceType type)

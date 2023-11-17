@@ -1,11 +1,11 @@
-﻿namespace TRGE.Core
+﻿namespace TRGE.Core;
+
+public enum LevelType
 {
-    public enum LevelType
-    {
-        Title,
-        Gym,
-        Normal,
-        Cutscene,
-        Current,
-    }
+    Title,
+    Gym,
+    Normal,
+    Cutscene,
+    Current,
+    Bonus,
 }
