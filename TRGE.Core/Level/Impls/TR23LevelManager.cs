@@ -84,12 +84,7 @@ internal class TR23LevelManager : AbstractTRLevelManager
         return Convert.ToUInt32(GetAmmolessLevels().Count);
     }
 
-    internal virtual List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> originalLevels)
-    {
-        return GetAmmolessLevelData(Levels, originalLevels);
-    }
-
-    private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
+    public List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> originalLevels)
     {
         List<MutableTuple<string, string, bool>> data = new();
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
@@ -150,12 +145,7 @@ internal class TR23LevelManager : AbstractTRLevelManager
         return Convert.ToUInt32(GetUnarmedLevels().Count);
     }
 
-    internal virtual List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> originalLevels)
-    {
-        return GetUnarmedLevelData(Levels, originalLevels);
-    }
-
-    private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
+    public List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> originalLevels)
     {
         List<MutableTuple<string, string, bool>> data = new();
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
@@ -228,12 +218,7 @@ internal class TR23LevelManager : AbstractTRLevelManager
         }
     }
 
-    internal List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> originalLevels)
-    {
-        return GetLevelBonusData(Levels, originalLevels);
-    }
-
-    private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
+    public List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> GetLevelBonusData(List<AbstractTRScriptedLevel> originalLevels)
     {
         List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> data = new();
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)

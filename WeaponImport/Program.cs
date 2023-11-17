@@ -7,7 +7,7 @@ namespace WeaponImport;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         TRTexImage8 img8 = new() { Pixels = new byte[256 * 256] };
         TRTexImage16 img16 = new()

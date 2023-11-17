@@ -109,12 +109,7 @@ internal class TR1LevelManager : AbstractTRLevelManager
         return (uint)GetAmmolessLevels().Count;
     }
 
-    internal virtual List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> originalLevels)
-    {
-        return GetAmmolessLevelData(Levels, originalLevels);
-    }
-
-    private List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
+    public List<MutableTuple<string, string, bool>> GetAmmolessLevelData(List<AbstractTRScriptedLevel> originalLevels)
     {
         List<MutableTuple<string, string, bool>> data = new();
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
@@ -173,12 +168,7 @@ internal class TR1LevelManager : AbstractTRLevelManager
         return (uint)GetMedilessLevels().Count;
     }
 
-    internal virtual List<MutableTuple<string, string, bool>> GetMedilessLevelData(List<AbstractTRScriptedLevel> originalLevels)
-    {
-        return GetMedilessLevelData(Levels, originalLevels);
-    }
-
-    private List<MutableTuple<string, string, bool>> GetMedilessLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
+    public List<MutableTuple<string, string, bool>> GetMedilessLevelData(List<AbstractTRScriptedLevel> originalLevels)
     {
         List<MutableTuple<string, string, bool>> data = new();
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
@@ -254,12 +244,7 @@ internal class TR1LevelManager : AbstractTRLevelManager
         return (uint)GetUnarmedLevels().Count;
     }
 
-    internal virtual List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> originalLevels)
-    {
-        return GetUnarmedLevelData(Levels, originalLevels);
-    }
-
-    private List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> levels, List<AbstractTRScriptedLevel> originalLevels)
+    public List<MutableTuple<string, string, bool>> GetUnarmedLevelData(List<AbstractTRScriptedLevel> originalLevels)
     {
         List<MutableTuple<string, string, bool>> data = new();
         foreach (AbstractTRScriptedLevel originalLevel in originalLevels)
