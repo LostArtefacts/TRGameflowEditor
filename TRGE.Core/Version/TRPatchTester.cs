@@ -33,7 +33,7 @@ namespace TRGE.Core
             }
             else
             {
-                edition.ExeVersion = CalculateProductVersion(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\Tomb1Main.exe"));
+                edition.ExeVersion = CalculateProductVersion(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\TR1X.exe"));
             }
         }
 

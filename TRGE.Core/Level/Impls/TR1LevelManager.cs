@@ -307,14 +307,14 @@ namespace TRGE.Core
                 TR1ScriptedLevel nextLevel = Levels.Find(l => l.Sequence == level.Sequence + 1 && l.Enabled) as TR1ScriptedLevel;
                 if (level.RemovesWeapons && !nextLevel.RemovesWeapons)
                 {
-                    if (nextLevel.GetStartInventoryItem(TR1Items.Pistols) == null)
+                    if (nextLevel.GetStartInventoryItem(TR1Items.Pistols_S_P) == null)
                     {
-                        nextLevel.AddStartInventoryItem(TR1Items.Pistols);
+                        nextLevel.AddStartInventoryItem(TR1Items.Pistols_S_P);
                     }
                 }
                 else
                 {
-                    nextLevel.RemoveStartInventoryItem(TR1Items.Pistols);
+                    nextLevel.RemoveStartInventoryItem(TR1Items.Pistols_S_P);
                 }
             }
         }

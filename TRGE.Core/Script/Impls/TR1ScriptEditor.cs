@@ -136,6 +136,12 @@ namespace TRGE.Core
             FixBearAi = config.GetBool(nameof(FixBearAi), true);
             LoadCurrentMusic = config.GetBool(nameof(LoadCurrentMusic), true);
             LoadMusicTriggers = config.GetBool(nameof(LoadMusicTriggers), true);
+            ConvertDroppedGuns = config.GetBool(nameof(ConvertDroppedGuns), false);
+            EnableUwRoll = config.GetBool(nameof(EnableUwRoll), false);
+            EnableEidosLogo = config.GetBool(nameof(EnableEidosLogo), true);
+            EnableBuffering = config.GetBool(nameof(EnableBuffering), false);
+            EnableLeanJumping = config.GetBool(nameof(EnableLeanJumping), false);
+            EnableConsole = config.GetBool(nameof(EnableConsole), true);
         }
 
         protected override void SaveImpl()
@@ -242,6 +248,12 @@ namespace TRGE.Core
             _config[nameof(FixBearAi)] = FixBearAi;
             _config[nameof(LoadCurrentMusic)] = LoadCurrentMusic;
             _config[nameof(LoadMusicTriggers)] = LoadMusicTriggers;
+            _config[nameof(ConvertDroppedGuns)] = ConvertDroppedGuns;
+            _config[nameof(EnableUwRoll)] = EnableUwRoll;
+            _config[nameof(EnableEidosLogo)] = EnableEidosLogo;
+            _config[nameof(EnableBuffering)] = EnableBuffering;
+            _config[nameof(EnableLeanJumping)] = EnableLeanJumping;
+            _config[nameof(EnableConsole)] = EnableConsole;
 
             AbstractTRScript backupScript = LoadBackupScript();
             AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
@@ -914,6 +926,42 @@ namespace TRGE.Core
         {
             get => (Script as TR1Script).LoadMusicTriggers;
             set => (Script as TR1Script).LoadMusicTriggers = value;
+        }
+
+        public bool ConvertDroppedGuns
+        {
+            get => (Script as TR1Script).ConvertDroppedGuns;
+            set => (Script as TR1Script).ConvertDroppedGuns = value;
+        }
+
+        public bool EnableUwRoll
+        {
+            get => (Script as TR1Script).EnableUwRoll;
+            set => (Script as TR1Script).EnableUwRoll = value;
+        }
+
+        public bool EnableEidosLogo
+        {
+            get => (Script as TR1Script).EnableEidosLogo;
+            set => (Script as TR1Script).EnableEidosLogo = value;
+        }
+
+        public bool EnableBuffering
+        {
+            get => (Script as TR1Script).EnableBuffering;
+            set => (Script as TR1Script).EnableBuffering = value;
+        }
+
+        public bool EnableLeanJumping
+        {
+            get => (Script as TR1Script).EnableLeanJumping;
+            set => (Script as TR1Script).EnableLeanJumping = value;
+        }
+
+        public bool EnableConsole
+        {
+            get => (Script as TR1Script).EnableConsole;
+            set => (Script as TR1Script).EnableConsole = value;
         }
     }
 }

@@ -28,6 +28,7 @@ namespace TRGE.Core
         public double DrawDistanceFade { get; set; }
         public double DrawDistanceMax { get; set; }
         public string[] Injections { get; set; }
+        public bool ConvertDroppedGuns { get; set; }
         public Dictionary<string, string> Strings { get; set; }
 
         private TR1FrontEnd _frontEnd;
@@ -115,6 +116,11 @@ namespace TRGE.Core
         public bool FixBearAi { get; set; }
         public bool LoadCurrentMusic { get; set; }
         public bool LoadMusicTriggers { get; set; }
+        public bool EnableUwRoll { get; set; }
+        public bool EnableEidosLogo { get; set; }
+        public bool EnableBuffering { get; set; }
+        public bool EnableLeanJumping { get; set; }
+        public bool EnableConsole { get; set; }
 
         #endregion
 
@@ -134,6 +140,7 @@ namespace TRGE.Core
             DrawDistanceFade = ReadDouble(nameof(DrawDistanceFade), GameflowData);
             DrawDistanceMax = ReadDouble(nameof(DrawDistanceMax), GameflowData);
             Injections = ReadNullableArray<string>(nameof(Injections), GameflowData);
+            ConvertDroppedGuns = ReadBool(nameof(ConvertDroppedGuns), GameflowData, false);
             Strings = ReadDictionary<string, string>(nameof(Strings), GameflowData);
 
             _additionalFiles.Add(MainMenuPicture);
@@ -155,6 +162,7 @@ namespace TRGE.Core
                         break;
 
                     case LevelType.Normal:
+                    case LevelType.Bonus:
                         Levels.Add(level);
                         level.Sequence = level.OriginalSequence = (ushort)Levels.Count; // Gym always first
                         break;
@@ -190,6 +198,22 @@ namespace TRGE.Core
                 level.UnobtainableKills = ReadNullableInt(nameof(level.UnobtainableKills), levelData);
                 level.UnobtainablePickups = ReadNullableInt(nameof(level.UnobtainablePickups), levelData);
                 level.LaraType = (uint?)ReadNullableInt(nameof(level.LaraType), levelData);
+
+                level.ItemDrops = new();
+                string dropsKey = nameof(level.ItemDrops).ToLowerSnake();
+                if (levelData.ContainsKey(dropsKey))
+                {
+                    JArray drops = JArray.Parse(ReadString(dropsKey, levelData));
+                    foreach (JToken dropToken in drops)
+                    {
+                        JObject dropData = dropToken as JObject;
+                        TR1ItemDrop drop = new();
+                        drop.EnemyNum = ReadInt(nameof(drop.EnemyNum), dropData);
+                        drop.ObjectIds = ReadArray<int>(nameof(drop.ObjectIds), dropData)
+                            .Select(i => (TR1Items)i).ToList();
+                        level.ItemDrops.Add(drop);
+                    }
+                }
                 
                 Dictionary<string, string> strings = ReadDictionary<string, string>("Strings", levelData);
                 foreach (string key in strings.Keys)
@@ -373,6 +397,11 @@ namespace TRGE.Core
             LoadMusicTriggers           = ReadBool(nameof(LoadMusicTriggers), ConfigData, true);
             LoadCurrentMusic            = ReadBool(nameof(LoadCurrentMusic), ConfigData, true);
             FixBearAi                   = ReadBool(nameof(FixBearAi), ConfigData, true);
+            EnableUwRoll                = ReadBool(nameof(EnableUwRoll), ConfigData, false);
+            EnableEidosLogo             = ReadBool(nameof(EnableEidosLogo), ConfigData, true);
+            EnableBuffering             = ReadBool(nameof(EnableBuffering), ConfigData, false);
+            EnableLeanJumping           = ReadBool(nameof(EnableLeanJumping), ConfigData, false);
+            EnableConsole               = ReadBool(nameof(EnableConsole), ConfigData, true);
         }
 
         private string ReadString(string key, JObject data)
@@ -587,6 +616,7 @@ namespace TRGE.Core
             Write(nameof(WaterColor), WaterColor, data);
             Write(nameof(DrawDistanceFade), DrawDistanceFade, data);
             Write(nameof(DrawDistanceMax), DrawDistanceMax, data);
+            Write(nameof(ConvertDroppedGuns), ConvertDroppedGuns, data);
             if (Injections != null)
             {
                 Write(nameof(Injections), Injections, data);
@@ -676,6 +706,11 @@ namespace TRGE.Core
             Write(nameof(FixBearAi), FixBearAi, data);
             Write(nameof(LoadCurrentMusic), LoadCurrentMusic, data);
             Write(nameof(LoadMusicTriggers), LoadMusicTriggers, data);
+            Write(nameof(EnableUwRoll), EnableUwRoll, data);
+            Write(nameof(EnableEidosLogo), EnableEidosLogo, data);
+            Write(nameof(EnableBuffering), EnableBuffering, data);
+            Write(nameof(EnableLeanJumping), EnableLeanJumping, data);
+            Write(nameof(EnableConsole), EnableConsole, data);
 
             // The existing data will have been re-read at this stage (T1M stores runtime config
             // in the same file so this may well have changed between saves in TRGE). Re-scan this
@@ -781,6 +816,10 @@ namespace TRGE.Core
             {
                 Write(nameof(level.InheritInjections), level.InheritInjections.Value, levelObj);
             }
+            if (level.ItemDrops?.Count > 0)
+            {
+                Write(nameof(level.ItemDrops), BuildItemDrops(level), levelObj);
+            }
             if (level.WaterColor != null)
             {
                 Write(nameof(level.WaterColor), level.WaterColor, levelObj);
@@ -830,6 +869,18 @@ namespace TRGE.Core
             }
 
             return levelObj;
+        }
+
+        private static JArray BuildItemDrops(TR1ScriptedLevel level)
+        {
+            JArray items = new();
+
+            foreach (TR1ItemDrop drop in level.ItemDrops)
+            {
+                items.Add(JObject.FromObject(drop, _mainSerializer));
+            }
+
+            return items;
         }
 
         private JArray BuildSequences(TR1ScriptedLevel level)

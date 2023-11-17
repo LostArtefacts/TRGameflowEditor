@@ -158,7 +158,7 @@ namespace TRGE.Coord
 
                 if (isAti)
                 {
-                    return null;
+                    throw new PlatformNotSupportedException("The use of TombATI is not supported. Please upgrade to TR1X - https://github.com/LostArtefacts/TR1X/");
                 }
 
                 throw new MissingScriptException(string.Format("No valid Tomb Raider script file was found in {0}.", path));
