@@ -27,7 +27,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         set => _io.InternalConfigFile = value;
     }
 
-    internal override string ConfigFilePath => InternalConfigFile.FullName;
+    internal override string ConfigFilePath => InternalConfigFile?.FullName;
 
     public DirectoryInfo WIPOutputDirectory
     {
@@ -57,11 +57,14 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
 
     public IReadOnlyList<AbstractTRScriptedLevel> Levels => LevelManager.Levels;
     public IReadOnlyList<AbstractTRScriptedLevel> ScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels);
-    public IReadOnlyList<AbstractTRScriptedLevel> EnabledScriptedLevels => LevelManager.GetOriginalSequencedLevels(LoadBackupScript().Levels, true);
+    public IReadOnlyList<AbstractTRScriptedLevel> EnabledScriptedLevels => LevelManager.GetOriginalSequencedLevels(LevelManager.Levels, true);
 
     protected TRScriptOpenOption _openOption;
 
     internal event EventHandler<TRScriptedLevelEventArgs> LevelModified;
+
+    public AbstractTRScriptEditor GoldEditor { get; set; }
+    public GameMode GameMode { get; set; }
 
     internal AbstractTRScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
     {
@@ -100,7 +103,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
 
     private void LoadConfig()
     {
-        _config = Config.Read(ConfigFilePath);
+        _config = ConfigFilePath != null ? Config.Read(ConfigFilePath) : null;
         //issue #36
         if (_config != null && OriginalFile != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
         {
@@ -139,6 +142,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
                 throw new EditionMismatchException("The TR edition in the configuration file does not match the edition of the current script file.");
             }
 
+            GameMode = config.GetGameMode(nameof(GameMode));
             Config levelSeq = config.GetSubConfig("LevelSequencing");
             LevelSequencingOrganisation = levelSeq.GetOrganisation("Organisation");
             LevelSequencingRNG = new RandomGenerator(levelSeq.GetSubConfig("RNG"));
@@ -160,7 +164,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
                 {
                     EnabledLevelStatus = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(enabledLevels.GetString("Data"));
                 }
-                RandomEnabledLevelCount = Math.Min(enabledLevels.GetUInt("RandomCount"), (uint)LevelManager.LevelCount);
+                RandomEnabledLevelCount = enabledLevels.GetUInt("RandomCount");
             }
             else
             {
@@ -191,12 +195,13 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
             {
                 LevelSunsetData = JsonConvert.DeserializeObject<List<MutableTuple<string, string, bool>>>(sunsetInfo.GetString("Data"));
             }
-            RandomSunsetLevelCount = Math.Min(sunsetInfo.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
+            RandomSunsetLevelCount = sunsetInfo.GetUInt("RandomCount");
 
             FrontEndHasFMV = config.GetBool("FrontEndFMVOn");
         }
         else
         {
+            GameMode = GameMode.Normal;
             LevelSequencingOrganisation = Organisation.Default;
             LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
             EnabledLevelOrganisation = Organisation.Default;
@@ -219,6 +224,43 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         return 1;
     }
 
+    public int GetTotalLevelCount(GameMode mode)
+    {
+        return GetLevelCount(mode, l => true);
+    }
+
+    public int GetDefaultUnarmedLevelCount(GameMode mode)
+    {
+        return GetLevelCount(mode, l => l.RemovesWeapons);
+    }
+
+    public int GetDefaultAmmolessLevelCount(GameMode mode)
+    {
+        return GetLevelCount(mode, l => l.RemovesAmmo);
+    }
+
+    public int GetDefaultSunsetLevelCount(GameMode mode)
+    {
+        return GetLevelCount(mode, l => l.HasSunset);
+    }
+
+    public int GetLevelCount(GameMode mode, Func<AbstractTRScriptedLevel, bool> propertyFunc)
+    {
+        AbstractTRLevelManager backupLevelManager = TRScriptedLevelFactory.GetLevelManager(LoadBackupScript());
+        if (mode == GameMode.Normal || GoldEditor == null)
+        {
+            return backupLevelManager.Levels.Where(l => propertyFunc(l)).Count();
+        }
+
+        int count = GoldEditor.LevelManager.Levels.Where(l => propertyFunc(l)).Count();
+        if (mode == GameMode.Combined)
+        {
+            count += backupLevelManager.Levels.Where(l => propertyFunc(l)).Count();
+        }
+
+        return count;
+    }
+
     internal void Save(/*TRSaveMonitor monitor*/)
     {
         //monitor.FireSaveStateChanged(0, TRSaveCategory.Scripting);
@@ -234,6 +276,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
             ["Original"] = OriginalFile?.FullName,
             ["CheckSumOnSave"] = string.Empty,
             ["FrontEndFMVOn"] = FrontEndHasFMV,
+            [nameof(GameMode)] = (int)GameMode,
             ["LevelSequencing"] = new Config
             {
                 ["Organisation"] = (int)LevelSequencingOrganisation,
@@ -269,14 +312,18 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         };
 
         AbstractTRScript backupScript = LoadBackupScript();
-        AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
-        AbstractTRLevelManager backupLevelManager = TRScriptedLevelFactory.GetLevelManager(backupScript); //#65, #86
+        AbstractTRLevelManager backupLevelManager = TRScriptedLevelFactory.GetLevelManager(backupScript);
+
+        if (GoldEditor != null)
+        {
+            ProcessGameMode(backupScript, backupLevelManager);
+        }
 
         if (LevelSequencingOrganisation == Organisation.Random)
         {
             if (TRInterop.RandomisationSupported)
             {
-                LevelManager.RandomiseSequencing(randoBaseScript.Levels);
+                LevelManager.RandomiseSequencing(backupLevelManager.Levels);
             }
             else
             {
@@ -312,7 +359,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         {
             if (TRInterop.RandomisationSupported)
             {
-                LevelManager.RandomiseGameTracks(randoBaseScript.Levels);
+                LevelManager.RandomiseGameTracks(backupLevelManager.Levels);
             }
             else
             {
@@ -326,14 +373,14 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
 
         if (LevelSecretSupportOrganisation == Organisation.Default)
         {
-            LevelManager.RestoreSecretSupport(backupScript.Levels);
+            LevelManager.RestoreSecretSupport(backupLevelManager.Levels);
         }
 
         if (LevelSunsetOrganisation == Organisation.Random)
         {
             if (TRInterop.RandomisationSupported)
             {
-                LevelManager.RandomiseSunsets(randoBaseScript.Levels);
+                LevelManager.RandomiseSunsets(backupLevelManager.Levels);
             }
             else
             {
@@ -349,12 +396,14 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
             LevelManager.SetSunsetData(LevelSunsetData); //TODO: Fix this - it's in place to ensure the event is triggered for any listeners
         }
 
-        SaveImpl();
+        SaveImpl(backupScript, backupLevelManager);
 
         LevelManager.Save();
 
         WriteScript();
     }
+
+    protected abstract void ProcessGameMode(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager);
 
     public void SaveScript()
     {
@@ -522,7 +571,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
 
     internal abstract AbstractTRScript CreateScript();
 
-    protected abstract void SaveImpl();
+    protected abstract void SaveImpl(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager);
 
     public bool GymAvailable => Edition.AssaultCourseSupported;
 

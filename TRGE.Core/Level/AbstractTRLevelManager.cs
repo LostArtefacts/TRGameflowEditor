@@ -38,6 +38,9 @@ public abstract class AbstractTRLevelManager
     internal abstract void Save();
     internal abstract void UpdateScript();
 
+    public virtual void ImportLevels(IEnumerable<AbstractTRScriptedLevel> levels) { }
+    public virtual void RemoveLevels(Func<AbstractTRScriptedLevel, bool> predicate) { }
+
     internal virtual AbstractTRScriptedLevel GetLevel(string id)
     {
         foreach (AbstractTRScriptedLevel level in Levels)
@@ -359,13 +362,19 @@ public abstract class AbstractTRLevelManager
         }
         if (tracks[TRAudioCategory.Ambient].Count > 0)
         {
-            uint count = Convert.ToUInt32(/*Levels.Count*/EnabledLevelCount);
+            uint count = Convert.ToUInt32(EnabledLevelCount);
             if (Edition.AssaultCourseSupported)
             {
                 count++;
             }
 
-            List<TRAudioTrack> levelTracks = tracks[TRAudioCategory.Ambient].RandomSelection(rand, count, true, exclusions);
+            List<TRAudioTrack> levelTracks = new(tracks[TRAudioCategory.Ambient]);
+            if (!RandomGameTracksIncludeBlank)
+            {
+                levelTracks.Remove(AudioProvider.GetBlankTrack());
+            }
+
+            levelTracks = levelTracks.RandomSelection(rand, count, true);
             int nextTrack = 0;
             for (int i = 0; i < originalLevels.Count; i++)
             {

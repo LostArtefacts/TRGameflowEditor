@@ -23,6 +23,16 @@ internal class TR1LevelManager : AbstractTRLevelManager
         }
     }
 
+    public override void ImportLevels(IEnumerable<AbstractTRScriptedLevel> levels)
+    {
+        _levels.AddRange(levels.Cast<TR1ScriptedLevel>());
+    }
+
+    public override void RemoveLevels(Func<AbstractTRScriptedLevel, bool> predicate)
+    {
+        _levels.RemoveAll(l => predicate(l));
+    }
+
     protected override ushort TitleSoundID
     {
         get => _script.TitleSoundID;

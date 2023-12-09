@@ -14,25 +14,32 @@ public static class TRScriptFactory
         };
     }
 
-    public static FileInfo FindScriptFile(DirectoryInfo directory)
+    public static FileInfo FindScriptFile(DirectoryInfo directory, bool gold)
     {
         string dir = directory.FullName;
         foreach (TREdition edition in TREdition.All)
         {
-            if (edition.HasScript)
+            string script = null;
+            if (gold && edition.HasGold)
             {
-                string script = Path.GetFullPath(Path.Combine(dir, edition.ScriptName));
-                if (File.Exists(script))
-                {
-                    // We need to return the matching file name exactly to preserve edits.
-                    // The matched script may not necessarily be in the current folder.
-                    string scriptDir = Path.GetDirectoryName(script);
-                    string scriptName = Path.GetFileName(script);
-                    string match = Array.Find(Directory.GetFiles(scriptDir), f => string.Compare(Path.GetFileName(f), scriptName, true) == 0);
-                    return new FileInfo(match);
-                }
+                script = Path.GetFullPath(Path.Combine(dir, edition.GoldScriptName));
+            }
+            else if (edition.HasScript)
+            {
+                script = Path.GetFullPath(Path.Combine(dir, edition.ScriptName));
+            }
+
+            if (script != null && File.Exists(script))
+            {
+                // We need to return the matching file name exactly to preserve edits.
+                // The matched script may not necessarily be in the current folder.
+                string scriptDir = Path.GetDirectoryName(script);
+                string scriptName = Path.GetFileName(script);
+                string match = Array.Find(Directory.GetFiles(scriptDir), f => string.Compare(Path.GetFileName(f), scriptName, true) == 0);
+                return new FileInfo(match);
             }
         }
+
         return null;
     }
 

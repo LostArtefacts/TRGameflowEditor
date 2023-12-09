@@ -177,6 +177,18 @@ public class TREditor
         {
             string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ScriptName)));
             IOExtensions.CopyFile(ScriptEditor.GetScriptOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+            if (ScriptEditor.Edition.HasGold)
+            {
+                if (ScriptEditor.GameMode == GameMode.Normal)
+                {
+                    IOExtensions.CopyFile(ScriptEditor.GoldEditor.GetScriptOutputPath(), new DirectoryInfo(targetScriptFolder), true);
+                }
+                else
+                {
+                    string targetFile = Path.Combine(targetScriptFolder, Path.GetFileName(ScriptEditor.GoldEditor.GetScriptOutputPath()));
+                    IOExtensions.CopyFile(ScriptEditor.GetScriptOutputPath(), targetFile, true);
+                }
+            }
         }
 
         if (ScriptEditor.Edition.HasConfig)
@@ -202,7 +214,13 @@ public class TREditor
             }
         }
 
-        foreach (string additionalFile in ScriptEditor.Script.GetAdditionalBackupFiles())
+        List<string> additionalFiles = ScriptEditor.Script.GetAdditionalBackupFiles();
+        if (ScriptEditor.GoldEditor != null)
+        {
+            additionalFiles.AddRange(ScriptEditor.GoldEditor.Script.GetAdditionalBackupFiles());
+        }
+
+        foreach (string additionalFile in additionalFiles.Distinct())
         {
             string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, @"..\", additionalFile)));
             string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(additionalFile));

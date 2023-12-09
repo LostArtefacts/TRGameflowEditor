@@ -32,7 +32,7 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
         Config unarmedLevels = config.GetSubConfig("UnarmedLevels");
         UnarmedLevelOrganisation = unarmedLevels.GetOrganisation("Organisation");
         UnarmedLevelRNG = new RandomGenerator(unarmedLevels.GetSubConfig("RNG"));
-        RandomUnarmedLevelCount = Math.Min(unarmedLevels.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
+        RandomUnarmedLevelCount = unarmedLevels.GetUInt("RandomCount");
         //see note in base.LoadConfig re restoring randomised - same applies for Unarmed
         if (unarmedLevels.ContainsKey("Data"))
         {
@@ -42,7 +42,7 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
         Config ammolessLevels = config.GetSubConfig("AmmolessLevels");
         AmmolessLevelOrganisation = ammolessLevels.GetOrganisation("Organisation");
         AmmolessLevelRNG = new RandomGenerator(ammolessLevels.GetSubConfig("RNG"));
-        RandomAmmolessLevelCount = Math.Min(ammolessLevels.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
+        RandomAmmolessLevelCount = ammolessLevels.GetUInt("RandomCount");
         //see note in base.LoadConfig re restoring randomised - same applies for Ammoless
         if (ammolessLevels.ContainsKey("Data"))
         {
@@ -86,7 +86,7 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
         TitleScreenEnabled = config.GetBool("TitlesOn");
     }
 
-    protected override void SaveImpl()
+    protected override void SaveImpl(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager)
     {
         //for unarmed, ammoless and bonus data, save the config before
         //running any randomisation, otherwise when the script is
@@ -96,7 +96,7 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
             ["Organisation"] = (int)UnarmedLevelOrganisation,
             ["RNG"] = UnarmedLevelRNG.ToJson(),
             ["RandomCount"] = RandomUnarmedLevelCount,
-            ["Data"] = UnarmedLevelData
+            ["Data"] = (LevelManager as TR23LevelManager).GetUnarmedLevelData(backupLevelManager.Levels)
         };
 
         _config["AmmolessLevels"] = new Config
@@ -104,7 +104,7 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
             ["Organisation"] = (int)AmmolessLevelOrganisation,
             ["RNG"] = AmmolessLevelRNG.ToJson(),
             ["RandomCount"] = RandomAmmolessLevelCount,
-            ["Data"] = AmmolessLevelData
+            ["Data"] = (LevelManager as TR23LevelManager).GetAmmolessLevelData(backupLevelManager.Levels)
         };
 
         if (CanOrganiseBonuses)
@@ -113,7 +113,7 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
             {
                 ["Organisation"] = (int)SecretBonusOrganisation,
                 ["RNG"] = SecretBonusRNG.ToJson(),
-                ["Data"] = LevelSecretBonusData
+                ["Data"] = (LevelManager as TR23LevelManager).GetLevelBonusData(backupLevelManager.Levels)
             };
         }
 
@@ -134,11 +134,8 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
         _config["ScreensizeOn"] = ScreensizingEnabled;
         _config["TitlesOn"] = TitleScreenEnabled;
 
-        AbstractTRScript backupScript = LoadBackupScript();
-        AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
-
-        List<AbstractTRScriptedLevel> randoBaseLevels = randoBaseScript.Levels;
-        TR23LevelManager backupLevelManager = TRScriptedLevelFactory.GetLevelManager(backupScript) as TR23LevelManager; //#65, #86
+        List<AbstractTRScriptedLevel> randoBaseLevels = backupLevelManager.Levels;
+        TR23LevelManager backupTR23LevelManager = backupLevelManager as TR23LevelManager;
         TR23LevelManager currentLevelManager = LevelManager as TR23LevelManager;
         
         if (AmmolessLevelOrganisation == Organisation.Random)
@@ -149,12 +146,12 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
             }
             else
             {
-                currentLevelManager.SetAmmolessLevelData(backupLevelManager.GetAmmolessLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
+                currentLevelManager.SetAmmolessLevelData(backupTR23LevelManager.GetAmmolessLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
             }
         }
         else if (AmmolessLevelOrganisation == Organisation.Default)
         {
-            currentLevelManager.SetAmmolessLevelData(backupLevelManager.GetAmmolessLevelData(backupLevelManager.Levels));
+            currentLevelManager.SetAmmolessLevelData(backupTR23LevelManager.GetAmmolessLevelData(backupLevelManager.Levels));
         }
 
         if (UnarmedLevelOrganisation == Organisation.Random)
@@ -165,12 +162,12 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
             }
             else
             {
-                currentLevelManager.SetUnarmedLevelData(backupLevelManager.GetUnarmedLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
+                currentLevelManager.SetUnarmedLevelData(backupTR23LevelManager.GetUnarmedLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
             }
         }
         else if (UnarmedLevelOrganisation == Organisation.Default)
         {
-            currentLevelManager.SetUnarmedLevelData(backupLevelManager.GetUnarmedLevelData(backupLevelManager.Levels));
+            currentLevelManager.SetUnarmedLevelData(backupTR23LevelManager.GetUnarmedLevelData(backupLevelManager.Levels));
         }
         else
         {
@@ -187,13 +184,12 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
             }
             else
             {
-                currentLevelManager.SetLevelBonusData(backupLevelManager.GetLevelBonusData(backupLevelManager.Levels)); //#65 lock to that of the original file
+                currentLevelManager.SetLevelBonusData(backupTR23LevelManager.GetLevelBonusData(backupLevelManager.Levels)); //#65 lock to that of the original file
             }
         }
         else if (SecretBonusOrganisation == Organisation.Default)
         {
-            //currentLevelManager.RestoreBonuses(backupLevels);
-            currentLevelManager.SetLevelBonusData(backupLevelManager.GetLevelBonusData(backupLevelManager.Levels));
+            currentLevelManager.SetLevelBonusData(backupTR23LevelManager.GetLevelBonusData(backupLevelManager.Levels));
         }
 
         TR2ScriptedLevel gym = currentLevelManager.AssaultLevel as TR2ScriptedLevel;
@@ -241,6 +237,11 @@ public class TR23ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoles
     internal override AbstractTRScript CreateScript()
     {
         return new TR23Script();
+    }
+
+    protected override void ProcessGameMode(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

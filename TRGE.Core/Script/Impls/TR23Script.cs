@@ -509,6 +509,40 @@ public class TR23Script : AbstractTRScript
     #endregion
 
     #region IO
+    private static readonly Dictionary<TREdition, List<string>> _editionDetection = new()
+    {
+        [TREdition.TR2PC] = new()
+        {
+            "wall.tr2", "boat.tr2", "venice.tr2", "opera.tr2", "rig.tr2", "platform.tr2", 
+            "unwater.tr2", "keel.tr2", "living.tr2", "deck.tr2", "skidoo.tr2", "monastry.tr2", 
+            "catacomb.tr2", "icecave.tr2", "emprtomb.tr2", "floating.tr2", "xian.tr2",
+        },
+        [TREdition.TR3PC] = new()
+        {
+            "jungle.tr2", "temple.tr2", "quadchas.tr2", "tonyboss.tr2", "shore.tr2", "crash.tr2", "rapids.tr2", "triboss.tr2", "roofs.tr2", "sewer.tr2",
+            "tower.tr2", "office.tr2", "nevada.tr2", "compound.tr2", "area51.tr2", "antarc.tr2", "mines.tr2", "city.tr2", "chamber.tr2", "stpaul.tr2",
+        },
+        [TREdition.TR2G] = new()
+        {
+            "level1.tr2", "level2.tr2", "level3.tr2", "level4.tr2", "level5.tr2",
+        },
+        [TREdition.TR3G] = new()
+        {
+            "scotland.tr2", "willsden.tr2", "chunnel.tr2", "undersea.tr2", "zoo.tr2", "slinc.tr2",
+        },
+        [TREdition.TR2PSX] = new()
+        {
+            "wall.psx", "boat.psx", "venice.psx", "opera.psx", "rig.psx", "platform.psx",
+            "unwater.psx", "keel.psx", "living.psx", "deck.psx", "skidoo.psx", "monastry.psx",
+            "catacomb.psx", "icecave.psx", "emprtomb.psx", "floating.psx", "xian.psx", "house.psx",
+        },
+        [TREdition.TR3PSX] = new()
+        {
+            "jungle.psx", "temple.psx", "quadchas.psx", "tonyboss.psx", "shore.psx", "crash.psx", "rapids.psx", "triboss.psx", "roofs.psx", "sewer.psx",
+            "tower.psx", "office.psx", "nevada.psx", "compound.psx", "area51.psx", "antarc.psx", "mines.psx", "city.psx", "chamber.psx", "stpaul.psx",
+        },
+    };
+
     protected override void CalculateEdition()
     {
         if (_levelFileNames == null)
@@ -516,38 +550,26 @@ public class TR23Script : AbstractTRScript
             return;
         }
 
-        foreach (string levelFile in _levelFileNames)
+        foreach (TREdition edition in _editionDetection.Keys)
         {
-            string llf = levelFile.ToLower();
-            if (llf.EndsWith("wall.tr2"))
+            if (_editionDetection[edition].Any(_levelFileNames.Select(l => Path.GetFileName(l).ToLower()).Contains))
             {
-                Edition = TREdition.TR2PC;
-            }
-            else if (llf.EndsWith("wall.psx"))
-            {
-                Edition = Xor == 0 ? TREdition.TR2PSXBeta : TREdition.TR2PSX;
-            }
-            else if (llf.EndsWith("level1.tr2"))
-            {
-                Edition = TREdition.TR2G;
-            }
-            else if (llf.EndsWith("jungle.tr2"))
-            {
-                Edition = TREdition.TR3PC;
-            }
-            else if (llf.EndsWith("jungle.psx"))
-            {
-                Edition = TREdition.TR3PSX;
-            }
-            else if (llf.EndsWith("scotland.tr2"))
-            {
-                Edition = TREdition.TR3G;
+                if (edition == TREdition.TR2PSX)
+                {
+                    Edition = (Xor == 0 ? TREdition.TR2PSXBeta : TREdition.TR2PSX).Clone();
+                }
+                else
+                {
+                    Edition = edition.Clone();
+                }
+                return;
             }
         }
 
-        if (Edition != null)
+        // Shared between TR2/3
+        if (_levelFileNames.Any(l => Path.GetFileName(l).ToLower().Equals("house.tr2")))
         {
-            Edition = Edition.Clone();
+            Edition = (_rplFileNames.Find(r => r.ToLower().Contains("ancient")) == null ? TREdition.TR3PC : TREdition.TR2PC).Clone();
         }
     }
 

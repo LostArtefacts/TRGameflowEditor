@@ -29,7 +29,7 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
         Config unarmedLevels = config.GetSubConfig("UnarmedLevels");
         UnarmedLevelOrganisation = unarmedLevels.GetOrganisation("Organisation");
         UnarmedLevelRNG = new RandomGenerator(unarmedLevels.GetSubConfig("RNG"));
-        RandomUnarmedLevelCount = Math.Min(unarmedLevels.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
+        RandomUnarmedLevelCount = unarmedLevels.GetUInt("RandomCount");
         //see note in base.LoadConfig re restoring randomised - same applies for Unarmed
         if (unarmedLevels.ContainsKey("Data"))
         {
@@ -39,7 +39,7 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
         Config ammolessLevels = config.GetSubConfig("AmmolessLevels");
         AmmolessLevelOrganisation = ammolessLevels.GetOrganisation("Organisation");
         AmmolessLevelRNG = new RandomGenerator(ammolessLevels.GetSubConfig("RNG"));
-        RandomAmmolessLevelCount = Math.Min(ammolessLevels.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
+        RandomAmmolessLevelCount = ammolessLevels.GetUInt("RandomCount");
         //see note in base.LoadConfig re restoring randomised - same applies for Ammoless
         if (ammolessLevels.ContainsKey("Data"))
         {
@@ -49,7 +49,7 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
         Config medilessLevels = config.GetSubConfig("MedilessLevels");
         MedilessLevelOrganisation = medilessLevels.GetOrganisation("Organisation");
         MedilessLevelRNG = new RandomGenerator(medilessLevels.GetSubConfig("RNG"));
-        RandomMedilessLevelCount = Math.Min(medilessLevels.GetUInt("RandomCount"), (uint)LevelManager.EnabledLevelCount);
+        RandomMedilessLevelCount = medilessLevels.GetUInt("RandomCount");
         //see note in base.LoadConfig re restoring randomised - same applies for Ammoless
         if (medilessLevels.ContainsKey("Data"))
         {
@@ -142,14 +142,14 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
         EnableConsole = config.GetBool(nameof(EnableConsole), true);
     }
 
-    protected override void SaveImpl()
+    protected override void SaveImpl(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager)
     {
         _config["UnarmedLevels"] = new Config
         {
             ["Organisation"] = (int)UnarmedLevelOrganisation,
             ["RNG"] = UnarmedLevelRNG.ToJson(),
             ["RandomCount"] = RandomUnarmedLevelCount,
-            ["Data"] = UnarmedLevelData
+            ["Data"] = (LevelManager as TR1LevelManager).GetUnarmedLevelData(backupLevelManager.Levels)
         };
 
         _config["AmmolessLevels"] = new Config
@@ -157,7 +157,7 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
             ["Organisation"] = (int)AmmolessLevelOrganisation,
             ["RNG"] = AmmolessLevelRNG.ToJson(),
             ["RandomCount"] = RandomAmmolessLevelCount,
-            ["Data"] = AmmolessLevelData
+            ["Data"] = (LevelManager as TR1LevelManager).GetAmmolessLevelData(backupLevelManager.Levels)
         };
 
         _config["MedilessLevels"] = new Config
@@ -165,7 +165,7 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
             ["Organisation"] = (int)MedilessLevelOrganisation,
             ["RNG"] = MedilessLevelRNG.ToJson(),
             ["RandomCount"] = RandomMedilessLevelCount,
-            ["Data"] = MedilessLevelData
+            ["Data"] = (LevelManager as TR1LevelManager).GetMedilessLevelData(backupLevelManager.Levels) //MedilessLevelData
         };
 
         _config["LevelCutScenesOn"] = LevelsHaveCutScenes;
@@ -253,11 +253,8 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
         _config[nameof(EnableLeanJumping)] = EnableLeanJumping;
         _config[nameof(EnableConsole)] = EnableConsole;
 
-        AbstractTRScript backupScript = LoadBackupScript();
-        AbstractTRScript randoBaseScript = LoadRandomisationBaseScript(); // #42
-
-        List<AbstractTRScriptedLevel> randoBaseLevels = randoBaseScript.Levels;
-        TR1LevelManager backupLevelManager = TRScriptedLevelFactory.GetLevelManager(backupScript) as TR1LevelManager; //#65, #86
+        List<AbstractTRScriptedLevel> randoBaseLevels = backupLevelManager.Levels;
+        TR1LevelManager backupTR1LevelManager = backupLevelManager as TR1LevelManager;
         TR1LevelManager currentLevelManager = LevelManager as TR1LevelManager;
 
         if (AmmolessLevelOrganisation == Organisation.Random)
@@ -268,12 +265,12 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
             }
             else
             {
-                currentLevelManager.SetAmmolessLevelData(backupLevelManager.GetAmmolessLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
+                currentLevelManager.SetAmmolessLevelData(backupTR1LevelManager.GetAmmolessLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
             }
         }
         else if (AmmolessLevelOrganisation == Organisation.Default)
         {
-            currentLevelManager.SetAmmolessLevelData(backupLevelManager.GetAmmolessLevelData(backupLevelManager.Levels));
+            currentLevelManager.SetAmmolessLevelData(backupTR1LevelManager.GetAmmolessLevelData(backupLevelManager.Levels));
         }
 
         if (MedilessLevelOrganisation == Organisation.Random)
@@ -284,12 +281,12 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
             }
             else
             {
-                currentLevelManager.SetMedilessLevelData(backupLevelManager.GetMedilessLevelData(backupLevelManager.Levels));
+                currentLevelManager.SetMedilessLevelData(backupTR1LevelManager.GetMedilessLevelData(backupLevelManager.Levels));
             }
         }
         else if (MedilessLevelOrganisation == Organisation.Default)
         {
-            currentLevelManager.SetMedilessLevelData(backupLevelManager.GetMedilessLevelData(backupLevelManager.Levels));
+            currentLevelManager.SetMedilessLevelData(backupTR1LevelManager.GetMedilessLevelData(backupLevelManager.Levels));
         }
 
         if (UnarmedLevelOrganisation == Organisation.Random)
@@ -300,12 +297,12 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
             }
             else
             {
-                currentLevelManager.SetUnarmedLevelData(backupLevelManager.GetUnarmedLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
+                currentLevelManager.SetUnarmedLevelData(backupTR1LevelManager.GetUnarmedLevelData(backupLevelManager.Levels)); //#65 lock to that of the original file; #86
             }
         }
         else if (UnarmedLevelOrganisation == Organisation.Default)
         {
-            currentLevelManager.SetUnarmedLevelData(backupLevelManager.GetUnarmedLevelData(backupLevelManager.Levels));
+            currentLevelManager.SetUnarmedLevelData(backupTR1LevelManager.GetUnarmedLevelData(backupLevelManager.Levels));
         }
         else
         {
@@ -346,6 +343,79 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
         return config;
     }
 
+    protected override void ProcessGameMode(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager)
+    {
+        TR1Script backupGoldScript = GoldEditor.LoadBackupScript() as TR1Script;
+
+        LevelManager.RemoveLevels(l => true);
+        MainMenuPicture = (backupScript as TR1Script).MainMenuPicture;
+
+        if (GameMode == GameMode.Normal)
+        {
+            LevelManager.ImportLevels(backupScript.Levels);
+            LevelManager.Levels[^1].IsFinalLevel = true;
+        }
+        else if (GameMode == GameMode.Gold)
+        {
+            MainMenuPicture = backupGoldScript.MainMenuPicture;
+            LevelManager.ImportLevels(backupGoldScript.Levels);
+            if (Edition.AssaultCourseSupported)
+            {
+                foreach (TR1ScriptedLevel level in LevelManager.Levels.Cast<TR1ScriptedLevel>())
+                {
+                    foreach (BaseLevelSequence sequence in level.Sequences)
+                    {
+                        if (sequence is LevelExitLevelSequence exit)
+                        {
+                            exit.LevelId++;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            LevelManager.ImportLevels(backupScript.Levels);
+            TR1ScriptedLevel finalLevel = LevelManager.Levels[^1] as TR1ScriptedLevel;
+            finalLevel.IsFinalLevel = false;
+            int statsIndex = finalLevel.Sequences.FindIndex(s => s.Type == LevelSequenceType.Level_Stats);
+            if (statsIndex == -1)
+            {
+                throw new Exception("Unable to combine regular/gold levels - original final level is misconfigured.");
+            }
+
+            BaseLevelSequence fmvSequence = finalLevel.Sequences.Find(s => s.Type == LevelSequenceType.Play_FMV);
+            if (fmvSequence != null && finalLevel.Sequences.IndexOf(fmvSequence) < statsIndex)
+            {
+                fmvSequence = null;
+            }
+
+            for (int i = finalLevel.Sequences.Count - 1; i > statsIndex; i--)
+            {
+                finalLevel.Sequences.RemoveAt(i);
+            }
+            finalLevel.Sequences.Add(new LevelExitLevelSequence()
+            {
+                Type = LevelSequenceType.Exit_To_Level,
+                LevelId = LevelManager.LevelCount + 1
+            });
+
+            LevelManager.ImportLevels(backupGoldScript.Levels);
+            finalLevel = LevelManager.Levels[^1] as TR1ScriptedLevel;
+            finalLevel.IsFinalLevel = true;
+
+            statsIndex = finalLevel.Sequences.FindIndex(s => s.Type == LevelSequenceType.Level_Stats);
+            if (statsIndex != -1 && fmvSequence != null)
+            {
+                finalLevel.AddSequenceAfter(LevelSequenceType.Level_Stats, fmvSequence, false);
+            }
+        }
+
+        LevelManager.SetLevelSequencing();
+        backupLevelManager.RemoveLevels(l => true);
+        backupLevelManager.ImportLevels(LevelManager.Levels);
+    }
+
     public List<MutableTuple<string, string, bool>> UnarmedLevelData
     {
         get => (LevelManager as TR1LevelManager).GetUnarmedLevelData(LoadBackupScript().Levels);
@@ -368,16 +438,6 @@ public class TR1ScriptEditor : AbstractTRScriptEditor, IUnarmedEditor, IAmmoless
     {
         get => (LevelManager as TR1LevelManager).RandomUnarmedLevelCount;
         set => (LevelManager as TR1LevelManager).RandomUnarmedLevelCount = value;
-    }
-
-    internal void RandomiseUnarmedLevels()
-    {
-        (LevelManager as TR1LevelManager).RandomiseUnarmedLevels(LoadRandomisationBaseScript().Levels);
-    }
-
-    internal List<TR1ScriptedLevel> GetUnarmedLevels()
-    {
-        return (LevelManager as TR1LevelManager).GetUnarmedLevels();
     }
 
     public List<MutableTuple<string, string, bool>> AmmolessLevelData
