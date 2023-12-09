@@ -76,6 +76,11 @@ public class Config : Dictionary<string, object>
         return value == null ? null : JsonConvert.DeserializeObject<T[]>(value.ToString());
     }
 
+    public GameMode GetGameMode(string key, GameMode defaultValue = GameMode.Normal)
+    {
+        return (GameMode)GetEnum(key, typeof(GameMode), defaultValue);
+    }
+
     public Organisation GetOrganisation(string key, Organisation defaultValue = Organisation.Default)
     {
         return (Organisation)GetEnum(key, typeof(Organisation), defaultValue);

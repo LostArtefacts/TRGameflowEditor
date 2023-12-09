@@ -174,6 +174,10 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
     {
         if (e.ScriptedLevel.Enabled && ShouldHandleModification(e))
         {
+            if (!_levelModifications.ContainsKey(e.LevelID))
+            {
+                _levelModifications[e.LevelID] = new HashSet<TRScriptedLevelEventArgs>();
+            }
             _levelModifications[e.LevelID].Add(e);
         }
     }

@@ -4,29 +4,34 @@ namespace TRGE.Core;
 
 public class TR1ScriptedLevel : AbstractTRScriptedLevel
 {
-    private static readonly Dictionary<ushort, ushort> _levelSecrets = new()
+    private static readonly Dictionary<string, ushort> _levelSecrets = new()
     {
         // Gym
-        [0] = 0,
+        ["GYM.PHD"] = 0,
         // Peru
-        [1] = 3,
-        [2] = 3,
-        [3] = 5,
-        [4] = 3,
+        ["LEVEL1.PHD"] = 3,
+        ["LEVEL2.PHD"] = 3,
+        ["LEVEL3A.PHD"] = 5,
+        ["LEVEL3B.PHD"] = 3,
         // Greece
-        [5] = 4,
-        [6] = 3,
-        [7] = 3,
-        [8] = 3,
-        [9] = 2,
+        ["LEVEL4.PHD"] = 4,
+        ["LEVEL5.PHD"] = 3,
+        ["LEVEL6.PHD"] = 3,
+        ["LEVEL7A.PHD"] = 3,
+        ["LEVEL7B.PHD"] = 2,
         // Egypt
-        [10] = 3,
-        [11] = 3,
-        [12] = 1,
+        ["LEVEL8A.PHD"] = 3,
+        ["LEVEL8B.PHD"] = 3,
+        ["LEVEL8C.PHD"] = 1,
         // Atlantis
-        [13] = 3,
-        [14] = 3,
-        [15] = 3
+        ["LEVEL10A.PHD"] = 3,
+        ["LEVEL10B.PHD"] = 3,
+        ["LEVEL10C.PHD"] = 3,
+        // Gold
+        ["EGYPT.PHD"] = 3,
+        ["CAT.PHD"] = 4,
+        ["END.PHD"] = 2,
+        ["END2.PHD"] = 1,
     };
 
     private ushort _sequence;
@@ -146,7 +151,7 @@ public class TR1ScriptedLevel : AbstractTRScriptedLevel
     private ushort? _numSecrets;
     public override ushort NumSecrets
     {
-        get => _numSecrets ?? _levelSecrets[OriginalSequence];
+        get => _numSecrets ?? _levelSecrets[LevelFileBaseName.ToUpper()];
         set => _numSecrets = value;
     }
 

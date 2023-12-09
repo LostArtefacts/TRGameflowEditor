@@ -7,10 +7,15 @@ public class TR1ATIScriptEditor : AbstractTRScriptEditor
 
     protected override void ApplyConfig(Config config) { }
 
-    protected override void SaveImpl() { }
+    protected override void SaveImpl(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager) { }
 
     internal override AbstractTRScript CreateScript()
     {
         return new TR1ATIScript();
+    }
+
+    protected override void ProcessGameMode(AbstractTRScript backupScript, AbstractTRLevelManager backupLevelManager)
+    {
+        throw new NotImplementedException();
     }
 }

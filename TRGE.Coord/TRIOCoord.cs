@@ -41,7 +41,7 @@ internal class TRIOCoord : ITRConfigProvider
     protected OperationMode _mode;
 
     protected string _editDirectory;
-    protected string _orignalScriptFile, _backupScriptFile, _scriptConfigFile, _originalTRConfigFile, _backupTRConfigFile;
+    protected string _orignalScriptFile, _backupScriptFile, _orignalGoldScriptFile,_backupGoldScriptFile, _scriptConfigFile, _originalTRConfigFile, _backupTRConfigFile;
     protected string _originalDirectory, _directoryConfigFile;
 
     internal string OriginalDirectory => _originalDirectory;
@@ -67,7 +67,8 @@ internal class TRIOCoord : ITRConfigProvider
     internal TREditor Open(string path, TRScriptOpenOption openOption, TRBackupChecksumOption checksumOption)
     {
         _mode = Directory.Exists(path) ? OperationMode.Directory : OperationMode.File;
-        _orignalScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path) : path;
+        _orignalScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path, false) : path;
+        _orignalGoldScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path, true) : path;
         _originalTRConfigFile = _mode == OperationMode.Directory ? FindConfigFile(path) : path;
         _originalDirectory = _mode == OperationMode.Directory ? path : new FileInfo(_orignalScriptFile).DirectoryName;
 
@@ -117,6 +118,23 @@ internal class TRIOCoord : ITRConfigProvider
         };
         AbstractTRScriptEditor scriptMan = TRScriptFactory.GetScriptEditor(io, openOption);
 
+        if (scriptMan.Edition.HasGold && _orignalGoldScriptFile != null)
+        {
+            TRScriptIOArgs goldIO = new()
+            {
+                TRScriptFile = new FileInfo(_orignalGoldScriptFile),
+                TRScriptBackupFile = _backupGoldScriptFile == null ? null : new FileInfo(_backupGoldScriptFile),
+                TRConfigFile = _originalTRConfigFile == null ? null : new FileInfo(_originalTRConfigFile),
+                TRConfigBackupFile = _backupTRConfigFile == null ? null : new FileInfo(_backupTRConfigFile),
+                InternalConfigFile = null,
+                WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
+                OutputDirectory = new DirectoryInfo(GetOutputDirectory()),
+                OriginalDirectory = new DirectoryInfo(_originalDirectory),
+                BackupDirectory = new DirectoryInfo(GetBackupDirectory()),
+            };
+            scriptMan.GoldEditor = TRScriptFactory.GetScriptEditor(goldIO, openOption);
+        }
+
         UpdateFileHistory();
 
         return scriptMan;
@@ -141,9 +159,9 @@ internal class TRIOCoord : ITRConfigProvider
         return TRLevelEditorFactory.GetLevelEditor(io, scriptEditor.Edition);
     }
 
-    private static string FindScriptFile(string path)
+    private static string FindScriptFile(string path, bool gold)
     {
-        FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path));
+        FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path), gold);
         if (fi == null)
         {
             // Check for TR1ATI
@@ -188,22 +206,35 @@ internal class TRIOCoord : ITRConfigProvider
                 filesToBackup.Add(_originalTRConfigFile);
             }
 
+            void backupLevels(List<AbstractTRScriptedLevel> levels)
+            {
+                foreach (AbstractTRScriptedLevel level in levels)
+                {
+                    filesToBackup.Add(GetOriginalFilePath(level.LevelFile));
+                    if (level.HasCutScene)
+                    {
+                        filesToBackup.Add(GetOriginalFilePath(level.CutSceneLevel.LevelFile));
+                    }
+                }
+            }
+
             // Open the original script and determine which files we need to copy. Merge the level files
             // with the original paths as some may not be in the current directory (e.g. TR3 cutscene files).
             AbstractTRScript script = TRScriptFactory.OpenScript(_orignalScriptFile);
-            foreach (AbstractTRScriptedLevel level in script.Levels)
-            {
-                filesToBackup.Add(GetOriginalFilePath(level.LevelFile));
-                if (level.HasCutScene)
-                {
-                    filesToBackup.Add(GetOriginalFilePath(level.CutSceneLevel.LevelFile));
-                }
-            }
+            backupLevels(script.Levels);
 
             AbstractTRScriptedLevel assaultLevel = script.AssaultLevel;
             if (assaultLevel != null)
             {
                 filesToBackup.Add(GetOriginalFilePath(assaultLevel.LevelFile));
+            }
+
+            AbstractTRScript goldScript = null;
+            if (_orignalGoldScriptFile != null)
+            {
+                filesToBackup.Add(_orignalGoldScriptFile);
+                goldScript = TRScriptFactory.OpenScript(_orignalGoldScriptFile);
+                backupLevels(goldScript.Levels);
             }
 
             // Perform a checksum against the level files unless the option to ignore issues has already been passed.
@@ -234,10 +265,12 @@ internal class TRIOCoord : ITRConfigProvider
                 }
             }
 
-            List<string> additionalFiles = script.GetAdditionalBackupFiles();
-            foreach (string additionalFile in additionalFiles)
+            filesToBackup.AddRange(script.GetAdditionalBackupFiles()
+                .Select(f => GetOriginalFilePath(f)));
+            if (goldScript != null)
             {
-                filesToBackup.Add(GetOriginalFilePath(additionalFile));
+                filesToBackup.AddRange(goldScript.GetAdditionalBackupFiles()
+                    .Select(f => GetOriginalFilePath(f)));
             }
 
             _backupArgs.ProgressTarget += filesToBackup.Count * 2;
@@ -255,6 +288,10 @@ internal class TRIOCoord : ITRConfigProvider
             if (_orignalScriptFile != null)
             {
                 _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
+            }
+            if (_orignalGoldScriptFile != null)
+            {
+                _backupGoldScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalGoldScriptFile).Name);
             }
             if (_originalTRConfigFile != null)
             {
@@ -305,6 +342,10 @@ internal class TRIOCoord : ITRConfigProvider
         {
             expectedFiles.Add(scriptEditor.BackupFile.Name);
         }
+        if (scriptEditor.GoldEditor != null)
+        {
+            expectedFiles.Add(scriptEditor.GoldEditor.BackupFile.Name);
+        }
         if (_originalTRConfigFile != null)
         {
             expectedFiles.Add(scriptEditor.BackupTRConfigFile.Name);
@@ -323,9 +364,24 @@ internal class TRIOCoord : ITRConfigProvider
             }
         }
 
-        foreach (string additionalFile in scriptEditor.Script.GetAdditionalBackupFiles())
+        if (scriptEditor.GoldEditor != null)
         {
-            expectedFiles.Add(Path.GetFileName(additionalFile));
+            foreach (AbstractTRScriptedLevel level in scriptEditor.GoldEditor.Levels)
+            {
+                expectedFiles.Add(level.LevelFileBaseName);
+                if (level.HasCutScene)
+                {
+                    expectedFiles.Add(level.LevelFileBaseName);
+                }
+            }
+        }
+
+        expectedFiles.AddRange(scriptEditor.Script.GetAdditionalBackupFiles()
+                .Select(f => Path.GetFileName(f)));
+        if (scriptEditor.GoldEditor != null)
+        {
+            expectedFiles.AddRange(scriptEditor.GoldEditor.Script.GetAdditionalBackupFiles()
+                .Select(f => Path.GetFileName(f)));
         }
 
         backupDI.ClearExcept(expectedFiles, TREditor.TargetFileExtensions);

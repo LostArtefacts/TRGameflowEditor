@@ -34,10 +34,11 @@ public class TREdition : ICloneable
 
     internal static readonly TREdition TR1PC = new()
     {
-        Title = "Tomb Raider I (PC)",
+        Title = "Tomb Raider I (TR1X)",
         Version = TRVersion.TR1,
         Hardware = Hardware.PC,
         ScriptName = @"..\cfg\TR1X_gameflow.json5",
+        GoldScriptName = @"..\cfg\TR1X_gameflow_ub.json5",
         ConfigName = @"..\cfg\TR1X.json5",
         DefaultConfig = "{}",
         LevelCompleteOffset = 0,
@@ -175,7 +176,9 @@ public class TREdition : ICloneable
     public string Title { get; internal set; }
     public TRVersion Version { get; internal set; }
     public string ScriptName { get; set; }
+    public string GoldScriptName { get; set; }
     public bool HasScript => ScriptName != null;
+    public bool HasGold => GoldScriptName != null;
     public string ConfigName { get; internal set; }
     public bool HasConfig => ConfigName != null;
     public string DefaultConfig { get; internal set; }
