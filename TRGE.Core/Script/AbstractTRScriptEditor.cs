@@ -509,6 +509,11 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
             BackupFile.CopyTo(OriginalFile.FullName, true);
         }
 
+        if (GoldEditor != null && GoldEditor.OriginalFile != null)
+        {
+            GoldEditor.BackupFile.CopyTo(GoldEditor.OriginalFile.FullName, true);
+        }
+
         if (TRConfigFile != null)
         {
             BackupTRConfigFile.CopyTo(TRConfigFile.FullName, true);

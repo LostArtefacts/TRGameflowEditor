@@ -142,7 +142,8 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
     protected Dictionary<string, string> GetRestoreFiles()
     {
         Dictionary<string, string> files = new();
-        foreach (AbstractTRScriptedLevel level in _scriptEditor.Levels)
+
+        void StoreLevel(AbstractTRScriptedLevel level)
         {
             string backup = Path.Combine(_io.BackupDirectory.FullName, level.LevelFileBaseName);
             string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.LevelFile)); // Supports restoring to folders outside data
@@ -153,6 +154,24 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
                 string cutRestore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.CutSceneLevel.LevelFile));
                 files[cutBackup] = cutRestore;
             }
+        }
+
+        foreach (AbstractTRScriptedLevel level in _scriptEditor.Levels)
+        {
+            StoreLevel(level);
+        }
+
+        if (_scriptEditor.GoldEditor != null)
+        {
+            foreach (AbstractTRScriptedLevel level in _scriptEditor.GoldEditor.Levels)
+            {
+                StoreLevel(level);
+            }
+        }
+
+        if (_scriptEditor.AssaultLevel != null)
+        {
+            StoreLevel(_scriptEditor.AssaultLevel);
         }
 
         foreach (string additionalFile in _scriptEditor.Script.GetAdditionalBackupFiles())
