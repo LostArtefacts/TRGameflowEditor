@@ -2,6 +2,7 @@
 using System.Text;
 using TRGE.Coord.Properties;
 using TRGE.Core;
+using TRLevelControl;
 using TRLevelControl.Model;
 
 namespace TRGE.Coord;
@@ -16,7 +17,7 @@ public class SpriteDefinition
     public static void LoadWeaponsIntoLevel(TR2Level level)
     {
         Dictionary<string, object> weaponDefinitions = JsonConvert.DeserializeObject<Dictionary<string, object>>(Encoding.Default.GetString(ResourceHelper.Decompress(Resources.Weapons)));
-        List<SpriteDefinition> loadedDefinitions = JsonConvert.DeserializeObject<List<SpriteDefinition>>(weaponDefinitions["Weapons"].ToString());
+        Dictionary<TR2Type, TRSpriteSequence> loadedDefinitions = JsonConvert.DeserializeObject<Dictionary<TR2Type, TRSpriteSequence>>(weaponDefinitions["Weapons"].ToString());
 
         TRTexImage16 img16 = JsonConvert.DeserializeObject<TRTexImage16>(weaponDefinitions["Tile16"].ToString());
         TRTexImage8 img8 = JsonConvert.DeserializeObject<TRTexImage8>(weaponDefinitions["Tile8"].ToString());
@@ -29,104 +30,171 @@ public class SpriteDefinition
         level.Images8.Add(img8);
         level.Images16.Add(img16);
 
-        List<TRSpriteTexture> spriteTextures = level.SpriteTextures.ToList();
-        List<TRSpriteSequence> spriteSequences = level.SpriteSequences.ToList();
-        foreach (SpriteDefinition def in loadedDefinitions)
+        foreach (var (type, def) in loadedDefinitions)
         {
-            def.Texture.Atlas = (ushort)(level.Images16.Count - 1);
-            spriteTextures.Add(def.Texture);
-            
-            def.Sequence.Offset = (short)(spriteTextures.Count - 1);
-            spriteSequences.Add(def.Sequence);
+            def.Textures.ForEach(t => t.Atlas = (ushort)(level.Images16.Count - 1));
+            level.Sprites[type] = def;
         }
-
-        level.SpriteTextures = spriteTextures.ToArray();
-        level.NumSpriteTextures = (uint)spriteTextures.Count;
-        level.SpriteSequences = spriteSequences.ToArray();
-        level.NumSpriteSequences = (uint)spriteSequences.Count;
     }
 
     public static void WriteWeaponDefinitions(TRTexImage8 img8, TRTexImage16 img16, string jsonPath)
     {
         Dictionary<string, object> output = new()
         {
-            ["Weapons"] = new List<SpriteDefinition>
+            ["Weapons"] = new Dictionary<TR2Type, TRSpriteSequence>
             {
-                new() {
-                    Sequence = new TRSpriteSequence { SpriteID = 135, NegativeLength = -1 },
-                    Texture = new TRSpriteTexture
+                [TR2Type.Pistols_S_P] = new()
+                {
+                    Textures = new()
                     {
-                        X = 104, Y = 28,
-                        Width = 18687, Height = 8959,
-                        LeftSide = -93, RightSide = 96,
-                        TopSide = -102, BottomSide = 11
+                        new()
+                        {
+                            X = 104,
+                            Y = 28,
+                            Width = 18687,
+                            Height = 8959,
+                            Alignment = new()
+                            {
+                                Left = -93,
+                                Right = 96,
+                                Top = -102,
+                                Bottom = 11
+                            }
+                        }
                     }
                 },
-                new() {
-                    Sequence = new TRSpriteSequence { SpriteID = 136, NegativeLength = -1 },
-                    Texture = new TRSpriteTexture
+                [TR2Type.Shotgun_S_P] = new()
+                {
+                    Textures = new()
                     {
-                        X = 0, Y = 26,
-                        Width = 26623, Height = 5375,
-                        LeftSide = -240, RightSide = 240,
-                        TopSide = -64, BottomSide = 32
+                        new()
+                        {
+                            X = 0,
+                            Y = 26,
+                            Width = 26623,
+                            Height = 5375,
+                            Alignment = new()
+                            {
+                                Left = -240,
+                                Right = 240,
+                                Top = -64,
+                                Bottom = 32
+                            }
+                        }
                     }
                 },
-                new() {
-                    Sequence = new TRSpriteSequence { SpriteID = 137, NegativeLength = -1 },
-                    Texture = new TRSpriteTexture
+                [TR2Type.Automags_S_P] = new()
+                {
+                    Textures = new()
                     {
-                        X = 0, Y = 47,
-                        Width = 23295, Height = 9215,
-                        LeftSide = -100, RightSide = 100,
-                        TopSide = -76, BottomSide = 7
+                        new()
+                        {
+                            X = 0,
+                            Y = 47,
+                            Width = 23295,
+                            Height = 9215,
+                            Alignment = new()
+                            {
+                                Left = -100,
+                                Right = 100,
+                                Top = -76,
+                                Bottom = 7
+                            }
+                        }
                     }
                 },
-                new() {
-                    Sequence = new TRSpriteSequence { SpriteID = 138, NegativeLength = -1 },
-                    Texture = new TRSpriteTexture
+                [TR2Type.Uzi_S_P] = new()
+                {
+                    Textures = new()
                     {
-                        X = 177, Y = 28,
-                        Width = 16897, Height = 9985,
-                        LeftSide = -128, RightSide = 128,
-                        TopSide = -56, BottomSide = 56
+                        new()
+                        {
+                            X = 177,
+                            Y = 28,
+                            Width = 16897,
+                            Height = 9985,
+                            Alignment = new()
+                            {
+                                Left = -128,
+                                Right = 128,
+                                Top = -56,
+                                Bottom =56
+                            }
+                        }
                     }
                 },
-                new() {
-                    Sequence = new TRSpriteSequence { SpriteID = 139, NegativeLength = -1 },
-                    Texture = new TRSpriteTexture
+                [TR2Type.Harpoon_S_P] = new()
+                {
+                    Textures = new()
                     {
-                        X = 124, Y = 0,
-                        Width = 28929, Height = 7169,
-                        LeftSide = -154, RightSide = 156,
-                        TopSide = -76, BottomSide = 3
+                        new()
+                        {
+                            X = 124,
+                            Y = 0,
+                            Width = 28929,
+                            Height = 7169,
+                            Alignment = new()
+                            {
+                                Left = -154,
+                                Right = 156,
+                                Top = -76,
+                                Bottom = 3
+                            }
+                        }
                     }
                 },
-                new() {
-                    Sequence = new TRSpriteSequence { SpriteID = 140, NegativeLength = -1 },
-                    Texture = new TRSpriteTexture
+                [TR2Type.M16_S_P] = new()
+                {
+                    Textures = new()
                     {
-                        X = 0, Y = 0,
-                        Width = 31745, Height = 6657,
-                        LeftSide = -194, RightSide = 205,
-                        TopSide = -80, BottomSide = 3
+                        new()
+                        {
+                            X = 0,
+                            Y = 0,
+                            Width = 31745,
+                            Height = 6657,
+                            Alignment = new()
+                            {
+                                Left = -194,
+                                Right = 205,
+                                Top = -80,
+                                Bottom = 3
+                            }
+                        }
                     }
                 },
-                new() {
-                    Sequence = new TRSpriteSequence { SpriteID = 141, NegativeLength = -1 },
-                    Texture = new TRSpriteTexture
+                [TR2Type.GrenadeLauncher_S_P] = new()
+                {
+                    Textures = new()
                     {
-                        X = 91, Y = 63,
-                        Width = 21249, Height = 8193,
-                        LeftSide = -89, RightSide = 92,
-                        TopSide = -67, BottomSide = 5
+                        new()
+                        {
+                            X = 91,
+                            Y = 63,
+                            Width = 21249,
+                            Height = 8193,
+                            Alignment = new()
+                            {
+                                Left = -89,
+                                Right = 92,
+                                Top = -67,
+                                Bottom = 5
+                            }
+                        }
                     }
-                }
+                },
             },
 
             ["Tile8"] = img8,
             ["Tile16"] = img16
         };
+                
+        Dictionary<TR2Type, TRSpriteSequence> d = (Dictionary<TR2Type, TRSpriteSequence>)output["Weapons"];
+        foreach (TRSpriteTexture t in d.Values.SelectMany(f => f.Textures))
+        {
+            t.Width = (ushort)((t.Width + 1) / TRConsts.TPageWidth);
+            t.Height = (ushort)((t.Height + 1) / TRConsts.TPageHeight);
+        }
 
         new FileInfo(jsonPath).WriteCompressedText(JsonConvert.SerializeObject(output, Formatting.Indented));
     }

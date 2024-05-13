@@ -12,12 +12,12 @@ public class TR2GExtensionTests : AbstractTRExtensionTests
     protected override void Setup()
     {
         base.Setup();
-        TRLevelEditorFactory.RegisterEditor(Edition.Version, typeof(TRLevelEditorExtensionExample));
+        TRLevelEditorFactory.RegisterEditor(Edition, typeof(TRLevelEditorExtensionExample));
     }
 
     protected override void TearDown()
     {
-        TRLevelEditorFactory.DeregisterEditor(Edition.Version, typeof(TRLevelEditorExtensionExample));
+        TRLevelEditorFactory.DeregisterEditor(Edition);
         base.TearDown();
     }
 }

@@ -2,6 +2,7 @@
 using TRGE.Coord.Helpers;
 using TRGE.Core;
 using TRLevelControl.Helpers;
+using TRLevelControl.Model;
 
 namespace TRGE.Coord;
 
@@ -164,21 +165,34 @@ internal class TRIOCoord : ITRConfigProvider
         FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path), gold);
         if (fi == null)
         {
-            // Check for TR1ATI
-            bool isAti = true;
-            foreach (string tr1Level in TR1LevelNames.AsList)
+            // Test Remasters and use fake scripts. This is ugly.
+            bool isTR1 = TR1LevelNames.AsList.All(l => File.Exists(Path.Combine(path, l)));
+            if (isTR1)
             {
-                isAti &= File.Exists(Path.Combine(path, tr1Level));
+                if (Directory.Exists(Path.Combine(path, "UB")) && File.Exists(Path.Combine(path, "../tomb1.dll")))
+                {
+                    return gold ? null : TRRScript.TR1PlaceholderName;
+                }
+
+                // Guess that it's TombATI
+                throw new PlatformNotSupportedException("The use of TombATI is not supported. Please upgrade to TR1X - https://github.com/LostArtefacts/TR1X/");
             }
 
-            if (isAti)
+            bool isTR2 = TR2LevelNames.AsList.All(l => File.Exists(Path.Combine(path, l)));
+            if (isTR2 && Directory.Exists(Path.Combine(path, "GM")) && File.Exists(Path.Combine(path, "../tomb2.dll")))
             {
-                throw new PlatformNotSupportedException("The use of TombATI is not supported. Please upgrade to TR1X - https://github.com/LostArtefacts/TR1X/");
+                return gold ? null : TRRScript.TR2PlaceholderName;
+            }
+
+            bool isTR3 = TR3LevelNames.AsList.All(l => File.Exists(Path.Combine(path, l)));
+            if (isTR3 && Directory.Exists(Path.Combine(path, "LA")) && File.Exists(Path.Combine(path, "../tomb3.dll")))
+            {
+                return gold ? null : TRRScript.TR3PlaceholderName;
             }
 
             throw new MissingScriptException(string.Format("No valid Tomb Raider script file was found in {0}.", path));
         }
-        return fi.FullName;
+        return fi?.FullName;
     }
 
     private static string FindConfigFile(string path)
@@ -193,34 +207,53 @@ internal class TRIOCoord : ITRConfigProvider
         string outputDirectory = GetOutputDirectory();
         if (_mode == OperationMode.Directory)
         {
+            AbstractTRScript script = TRScriptFactory.OpenScript(_orignalScriptFile);
+
             DirectoryInfo backupDI = new(backupDirectory);
             DirectoryInfo outputDI = new(outputDirectory);
 
             List<string> filesToBackup = new();
-            if (_orignalScriptFile != null)
+            if (!script.Edition.Remastered)
             {
-                filesToBackup.Add(_orignalScriptFile);
-            }
-            if (_originalTRConfigFile != null)
-            {
-                filesToBackup.Add(_originalTRConfigFile);
+                if (_orignalScriptFile != null)
+                {
+                    filesToBackup.Add(_orignalScriptFile);
+                }
+                if (_originalTRConfigFile != null)
+                {
+                    filesToBackup.Add(_originalTRConfigFile);
+                }
             }
 
             void backupLevels(List<AbstractTRScriptedLevel> levels)
             {
                 foreach (AbstractTRScriptedLevel level in levels)
                 {
-                    filesToBackup.Add(GetOriginalFilePath(level.LevelFile));
-                    if (level.HasCutScene)
+                    if (level is TRRScriptedLevel remasteredLevel)
                     {
-                        filesToBackup.Add(GetOriginalFilePath(level.CutSceneLevel.LevelFile));
+                        filesToBackup.AddRange(remasteredLevel.AllFiles.Select(f => GetOriginalFilePath(f)));
+                        if (level.HasCutScene)
+                        {
+                            filesToBackup.AddRange((remasteredLevel.CutSceneLevel as TRRScriptedLevel).AllFiles.Select(f => GetOriginalFilePath(f)));
+                        }
+                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.MapFile));
+                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.PdpFile));
+                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.TexFile));
+                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.TrgFile));
+                    }
+                    else
+                    {
+                        filesToBackup.Add(GetOriginalFilePath(level.LevelFile));
+                        if (level.HasCutScene)
+                        {
+                            filesToBackup.Add(GetOriginalFilePath(level.CutSceneLevel.LevelFile));
+                        }
                     }
                 }
             }
 
             // Open the original script and determine which files we need to copy. Merge the level files
             // with the original paths as some may not be in the current directory (e.g. TR3 cutscene files).
-            AbstractTRScript script = TRScriptFactory.OpenScript(_orignalScriptFile);
             backupLevels(script.Levels);
 
             AbstractTRScriptedLevel assaultLevel = script.AssaultLevel;

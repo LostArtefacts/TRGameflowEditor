@@ -78,20 +78,9 @@ public class BaseTRLevelEditor : AbstractTRLevelEditor
     {
         InitialiseUnarmedRNG(scriptEditor);
 
-        // Ensure cutscene files are copied initially
-        foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
-        {
-            if (level.SupportsCutScenes)
-            {
-                File.Copy(GetReadLevelFilePath(level.CutSceneLevel.LevelFileBaseName), GetWriteLevelFilePath(level.CutSceneLevel.LevelFileBaseName));
-            }
-        }
-
-        // And assault if supported
-        if (scriptEditor.GymAvailable)
-        {
-            File.Copy(GetReadLevelFilePath(scriptEditor.AssaultLevel.LevelFileBaseName), GetWriteLevelFilePath(scriptEditor.AssaultLevel.LevelFileBaseName));
-        }
+        // Copy the entire backup into the WIP folder ready for what lies ahead
+        IOExtensions.Copy(_io.BackupDirectory, _io.OutputDirectory);
+        IOExtensions.Copy(_io.BackupDirectory, _io.WIPOutputDirectory);
 
         PreSaveImpl(scriptEditor);
     }

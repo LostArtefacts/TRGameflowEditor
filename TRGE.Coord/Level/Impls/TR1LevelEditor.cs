@@ -31,22 +31,6 @@ public class TR1LevelEditor : BaseTRLevelEditor
         _control.Write(level, GetWriteLevelFilePath(lvl));
     }
 
-    protected override void PreSaveImpl(AbstractTRScriptEditor scriptEditor)
-    {
-        if (!scriptEditor.Edition.IsCommunityPatch)
-        {
-            // Can't guarantee that the ATI levels will have been copied to WIP, so do that now
-            foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
-            {
-                IOExtensions.CopyFile(GetReadLevelFilePath(level.LevelFileBaseName), GetWriteLevelFilePath(level.LevelFileBaseName), true);
-                if (level.HasCutScene)
-                {
-                    IOExtensions.CopyFile(GetReadLevelFilePath(level.CutSceneLevel.LevelFileBaseName), GetWriteLevelFilePath(level.CutSceneLevel.LevelFileBaseName), true);
-                }
-            }
-        }
-    }
-
     protected override void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor)
     {
         if (scriptEditor.Edition.IsCommunityPatch)

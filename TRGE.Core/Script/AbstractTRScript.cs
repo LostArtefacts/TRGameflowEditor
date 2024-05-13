@@ -54,7 +54,7 @@ public abstract class AbstractTRScript
 
     public void Write(string filePath)
     {
-        if (filePath == null)
+        if (filePath == null || TRRScript.IsTRRScriptPath(filePath))
         {
             return;
         }

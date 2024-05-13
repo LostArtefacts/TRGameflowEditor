@@ -105,7 +105,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
     {
         _config = ConfigFilePath != null ? Config.Read(ConfigFilePath) : null;
         //issue #36
-        if (_config != null && OriginalFile != null && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
+        if (_config != null && OriginalFile != null && !TRRScript.IsTRRScriptPath(OriginalFile.FullName) && !OriginalFile.Checksum().Equals(_config["CheckSumOnSave"]))
         {
             switch (_openOption)
             {
@@ -136,7 +136,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         if (config != null)
         {
             Config configEdition = config.GetSubConfig("Edition");
-            TREdition checkEdition = TREdition.From(configEdition.GetHardware("Hardware"), configEdition.GetTRVersion("Version"));
+            TREdition checkEdition = TREdition.From(configEdition.GetHardware("Hardware"), configEdition.GetTRVersion("Version"), configEdition.GetBool("Remastered"));
             if (checkEdition == null || !checkEdition.Equals(Edition))
             {
                 throw new EditionMismatchException("The TR edition in the configuration file does not match the edition of the current script file.");
@@ -433,7 +433,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
     /// </summary>
     internal sealed override void SaveComplete()
     {
-        if (OriginalFile != null)
+        if (OriginalFile != null && !TRRScript.IsTRRScriptPath(OriginalFile.FullName))
         {
             _config["CheckSumOnSave"] = new FileInfo(GetScriptWIPOutputPath()).Checksum();
         }
@@ -569,7 +569,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         return script;
     }
 
-    internal List<AbstractTRScriptedLevel> GetOriginalLevels()
+    public List<AbstractTRScriptedLevel> GetOriginalLevels()
     {
         return LoadBackupScript().Levels;
     }

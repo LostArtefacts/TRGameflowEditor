@@ -208,7 +208,7 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
         {
             levelCount++;
         }
-        return levelCount + GetSaveTarget(levelCount);
+        return (_edition.Remastered ? 0 : levelCount) + GetSaveTarget(levelCount);
         //return _levelModifications.Count + GetSaveTarget(_levelModifications.Count);
     }
 

@@ -7,6 +7,11 @@ public static class TRPatchTester
 {
     public static void Test(TREdition edition, TRScriptIOArgs ioArgs)
     {
+        if (edition.Remastered)
+        {
+            return;
+        }
+
         switch (edition.Version)
         {
             case TRVersion.TR1:

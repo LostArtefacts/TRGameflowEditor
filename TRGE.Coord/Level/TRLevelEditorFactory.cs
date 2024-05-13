@@ -5,56 +5,82 @@ namespace TRGE.Coord;
 
 public static class TRLevelEditorFactory
 {
-    private static readonly IReadOnlyDictionary<TRVersion, Type> _defaultTypeMap = new Dictionary<TRVersion, Type>
+    private static readonly List<EditorType> _editorTypes = new()
     {
-        [TRVersion.TR1] = typeof(TR1LevelEditor),
-        [TRVersion.TR2] = typeof(TR2LevelEditor),
-        [TRVersion.TR2G] = typeof(TR2LevelEditor),
-        [TRVersion.TR3] = typeof(TR3LevelEditor),
-        [TRVersion.TR3G] = typeof(TR3LevelEditor)
+        new()
+        {
+            Version = TRVersion.TR1,
+            Type = typeof(TR1LevelEditor),
+        },
+        new()
+        {
+            Version = TRVersion.TR2,
+            Type = typeof(TR1LevelEditor),
+        },
+        new()
+        {
+            Version = TRVersion.TR3,
+            Type = typeof(TR1LevelEditor),
+        }
     };
 
-    private static readonly Dictionary<TRVersion, Type> _typeMap = _defaultTypeMap.ToDictionary();
+    public static void RegisterEditor(TREdition edition, Type type)
+        => RegisterEditor(edition.Version, edition.Remastered, type);
 
-    public static void RegisterEditor(TRVersion version, Type type)
+    public static void RegisterEditor(TRVersion version, bool remastered, Type type)
     {
-        if (_typeMap.ContainsKey(version))
+        DeregisterEditor(version, remastered);
+        _editorTypes.Add(new()
         {
-            _typeMap[version] = type;
-        }
-        else
-        {
-            _typeMap.Add(version, type);
-        }
+            Version = version,
+            Remastered = remastered,
+            Type = type
+        });
     }
 
-    public static void DeregisterEditor(TRVersion version, Type type)
+    public static void DeregisterEditor(TREdition edition)
+        => DeregisterEditor(edition.Version, edition.Remastered);
+
+    public static void DeregisterEditor(TRVersion version, bool remastered)
     {
-        if (_typeMap.ContainsKey(version) && _typeMap[version] == type && _defaultTypeMap.ContainsKey(version))
-        {
-            _typeMap[version] = _defaultTypeMap[version];
-        }
+        _editorTypes.RemoveAll(t => t.Version == version && t.Remastered == remastered);
     }
 
     internal static AbstractTRLevelEditor GetLevelEditor(TRDirectoryIOArgs io, TREdition edition)
     {
-        if (EditionSupportsLevelEditing(edition))
+        EditorType type = GetEditorType(edition);
+        if (type == null)
         {
-            return (AbstractTRLevelEditor)Activator.CreateInstance
-            (
-                _typeMap[edition.Version],
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, 
-                null,
-                new object[] { io, edition },
-                null
-            );
+            return null;
         }
 
-        return null;
+        return (AbstractTRLevelEditor)Activator.CreateInstance
+        (
+            type.Type,
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
+            null,
+            new object[] { io, edition },
+            null
+        );
     }
 
     internal static bool EditionSupportsLevelEditing(TREdition edition)
+         =>  GetEditorType(edition) != null;
+
+    internal static EditorType GetEditorType(TREdition edition)
     {
-        return _typeMap.ContainsKey(edition.Version);
+        return GetEditorType(edition.Version, edition.Remastered);
     }
+
+    internal static EditorType GetEditorType(TRVersion version, bool remastered)
+    {
+        return _editorTypes.Find(t => t.Version == version && t.Remastered == remastered);
+    }
+}
+
+internal class EditorType
+{
+    public TRVersion Version { get; set; }
+    public bool Remastered { get; set; }
+    public Type Type { get; set; }
 }

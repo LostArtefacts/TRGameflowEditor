@@ -4,6 +4,19 @@ public static class TRScriptFactory
 {
     public static AbstractTRScriptEditor GetScriptEditor(TRScriptIOArgs ioArgs, TRScriptOpenOption openOption)
     {
+        if (ioArgs.TRScriptFile != null)
+        {
+            switch (ioArgs.TRScriptFile.Name)
+            {
+                case TRRScript.TR1PlaceholderName:
+                case TRRScript.TR2PlaceholderName:
+                case TRRScript.TR3PlaceholderName:
+                    return new TRRScriptEditor(ioArgs, openOption);
+                default:
+                    break;
+            }
+        }
+
         uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile?.FullName);
         return scriptVersion switch
         {
@@ -74,12 +87,18 @@ public static class TRScriptFactory
 
     public static AbstractTRScript OpenScript(string filePath)
     {
-        AbstractTRScript script = GetDatFileVersion(filePath) switch
+        AbstractTRScript script = filePath switch
         {
-            TR1ATIScript.Version => new TR1ATIScript(),
-            TR1Script.Version => new TR1Script(),
-            TR23Script.Version => new TR23Script(),
-            _ => throw new UnsupportedScriptException(),
+            TRRScript.TR1PlaceholderName => new TRRScript(TRVersion.TR1),
+            TRRScript.TR2PlaceholderName => new TRRScript(TRVersion.TR2),
+            TRRScript.TR3PlaceholderName => new TRRScript(TRVersion.TR3),
+            _ => GetDatFileVersion(filePath) switch
+            {
+                TR1ATIScript.Version => new TR1ATIScript(),
+                TR1Script.Version => new TR1Script(),
+                TR23Script.Version => new TR23Script(),
+                _ => throw new UnsupportedScriptException(),
+            },
         };
         script.Read(filePath);
         return script;

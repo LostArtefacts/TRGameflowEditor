@@ -4,6 +4,11 @@ internal static class TRScriptedLevelFactory
 {
     internal static AbstractTRLevelManager GetLevelManager(AbstractTRScript script)
     {
+        if (script.Edition.Remastered)
+        {
+            return new TRRLevelManager(script as TRRScript);
+        }
+
         switch (script.Edition.Version)
         {
             case TRVersion.TR1:

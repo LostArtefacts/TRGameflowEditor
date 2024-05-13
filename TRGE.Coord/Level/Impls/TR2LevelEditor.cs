@@ -1,16 +1,16 @@
 ﻿using Newtonsoft.Json;
+using TRDataControl;
 using TRGE.Coord.Properties;
 using TRGE.Core;
 using TRLevelControl;
 using TRLevelControl.Helpers;
 using TRLevelControl.Model;
-using TRModelTransporter.Transport;
 
 namespace TRGE.Coord;
 
 public class TR2LevelEditor : BaseTRLevelEditor
 {
-    private static readonly string _hshChecksum = "7c54e8752d4d49e7d3bcf72ffdc3e227"; // #75
+    private static readonly string _hshChecksum = "2241125203a4af81fc4889ed844d5b22"; // #75
     private static readonly string _flUKChecksum = "b8fc5d8444b15527cec447bc0387c41a"; // #83
     private static readonly string _flMPChecksum = "1e7d0d88ff9d569e22982af761bb006b"; // #83
 
@@ -26,6 +26,11 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     internal override bool ShouldHandleModification(TRScriptedLevelEventArgs e)
     {
+        if (_edition.Remastered)
+        {
+            return false;
+        }
+
         return e.Modification switch
         {
             TRScriptedLevelModification.SunsetChanged or TRScriptedLevelModification.StartingWeaponsAdded or TRScriptedLevelModification.StartingWeaponsRemoved or TRScriptedLevelModification.SkidooAdded or TRScriptedLevelModification.SkidooRemoved => true,
@@ -159,6 +164,11 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     protected virtual void CheckFloaterBackup()
     {
+        if (_edition.Remastered)
+        {
+            return;
+        }
+
         // #83 If the version swapping tool has been used after having already
         // backed-up the level files, TRGE will always used the file that was
         // originally backed-up. The swapper tool replaces floating.tr2, so
@@ -184,6 +194,11 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     protected virtual void CheckHSHBackup()
     {
+        if (_edition.Remastered)
+        {
+            return;
+        }
+
         // HSH is a special case as we need to make sure all weapons, ammo,
         // and relevant animations are available in the level in case it no
         // longer removes weapons, but at the moment this isn't possible
@@ -246,6 +261,11 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     protected override void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor)
     {
+        if (_edition.Remastered)
+        {
+            return;
+        }
+
         // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
         TR23ScriptEditor editor = scriptEditor as TR23ScriptEditor;
         if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
@@ -267,8 +287,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
     {
-        int pistolIndex = level.SpriteSequences.ToList().FindIndex(e => e.SpriteID == (short)TR2Type.Pistols_S_P);
-        if (pistolIndex == -1)
+        if (!level.Sprites.ContainsKey(TR2Type.Pistols_S_P))
         {
             SpriteDefinition.LoadWeaponsIntoLevel(level);
             return true;
@@ -304,7 +323,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
             {
                 room.LightMode = 3;
                 changesMade = true;
-                foreach (TR2RoomVertex vert in room.RoomData.Vertices)
+                foreach (TR2RoomVertex vert in room.Mesh.Vertices)
                 {
                     vert.Attributes |= 3;
                 }
@@ -383,12 +402,12 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
     private static void ImportModels(TR2Level level, string lvlName, List<TR2Type> entities)
     {
-        TR2ModelImporter importer = new()
+        TR2DataImporter importer = new()
         {
-            DataFolder = @"Resources\TR2\Models",
+            DataFolder = @"Resources\TR2\Objects",
             Level = level,
             LevelName = lvlName,
-            EntitiesToImport = entities
+            TypesToImport = entities
         };
 
         importer.Import();
