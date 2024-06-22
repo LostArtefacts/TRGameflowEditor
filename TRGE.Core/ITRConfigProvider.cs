@@ -3,5 +3,5 @@
 public interface ITRConfigProvider
 {
     object GetConfig();
-    void SetConfig(object config);
+    void SetConfig(object config, string configDirectory);
 }

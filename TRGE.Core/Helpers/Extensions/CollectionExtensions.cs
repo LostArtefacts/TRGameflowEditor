@@ -61,6 +61,28 @@ internal static class CollectionExtensions
         return resultSet;
     }
 
+    public static void Shuffle<T>(this List<T> list, Random rand, int count = 5)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            ShuffleImpl(list, rand);
+        }
+    }
+
+    private static void ShuffleImpl<T>(List<T> list, Random rand)
+    {
+        List<T> iterList = new(list);
+        list.Clear();
+
+        int count = iterList.Count;
+        while (list.Count < count)
+        {
+            T item = iterList[rand.Next(0, iterList.Count)];
+            list.Add(item);
+            iterList.Remove(item);
+        }
+    }
+
     internal static void Sort<T1, T2>(this Dictionary<T1, T2> dict, Comparison<T1> comp)
     {
         List<T1> keys = new(dict.Keys);

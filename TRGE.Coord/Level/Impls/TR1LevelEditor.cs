@@ -1,4 +1,5 @@
-﻿using TRGE.Core;
+﻿using TRGE.Coord.Properties;
+using TRGE.Core;
 using TRLevelControl;
 using TRLevelControl.Helpers;
 using TRLevelControl.Model;
@@ -13,6 +14,22 @@ public class TR1LevelEditor : BaseTRLevelEditor
         : base(io, edition)
     {
         _control = new();
+        MoveTitles();
+    }
+
+    private void MoveTitles()
+    {
+        string titleReg = Path.Combine(_io.BackupDirectory.FullName, "title.webp");
+        if (File.Exists(titleReg))
+        {
+            File.WriteAllBytes(titleReg, Resources.TR1XTitleRegular);
+        }
+
+        titleReg = Path.Combine(_io.BackupDirectory.FullName, "title_ub.webp");
+        if (File.Exists(titleReg))
+        {
+            File.WriteAllBytes(titleReg, Resources.TR1XTitleUB);
+        }
     }
 
     private TR1Level ReadLevel(string lvl)
@@ -29,22 +46,6 @@ public class TR1LevelEditor : BaseTRLevelEditor
     private void WriteLevel(TR1Level level, string lvl)
     {
         _control.Write(level, GetWriteLevelFilePath(lvl));
-    }
-
-    protected override void PreSaveImpl(AbstractTRScriptEditor scriptEditor)
-    {
-        if (!scriptEditor.Edition.IsCommunityPatch)
-        {
-            // Can't guarantee that the ATI levels will have been copied to WIP, so do that now
-            foreach (AbstractTRScriptedLevel level in scriptEditor.Levels)
-            {
-                IOExtensions.CopyFile(GetReadLevelFilePath(level.LevelFileBaseName), GetWriteLevelFilePath(level.LevelFileBaseName), true);
-                if (level.HasCutScene)
-                {
-                    IOExtensions.CopyFile(GetReadLevelFilePath(level.CutSceneLevel.LevelFileBaseName), GetWriteLevelFilePath(level.CutSceneLevel.LevelFileBaseName), true);
-                }
-            }
-        }
     }
 
     protected override void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor)

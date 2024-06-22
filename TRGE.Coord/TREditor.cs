@@ -126,7 +126,7 @@ public class TREditor
 
                 // Copy everything from WIP into the Output folder.
                 DirectoryInfo outputDirectory = new(_outputDirectory);
-                wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
+                wipDirectory.Copy(outputDirectory, true);
 
                 // Finally, copy everything to the target folder.
                 CopyOutputToTarget();
@@ -198,6 +198,35 @@ public class TREditor
         }
 
         List<AbstractTRScriptedLevel> levels = new(ScriptEditor.Levels);
+
+        if (_scriptEditor.Edition.Remastered && _scriptEditor.LevelSequencingOrganisation != Organisation.Default)
+        {
+            // No actual sequencing defined for the game, so rewrite the output levels
+            List<AbstractTRScriptedLevel> originalLevels = ScriptEditor.GetOriginalLevels();
+
+            foreach (AbstractTRScriptedLevel level in levels)
+            {
+                TRRScriptedLevel trrLevel = level as TRRScriptedLevel;
+                RenameOutputFile(Path.Combine(_outputDirectory, trrLevel.LevelFileBaseName), Path.Combine(_outputDirectory, trrLevel.Sequence + Path.GetExtension(trrLevel.LevelFileBaseName)));
+                RenameOutputFile(Path.Combine(_outputDirectory, trrLevel.MapFileBaseName), Path.Combine(_outputDirectory, level.Sequence + Path.GetExtension(trrLevel.MapFile)));
+                RenameOutputFile(Path.Combine(_outputDirectory, trrLevel.PdpFileBaseName), Path.Combine(_outputDirectory, level.Sequence + Path.GetExtension(trrLevel.PdpFile)));
+                RenameOutputFile(Path.Combine(_outputDirectory, trrLevel.TexFileBaseName), Path.Combine(_outputDirectory, level.Sequence + Path.GetExtension(trrLevel.TexFile)));
+                RenameOutputFile(Path.Combine(_outputDirectory, trrLevel.TrgFileBaseName), Path.Combine(_outputDirectory, level.Sequence + Path.GetExtension(trrLevel.TrgFileBaseName)));
+            }
+
+            foreach (AbstractTRScriptedLevel level in levels)
+            {
+                TRRScriptedLevel trrLevel = level as TRRScriptedLevel;
+                TRRScriptedLevel targetSequenceLevel = originalLevels.Find(l => l.Sequence == trrLevel.Sequence) as TRRScriptedLevel;
+                string outputLevel = Path.Combine(_outputDirectory, trrLevel.Sequence + Path.GetExtension(trrLevel.LevelFileBaseName));
+                RenameOutputFile(outputLevel, Path.Combine(_outputDirectory, targetSequenceLevel.LevelFileBaseName));
+                RenameOutputFile(Path.ChangeExtension(outputLevel, Path.GetExtension(trrLevel.MapFile)), Path.Combine(_outputDirectory, targetSequenceLevel.MapFileBaseName));
+                RenameOutputFile(Path.ChangeExtension(outputLevel, Path.GetExtension(trrLevel.PdpFile)), Path.Combine(_outputDirectory, targetSequenceLevel.PdpFileBaseName));
+                RenameOutputFile(Path.ChangeExtension(outputLevel, Path.GetExtension(trrLevel.TexFile)), Path.Combine(_outputDirectory, targetSequenceLevel.TexFileBaseName));
+                RenameOutputFile(Path.ChangeExtension(outputLevel, Path.GetExtension(trrLevel.TrgFile)), Path.Combine(_outputDirectory, targetSequenceLevel.TrgFileBaseName));
+            }
+        }
+
         if (ScriptEditor.Edition.AssaultCourseSupported)
         {
             levels.Add(ScriptEditor.AssaultLevel);
@@ -228,13 +257,30 @@ public class TREditor
         }
     }
 
+    private static void RenameOutputFile(string baseFile, string targetFile)
+    {
+        if (!File.Exists(baseFile))
+        {
+            return;
+        }
+
+        File.Move(baseFile, targetFile, true);
+    }
+
     private void CopyLevelToTarget(AbstractTRScriptedLevel level)
     {
-        string outputLevel = Path.Combine(_outputDirectory, level.LevelFileBaseName);
-        if (File.Exists(outputLevel))
+        List<string> files = level is TRRScriptedLevel trrLevel 
+            ? trrLevel.AllFiles
+            : new() { level.LevelFile };
+
+        foreach (string file in files)
         {
-            string targetFile = Path.GetFullPath(Path.Combine(_targetDirectory, @"..\", level.LevelFile));
-            IOExtensions.CopyFile(outputLevel, targetFile, true);
+            string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(file));
+            if (File.Exists(outputFile))
+            {
+                string targetFile = Path.GetFullPath(Path.Combine(_targetDirectory, @"..\", file));
+                IOExtensions.CopyFile(outputFile, targetFile, true);
+            }
         }
     }
 

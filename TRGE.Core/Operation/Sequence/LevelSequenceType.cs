@@ -29,4 +29,5 @@ public enum LevelSequenceType
     Mesh_Swap,
     Fix_Pyramid_Secret,
     Setup_Bacon_Lara,
+    Loading_Screen,
 }

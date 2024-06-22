@@ -79,4 +79,22 @@ internal class Resources {
             return ((byte[])(obj));
         }
     }
+
+    internal static byte[] TR1XTitleRegular
+    {
+        get
+        {
+            object obj = ResourceManager.GetObject("titleh", resourceCulture);
+            return ((byte[])(obj));
+        }
+    }
+
+    internal static byte[] TR1XTitleUB
+    {
+        get
+        {
+            object obj = ResourceManager.GetObject("titleh_ub", resourceCulture);
+            return ((byte[])(obj));
+        }
+    }
 }

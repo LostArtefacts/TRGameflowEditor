@@ -1,6 +1,4 @@
-﻿using TRFDControl;
-using TRFDControl.Utilities;
-using TRGE.Core;
+﻿using TRGE.Core;
 using TRLevelControl;
 using TRLevelControl.Helpers;
 using TRLevelControl.Model;
@@ -35,6 +33,11 @@ public class TR3LevelEditor : BaseTRLevelEditor
 
     internal override bool ShouldHandleModification(TRScriptedLevelEventArgs e)
     {
+        if (_edition.Remastered)
+        {
+            return false;
+        }
+
         return e.Modification switch
         {
             TRScriptedLevelModification.SequenceChanged => true,
@@ -57,6 +60,11 @@ public class TR3LevelEditor : BaseTRLevelEditor
 
     protected override void InitialiseUnarmedRNG(AbstractTRScriptEditor scriptEditor)
     {
+        if (_edition.Remastered)
+        {
+            return;
+        }
+
         // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
         TR23ScriptEditor editor = scriptEditor as TR23ScriptEditor;
         if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
@@ -133,15 +141,10 @@ public class TR3LevelEditor : BaseTRLevelEditor
         List<TR3Entity> fishies = level.Entities.FindAll(e => e.TypeID == TR3Type.Fish || e.TypeID == TR3Type.Piranhas_N);
         if (fishies.Count > 0)
         {
-            FDControl control = new();
-            control.ParseFromLevel(level);
-
             foreach (TR3Entity fish in fishies)
             {
-                FDUtilities.RemoveEntityTriggers(level, level.Entities.IndexOf(fish), control);
+                level.FloorData.RemoveEntityTriggers(level.Entities.IndexOf(fish));
             }
-
-            control.WriteToLevel(level);
         }
 
         WriteLevel(level, args.LevelFileBaseName);

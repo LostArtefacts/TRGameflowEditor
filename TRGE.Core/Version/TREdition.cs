@@ -2,7 +2,7 @@
 
 public class TREdition : ICloneable
 {
-    internal static readonly TREdition GenericPC = new()
+    public static readonly TREdition GenericPC = new()
     {
         Title = "Unknown (PC)",
         Version = TRVersion.Unknown,
@@ -17,7 +17,7 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    internal static readonly TREdition GenericPSX = new()
+    public static readonly TREdition GenericPSX = new()
     {
         Title = "Unknown (PSX)",
         Version = TRVersion.Unknown,
@@ -32,7 +32,7 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    internal static readonly TREdition TR1PC = new()
+    public static readonly TREdition TR1PC = new()
     {
         Title = "Tomb Raider I (TR1X)",
         Version = TRVersion.TR1,
@@ -51,9 +51,25 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    internal static readonly TREdition TR2PC = new()
+    public static readonly TREdition TR1RM = new()
     {
-        Title = "Tomb Raider II (PC)",
+        Title = "Tomb Raider I Remastered",
+        Version = TRVersion.TR1,
+        Hardware = Hardware.PC,
+        Remastered = true,
+        LevelCompleteOffset = 0,
+        SecretBonusesSupported = false,
+        SunsetsSupported = false,
+        SecretSoundSupported = false,
+        AssaultCourseSupported = true,
+        UnarmedLevelCount = 1,
+        AmmolessLevelCount = 0,
+        SunsetLevelCount = 0
+    };
+
+    public static readonly TREdition TR2PC = new()
+    {
+        Title = "Tomb Raider II (Classic)",
         Version = TRVersion.TR2,
         ScriptName = "TOMBPC.dat",
         Hardware = Hardware.PC,
@@ -67,7 +83,23 @@ public class TREdition : ICloneable
         SunsetLevelCount = 1
     };
 
-    internal static readonly TREdition TR2PSX = new()
+    public static readonly TREdition TR2RM = new()
+    {
+        Title = "Tomb Raider II Remastered",
+        Version = TRVersion.TR2,
+        Hardware = Hardware.PC,
+        Remastered = true,
+        LevelCompleteOffset = 0,
+        SecretBonusesSupported = false,
+        SunsetsSupported = false,
+        SecretSoundSupported = false,
+        AssaultCourseSupported = true,
+        UnarmedLevelCount = 2,
+        AmmolessLevelCount = 1,
+        SunsetLevelCount = 0
+    };
+
+    public static readonly TREdition TR2PSX = new()
     {
         Title = "Tomb Raider II (PSX)",
         Version = TRVersion.TR2,
@@ -83,7 +115,7 @@ public class TREdition : ICloneable
         SunsetLevelCount = 1
     };
 
-    internal static readonly TREdition TR2PSXBeta = new()
+    public static readonly TREdition TR2PSXBeta = new()
     {
         Title = "Tomb Raider II (PSX BETA)",
         Version = TRVersion.TR2,
@@ -99,7 +131,7 @@ public class TREdition : ICloneable
         SunsetLevelCount = 1
     };
 
-    internal static readonly TREdition TR2G = new()
+    public static readonly TREdition TR2G = new()
     {
         Title = "Tomb Raider II Gold",
         Version = TRVersion.TR2G,
@@ -115,9 +147,9 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    internal static readonly TREdition TR3PC = new()
+    public static readonly TREdition TR3PC = new()
     {
-        Title = "Tomb Raider III (PC)",
+        Title = "Tomb Raider III (Classic)",
         Version = TRVersion.TR3,
         ScriptName = "TOMBPC.dat",
         Hardware = Hardware.PC,
@@ -131,7 +163,23 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    internal static readonly TREdition TR3PSX = new()
+    public static readonly TREdition TR3RM = new()
+    {
+        Title = "Tomb Raider III Remastered",
+        Version = TRVersion.TR3,
+        Hardware = Hardware.PC,
+        Remastered = true,
+        LevelCompleteOffset = 1,
+        SecretBonusesSupported = false,
+        SunsetsSupported = false,
+        SecretSoundSupported = false,
+        AssaultCourseSupported = true,
+        UnarmedLevelCount = 1,
+        AmmolessLevelCount = 1,
+        SunsetLevelCount = 0
+    };
+
+    public static readonly TREdition TR3PSX = new()
     {
         Title = "Tomb Raider III (PSX)",
         Version = TRVersion.TR3,
@@ -147,7 +195,7 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    internal static readonly TREdition TR3G = new()
+    public static readonly TREdition TR3G = new()
     {
         Title = "Tomb Raider III Gold",
         Version = TRVersion.TR3G,
@@ -163,18 +211,19 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    internal static readonly IReadOnlyList<TREdition> All = new List<TREdition>
+    public static readonly IReadOnlyList<TREdition> All = new List<TREdition>
     {
-        TR1PC, TR2PC, TR2G, TR2PSXBeta, TR2PSX, TR3PC, TR3G, TR3PSX
+        TR1PC, TR1RM, TR2PC, TR2RM, TR2G, TR2PSXBeta, TR2PSX, TR3PC, TR3RM, TR3G, TR3PSX
     };
 
-    internal static TREdition From(Hardware hardware, TRVersion version)
+    public static TREdition From(Hardware hardware, TRVersion version, bool remastered)
     {
-        return All.FirstOrDefault(e => e.Hardware == hardware && e.Version == version);
+        return All.FirstOrDefault(e => e.Hardware == hardware && e.Version == version && e.Remastered == remastered);
     }
 
     public string Title { get; internal set; }
     public TRVersion Version { get; internal set; }
+    public bool Remastered { get; internal set; }
     public string ScriptName { get; set; }
     public string GoldScriptName { get; set; }
     public bool HasScript => ScriptName != null;
@@ -238,7 +287,8 @@ public class TREdition : ICloneable
         return new Dictionary<string, object>
         {
             { "Hardware", (int)Hardware },
-            { "Version", (int)Version }
+            { "Version", (int)Version },
+            { "Remastered", Remastered }
         };
     }
 

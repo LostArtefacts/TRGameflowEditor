@@ -7,6 +7,11 @@ public static class TRPatchTester
 {
     public static void Test(TREdition edition, TRScriptIOArgs ioArgs)
     {
+        if (edition.Remastered)
+        {
+            return;
+        }
+
         switch (edition.Version)
         {
             case TRVersion.TR1:
@@ -72,7 +77,7 @@ public static class TRPatchTester
 
             int[] parts = new int[] { 0, 0, 0 };
             string[] productParts = version.Split('.');
-            for (int i = 0; i < productParts.Length; i++)
+            for (int i = 0; i < parts.Length && i < productParts.Length; i++)
             {
                 int j = 0;
                 string part = string.Empty;

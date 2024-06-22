@@ -24,14 +24,11 @@
     <Reference Include="RectanglePacker">
       <HintPath>..\Dependencies\RectanglePacker.dll</HintPath>
     </Reference>
-    <Reference Include="TRFDControl">
-      <HintPath>..\Dependencies\TRFDControl.dll</HintPath>
+    <Reference Include="TRDataControl">
+      <HintPath>..\Dependencies\TRDataControl.dll</HintPath>
     </Reference>
     <Reference Include="TRLevelControl">
       <HintPath>..\Dependencies\TRLevelControl.dll</HintPath>
-    </Reference>
-    <Reference Include="TRModelTransporter">
-      <HintPath>..\Dependencies\TRModelTransporter.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
