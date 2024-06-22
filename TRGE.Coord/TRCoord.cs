@@ -29,10 +29,10 @@ public class TRCoord
     private TRCoord()
     {
         RootConfigDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
+        
         Dictionary<string, object> config = LoadConfig();
         _trioCoord = new TRIOCoord();
-        _trioCoord.SetConfig(config == null ? null : (config.ContainsKey("History") ? config["History"] : null));
+        _trioCoord.SetConfig(config == null ? null : (config.ContainsKey("History") ? config["History"] : null), Path.Combine(_rootConfigDirectory, _configDirectoryName));
 
         _trioCoord.HistoryAdded += TRHistoryAdded;
         _trioCoord.HistoryChanged += TRHistoryChanged;
@@ -78,7 +78,7 @@ public class TRCoord
     {
         Dictionary<string, object> config = new()
         {
-            ["History"] = _trioCoord.GetConfig()
+            ["History"] = _trioCoord.GetConfig(),
         };
 
         File.WriteAllText(ConfigFilePath, JsonConvert.SerializeObject(config, Formatting.Indented));

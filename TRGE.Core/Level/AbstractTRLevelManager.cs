@@ -341,7 +341,7 @@ public abstract class AbstractTRLevelManager
         }
     }
 
-    internal void RandomiseGameTracks(List<AbstractTRScriptedLevel> originalLevels)
+    internal virtual void RandomiseGameTracks(TRScriptIOArgs io, List<AbstractTRScriptedLevel> originalLevels)
     {
         IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
         Random rand = GameTrackRNG.Create();

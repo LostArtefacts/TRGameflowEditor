@@ -88,6 +88,11 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
             Script.ReadConfig(BackupTRConfigFile);
         }
 
+        if (script is TRRScript trrScript)
+        {
+            trrScript.ReadStrings(_io.BackupDirectory.FullName);
+        }
+
         TRPatchTester.Test(Edition, _io);
 
         LevelManager = TRScriptedLevelFactory.GetLevelManager(script);
@@ -359,7 +364,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         {
             if (TRInterop.RandomisationSupported)
             {
-                LevelManager.RandomiseGameTracks(backupLevelManager.Levels);
+                LevelManager.RandomiseGameTracks(_io, backupLevelManager.Levels);
             }
             else
             {
@@ -504,7 +509,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
 
     internal override void Restore()
     {
-        if (OriginalFile != null)
+        if (OriginalFile != null && !TRRScript.IsTRRScriptPath(OriginalFile.FullName))
         {
             BackupFile.CopyTo(OriginalFile.FullName, true);
         }
@@ -674,7 +679,7 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
 
     internal void RandomiseGameTracks()
     {
-        LevelManager.RandomiseGameTracks(LoadBackupScript().Levels);
+        LevelManager.RandomiseGameTracks(_io, LoadBackupScript().Levels);
     }
 
     public Organisation LevelSecretSupportOrganisation

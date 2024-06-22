@@ -1,4 +1,6 @@
-﻿namespace TRGE.Core;
+﻿using System.Reflection.Emit;
+
+namespace TRGE.Core;
 
 public class TRRScriptedLevel : AbstractTRScriptedLevel
 {
@@ -97,6 +99,15 @@ public class TRRScriptedLevel : AbstractTRScriptedLevel
     public TRRScriptedLevel(TRVersion version)
     {
         Version = version;
+        for (int i = 0; i < 4; i++)
+        {
+            Keys.Add(null);
+            Puzzles.Add(null);
+            if (i < 2)
+            {
+                Pickups.Add(null);
+            }
+        }
     }
 
     private ushort _sequence;
@@ -164,6 +175,7 @@ public class TRRScriptedLevel : AbstractTRScriptedLevel
     public override bool HasSecrets { get; set; }
     public override bool KillToComplete { get; set; }
     public override bool IsFinalLevel { get; set; }
+    public bool IsCutscene { get; set; }
 
     public override ushort NumSecrets
     {

@@ -1,4 +1,6 @@
-﻿namespace TRGE.Core;
+﻿using System.Diagnostics;
+
+namespace TRGE.Core;
 
 internal class TRRLevelManager : AbstractTRLevelManager
 {
@@ -46,25 +48,104 @@ internal class TRRLevelManager : AbstractTRLevelManager
 
     internal override void UpdateScript() { }
 
+    //private static readonly Dictionary<TRVersion, List<int>> _fixedSequences = new()
+    //{
+    //    //[TRVersion.TR1] = new() { 8, 13 },
+    //    //[TRVersion.TR2] = new() { 5, 8, 12, 16, 18 },
+    //    //[TRVersion.TR3] = new() { 9, 14, 20 },
+    //};
+
     internal override void RandomiseSequencing(List<AbstractTRScriptedLevel> originalLevels)
     {
-        List<AbstractTRScriptedLevel> shuffledLevels = new(originalLevels);
-        shuffledLevels.Randomise(SequencingRNG.Create());
+        // Not reliable
+        //List<AbstractTRScriptedLevel> shuffledLevels = new(originalLevels);
+        //shuffledLevels.Randomise(SequencingRNG.Create());
 
-        if (_script.Edition.Remastered && _script.Edition.Version == TRVersion.TR1)
+        //if (_script.Edition.Remastered && _fixedSequences.ContainsKey(_script.Edition.Version))
+        //{
+        //    List<int> fixedSequences = _fixedSequences[_script.Edition.Version];
+        //    foreach (int sequence in fixedSequences)
+        //    {
+        //        int index = shuffledLevels.FindIndex(l => l.OriginalSequence == sequence);
+        //        (shuffledLevels[index], shuffledLevels[sequence - 1]) = (shuffledLevels[sequence - 1], shuffledLevels[index]);
+        //    }
+        //}
+
+        //List<AbstractTRScriptedLevel> newLevels = new();
+        //foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
+        //{
+        //    AbstractTRScriptedLevel level = GetLevel(shfLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
+        //    newLevels.Add(level);
+        //}
+
+        //Levels = newLevels;
+        //SetLevelSequencing();
+    }
+
+    internal override void RandomiseGameTracks(TRScriptIOArgs io, List<AbstractTRScriptedLevel> originalLevels)
+    {
+        IReadOnlyDictionary<TRAudioCategory, List<TRAudioTrack>> tracks = AudioProvider.GetCategorisedTracks();
+        Random rand = GameTrackRNG.Create();
+
+        HashSet<TRAudioTrack> exclusions = new()
         {
-            int cisternIndex = shuffledLevels.FindIndex(l => l.Is("LEVEL7A.PHD"));
-            (shuffledLevels[cisternIndex], shuffledLevels[7]) = (shuffledLevels[7], shuffledLevels[cisternIndex]);
+            AudioProvider.GetBlankTrack()
+        };
+
+        if (tracks[TRAudioCategory.Title].Count > 0)
+        {
+            List<TRAudioTrack> titleTracks = new(tracks[TRAudioCategory.Title]);
+            if (Edition.Version == TRVersion.TR3)
+            {
+                titleTracks.Add(new()
+                {
+                    ID = 123,
+                });
+            }
+            ushort currentTrack = (_script.FrontEnd as TRRFrontEnd).TrackID;
+            ushort titleSound;
+            do
+            {
+                titleSound = titleTracks.RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
+            }
+            while (titleSound == currentTrack);
+
+            currentTrack -= _script.TrackOffset;
+            titleSound -= _script.TrackOffset;
+
+            string originalFile = Path.Combine(io.WIPOutputDirectory.FullName, currentTrack + ".OGG");
+            string newFile = Path.Combine(io.WIPOutputDirectory.FullName, titleSound + ".OGG");
+            if (File.Exists(originalFile) && File.Exists(newFile))
+            {
+                File.Copy(newFile, originalFile, true);
+            }
         }
 
-        List<AbstractTRScriptedLevel> newLevels = new();
-        foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
+        List<ushort> ambientTracks = originalLevels.Select(l => l.TrackID).Distinct().ToList();
+        ambientTracks.RemoveAll(t => t == 0 || t == ushort.MaxValue || !File.Exists(Path.Combine(io.BackupDirectory.FullName, (t - _script.TrackOffset) + ".OGG")));
+        if (ambientTracks.Count == 0)
         {
-            AbstractTRScriptedLevel level = GetLevel(shfLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
-            newLevels.Add(level);
+            return;
         }
 
-        Levels = newLevels;
-        SetLevelSequencing();
+        List<ushort> mixedTracks = new(ambientTracks);
+        do
+        {
+            mixedTracks.Shuffle(rand);
+        }
+        while (mixedTracks.Any(t => ambientTracks.IndexOf(t) == mixedTracks.IndexOf(t)));
+
+        for (int i = 0; i < mixedTracks.Count; i++)
+        {
+            int trackID = ambientTracks[i] - _script.TrackOffset;
+            int nextID = mixedTracks[i] - _script.TrackOffset;
+
+            string backupFile = Path.Combine(io.BackupDirectory.FullName, nextID + ".OGG");
+            string targetFile = Path.Combine(io.WIPOutputDirectory.FullName, trackID + ".OGG");
+            if (File.Exists(backupFile))
+            {
+                File.WriteAllBytes(targetFile, File.ReadAllBytes(backupFile));
+            }
+        }
     }
 }

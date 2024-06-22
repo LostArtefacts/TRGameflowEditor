@@ -54,12 +54,18 @@ public abstract class AbstractTRScript
 
     public void Write(string filePath)
     {
-        if (filePath == null || TRRScript.IsTRRScriptPath(filePath))
+        if (filePath == null)
         {
             return;
         }
 
         Stamp();
+        if (TRRScript.IsTRRScriptPath(filePath))
+        {
+            (this as TRRScript).WriteStrings(Path.GetDirectoryName(filePath));
+            return;
+        }
+
         string ext = Path.GetExtension(filePath).ToUpper();
         switch (ext)
         {
@@ -128,6 +134,10 @@ public abstract class AbstractTRScript
         }
 
         string stamp = TRInterop.ScriptModificationStamp.Encode(TRLanguage);
+        if (this is TRRScript)
+        {
+            stamp = stamp.Replace("Modified by ", string.Empty);
+        }
         if (stamp.Length > 0 && !stamp.Trim().StartsWith("-"))
         {
             stamp = " - " + stamp;

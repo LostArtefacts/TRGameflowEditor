@@ -126,7 +126,7 @@ public class TREditor
 
                 // Copy everything from WIP into the Output folder.
                 DirectoryInfo outputDirectory = new(_outputDirectory);
-                wipDirectory.Copy(outputDirectory, true, TargetFileExtensions);
+                wipDirectory.Copy(outputDirectory, true);
 
                 // Finally, copy everything to the target folder.
                 CopyOutputToTarget();

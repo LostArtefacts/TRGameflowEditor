@@ -145,14 +145,35 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
 
         void StoreLevel(AbstractTRScriptedLevel level)
         {
-            string backup = Path.Combine(_io.BackupDirectory.FullName, level.LevelFileBaseName);
-            string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.LevelFile)); // Supports restoring to folders outside data
-            files[backup] = restore;
-            if (level.HasCutScene)
+            if (level is TRRScriptedLevel remasteredLevel)
             {
-                string cutBackup = Path.Combine(_io.BackupDirectory.FullName, level.CutSceneLevel.LevelFileBaseName);
-                string cutRestore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.CutSceneLevel.LevelFile));
-                files[cutBackup] = cutRestore;
+                foreach (string file in remasteredLevel.AllFiles)
+                {
+                    string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(file));
+                    string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", file));
+                    files[backup] = restore;
+                }
+                if (level.HasCutScene)
+                {
+                    foreach (string file in (remasteredLevel.CutSceneLevel as TRRScriptedLevel).AllFiles)
+                    {
+                        string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(file));
+                        string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", file));
+                        files[backup] = restore;
+                    }
+                }
+            }
+            else
+            {
+                string backup = Path.Combine(_io.BackupDirectory.FullName, level.LevelFileBaseName);
+                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.LevelFile)); // Supports restoring to folders outside data
+                files[backup] = restore;
+                if (level.HasCutScene)
+                {
+                    string cutBackup = Path.Combine(_io.BackupDirectory.FullName, level.CutSceneLevel.LevelFileBaseName);
+                    string cutRestore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.CutSceneLevel.LevelFile));
+                    files[cutBackup] = cutRestore;
+                }
             }
         }
 
@@ -164,6 +185,13 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
         if (_scriptEditor.GoldEditor != null)
         {
             foreach (AbstractTRScriptedLevel level in _scriptEditor.GoldEditor.Levels)
+            {
+                StoreLevel(level);
+            }
+        }
+        else if (_scriptEditor.Script is TRRScript trrscript)
+        {
+            foreach (AbstractTRScriptedLevel level in trrscript.GoldLevels)
             {
                 StoreLevel(level);
             }

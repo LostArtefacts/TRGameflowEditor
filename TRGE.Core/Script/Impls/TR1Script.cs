@@ -249,6 +249,11 @@ public class TR1Script : AbstractTRScript
                         PicturePath = ReadString("PicturePath", sequenceData),
                         DisplayTime = ReadDouble("DisplayTime", sequenceData)
                     },
+                    LevelSequenceType.Loading_Screen => new LoadingScreenSequence
+                    {
+                        PicturePath = ReadString("PicturePath", sequenceData),
+                        DisplayTime = ReadDouble("DisplayTime", sequenceData)
+                    },
                     LevelSequenceType.Total_Stats => new TotalStatsLevelSequence
                     {
                         PicturePath = ReadString("PicturePath", sequenceData)

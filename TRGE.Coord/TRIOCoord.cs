@@ -2,7 +2,6 @@
 using TRGE.Coord.Helpers;
 using TRGE.Core;
 using TRLevelControl.Helpers;
-using TRLevelControl.Model;
 
 namespace TRGE.Coord;
 
@@ -16,7 +15,7 @@ internal class TRIOCoord : ITRConfigProvider
     /// <summary>
     /// The main folder name in the application settings folder that houses all edit information.
     /// </summary>
-    protected const string _editDirectoryName = "Edits";
+    protected const string _editDirectoryName = "Editors";
     /// <summary>
     /// The folder name under a specific edit folder where backups are stored.
     /// </summary>
@@ -236,10 +235,6 @@ internal class TRIOCoord : ITRConfigProvider
                         {
                             filesToBackup.AddRange((remasteredLevel.CutSceneLevel as TRRScriptedLevel).AllFiles.Select(f => GetOriginalFilePath(f)));
                         }
-                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.MapFile));
-                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.PdpFile));
-                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.TexFile));
-                        //filesToBackup.Add(GetOriginalFilePath(remasteredLevel.TrgFile));
                     }
                     else
                     {
@@ -255,11 +250,15 @@ internal class TRIOCoord : ITRConfigProvider
             // Open the original script and determine which files we need to copy. Merge the level files
             // with the original paths as some may not be in the current directory (e.g. TR3 cutscene files).
             backupLevels(script.Levels);
+            if (script is TRRScript trrscript)
+            {
+                backupLevels(trrscript.GoldLevels);
+            }
 
             AbstractTRScriptedLevel assaultLevel = script.AssaultLevel;
             if (assaultLevel != null)
             {
-                filesToBackup.Add(GetOriginalFilePath(assaultLevel.LevelFile));
+                backupLevels(new() { assaultLevel });
             }
 
             AbstractTRScript goldScript = null;
@@ -305,6 +304,8 @@ internal class TRIOCoord : ITRConfigProvider
                 filesToBackup.AddRange(goldScript.GetAdditionalBackupFiles()
                     .Select(f => GetOriginalFilePath(f)));
             }
+
+            TestTRRCommon(filesToBackup, script);
 
             _backupArgs.ProgressTarget += filesToBackup.Count * 2;
             FireBackupProgressChanged();
@@ -353,6 +354,23 @@ internal class TRIOCoord : ITRConfigProvider
 
         _scriptConfigFile = Path.Combine(_editDirectory, _scriptConfigFileName);
         _directoryConfigFile = Path.Combine(_editDirectory, _dirConfigFileName);
+    }
+
+    private void TestTRRCommon(List<string> backupFiles, AbstractTRScript script)
+    {
+        if (script is not TRRScript
+            || backupFiles.Find(f => Path.GetFileName(f).ToUpper() == "COMMON.TXT") is not string commonFile)
+        {
+            return;
+        }
+
+        string commonFolder = Path.GetFullPath(Path.Combine(_editDirectory, @"..\TRR"));
+        Directory.CreateDirectory(commonFolder);
+        string commonBackupFile = Path.Combine(commonFolder, Path.GetFileName(commonFile));
+        IOExtensions.CopyFile(commonFile, commonBackupFile, false);
+
+        backupFiles.Remove(commonFile);
+        backupFiles.Add(commonBackupFile);
     }
 
     private string GetOriginalFilePath(string fileName)
@@ -408,6 +426,10 @@ internal class TRIOCoord : ITRConfigProvider
                 }
             }
         }
+        else if (scriptEditor.Script is TRRScript trrscript)
+        {
+            expectedFiles.AddRange(trrscript.GoldLevels.Select(l => l.LevelFileBaseName));
+        }
 
         expectedFiles.AddRange(scriptEditor.Script.GetAdditionalBackupFiles()
                 .Select(f => Path.GetFileName(f)));
@@ -425,14 +447,10 @@ internal class TRIOCoord : ITRConfigProvider
     internal string GetEditDirectory()
     {
         DirectoryInfo topLevelEditDirectory = Directory.CreateDirectory(Path.Combine(TRCoord.Instance.ConfigDirectory, _editDirectoryName));
-        // This is ugly, but allows TR1ATI to be later opened as Tomb1Main
-        string hashBase = _orignalScriptFile ?? Path.GetFullPath(Path.Combine(_originalDirectory, TREdition.TR1PC.ScriptName));
-
-        string editDirectory = Path.Combine(topLevelEditDirectory.FullName, HashingExtensions.CreateMD5(hashBase));
-        if (Directory.Exists(editDirectory))
+        string hashBase = Path.GetFullPath(_originalDirectory);
+        if (_orignalScriptFile != null)
         {
-            // Legacy - case-sensitive path
-            return editDirectory;
+            hashBase += $@"\{_orignalScriptFile}";
         }
 
         return topLevelEditDirectory.CreateSubdirectory(HashingExtensions.CreateMD5(hashBase.ToUpper())).FullName;
@@ -522,13 +540,24 @@ internal class TRIOCoord : ITRConfigProvider
         {
             Directory.Delete(backupDirectory, true);
         }
+
+        if (_orignalScriptFile == TRRScript.TR1PlaceholderName
+            || _orignalScriptFile == TRRScript.TR2PlaceholderName
+            || _orignalScriptFile == TRRScript.TR3PlaceholderName)
+        {
+            string commonFolder = Path.GetFullPath(Path.Combine(_editDirectory, @"..\TRR"));
+            if (Directory.Exists(commonFolder))
+            {
+                Directory.Delete(commonFolder, true);
+            }
+        }
     }
     #endregion
 
     #region ITRConfigProvider
-    public void SetConfig(object config)
+    public void SetConfig(object config, string configDirectory)
     {
-        if (config == null)
+        if (config == null || !Directory.Exists(Path.Combine(configDirectory, _editDirectoryName)))
         {
             _history.Clear();
         }
