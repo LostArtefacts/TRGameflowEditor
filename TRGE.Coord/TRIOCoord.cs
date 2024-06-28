@@ -552,6 +552,38 @@ internal class TRIOCoord : ITRConfigProvider
             }
         }
     }
+
+    internal void CheckBackupIntegrity()
+    {
+        if (TRInterop.ChecksumTester == null)
+        {
+            return;
+        }
+
+        List<string> failures = new();
+        List<string> exts = new() { ".PHD", ".TR2", ".TR4", ".TRC" };
+        foreach (string backupFile in Directory.GetFiles(GetBackupDirectory()))
+        {
+            if (!exts.Contains(Path.GetExtension(backupFile).ToUpper()))
+            {
+                continue;
+            }
+            if (!TRInterop.ChecksumTester.Test(backupFile))
+            {
+                failures.Add(Path.GetFileName(backupFile));
+            }
+        }
+
+        if (failures.Count == 0)
+        {
+            return;
+        }
+
+        throw new ChecksumMismatchException
+        {
+            FailedFiles = failures,
+        };
+    }
     #endregion
 
     #region ITRConfigProvider

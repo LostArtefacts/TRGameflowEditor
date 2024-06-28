@@ -49,6 +49,13 @@ public static class TRScriptFactory
                 string scriptDir = Path.GetDirectoryName(script);
                 string scriptName = Path.GetFileName(script);
                 string match = Array.Find(Directory.GetFiles(scriptDir), f => string.Compare(Path.GetFileName(f), scriptName, true) == 0);
+
+                // Additional check for TRR in case the player has copied an old script file into the remastered folder. Also ugly.
+                if (File.Exists(Path.Combine(dir, "TITLE.PDP")))
+                {
+                    continue;
+                }
+
                 return new FileInfo(match);
             }
         }
