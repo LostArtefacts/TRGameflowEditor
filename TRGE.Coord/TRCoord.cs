@@ -148,4 +148,9 @@ public class TRCoord
     {
         _trioCoord.ClearBackup();
     }
+
+    public void CheckBackupIntegrity()
+    {
+        _trioCoord.CheckBackupIntegrity();
+    }
 }

@@ -2,6 +2,8 @@
 
 public class ChecksumMismatchException : Exception
 {
+    public List<string> FailedFiles { get; set; } = new();
+
     public ChecksumMismatchException()
         : base() { }
 
