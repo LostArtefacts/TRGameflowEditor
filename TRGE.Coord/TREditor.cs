@@ -255,6 +255,13 @@ public class TREditor
             string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(additionalFile));
             IOExtensions.CopyFile(outputFile, new DirectoryInfo(targetFolder), true);
         }
+
+        if (_scriptEditor.Edition.Remastered && _scriptEditor.LevelSequencingOrganisation != Organisation.Default)
+        {
+            // Add some map data for any external programs
+            List<TRRSequence> sequences = GenerateTRRSequenceOutput();
+            File.WriteAllText(Path.Combine(_targetDirectory, "trge.json"), JsonConvert.SerializeObject(sequences));
+        }
     }
 
     private static void RenameOutputFile(string baseFile, string targetFile)
@@ -386,5 +393,27 @@ public class TREditor
 
         ScriptEditor = null;
         LevelEditor = null;
+    }
+
+    private List<TRRSequence> GenerateTRRSequenceOutput()
+    {
+        List<AbstractTRScriptedLevel> levels = new(ScriptEditor.Levels);
+        return new(levels.Select(l => new TRRSequence
+        {
+            Index = l.Sequence,
+            Name = l.Name,
+            Ammoless = l.RemovesAmmo,
+            Unarmed = l.RemovesWeapons,
+            HasCutScene = levels.Find(lvl => lvl.OriginalSequence == l.Sequence).HasCutScene,
+        }));
+    }
+
+    private class TRRSequence
+    {
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public bool Unarmed { get; set; }
+        public bool Ammoless { get; set; }
+        public bool HasCutScene { get; set; }
     }
 }
