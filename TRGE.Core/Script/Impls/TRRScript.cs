@@ -158,7 +158,17 @@ public class TRRScript : AbstractTRScript
     {
         IEnumerable<string> lines = CommonStrings.Select(kvp => kvp.Key + "=" + kvp.Value);
         File.WriteAllLines(Path.Combine(path, "COMMON.TXT"), lines);
-        lines = GameStrings.Select(kvp => kvp.Key + "=" + kvp.Value);
+
+        Dictionary<string, string> gameStringCopy = GameStrings.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        foreach (AbstractTRScriptedLevel level in _levels)
+        {
+            string baseName = _levels.Find(l => l.OriginalSequence == level.Sequence).LevelFileBaseName.ToUpper();
+            string targetName = level.LevelFileBaseName.ToUpper();
+            gameStringCopy["LVL_" + Path.GetFileNameWithoutExtension(baseName)]
+                = GameStrings["LVL_" + Path.GetFileNameWithoutExtension(targetName)];
+        }
+
+        lines = gameStringCopy.Select(kvp => kvp.Key + "=" + kvp.Value);
         File.WriteAllLines(Path.Combine(path, "STRINGS.TXT"), lines);
     }
 

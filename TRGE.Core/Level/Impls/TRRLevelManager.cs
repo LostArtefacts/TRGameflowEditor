@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using Newtonsoft.Json;
 
 namespace TRGE.Core;
 
@@ -48,38 +48,39 @@ internal class TRRLevelManager : AbstractTRLevelManager
 
     internal override void UpdateScript() { }
 
-    //private static readonly Dictionary<TRVersion, List<int>> _fixedSequences = new()
-    //{
-    //    //[TRVersion.TR1] = new() { 8, 13 },
-    //    //[TRVersion.TR2] = new() { 5, 8, 12, 16, 18 },
-    //    //[TRVersion.TR3] = new() { 9, 14, 20 },
-    //};
-
     internal override void RandomiseSequencing(List<AbstractTRScriptedLevel> originalLevels)
     {
-        // Not reliable
-        //List<AbstractTRScriptedLevel> shuffledLevels = new(originalLevels);
-        //shuffledLevels.Randomise(SequencingRNG.Create());
+        string path = $@"Resources\{_script.Edition.Version}\Restrictions\trr_sequencing.json";
+        if (_script.Edition.Version == TRVersion.TR3 || !File.Exists(path))
+        {
+            return;
+        }
 
-        //if (_script.Edition.Remastered && _fixedSequences.ContainsKey(_script.Edition.Version))
-        //{
-        //    List<int> fixedSequences = _fixedSequences[_script.Edition.Version];
-        //    foreach (int sequence in fixedSequences)
-        //    {
-        //        int index = shuffledLevels.FindIndex(l => l.OriginalSequence == sequence);
-        //        (shuffledLevels[index], shuffledLevels[sequence - 1]) = (shuffledLevels[sequence - 1], shuffledLevels[index]);
-        //    }
-        //}
+        TRRSequencing sequencing = JsonConvert.DeserializeObject<TRRSequencing>(File.ReadAllText(path));
+        List<AbstractTRScriptedLevel> shuffledLevels = new(originalLevels);
+        Random generator = SequencingRNG.Create();
+        do
+        {
+            shuffledLevels.Randomise(generator);
+            foreach (int sequence in sequencing.Fixed)
+            {
+                int index = shuffledLevels.FindIndex(l => l.OriginalSequence == sequence);
+                (shuffledLevels[index], shuffledLevels[sequence - 1]) = (shuffledLevels[sequence - 1], shuffledLevels[index]);
+            }
+        }
+        while (shuffledLevels.Any(l => sequencing.Invalid.ContainsKey(l.OriginalSequence)
+            && sequencing.Invalid[l.OriginalSequence].Contains(shuffledLevels.IndexOf(l) + 1)));
 
-        //List<AbstractTRScriptedLevel> newLevels = new();
-        //foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
-        //{
-        //    AbstractTRScriptedLevel level = GetLevel(shfLevel.ID) ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
-        //    newLevels.Add(level);
-        //}
+        List<AbstractTRScriptedLevel> newLevels = new();
+        foreach (AbstractTRScriptedLevel shfLevel in shuffledLevels)
+        {
+            AbstractTRScriptedLevel level = GetLevel(shfLevel.ID)
+                ?? throw new ArgumentException(string.Format("{0} does not represent a valid level", shfLevel.ID));
+            newLevels.Add(level);
+        }
 
-        //Levels = newLevels;
-        //SetLevelSequencing();
+        Levels = newLevels;
+        SetLevelSequencing();
     }
 
     internal override void RandomiseGameTracks(TRScriptIOArgs io, List<AbstractTRScriptedLevel> originalLevels)
@@ -147,5 +148,11 @@ internal class TRRLevelManager : AbstractTRLevelManager
                 File.WriteAllBytes(targetFile, File.ReadAllBytes(backupFile));
             }
         }
+    }
+
+    private class TRRSequencing
+    {
+        public List<int> Fixed { get; set; }
+        public Dictionary<int, List<int>> Invalid { get; set; }
     }
 }
