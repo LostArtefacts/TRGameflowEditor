@@ -88,7 +88,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
             SetDefaultWeaponsAvailable(level, e.ScriptedLevel);
             if ((e.ScriptedLevel as TR2ScriptedLevel).RequiresWeaponTextureInjection)
             {
-                MaybeInjectWeaponTexture(level);
+                InjectGunSprites(level);
             }
 
             control.Write(level, GetWriteLevelFilePath(e.LevelFileBaseName));
@@ -283,9 +283,20 @@ public class TR2LevelEditor : BaseTRLevelEditor
 
         // #75 Check that the HSH backup integrity is still in place i.e. it hasn't been overwritten manually externally
         CheckHSHBackup();
+
+        if (scriptEditor.Edition.Remastered)
+        {
+            TR2LevelControl control = new();
+            foreach (AbstractTRScriptedLevel lvl in scriptEditor.Levels.Where(l => l.Is("FLOATING") || l.Is("XIAN")))
+            {
+                TR2Level level = control.Read(GetReadLevelFilePath(lvl.LevelFileBaseName));
+                InjectGunSprites(level);
+                control.Write(level, GetWriteLevelFilePath(lvl.LevelFileBaseName));
+            }
+        }
     }
 
-    protected virtual bool MaybeInjectWeaponTexture(TR2Level level)
+    protected virtual bool InjectGunSprites(TR2Level level)
     {
         if (!level.Sprites.ContainsKey(TR2Type.Pistols_S_P))
         {
