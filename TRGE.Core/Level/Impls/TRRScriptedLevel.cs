@@ -66,7 +66,7 @@ public class TRRScriptedLevel : AbstractTRScriptedLevel
             [3] = 5,
             [4] = 0,
             // South Pacific
-            [5] = 3,
+            [5] = 4,
             [6] = 3,
             [7] = 3,
             [8] = 1,
