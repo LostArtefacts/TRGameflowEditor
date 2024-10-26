@@ -60,7 +60,7 @@ public class TR1ATIScript : AbstractTRScript
             TitleLevel = new TR1ScriptedLevel
             {
                 Name = "Title",
-                LevelFile = @"data\title.phd",
+                LevelFile = "data/title.phd",
                 Sequences = new List<BaseLevelSequence>()
             }
         };
@@ -68,7 +68,7 @@ public class TR1ATIScript : AbstractTRScript
         _assaultLevel = new TR1ScriptedLevel
         {
             Name = "Lara's Home",
-            LevelFile = @"data\gym.phd",
+            LevelFile = "data/gym.phd",
             Sequences = new List<BaseLevelSequence>()
         };
 
@@ -77,7 +77,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Caves",
-                LevelFile = @"data\level1.phd",
+                LevelFile = "data/level1.phd",
                 Sequence = 1,
                 OriginalSequence = 1,
                 Sequences = new List<BaseLevelSequence>()
@@ -85,7 +85,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "City of Vilcabamba",
-                LevelFile = @"data\level2.phd",
+                LevelFile = "data/level2.phd",
                 Sequence = 2,
                 OriginalSequence = 2,
                 Sequences = new List<BaseLevelSequence>()
@@ -93,7 +93,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Lost Valley",
-                LevelFile = @"data\level3a.phd",
+                LevelFile = "data/level3a.phd",
                 Sequence = 3,
                 OriginalSequence = 3,
                 Sequences = new List<BaseLevelSequence>()
@@ -101,21 +101,21 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Tomb of Qualopec",
-                LevelFile = @"data\level3b.phd",
+                LevelFile = "data/level3b.phd",
                 Sequence = 4,
                 OriginalSequence = 4,
                 Sequences = new List<BaseLevelSequence>(),
                 CutSceneLevel = new TR1ScriptedLevel
                 {
                     Name = "Cut Scene 1",
-                    LevelFile = @"data\cut1.phd",
+                    LevelFile = "data/cut1.phd",
                     Sequences = new List<BaseLevelSequence>()
                 }
             },
             new TR1ScriptedLevel
             {
                 Name = "St. Francis' Folly",
-                LevelFile = @"data\level4.phd",
+                LevelFile = "data/level4.phd",
                 Sequence = 5,
                 OriginalSequence = 5,
                 Sequences = new List<BaseLevelSequence>()
@@ -123,7 +123,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Colosseum",
-                LevelFile = @"data\level5.phd",
+                LevelFile = "data/level5.phd",
                 Sequence = 6,
                 OriginalSequence = 6,
                 Sequences = new List<BaseLevelSequence>()
@@ -131,7 +131,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Palace Midas",
-                LevelFile = @"data\level6.phd",
+                LevelFile = "data/level6.phd",
                 Sequence = 7,
                 OriginalSequence = 7,
                 Sequences = new List<BaseLevelSequence>()
@@ -139,7 +139,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "The Cistern",
-                LevelFile = @"data\level7a.phd",
+                LevelFile = "data/level7a.phd",
                 Sequence = 8,
                 OriginalSequence = 8,
                 Sequences = new List<BaseLevelSequence>()
@@ -147,21 +147,21 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Tomb of Tihocan",
-                LevelFile = @"data\level7b.phd",
+                LevelFile = "data/level7b.phd",
                 Sequence = 9,
                 OriginalSequence = 9,
                 Sequences = new List<BaseLevelSequence>(),
                 CutSceneLevel = new TR1ScriptedLevel
                 {
                     Name = "Cut Scene 2",
-                    LevelFile = @"data\cut2.phd",
+                    LevelFile = "data/cut2.phd",
                     Sequences = new List<BaseLevelSequence>()
                 }
             },
             new TR1ScriptedLevel
             {
                 Name = "City of Khamoon",
-                LevelFile = @"data\level8a.phd",
+                LevelFile = "data/level8a.phd",
                 Sequence = 10,
                 OriginalSequence = 10,
                 Sequences = new List<BaseLevelSequence>()
@@ -169,7 +169,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Obelisk of Khamoon",
-                LevelFile = @"data\level8b.phd",
+                LevelFile = "data/level8b.phd",
                 Sequence = 11,
                 OriginalSequence = 11,
                 Sequences = new List<BaseLevelSequence>()
@@ -177,7 +177,7 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Sanctuary of the Scion",
-                LevelFile = @"data\level8c.phd",
+                LevelFile = "data/level8c.phd",
                 Sequence = 12,
                 OriginalSequence = 12,
                 Sequences = new List<BaseLevelSequence>()
@@ -185,35 +185,35 @@ public class TR1ATIScript : AbstractTRScript
             new TR1ScriptedLevel
             {
                 Name = "Natla's Mines",
-                LevelFile = @"data\level10a.phd",
+                LevelFile = "data/level10a.phd",
                 Sequence = 13,
                 OriginalSequence = 13,
                 Sequences = new List<BaseLevelSequence>(),
                 CutSceneLevel = new TR1ScriptedLevel
                 {
                     Name = "Cut Scene 3",
-                    LevelFile = @"data\cut3.phd",
+                    LevelFile = "data/cut3.phd",
                     Sequences = new List<BaseLevelSequence>()
                 }
             },
             new TR1ScriptedLevel
             {
                 Name = "Atlantis",
-                LevelFile = @"data\level10b.phd",
+                LevelFile = "data/level10b.phd",
                 Sequence = 14,
                 OriginalSequence = 14,
                 Sequences = new List<BaseLevelSequence>(),
                 CutSceneLevel = new TR1ScriptedLevel
                 {
                     Name = "Cut Scene 4",
-                    LevelFile = @"data\cut4.phd",
+                    LevelFile = "data/cut4.phd",
                     Sequences = new List<BaseLevelSequence>()
                 }
             },
             new TR1ScriptedLevel
             {
                 Name = "The Great Pyramid",
-                LevelFile = @"data\level10c.phd",
+                LevelFile = "data/level10c.phd",
                 Sequence = 15,
                 OriginalSequence = 15,
                 Sequences = new List<BaseLevelSequence>(),

@@ -12,7 +12,7 @@ public class TR1Tests
     [TestMethod]
     public void TestDetectTomb1Main()
     {
-        string dir = @"TR1\Tomb1MainTest\Data";
+        string dir = "TR1/Tomb1MainTest/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         Assert.IsTrue(editor.ScriptEditor.Edition.IsCommunityPatch);
     }
@@ -20,7 +20,7 @@ public class TR1Tests
     [TestMethod]
     public void TestDetectTR1ATI()
     {
-        string dir = @"TR1\TR1ATITest\Data";
+        string dir = "TR1/TR1ATITest/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         Assert.IsFalse(editor.ScriptEditor.Edition.IsCommunityPatch);
     }
@@ -28,7 +28,7 @@ public class TR1Tests
     [TestMethod]
     public void TestATIConversionToTomb1Main()
     {
-        string dir = @"TR1\TR1ATITest\Data";
+        string dir = "TR1/TR1ATITest/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         editor.Save();
         Assert.IsTrue(editor.ScriptEditor.Edition.IsCommunityPatch);
@@ -38,7 +38,7 @@ public class TR1Tests
     [TestMethod]
     public void TestTomb1MainRead()
     {
-        string dir = @"TR1\Tomb1Main\Data";
+        string dir = "TR1/Tomb1Main/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
 
         editor.ScriptEditor.LevelSequencingOrganisation = Organisation.Random;
@@ -61,7 +61,7 @@ public class TR1Tests
     [TestMethod]
     public void TestTomb1MainLevelCount()
     {
-        string dir = @"TR1\Tomb1Main\Data";
+        string dir = "TR1/Tomb1Main/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         TRInterop.RandomisationSupported = true;
 
@@ -83,7 +83,7 @@ public class TR1Tests
     [TestMethod]
     public void TestTomb1MainMediless()
     {
-        string dir = @"TR1\Tomb1Main\Data";
+        string dir = "TR1/Tomb1Main/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         TRInterop.RandomisationSupported = true;
 
@@ -113,7 +113,7 @@ public class TR1Tests
     [TestMethod]
     public void TestTomb1MainRestore()
     {
-        string dir = @"TR1\Tomb1Main\Data";
+        string dir = "TR1/Tomb1Main/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         editor.Restore();
     }
@@ -121,7 +121,7 @@ public class TR1Tests
     [TestMethod]
     public void TestATIRead()
     {
-        string dir = @"TR1\ATI\Data";
+        string dir = "TR1/ATI/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         editor.Save();
     }
@@ -129,7 +129,7 @@ public class TR1Tests
     [TestMethod]
     public void TestATIRestore()
     {
-        string dir = @"TR1\ATI\Data";
+        string dir = "TR1/ATI/Data";
         TREditor editor = TRCoord.Instance.Open(dir, TRScriptOpenOption.DiscardBackup);
         editor.Restore();
     }
@@ -137,12 +137,12 @@ public class TR1Tests
     [TestMethod]
     public void TestConfig()
     {
-        const string gf = @"TR1\cfgonly\Tomb1Main_gameflow.json5";
-        const string cf = @"TR1\cfgonly\Tomb1Main.json5";
-        const string cfEmpty = @"TR1\cfgonly\Tomb1Main_empty.json5";
-        const string cfFuture = @"TR1\cfgonly\Tomb1Main_future.json5";
-        const string gfTest = @"TR1\cfgonly\Tomb1Main_gameflow_TEST.json5";
-        const string cfTest = @"TR1\cfgonly\Tomb1Main_TEST.json5";
+        const string gf = "TR1/cfgonly/Tomb1Main_gameflow.json5";
+        const string cf = "TR1/cfgonly/Tomb1Main.json5";
+        const string cfEmpty = "TR1/cfgonly/Tomb1Main_empty.json5";
+        const string cfFuture = "TR1/cfgonly/Tomb1Main_future.json5";
+        const string gfTest = "TR1/cfgonly/Tomb1Main_gameflow_TEST.json5";
+        const string cfTest = "TR1/cfgonly/Tomb1Main_TEST.json5";
 
         JObject defaultGameflow = JObject.Parse(File.ReadAllText(gf));
         string defaultSerializedGameflow = JsonConvert.SerializeObject(defaultGameflow, Formatting.Indented);

@@ -174,36 +174,36 @@ public class TRRScript : AbstractTRScript
 
     private void BuildAsTR1()
     {
-        _additionalFiles.Add(@"PIX\HD\ATLAN.DDS");
-        _additionalFiles.Add(@"PIX\HD\AZTEC.DDS");
-        _additionalFiles.Add(@"PIX\HD\EGYPT.DDS");
-        _additionalFiles.Add(@"PIX\HD\GREEK.DDS");
-        _additionalFiles.Add(@"PIX\HD\GYM.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_EU.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_JA.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_US.DDS");
-        _additionalFiles.Add(@"TEXT\EN\STRINGS.TXT");
-        _additionalFiles.Add(@"..\1\TEXT\EN\COMMON.TXT");
+        _additionalFiles.Add("PIX/HD/ATLAN.DDS");
+        _additionalFiles.Add("PIX/HD/AZTEC.DDS");
+        _additionalFiles.Add("PIX/HD/EGYPT.DDS");
+        _additionalFiles.Add("PIX/HD/GREEK.DDS");
+        _additionalFiles.Add("PIX/HD/GYM.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_EU.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_JA.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_US.DDS");
+        _additionalFiles.Add("TEXT/EN/STRINGS.TXT");
+        _additionalFiles.Add("../1/TEXT/EN/COMMON.TXT");
 
-        _additionalFiles.Add(@"TRACKS\2.OGG");
-        _additionalFiles.Add(@"TRACKS\5.OGG");
-        _additionalFiles.Add(@"TRACKS\6.OGG");
-        _additionalFiles.Add(@"TRACKS\7.OGG");
-        _additionalFiles.Add(@"TRACKS\8.OGG");
-        _additionalFiles.Add(@"TRACKS\10.OGG");
-        _additionalFiles.Add(@"TRACKS\16.OGG");
-        _additionalFiles.Add(@"TRACKS\17.OGG");
-        _additionalFiles.Add(@"TRACKS\19.OGG");
-        _additionalFiles.Add(@"TRACKS\57.OGG");
-        _additionalFiles.Add(@"TRACKS\58.OGG");
-        _additionalFiles.Add(@"TRACKS\59.OGG");
+        _additionalFiles.Add("TRACKS/2.OGG");
+        _additionalFiles.Add("TRACKS/5.OGG");
+        _additionalFiles.Add("TRACKS/6.OGG");
+        _additionalFiles.Add("TRACKS/7.OGG");
+        _additionalFiles.Add("TRACKS/8.OGG");
+        _additionalFiles.Add("TRACKS/10.OGG");
+        _additionalFiles.Add("TRACKS/16.OGG");
+        _additionalFiles.Add("TRACKS/17.OGG");
+        _additionalFiles.Add("TRACKS/19.OGG");
+        _additionalFiles.Add("TRACKS/57.OGG");
+        _additionalFiles.Add("TRACKS/58.OGG");
+        _additionalFiles.Add("TRACKS/59.OGG");
 
         _frontEnd = new()
         {
             TitleLevel = new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Title",
-                LevelFile = @"DATA\TITLE.PHD",
+                LevelFile = "DATA/TITLE.PHD",
                 TrackID = 2,
             }
         };
@@ -211,7 +211,7 @@ public class TRRScript : AbstractTRScript
         _assaultLevel = new TRRScriptedLevel(TRVersion.TR1)
         {
             Name = "Lara's Home",
-            LevelFile = @"DATA\GYM.PHD",
+            LevelFile = "DATA/GYM.PHD",
         };
 
         _levels = new()
@@ -219,7 +219,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Caves",
-                LevelFile = @"DATA\LEVEL1.PHD",
+                LevelFile = "DATA/LEVEL1.PHD",
                 Sequence = 1,
                 OriginalSequence = 1,
                 TrackID = 5,
@@ -227,7 +227,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "City of Vilcabamba",
-                LevelFile = @"DATA\LEVEL2.PHD",
+                LevelFile = "DATA/LEVEL2.PHD",
                 Sequence = 2,
                 OriginalSequence = 2,
                 TrackID = 5,
@@ -235,7 +235,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Lost Valley",
-                LevelFile = @"DATA\LEVEL3A.PHD",
+                LevelFile = "DATA/LEVEL3A.PHD",
                 Sequence = 3,
                 OriginalSequence = 3,
                 TrackID = 5,
@@ -243,21 +243,21 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Tomb of Qualopec",
-                LevelFile = @"DATA\LEVEL3B.PHD",
+                LevelFile = "DATA/LEVEL3B.PHD",
                 Sequence = 4,
                 OriginalSequence = 4,
                 TrackID = 5,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR1)
                 {
                     Name = "Cut Scene 1",
-                    LevelFile = @"DATA\CUT1.PHD",
+                    LevelFile = "DATA/CUT1.PHD",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "St. Francis' Folly",
-                LevelFile = @"DATA\LEVEL4.PHD",
+                LevelFile = "DATA/LEVEL4.PHD",
                 Sequence = 5,
                 OriginalSequence = 5,
                 TrackID = 58,
@@ -265,7 +265,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Colosseum",
-                LevelFile = @"DATA\LEVEL5.PHD",
+                LevelFile = "DATA/LEVEL5.PHD",
                 Sequence = 6,
                 OriginalSequence = 6,
                 TrackID = 58,
@@ -273,7 +273,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Palace Midas",
-                LevelFile = @"DATA\LEVEL6.PHD",
+                LevelFile = "DATA/LEVEL6.PHD",
                 Sequence = 7,
                 OriginalSequence = 7,
                 TrackID = 58,
@@ -281,7 +281,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "The Cistern",
-                LevelFile = @"DATA\LEVEL7A.PHD",
+                LevelFile = "DATA/LEVEL7A.PHD",
                 Sequence = 8,
                 OriginalSequence = 8,
                 TrackID = 57,
@@ -289,14 +289,14 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Tomb of Tihocan",
-                LevelFile = @"DATA\LEVEL7B.PHD",
+                LevelFile = "DATA/LEVEL7B.PHD",
                 Sequence = 9,
                 OriginalSequence = 9,
                 TrackID = 57,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR1)
                 {
                     Name = "Cut Scene 2",
-                    LevelFile = @"DATA\CUT2.PHD",
+                    LevelFile = "DATA/CUT2.PHD",
                     IgnoreMap = true,
                     IsCutscene = true,
                 }
@@ -304,7 +304,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "City of Khamoon",
-                LevelFile = @"DATA\LEVEL8A.PHD",
+                LevelFile = "DATA/LEVEL8A.PHD",
                 Sequence = 10,
                 OriginalSequence = 10,
                 TrackID = 58,
@@ -312,7 +312,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Obelisk of Khamoon",
-                LevelFile = @"DATA\LEVEL8B.PHD",
+                LevelFile = "DATA/LEVEL8B.PHD",
                 Sequence = 11,
                 OriginalSequence = 11,
                 TrackID = 58,
@@ -320,7 +320,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Sanctuary of the Scion",
-                LevelFile = @"DATA\LEVEL8C.PHD",
+                LevelFile = "DATA/LEVEL8C.PHD",
                 Sequence = 12,
                 OriginalSequence = 12,
                 TrackID = 58,
@@ -328,7 +328,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Natla's Mines",
-                LevelFile = @"DATA\LEVEL10A.PHD",
+                LevelFile = "DATA/LEVEL10A.PHD",
                 Sequence = 13,
                 OriginalSequence = 13,
                 RemovesWeapons = true,
@@ -336,28 +336,28 @@ public class TRRScript : AbstractTRScript
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR1)
                 {
                     Name = "Cut Scene 3",
-                    LevelFile = @"DATA\CUT3.PHD",
+                    LevelFile = "DATA/CUT3.PHD",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Atlantis",
-                LevelFile = @"DATA\LEVEL10B.PHD",
+                LevelFile = "DATA/LEVEL10B.PHD",
                 Sequence = 14,
                 OriginalSequence = 14,
                 TrackID = 59,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR1)
                 {
                     Name = "Cut Scene 4",
-                    LevelFile = @"DATA\CUT4.PHD",
+                    LevelFile = "DATA/CUT4.PHD",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "The Great Pyramid",
-                LevelFile = @"DATA\LEVEL10C.PHD",
+                LevelFile = "DATA/LEVEL10C.PHD",
                 Sequence = 15,
                 OriginalSequence = 15,
                 TrackID = 59,
@@ -370,7 +370,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Atlantean Stronghold",
-                LevelFile = @"DATA\UB\END.PHD",
+                LevelFile = "DATA/UB/END.PHD",
                 Sequence = 1,
                 OriginalSequence = 1,
                 TrackID = 59,
@@ -378,7 +378,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "The Hive",
-                LevelFile = @"DATA\UB\END2.PHD",
+                LevelFile = "DATA/UB/END2.PHD",
                 Sequence = 2,
                 OriginalSequence = 2,
                 TrackID = 59,
@@ -386,7 +386,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Return to Egypt",
-                LevelFile = @"DATA\UB\EGYPT.PHD",
+                LevelFile = "DATA/UB/EGYPT.PHD",
                 Sequence = 3,
                 RemovesWeapons = true,
                 RemovesAmmo = true,
@@ -396,7 +396,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR1)
             {
                 Name = "Temple of the Cat",
-                LevelFile = @"DATA\UB\CAT.PHD",
+                LevelFile = "DATA/UB/CAT.PHD",
                 Sequence = 4,
                 OriginalSequence = 4,
                 TrackID = 58,
@@ -409,38 +409,38 @@ public class TRRScript : AbstractTRScript
     {
         TrackOffset = 4;
 
-        _additionalFiles.Add(@"PIX\HD\CHINA.DDS");
-        _additionalFiles.Add(@"PIX\HD\MANSION.DDS");
-        _additionalFiles.Add(@"PIX\HD\RIG.DDS");
-        _additionalFiles.Add(@"PIX\HD\TIBET.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITAN.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_EU.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_JA.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_US.DDS");
-        _additionalFiles.Add(@"PIX\HD\VENICE.DDS");
-        _additionalFiles.Add(@"TEXT\EN\STRINGS.TXT");
-        _additionalFiles.Add(@"..\1\TEXT\EN\COMMON.TXT");
+        _additionalFiles.Add("PIX/HD/CHINA.DDS");
+        _additionalFiles.Add("PIX/HD/MANSION.DDS");
+        _additionalFiles.Add("PIX/HD/RIG.DDS");
+        _additionalFiles.Add("PIX/HD/TIBET.DDS");
+        _additionalFiles.Add("PIX/HD/TITAN.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_EU.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_JA.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_US.DDS");
+        _additionalFiles.Add("PIX/HD/VENICE.DDS");
+        _additionalFiles.Add("TEXT/EN/STRINGS.TXT");
+        _additionalFiles.Add("../1/TEXT/EN/COMMON.TXT");
 
-        _additionalFiles.Add(@"TRACKS\27.OGG");
-        _additionalFiles.Add(@"TRACKS\28.OGG");
-        _additionalFiles.Add(@"TRACKS\29.OGG");
-        _additionalFiles.Add(@"TRACKS\30.OGG");
-        _additionalFiles.Add(@"TRACKS\36.OGG");
-        _additionalFiles.Add(@"TRACKS\41.OGG");
-        _additionalFiles.Add(@"TRACKS\48.OGG");
-        _additionalFiles.Add(@"TRACKS\49.OGG");
-        _additionalFiles.Add(@"TRACKS\53.OGG");
-        _additionalFiles.Add(@"TRACKS\54.OGG");
-        _additionalFiles.Add(@"TRACKS\55.OGG");
-        _additionalFiles.Add(@"TRACKS\56.OGG");
-        _additionalFiles.Add(@"TRACKS\60.OGG");
+        _additionalFiles.Add("TRACKS/27.OGG");
+        _additionalFiles.Add("TRACKS/28.OGG");
+        _additionalFiles.Add("TRACKS/29.OGG");
+        _additionalFiles.Add("TRACKS/30.OGG");
+        _additionalFiles.Add("TRACKS/36.OGG");
+        _additionalFiles.Add("TRACKS/41.OGG");
+        _additionalFiles.Add("TRACKS/48.OGG");
+        _additionalFiles.Add("TRACKS/49.OGG");
+        _additionalFiles.Add("TRACKS/53.OGG");
+        _additionalFiles.Add("TRACKS/54.OGG");
+        _additionalFiles.Add("TRACKS/55.OGG");
+        _additionalFiles.Add("TRACKS/56.OGG");
+        _additionalFiles.Add("TRACKS/60.OGG");
 
         _frontEnd = new()
         {
             TitleLevel = new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Title",
-                LevelFile = @"DATA\TITLE.TR2",
+                LevelFile = "DATA/TITLE.TR2",
                 TrackID = 64
             }
         };
@@ -448,7 +448,7 @@ public class TRRScript : AbstractTRScript
         _assaultLevel = new TRRScriptedLevel(TRVersion.TR2)
         {
             Name = "Lara's Home",
-            LevelFile = @"DATA\ASSAULT.TR2",
+            LevelFile = "DATA/ASSAULT.TR2",
         };
 
         _levels = new()
@@ -456,49 +456,49 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "The Great Wall",
-                LevelFile = @"DATA\WALL.TR2",
+                LevelFile = "DATA/WALL.TR2",
                 Sequence = 1,
                 OriginalSequence = 1,
                 TrackID = 33,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR2)
                 {
                     Name = "Cut Scene 1",
-                    LevelFile = @"DATA\CUT1.TR2",
+                    LevelFile = "DATA/CUT1.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Venice",
-                LevelFile = @"DATA\BOAT.TR2",
+                LevelFile = "DATA/BOAT.TR2",
                 Sequence = 2,
                 OriginalSequence = 2,
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Bartoli's Hideout",
-                LevelFile = @"DATA\VENICE.TR2",
+                LevelFile = "DATA/VENICE.TR2",
                 Sequence = 3,
                 OriginalSequence = 3,
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Opera House",
-                LevelFile = @"DATA\OPERA.TR2",
+                LevelFile = "DATA/OPERA.TR2",
                 Sequence = 4,
                 OriginalSequence = 4,
                 TrackID = 31,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR2)
                 {
                     Name = "Cut Scene 2",
-                    LevelFile = @"DATA\CUT2.TR2",
+                    LevelFile = "DATA/CUT2.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Offshore Rig",
-                LevelFile = @"DATA\RIG.TR2",
+                LevelFile = "DATA/RIG.TR2",
                 Sequence = 5,
                 OriginalSequence = 5,
                 TrackID = 58,
@@ -508,21 +508,21 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Diving Area",
-                LevelFile = @"DATA\PLATFORM.TR2",
+                LevelFile = "DATA/PLATFORM.TR2",
                 Sequence = 6,
                 OriginalSequence = 6,
                 TrackID = 58,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR2)
                 {
                     Name = "Cut Scene 3",
-                    LevelFile = @"DATA\CUT3.TR2",
+                    LevelFile = "DATA/CUT3.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "40 Fathoms",
-                LevelFile = @"DATA\UNWATER.TR2",
+                LevelFile = "DATA/UNWATER.TR2",
                 Sequence = 7,
                 OriginalSequence = 7,
                 TrackID = 34,
@@ -530,7 +530,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Wreck of the Maria Doria",
-                LevelFile = @"DATA\KEEL.TR2",
+                LevelFile = "DATA/KEEL.TR2",
                 Sequence = 8,
                 OriginalSequence = 8,
                 TrackID = 31,
@@ -538,7 +538,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Living Quarters",
-                LevelFile = @"DATA\LIVING.TR2",
+                LevelFile = "DATA/LIVING.TR2",
                 Sequence = 9,
                 OriginalSequence = 9,
                 TrackID = 34,
@@ -546,7 +546,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "The Deck",
-                LevelFile = @"DATA\DECK.TR2",
+                LevelFile = "DATA/DECK.TR2",
                 Sequence = 10,
                 OriginalSequence = 10,
                 TrackID = 31,
@@ -554,7 +554,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Tibetan Foothills",
-                LevelFile = @"DATA\SKIDOO.TR2",
+                LevelFile = "DATA/SKIDOO.TR2",
                 Sequence = 11,
                 OriginalSequence = 11,
                 TrackID = 33,
@@ -562,14 +562,14 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Barkhang Monastery",
-                LevelFile = @"DATA\MONASTRY.TR2",
+                LevelFile = "DATA/MONASTRY.TR2",
                 Sequence = 12,
                 OriginalSequence = 12,
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Catacombs of the Talion",
-                LevelFile = @"DATA\CATACOMB.TR2",
+                LevelFile = "DATA/CATACOMB.TR2",
                 Sequence = 13,
                 OriginalSequence = 13,
                 TrackID = 31,
@@ -577,7 +577,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Ice Palace",
-                LevelFile = @"DATA\ICECAVE.TR2",
+                LevelFile = "DATA/ICECAVE.TR2",
                 Sequence = 14,
                 OriginalSequence = 14,
                 TrackID = 31,
@@ -585,21 +585,21 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Temple of Xian",
-                LevelFile = @"DATA\EMPRTOMB.TR2",
+                LevelFile = "DATA/EMPRTOMB.TR2",
                 Sequence = 15,
                 OriginalSequence = 15,
                 TrackID = 59,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR2)
                 {
                     Name = "Cut Scene 4",
-                    LevelFile = @"DATA\CUT4.TR2",
+                    LevelFile = "DATA/CUT4.TR2",
                     IsCutscene = true,
                 },
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Floating Islands",
-                LevelFile = @"DATA\FLOATING.TR2",
+                LevelFile = "DATA/FLOATING.TR2",
                 Sequence = 16,
                 OriginalSequence = 16,
                 TrackID = 59,
@@ -607,7 +607,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "The Dragon's Lair",
-                LevelFile = @"DATA\XIAN.TR2",
+                LevelFile = "DATA/XIAN.TR2",
                 Sequence = 17,
                 OriginalSequence = 17,
                 TrackID = 59,
@@ -615,7 +615,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Home Sweet Home",
-                LevelFile = @"DATA\HOUSE.TR2",
+                LevelFile = "DATA/HOUSE.TR2",
                 Sequence = 18,
                 OriginalSequence = 18,
                 IsFinalLevel = true,
@@ -630,35 +630,35 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "The Cold War",
-                LevelFile = @"DATA\GM\LEVEL1.TR2",
+                LevelFile = "DATA/GM/LEVEL1.TR2",
                 Sequence = 1,
                 OriginalSequence = 1,
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Fool's Gold",
-                LevelFile = @"DATA\GM\LEVEL2.TR2",
+                LevelFile = "DATA/GM/LEVEL2.TR2",
                 Sequence = 2,
                 OriginalSequence = 2,
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Furnace of the Gods",
-                LevelFile = @"DATA\GM\LEVEL3.TR2",
+                LevelFile = "DATA/GM/LEVEL3.TR2",
                 Sequence = 3,
                 OriginalSequence = 3,
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Kingdom",
-                LevelFile = @"DATA\GM\LEVEL4.TR2",
+                LevelFile = "DATA/GM/LEVEL4.TR2",
                 Sequence = 4,
                 OriginalSequence = 4,
             },
             new TRRScriptedLevel(TRVersion.TR2)
             {
                 Name = "Nightmare in Vegas",
-                LevelFile = @"DATA\GM\LEVEL5.TR2",
+                LevelFile = "DATA/GM/LEVEL5.TR2",
                 Sequence = 5,
                 OriginalSequence = 5,
                 IsFinalLevel = true,
@@ -668,49 +668,49 @@ public class TRRScript : AbstractTRScript
 
     private void BuildAsTR3()
     {
-        _additionalFiles.Add(@"PIX\HD\ANTARC.DDS");
-        _additionalFiles.Add(@"PIX\HD\HOUSE.DDS");
-        _additionalFiles.Add(@"PIX\HD\INDIA.DDS");
-        _additionalFiles.Add(@"PIX\HD\LONDON.DDS");
-        _additionalFiles.Add(@"PIX\HD\NEVADA.DDS");
-        _additionalFiles.Add(@"PIX\HD\SOUTHPAC.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_EU.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_JA.DDS");
-        _additionalFiles.Add(@"PIX\HD\TITLE_US.DDS");
-        _additionalFiles.Add(@"TEXT\EN\STRINGS.TXT");
-        _additionalFiles.Add(@"..\1\TEXT\EN\COMMON.TXT");
+        _additionalFiles.Add("PIX/HD/ANTARC.DDS");
+        _additionalFiles.Add("PIX/HD/HOUSE.DDS");
+        _additionalFiles.Add("PIX/HD/INDIA.DDS");
+        _additionalFiles.Add("PIX/HD/LONDON.DDS");
+        _additionalFiles.Add("PIX/HD/NEVADA.DDS");
+        _additionalFiles.Add("PIX/HD/SOUTHPAC.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_EU.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_JA.DDS");
+        _additionalFiles.Add("PIX/HD/TITLE_US.DDS");
+        _additionalFiles.Add("TEXT/EN/STRINGS.TXT");
+        _additionalFiles.Add("../1/TEXT/EN/COMMON.TXT");
 
-        _additionalFiles.Add(@"TRACKS\2.OGG");
-        _additionalFiles.Add(@"TRACKS\3.OGG");
-        _additionalFiles.Add(@"TRACKS\4.OGG");
-        _additionalFiles.Add(@"TRACKS\5.OGG");
-        _additionalFiles.Add(@"TRACKS\6.OGG");
-        _additionalFiles.Add(@"TRACKS\7.OGG");
-        _additionalFiles.Add(@"TRACKS\8.OGG");
-        _additionalFiles.Add(@"TRACKS\9.OGG");
-        _additionalFiles.Add(@"TRACKS\10.OGG");
-        _additionalFiles.Add(@"TRACKS\12.OGG");
-        _additionalFiles.Add(@"TRACKS\14.OGG");
-        _additionalFiles.Add(@"TRACKS\26.OGG");
-        _additionalFiles.Add(@"TRACKS\27.OGG");
-        _additionalFiles.Add(@"TRACKS\28.OGG");
-        _additionalFiles.Add(@"TRACKS\30.OGG");
-        _additionalFiles.Add(@"TRACKS\31.OGG");
-        _additionalFiles.Add(@"TRACKS\32.OGG");
-        _additionalFiles.Add(@"TRACKS\33.OGG");
-        _additionalFiles.Add(@"TRACKS\34.OGG");
-        _additionalFiles.Add(@"TRACKS\36.OGG");
-        _additionalFiles.Add(@"TRACKS\37.OGG");
-        _additionalFiles.Add(@"TRACKS\73.OGG");
-        _additionalFiles.Add(@"TRACKS\74.OGG");
-        _additionalFiles.Add(@"TRACKS\123.OGG");
+        _additionalFiles.Add("TRACKS/2.OGG");
+        _additionalFiles.Add("TRACKS/3.OGG");
+        _additionalFiles.Add("TRACKS/4.OGG");
+        _additionalFiles.Add("TRACKS/5.OGG");
+        _additionalFiles.Add("TRACKS/6.OGG");
+        _additionalFiles.Add("TRACKS/7.OGG");
+        _additionalFiles.Add("TRACKS/8.OGG");
+        _additionalFiles.Add("TRACKS/9.OGG");
+        _additionalFiles.Add("TRACKS/10.OGG");
+        _additionalFiles.Add("TRACKS/12.OGG");
+        _additionalFiles.Add("TRACKS/14.OGG");
+        _additionalFiles.Add("TRACKS/26.OGG");
+        _additionalFiles.Add("TRACKS/27.OGG");
+        _additionalFiles.Add("TRACKS/28.OGG");
+        _additionalFiles.Add("TRACKS/30.OGG");
+        _additionalFiles.Add("TRACKS/31.OGG");
+        _additionalFiles.Add("TRACKS/32.OGG");
+        _additionalFiles.Add("TRACKS/33.OGG");
+        _additionalFiles.Add("TRACKS/34.OGG");
+        _additionalFiles.Add("TRACKS/36.OGG");
+        _additionalFiles.Add("TRACKS/37.OGG");
+        _additionalFiles.Add("TRACKS/73.OGG");
+        _additionalFiles.Add("TRACKS/74.OGG");
+        _additionalFiles.Add("TRACKS/123.OGG");
 
         _frontEnd = new()
         {
             TitleLevel = new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Title",
-                LevelFile = @"DATA\TITLE.TR2",
+                LevelFile = "DATA/TITLE.TR2",
                 TrackID = 5,
             }
         };
@@ -718,7 +718,7 @@ public class TRRScript : AbstractTRScript
         _assaultLevel = new TRRScriptedLevel(TRVersion.TR3)
         {
             Name = "Lara's Home",
-            LevelFile = @"DATA\HOUSE.TR2",
+            LevelFile = "DATA/HOUSE.TR2",
         };
 
         _levels = new()
@@ -726,35 +726,35 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Jungle",
-                LevelFile = @"DATA\JUNGLE.TR2",
+                LevelFile = "DATA/JUNGLE.TR2",
                 Sequence = 1,
                 OriginalSequence = 1,
                 TrackID = 34,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 1",
-                    LevelFile = @"CUTS\CUT6.TR2",
+                    LevelFile = "CUTS/CUT6.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Temple Ruins",
-                LevelFile = @"DATA\TEMPLE.TR2",
+                LevelFile = "DATA/TEMPLE.TR2",
                 Sequence = 2,
                 OriginalSequence = 2,
                 TrackID = 34,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 2",
-                    LevelFile = @"CUTS\CUT9.TR2",
+                    LevelFile = "CUTS/CUT9.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "The River Ganges",
-                LevelFile = @"DATA\QUADCHAS.TR2",
+                LevelFile = "DATA/QUADCHAS.TR2",
                 Sequence = 3,
                 OriginalSequence = 3,
                 TrackID = 34,
@@ -762,7 +762,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Caves of Kaliya",
-                LevelFile = @"DATA\TONYBOSS.TR2",
+                LevelFile = "DATA/TONYBOSS.TR2",
                 Sequence = 4,
                 OriginalSequence = 4,
                 TrackID = 30,
@@ -770,35 +770,35 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Coastal Village",
-                LevelFile = @"DATA\SHORE.TR2",
+                LevelFile = "DATA/SHORE.TR2",
                 Sequence = 5,
                 OriginalSequence = 5,
                 TrackID = 32,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 3",
-                    LevelFile = @"CUTS\CUT1.TR2",
+                    LevelFile = "CUTS/CUT1.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Crash Site",
-                LevelFile = @"DATA\CRASH.TR2",
+                LevelFile = "DATA/CRASH.TR2",
                 Sequence = 6,
                 OriginalSequence = 6,
                 TrackID = 33,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 4",
-                    LevelFile = @"CUTS\CUT4.TR2",
+                    LevelFile = "CUTS/CUT4.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Madubu Gorge",
-                LevelFile = @"DATA\RAPIDS.TR2",
+                LevelFile = "DATA/RAPIDS.TR2",
                 Sequence = 7,
                 OriginalSequence = 7,
                 TrackID = 36,
@@ -806,7 +806,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Temple of Puna",
-                LevelFile = @"DATA\TRIBOSS.TR2",
+                LevelFile = "DATA/TRIBOSS.TR2",
                 Sequence = 8,
                 OriginalSequence = 8,
                 TrackID = 30,
@@ -814,70 +814,70 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Thames Wharf",
-                LevelFile = @"DATA\ROOFS.TR2",
+                LevelFile = "DATA/ROOFS.TR2",
                 Sequence = 9,
                 OriginalSequence = 9,
                 TrackID = 73,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 5",
-                    LevelFile = @"CUTS\CUT2.TR2",
+                    LevelFile = "CUTS/CUT2.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Aldwych",
-                LevelFile = @"DATA\SEWER.TR2",
+                LevelFile = "DATA/SEWER.TR2",
                 Sequence = 10,
                 OriginalSequence = 10,
                 TrackID = 74,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 6",
-                    LevelFile = @"CUTS\CUT5.TR2",
+                    LevelFile = "CUTS/CUT5.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Lud's Gate",
-                LevelFile = @"DATA\TOWER.TR2",
+                LevelFile = "DATA/TOWER.TR2",
                 Sequence = 11,
                 OriginalSequence = 11,
                 TrackID = 31,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 7",
-                    LevelFile = @"CUTS\CUT11.TR2",
+                    LevelFile = "CUTS/CUT11.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "City",
-                LevelFile = @"DATA\OFFICE.TR2",
+                LevelFile = "DATA/OFFICE.TR2",
                 Sequence = 12,
                 OriginalSequence = 12,
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Nevada",
-                LevelFile = @"DATA\NEVADA.TR2",
+                LevelFile = "DATA/NEVADA.TR2",
                 Sequence = 13,
                 OriginalSequence = 13,
                 TrackID = 33,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 8",
-                    LevelFile = @"CUTS\CUT7.TR2",
+                    LevelFile = "CUTS/CUT7.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "High Security Compound",
-                LevelFile = @"DATA\COMPOUND.TR2",
+                LevelFile = "DATA/COMPOUND.TR2",
                 Sequence = 14,
                 OriginalSequence = 14,
                 HasStartAnimation = true,
@@ -887,14 +887,14 @@ public class TRRScript : AbstractTRScript
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 9",
-                    LevelFile = @"CUTS\CUT8.TR2",
+                    LevelFile = "CUTS/CUT8.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Area 51",
-                LevelFile = @"DATA\AREA51.TR2",
+                LevelFile = "DATA/AREA51.TR2",
                 Sequence = 15,
                 OriginalSequence = 15,
                 TrackID = 27,
@@ -902,7 +902,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Antarctica",
-                LevelFile = @"DATA\ANTARC.TR2",
+                LevelFile = "DATA/ANTARC.TR2",
                 Sequence = 16,
                 OriginalSequence = 16,
                 TrackID = 28,
@@ -910,14 +910,14 @@ public class TRRScript : AbstractTRScript
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 10",
-                    LevelFile = @"CUTS\CUT3.TR2",
+                    LevelFile = "CUTS/CUT3.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "RX-Tech Mines",
-                LevelFile = @"DATA\MINES.TR2",
+                LevelFile = "DATA/MINES.TR2",
                 Sequence = 17,
                 OriginalSequence = 17,
                 TrackID = 30,
@@ -926,21 +926,21 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Lost City of Tinnos",
-                LevelFile = @"DATA\CITY.TR2",
+                LevelFile = "DATA/CITY.TR2",
                 Sequence = 18,
                 OriginalSequence = 18,
                 TrackID = 26,
                 CutSceneLevel = new TRRScriptedLevel(TRVersion.TR3)
                 {
                     Name = "Cut Scene 11",
-                    LevelFile = @"CUTS\CUT12.TR2",
+                    LevelFile = "CUTS/CUT12.TR2",
                     IsCutscene = true,
                 }
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Meteorite Cavern",
-                LevelFile = @"DATA\CHAMBER.TR2",
+                LevelFile = "DATA/CHAMBER.TR2",
                 Sequence = 19,
                 OriginalSequence = 19,
                 TrackID = 26,
@@ -948,7 +948,7 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "All Hallows",
-                LevelFile = @"DATA\STPAUL.TR2",
+                LevelFile = "DATA/STPAUL.TR2",
                 Sequence = 20,
                 OriginalSequence = 20,
                 TrackID = 30,
@@ -961,42 +961,42 @@ public class TRRScript : AbstractTRScript
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Highland Fling",
-                LevelFile = @"DATA\LA\SCOTLAND.TR2",
+                LevelFile = "DATA/LA/SCOTLAND.TR2",
                 Sequence = 1,
                 OriginalSequence = 1,
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Willard's Lair",
-                LevelFile = @"DATA\LA\WILLSDEN.TR2",
+                LevelFile = "DATA/LA/WILLSDEN.TR2",
                 Sequence = 2,
                 OriginalSequence = 2,
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Shakespeare Cliff",
-                LevelFile = @"DATA\LA\CHUNNEL.TR2",
+                LevelFile = "DATA/LA/CHUNNEL.TR2",
                 Sequence = 3,
                 OriginalSequence = 3,
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Sleeping with the Fishes",
-                LevelFile = @"DATA\LA\UNDERSEA.TR2",
+                LevelFile = "DATA/LA/UNDERSEA.TR2",
                 Sequence = 4,
                 OriginalSequence = 4,
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "It's a Madhouse!",
-                LevelFile = @"DATA\LA\ZOO.TR2",
+                LevelFile = "DATA/LA/ZOO.TR2",
                 Sequence = 5,
                 OriginalSequence = 5,
             },
             new TRRScriptedLevel(TRVersion.TR3)
             {
                 Name = "Reunion",
-                LevelFile = @"DATA\LA\SLINC.TR2",
+                LevelFile = "DATA/LA/SLINC.TR2",
                 Sequence = 6,
                 OriginalSequence = 6,
                 IsFinalLevel = true,

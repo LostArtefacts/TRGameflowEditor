@@ -150,7 +150,7 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
                 foreach (string file in remasteredLevel.AllFiles)
                 {
                     string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(file));
-                    string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", file));
+                    string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, "../", file));
                     files[backup] = restore;
                 }
                 if (level.HasCutScene)
@@ -158,7 +158,7 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
                     foreach (string file in (remasteredLevel.CutSceneLevel as TRRScriptedLevel).AllFiles)
                     {
                         string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(file));
-                        string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", file));
+                        string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, "../", file));
                         files[backup] = restore;
                     }
                 }
@@ -166,12 +166,12 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
             else
             {
                 string backup = Path.Combine(_io.BackupDirectory.FullName, level.LevelFileBaseName);
-                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.LevelFile)); // Supports restoring to folders outside data
+                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, "../", level.LevelFile)); // Supports restoring to folders outside data
                 files[backup] = restore;
                 if (level.HasCutScene)
                 {
                     string cutBackup = Path.Combine(_io.BackupDirectory.FullName, level.CutSceneLevel.LevelFileBaseName);
-                    string cutRestore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", level.CutSceneLevel.LevelFile));
+                    string cutRestore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, "../", level.CutSceneLevel.LevelFile));
                     files[cutBackup] = cutRestore;
                 }
             }
@@ -207,7 +207,7 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
             string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(additionalFile));
             if (File.Exists(backup))
             {
-                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, @"..\", additionalFile));
+                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, "../", additionalFile));
                 files[backup] = restore;
             }
         }

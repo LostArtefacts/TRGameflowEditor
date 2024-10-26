@@ -25,7 +25,7 @@
     <None Remove="Resources\up.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TRGE.Coord\TRGE.Coord.csproj" />

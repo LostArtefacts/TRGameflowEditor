@@ -19,7 +19,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
     public TR2LevelEditor(TRDirectoryIOArgs io, TREdition edition)
         : base(io, edition)
     {
-        _defaultVehicleLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(ReadResource(@"Locations\vehicle_locations.json"));
+        _defaultVehicleLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(ReadResource("Locations/vehicle_locations.json"));
         CheckFloaterBackup();
         CheckHSHBackup();
     }
@@ -415,7 +415,7 @@ public class TR2LevelEditor : BaseTRLevelEditor
     {
         TR2DataImporter importer = new()
         {
-            DataFolder = @"Resources\TR2\Objects",
+            DataFolder = "Resources/TR2/Objects",
             Level = level,
             LevelName = lvlName,
             TypesToImport = entities

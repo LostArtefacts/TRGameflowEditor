@@ -50,7 +50,7 @@ internal class TRRLevelManager : AbstractTRLevelManager
 
     internal override void RandomiseSequencing(List<AbstractTRScriptedLevel> originalLevels)
     {
-        string path = $@"Resources\{_script.Edition.Version}\Restrictions\trr_sequencing.json";
+        string path = $"Resources/{_script.Edition.Version}/Restrictions/trr_sequencing.json";
         if (_script.Edition.Version == TRVersion.TR3 || !File.Exists(path))
         {
             return;
