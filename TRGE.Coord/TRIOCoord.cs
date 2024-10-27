@@ -364,7 +364,7 @@ internal class TRIOCoord : ITRConfigProvider
             return;
         }
 
-        string commonFolder = Path.GetFullPath(Path.Combine(_editDirectory, @"..\TRR"));
+        string commonFolder = Path.GetFullPath(Path.Combine(_editDirectory, "../TRR"));
         Directory.CreateDirectory(commonFolder);
         string commonBackupFile = Path.Combine(commonFolder, Path.GetFileName(commonFile));
         IOExtensions.CopyFile(commonFile, commonBackupFile, false);
@@ -375,7 +375,7 @@ internal class TRIOCoord : ITRConfigProvider
 
     private string GetOriginalFilePath(string fileName)
     {
-        return Path.GetFullPath(Path.Combine(_originalDirectory, @"..\", fileName));
+        return Path.GetFullPath(Path.Combine(_originalDirectory, "../", fileName));
     }
 
     private void FireBackupProgressChanged(int progress = 0)
@@ -545,7 +545,7 @@ internal class TRIOCoord : ITRConfigProvider
             || _orignalScriptFile == TRRScript.TR2PlaceholderName
             || _orignalScriptFile == TRRScript.TR3PlaceholderName)
         {
-            string commonFolder = Path.GetFullPath(Path.Combine(_editDirectory, @"..\TRR"));
+            string commonFolder = Path.GetFullPath(Path.Combine(_editDirectory, "../TRR"));
             if (Directory.Exists(commonFolder))
             {
                 Directory.Delete(commonFolder, true);

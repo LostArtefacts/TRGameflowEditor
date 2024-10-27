@@ -38,7 +38,7 @@ public class TREditor
 
     public TREdition Edition => _scriptEditor.Edition;
     public string BackupDirectory => _scriptEditor.BackupDirectory.FullName;
-    public string ErrorDirectory => Path.GetFullPath(Path.Combine(BackupDirectory, @"..\Errors"));
+    public string ErrorDirectory => Path.GetFullPath(Path.Combine(BackupDirectory, "../Errors"));
     public string OutputDirectory => _outputDirectory;
     public string TargetDirectory => _targetDirectory;
     private readonly string _wipOutputDirectory;
@@ -251,7 +251,7 @@ public class TREditor
 
         foreach (string additionalFile in additionalFiles.Distinct())
         {
-            string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, @"..\", additionalFile)));
+            string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, "../", additionalFile)));
             string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(additionalFile));
             IOExtensions.CopyFile(outputFile, new DirectoryInfo(targetFolder), true);
         }
@@ -285,7 +285,7 @@ public class TREditor
             string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(file));
             if (File.Exists(outputFile))
             {
-                string targetFile = Path.GetFullPath(Path.Combine(_targetDirectory, @"..\", file));
+                string targetFile = Path.GetFullPath(Path.Combine(_targetDirectory, "../", file));
                 IOExtensions.CopyFile(outputFile, targetFile, true);
             }
         }

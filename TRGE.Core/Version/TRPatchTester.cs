@@ -36,19 +36,19 @@ public static class TRPatchTester
         }
         else
         {
-            edition.ExeVersion = CalculateProductVersion(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\TR1X.exe"));
+            edition.ExeVersion = CalculateProductVersion(Path.Combine(ioArgs.OriginalDirectory.FullName, "../TR1X.exe"));
         }
     }
 
     private static void TestForTR2Main(TREdition edition, TRScriptIOArgs ioArgs)
     {
-        string dllPath = Path.GetFullPath(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\TR2Main.dll"));
+        string dllPath = Path.GetFullPath(Path.Combine(ioArgs.OriginalDirectory.FullName, "../TR2Main.dll"));
         edition.IsCommunityPatch = File.Exists(dllPath);
     }
 
     private static void TestForTR3Main(TREdition edition, TRScriptIOArgs ioArgs)
     {
-        FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(ioArgs.OriginalDirectory.FullName, @"..\tomb3.exe"));
+        FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(ioArgs.OriginalDirectory.FullName, "../tomb3.exe"));
         edition.IsCommunityPatch = versionInfo.InternalName != null;
         if (edition.IsCommunityPatch)
         {

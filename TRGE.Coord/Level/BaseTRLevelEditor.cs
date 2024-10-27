@@ -12,7 +12,7 @@ public class BaseTRLevelEditor : AbstractTRLevelEditor
     public BaseTRLevelEditor(TRDirectoryIOArgs io, TREdition edition)
         :base(io, edition)
     {
-        _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(ReadResource(@"Locations\unarmed_locations.json"));
+        _defaultWeaponLocations = JsonConvert.DeserializeObject<Dictionary<string, List<Location>>>(ReadResource("Locations/unarmed_locations.json"));
     }
 
     internal override bool ShouldHandleModification(TRScriptedLevelEventArgs e)
