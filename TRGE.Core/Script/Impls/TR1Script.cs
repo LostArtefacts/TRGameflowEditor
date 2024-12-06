@@ -537,7 +537,7 @@ public class TR1Script : AbstractTRScript
     private static Dictionary<K, V> ReadDictionary<K, V>(string key, JObject data)
     {
         string d = ReadString(key, data, string.Empty);
-        return d.Length == 0 ? null : JsonConvert.DeserializeObject<Dictionary<K, V>>(d);
+        return d.Length == 0 ? new() : JsonConvert.DeserializeObject<Dictionary<K, V>>(d);
     }
 
     private TR1ScriptedLevel FindParentLevel(int cutsceneLevelID)
