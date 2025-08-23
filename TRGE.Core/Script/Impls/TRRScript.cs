@@ -1,6 +1,8 @@
-﻿namespace TRGE.Core;
+﻿using TRGE.Core.Script;
 
-public class TRRScript : AbstractTRScript
+namespace TRGE.Core;
+
+public class TRRScript : AbstractTRScript, IStringSplitScript
 {
     public const string TR1PlaceholderName = "TR1RGF.dummy";
     public const string TR2PlaceholderName = "TR2RGF.dummy";
@@ -131,7 +133,7 @@ public class TRRScript : AbstractTRScript
         }
     }
 
-    internal void ReadStrings(string path)
+    public void ReadStrings(string path)
     {
         void Read(string file, Dictionary<string, string> strings)
         {
@@ -174,29 +176,29 @@ public class TRRScript : AbstractTRScript
 
     private void BuildAsTR1()
     {
-        _additionalFiles.Add("PIX/HD/ATLAN.DDS");
-        _additionalFiles.Add("PIX/HD/AZTEC.DDS");
-        _additionalFiles.Add("PIX/HD/EGYPT.DDS");
-        _additionalFiles.Add("PIX/HD/GREEK.DDS");
-        _additionalFiles.Add("PIX/HD/GYM.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_EU.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_JA.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_US.DDS");
-        _additionalFiles.Add("TEXT/EN/STRINGS.TXT");
-        _additionalFiles.Add("../1/TEXT/EN/COMMON.TXT");
+        AddAdditionalBackupFile("PIX/HD/ATLAN.DDS");
+        AddAdditionalBackupFile("PIX/HD/AZTEC.DDS");
+        AddAdditionalBackupFile("PIX/HD/EGYPT.DDS");
+        AddAdditionalBackupFile("PIX/HD/GREEK.DDS");
+        AddAdditionalBackupFile("PIX/HD/GYM.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_EU.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_JA.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_US.DDS");
+        AddAdditionalBackupFile("TEXT/EN/STRINGS.TXT");
+        AddAdditionalBackupFile("../1/TEXT/EN/COMMON.TXT");
 
-        _additionalFiles.Add("TRACKS/2.OGG");
-        _additionalFiles.Add("TRACKS/5.OGG");
-        _additionalFiles.Add("TRACKS/6.OGG");
-        _additionalFiles.Add("TRACKS/7.OGG");
-        _additionalFiles.Add("TRACKS/8.OGG");
-        _additionalFiles.Add("TRACKS/10.OGG");
-        _additionalFiles.Add("TRACKS/16.OGG");
-        _additionalFiles.Add("TRACKS/17.OGG");
-        _additionalFiles.Add("TRACKS/19.OGG");
-        _additionalFiles.Add("TRACKS/57.OGG");
-        _additionalFiles.Add("TRACKS/58.OGG");
-        _additionalFiles.Add("TRACKS/59.OGG");
+        AddAdditionalBackupFile("TRACKS/2.OGG");
+        AddAdditionalBackupFile("TRACKS/5.OGG");
+        AddAdditionalBackupFile("TRACKS/6.OGG");
+        AddAdditionalBackupFile("TRACKS/7.OGG");
+        AddAdditionalBackupFile("TRACKS/8.OGG");
+        AddAdditionalBackupFile("TRACKS/10.OGG");
+        AddAdditionalBackupFile("TRACKS/16.OGG");
+        AddAdditionalBackupFile("TRACKS/17.OGG");
+        AddAdditionalBackupFile("TRACKS/19.OGG");
+        AddAdditionalBackupFile("TRACKS/57.OGG");
+        AddAdditionalBackupFile("TRACKS/58.OGG");
+        AddAdditionalBackupFile("TRACKS/59.OGG");
 
         _frontEnd = new()
         {
@@ -409,31 +411,31 @@ public class TRRScript : AbstractTRScript
     {
         TrackOffset = 4;
 
-        _additionalFiles.Add("PIX/HD/CHINA.DDS");
-        _additionalFiles.Add("PIX/HD/MANSION.DDS");
-        _additionalFiles.Add("PIX/HD/RIG.DDS");
-        _additionalFiles.Add("PIX/HD/TIBET.DDS");
-        _additionalFiles.Add("PIX/HD/TITAN.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_EU.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_JA.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_US.DDS");
-        _additionalFiles.Add("PIX/HD/VENICE.DDS");
-        _additionalFiles.Add("TEXT/EN/STRINGS.TXT");
-        _additionalFiles.Add("../1/TEXT/EN/COMMON.TXT");
+        AddAdditionalBackupFile("PIX/HD/CHINA.DDS");
+        AddAdditionalBackupFile("PIX/HD/MANSION.DDS");
+        AddAdditionalBackupFile("PIX/HD/RIG.DDS");
+        AddAdditionalBackupFile("PIX/HD/TIBET.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITAN.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_EU.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_JA.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_US.DDS");
+        AddAdditionalBackupFile("PIX/HD/VENICE.DDS");
+        AddAdditionalBackupFile("TEXT/EN/STRINGS.TXT");
+        AddAdditionalBackupFile("../1/TEXT/EN/COMMON.TXT");
 
-        _additionalFiles.Add("TRACKS/27.OGG");
-        _additionalFiles.Add("TRACKS/28.OGG");
-        _additionalFiles.Add("TRACKS/29.OGG");
-        _additionalFiles.Add("TRACKS/30.OGG");
-        _additionalFiles.Add("TRACKS/36.OGG");
-        _additionalFiles.Add("TRACKS/41.OGG");
-        _additionalFiles.Add("TRACKS/48.OGG");
-        _additionalFiles.Add("TRACKS/49.OGG");
-        _additionalFiles.Add("TRACKS/53.OGG");
-        _additionalFiles.Add("TRACKS/54.OGG");
-        _additionalFiles.Add("TRACKS/55.OGG");
-        _additionalFiles.Add("TRACKS/56.OGG");
-        _additionalFiles.Add("TRACKS/60.OGG");
+        AddAdditionalBackupFile("TRACKS/27.OGG");
+        AddAdditionalBackupFile("TRACKS/28.OGG");
+        AddAdditionalBackupFile("TRACKS/29.OGG");
+        AddAdditionalBackupFile("TRACKS/30.OGG");
+        AddAdditionalBackupFile("TRACKS/36.OGG");
+        AddAdditionalBackupFile("TRACKS/41.OGG");
+        AddAdditionalBackupFile("TRACKS/48.OGG");
+        AddAdditionalBackupFile("TRACKS/49.OGG");
+        AddAdditionalBackupFile("TRACKS/53.OGG");
+        AddAdditionalBackupFile("TRACKS/54.OGG");
+        AddAdditionalBackupFile("TRACKS/55.OGG");
+        AddAdditionalBackupFile("TRACKS/56.OGG");
+        AddAdditionalBackupFile("TRACKS/60.OGG");
 
         _frontEnd = new()
         {
@@ -668,42 +670,42 @@ public class TRRScript : AbstractTRScript
 
     private void BuildAsTR3()
     {
-        _additionalFiles.Add("PIX/HD/ANTARC.DDS");
-        _additionalFiles.Add("PIX/HD/HOUSE.DDS");
-        _additionalFiles.Add("PIX/HD/INDIA.DDS");
-        _additionalFiles.Add("PIX/HD/LONDON.DDS");
-        _additionalFiles.Add("PIX/HD/NEVADA.DDS");
-        _additionalFiles.Add("PIX/HD/SOUTHPAC.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_EU.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_JA.DDS");
-        _additionalFiles.Add("PIX/HD/TITLE_US.DDS");
-        _additionalFiles.Add("TEXT/EN/STRINGS.TXT");
-        _additionalFiles.Add("../1/TEXT/EN/COMMON.TXT");
+        AddAdditionalBackupFile("PIX/HD/ANTARC.DDS");
+        AddAdditionalBackupFile("PIX/HD/HOUSE.DDS");
+        AddAdditionalBackupFile("PIX/HD/INDIA.DDS");
+        AddAdditionalBackupFile("PIX/HD/LONDON.DDS");
+        AddAdditionalBackupFile("PIX/HD/NEVADA.DDS");
+        AddAdditionalBackupFile("PIX/HD/SOUTHPAC.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_EU.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_JA.DDS");
+        AddAdditionalBackupFile("PIX/HD/TITLE_US.DDS");
+        AddAdditionalBackupFile("TEXT/EN/STRINGS.TXT");
+        AddAdditionalBackupFile("../1/TEXT/EN/COMMON.TXT");
 
-        _additionalFiles.Add("TRACKS/2.OGG");
-        _additionalFiles.Add("TRACKS/3.OGG");
-        _additionalFiles.Add("TRACKS/4.OGG");
-        _additionalFiles.Add("TRACKS/5.OGG");
-        _additionalFiles.Add("TRACKS/6.OGG");
-        _additionalFiles.Add("TRACKS/7.OGG");
-        _additionalFiles.Add("TRACKS/8.OGG");
-        _additionalFiles.Add("TRACKS/9.OGG");
-        _additionalFiles.Add("TRACKS/10.OGG");
-        _additionalFiles.Add("TRACKS/12.OGG");
-        _additionalFiles.Add("TRACKS/14.OGG");
-        _additionalFiles.Add("TRACKS/26.OGG");
-        _additionalFiles.Add("TRACKS/27.OGG");
-        _additionalFiles.Add("TRACKS/28.OGG");
-        _additionalFiles.Add("TRACKS/30.OGG");
-        _additionalFiles.Add("TRACKS/31.OGG");
-        _additionalFiles.Add("TRACKS/32.OGG");
-        _additionalFiles.Add("TRACKS/33.OGG");
-        _additionalFiles.Add("TRACKS/34.OGG");
-        _additionalFiles.Add("TRACKS/36.OGG");
-        _additionalFiles.Add("TRACKS/37.OGG");
-        _additionalFiles.Add("TRACKS/73.OGG");
-        _additionalFiles.Add("TRACKS/74.OGG");
-        _additionalFiles.Add("TRACKS/123.OGG");
+        AddAdditionalBackupFile("TRACKS/2.OGG");
+        AddAdditionalBackupFile("TRACKS/3.OGG");
+        AddAdditionalBackupFile("TRACKS/4.OGG");
+        AddAdditionalBackupFile("TRACKS/5.OGG");
+        AddAdditionalBackupFile("TRACKS/6.OGG");
+        AddAdditionalBackupFile("TRACKS/7.OGG");
+        AddAdditionalBackupFile("TRACKS/8.OGG");
+        AddAdditionalBackupFile("TRACKS/9.OGG");
+        AddAdditionalBackupFile("TRACKS/10.OGG");
+        AddAdditionalBackupFile("TRACKS/12.OGG");
+        AddAdditionalBackupFile("TRACKS/14.OGG");
+        AddAdditionalBackupFile("TRACKS/26.OGG");
+        AddAdditionalBackupFile("TRACKS/27.OGG");
+        AddAdditionalBackupFile("TRACKS/28.OGG");
+        AddAdditionalBackupFile("TRACKS/30.OGG");
+        AddAdditionalBackupFile("TRACKS/31.OGG");
+        AddAdditionalBackupFile("TRACKS/32.OGG");
+        AddAdditionalBackupFile("TRACKS/33.OGG");
+        AddAdditionalBackupFile("TRACKS/34.OGG");
+        AddAdditionalBackupFile("TRACKS/36.OGG");
+        AddAdditionalBackupFile("TRACKS/37.OGG");
+        AddAdditionalBackupFile("TRACKS/73.OGG");
+        AddAdditionalBackupFile("TRACKS/74.OGG");
+        AddAdditionalBackupFile("TRACKS/123.OGG");
 
         _frontEnd = new()
         {

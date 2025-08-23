@@ -202,12 +202,12 @@ public abstract class AbstractTRLevelEditor : AbstractTRGEEditor
             StoreLevel(_scriptEditor.AssaultLevel);
         }
 
-        foreach (string additionalFile in _scriptEditor.Script.GetAdditionalBackupFiles())
+        foreach (var (src, bak) in _scriptEditor.Script.GetAdditionalBackupFiles())
         {
-            string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(additionalFile));
+            string backup = Path.Combine(_io.BackupDirectory.FullName, Path.GetFileName(bak));
             if (File.Exists(backup))
             {
-                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, "../", additionalFile));
+                string restore = Path.GetFullPath(Path.Combine(_io.OriginalDirectory.FullName, "../", src));
                 files[backup] = restore;
             }
         }

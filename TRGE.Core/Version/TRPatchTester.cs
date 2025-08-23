@@ -31,7 +31,6 @@ public static class TRPatchTester
         edition.IsCommunityPatch = ioArgs.TRScriptFile != null;
         if (!edition.IsCommunityPatch)
         {
-            edition.ConfigName = null;
             edition.ScriptName = null;
         }
         else

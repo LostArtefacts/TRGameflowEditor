@@ -63,30 +63,6 @@ public static class TRScriptFactory
         return null;
     }
 
-    public static FileInfo FindConfigFile(DirectoryInfo directory)
-    {
-        string dir = directory.FullName;
-        foreach (TREdition edition in TREdition.All)
-        {
-            if (edition.HasConfig)
-            {
-                string config = Path.GetFullPath(Path.Combine(dir, edition.ConfigName));
-                if (File.Exists(config))
-                {
-                    return new FileInfo(config);
-                }
-                else if (edition.HasDefaultConfig && Directory.Exists(Path.GetDirectoryName(config)))
-                {
-                    // T1M no longer ships with Tomb1Main.json5 as standard, so we create
-                    // a dummy file to trigger the correct processes further down the line.
-                    File.WriteAllText(config, edition.DefaultConfig);
-                    return new FileInfo(config);
-                }
-            }
-        }
-        return null;
-    }
-
     public static AbstractTRScript OpenScript(FileInfo file)
     {
         return OpenScript(file.FullName);

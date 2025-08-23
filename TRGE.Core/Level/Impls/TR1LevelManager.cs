@@ -77,10 +77,10 @@ internal class TR1LevelManager : AbstractTRLevelManager
 
     protected override void FinalLevelChanged(AbstractTRScriptedLevel oldFinalLevel, AbstractTRScriptedLevel newFinalLevel)
     {
-        TR1ScriptedLevel oldLevel = (oldFinalLevel.HasCutScene ? oldFinalLevel.CutSceneLevel : oldFinalLevel) as TR1ScriptedLevel;
-        TR1ScriptedLevel newLevel = (newFinalLevel.HasCutScene ? newFinalLevel.CutSceneLevel : newFinalLevel) as TR1ScriptedLevel;
+        var oldLevel = oldFinalLevel as TR1ScriptedLevel;
+        var newLevel = newFinalLevel as TR1ScriptedLevel;
 
-        List<BaseLevelSequence> endSequences = new();
+        List<BaseLevelSequence> endSequences = [];
         int statsIndex = oldLevel.Sequences.FindIndex(s => s.Type == LevelSequenceType.Level_Stats);
         for (int i = oldLevel.Sequences.Count - 1; i > statsIndex; i--)
         {
@@ -89,13 +89,11 @@ internal class TR1LevelManager : AbstractTRLevelManager
             oldLevel.Sequences.Remove(sequence);
         }
 
-        oldLevel.Sequences.Add(new LevelExitLevelSequence
+        if (endSequences.Any(s => s.Type == LevelSequenceType.Level_Complete))
         {
-            Type = LevelSequenceType.Exit_To_Level,
-            LevelId = oldFinalLevel.Sequence + 1
-        });
+            newLevel.Sequences.RemoveAll(s => s.Type == LevelSequenceType.Level_Complete);
+        }
 
-        newLevel.Sequences.RemoveAll(s => s.Type == LevelSequenceType.Exit_To_Level);
         newLevel.Sequences.AddRange(endSequences);
     }
 
@@ -401,9 +399,9 @@ internal class TR1LevelManager : AbstractTRLevelManager
         {
             foreach (TR1ScriptedLevel level in Levels.Cast<TR1ScriptedLevel>())
             {
-                if (level.IsFinalLevel && level.Sequences.Find(s => s is PlaySyncedAudioLevelSequence) is PlaySyncedAudioLevelSequence sequence)
+                if (level.IsFinalLevel && level.Sequences.Find(s => s is PlayMusicLevelSequence) is PlayMusicLevelSequence sequence)
                 {
-                    sequence.AudioId = tracks[TRAudioCategory.Credits].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
+                    sequence.MusicTrack = tracks[TRAudioCategory.Credits].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
                     break;
                 }
             }

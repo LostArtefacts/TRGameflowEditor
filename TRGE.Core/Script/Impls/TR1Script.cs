@@ -1,14 +1,17 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using TRGE.Core.Item;
 using TRGE.Core.Item.Enums;
+using TRGE.Core.Script;
 
 namespace TRGE.Core;
 
-public class TR1Script : AbstractTRScript
+public class TR1Script : AbstractTRScript, IStringSplitScript
 {
     private static readonly JsonSerializer _mainSerializer = new()
     {
+        NullValueHandling = NullValueHandling.Ignore,
         ContractResolver = new BaseFirstContractResolver
         {
             NamingStrategy = new SnakeCaseNamingStrategy()
@@ -18,22 +21,18 @@ public class TR1Script : AbstractTRScript
     public const uint Version = 1;
 
     #region Gameflow
-    public string MainMenuPicture { get; set; }
-    public string SavegameFmtLegacy { get; set; }
-    public string SavegameFmtBson { get; set; }
-    public double DemoDelay { get; set; }
-    public double[] WaterColor { get; set; }
-    public double DrawDistanceFade { get; set; }
-    public double DrawDistanceMax { get; set; }
+    // Only properties we're interested in
+    public string MainMenuPicture { get; set; }    
     public string[] Injections { get; set; }
+    public bool EnableTR2ItemDrops { get; set; }
     public bool ConvertDroppedGuns { get; set; }
-    public Dictionary<string, string> Strings { get; set; }
+    public bool EnableKillerPushblocks { get; set; }
 
     private TR1FrontEnd _frontEnd;
     private TR1ScriptedLevel _atiCurrent;
     public override AbstractTRFrontEnd FrontEnd => _frontEnd;
     public override AbstractTRScriptedLevel AssaultLevel { get; set; }
-    public override List<AbstractTRScriptedLevel> Levels { get; set; }
+    public override List<AbstractTRScriptedLevel> Levels { get; set; } = [];
 
 
     public override ushort TitleSoundID
@@ -41,89 +40,60 @@ public class TR1Script : AbstractTRScript
         get => _frontEnd.TrackID;
         set => _frontEnd.TrackID = value;
     }
-    #endregion
 
-    #region Config
-    public int StartLaraHitpoints { get; set; }
-    public bool DisableHealingBetweenLevels { get; set; }
-    public bool DisableMedpacks { get; set; }
-    public bool DisableMagnums { get; set; }
-    public bool DisableUzis { get; set; }
-    public bool DisableShotgun { get; set; }
-    public bool EnableDeathsCounter { get; set; }
-    public bool EnableEnemyHealthbar { get; set; }
-    public bool EnableEnhancedLook { get; set; }
-    public bool EnableShotgunFlash { get; set; }
-    public bool FixShotgunTargeting { get; set; }
-    public bool EnableNumericKeys { get; set; }
-    public bool EnableTr3Sidesteps { get; set; }
-    public bool EnableCheats { get; set; }
-    public bool EnableBraid { get; set; }
-    public bool EnableDetailedStats { get; set; }
-    public bool EnableCompassStats { get; set; }
-    public bool EnableTotalStats { get; set; }
-    public bool EnableTimerInInventory { get; set; }
-    public bool EnableSmoothBars { get; set; }
-    public bool EnableFadeEffects { get; set; }
-    public TRMenuStyle MenuStyle { get; set; }
-    public TRHealthbarMode HealthbarShowingMode { get; set; }
-    public TRUILocation HealthbarLocation { get; set; }
-    public TRUIColour HealthbarColor { get; set; }
-    public TRAirbarMode AirbarShowingMode { get; set; }
-    public TRUILocation AirbarLocation { get; set; }
-    public TRUIColour AirbarColor { get; set; }
-    public TRUILocation EnemyHealthbarLocation { get; set; }
-    public TRUIColour EnemyHealthbarColor { get; set; }
-    public bool FixTihocanSecretSound { get; set; }
-    public bool FixPyramidSecretTrigger { get; set; }
-    public bool FixFloorDataIssues { get; set; }
-    public bool FixSecretsKillingMusic { get; set; }
-    public bool FixSpeechesKillingMusic { get; set; }
-    public bool FixDescendingGlitch { get; set; }
-    public bool FixWallJumpGlitch { get; set; }
-    public bool FixBridgeCollision { get; set; }
-    public bool FixQwopGlitch { get; set; }
-    public bool FixAlligatorAi { get; set; }
-    public bool ChangePierreSpawn { get; set; }
-    public int FovValue { get; set; }
-    public bool FovVertical { get; set; }
-    public bool EnableDemo { get; set; }
-    public bool EnableFmv { get; set; }
-    public bool EnableCine { get; set; }
-    public bool EnableMusicInMenu { get; set; }
-    public bool EnableMusicInInventory { get; set; }
-    public bool DisableTrexCollision { get; set; }
-    public int ResolutionWidth { get; set; }
-    public int ResolutionHeight { get; set; }
-    public bool EnableRoundShadow { get; set; }
-    public bool Enable3dPickups { get; set; }
-    public TRScreenshotFormat ScreenshotFormat { get; set; }
-    public double AnisotropyFilter { get; set; }
-    public bool WalkToItems { get; set; }
-    public int MaximumSaveSlots { get; set; }
-    public bool RevertToPistols { get; set; }
-    public bool EnableEnhancedSaves { get; set; }
-    public bool EnablePitchedSounds { get; set; }
-    public bool EnableJumpTwists { get; set; }
-    public bool EnabledInvertedLook { get; set; }
-    public int CameraSpeed { get; set; }
-    public bool EnableSwingCancel { get; set; }
-    public bool EnableTr2Jumping { get; set; }
-    public bool EnableGameModes { get; set; }
-    public bool EnableSaveCrystals { get; set; }
-    public bool FixBearAi { get; set; }
-    public bool LoadCurrentMusic { get; set; }
-    public bool LoadMusicTriggers { get; set; }
-    public bool EnableUwRoll { get; set; }
-    public bool EnableEidosLogo { get; set; }
-    public bool EnableBuffering { get; set; }
-    public bool EnableLeanJumping { get; set; }
-    public bool EnableConsole { get; set; }
+    public bool DemosEnabled
+    {
+        get => !EnforcedConfig.TryGetValue("enable_demo", out object val) || bool.Parse(val.ToString());
+        set => SetEnforcedConfig("enable_demo", value, true);
+    }
 
+    public int StartLaraHitpoints
+    {
+        get => EnforcedConfig.TryGetValue("start_lara_hitpoints", out object val) ? int.Parse(val.ToString()) : 1000;
+        set => SetEnforcedConfig("start_lara_hitpoints", value, 1000);
+    }
+
+    public bool DisableMedpacks
+    {
+        get => !EnforcedConfig.TryGetValue("disable_medpacks", out object val) || bool.Parse(val.ToString());
+        set => SetEnforcedConfig("disable_medpacks", value, true);
+    }
+
+    public bool DisableHealingBetweenLevels
+    {
+        get => !EnforcedConfig.TryGetValue("disable_healing_between_levels", out object val) || bool.Parse(val.ToString());
+        set => SetEnforcedConfig("disable_healing_between_levels", value, true);
+    }
+
+    private void SetEnforcedConfig(string name, object value, object defaultValue)
+    {
+        if (value == defaultValue)
+        {
+            EnforcedConfig.Remove(name);
+        }
+        else
+        {
+            EnforcedConfig[name] = value;
+        }
+    }
+
+    public void EnforceConfig(string name, object value, bool hide = false)
+    {
+        EnforcedConfig[name] = value;
+        if (hide)
+        {
+            HiddenConfig.Add(name);
+        }
+    }
     #endregion
 
     public JObject GameflowData { get; internal set; }
-    public JObject ConfigData { get; internal set; }
+    public Dictionary<string, object> EnforcedConfig { get; internal set; } = [];
+    public List<string> HiddenConfig { get; internal set; } = [];
+    public string LanguageName { get; set; }
+    public Dictionary<string, string> BaseStrings { get; set; } = [];
+    public Dictionary<string, string> GameStrings { get; set; } = [];
+    public Dictionary<TR1Items, TRXObjectText> ObjectStrings { get; set; } = [];
 
     public override void ReadScriptJson(string json)
     {
@@ -131,28 +101,28 @@ public class TR1Script : AbstractTRScript
         GameflowData = JObject.Parse(json);
 
         MainMenuPicture = ReadString(nameof(MainMenuPicture), GameflowData);
-        SavegameFmtLegacy = ReadString(nameof(SavegameFmtLegacy), GameflowData);
-        SavegameFmtBson = ReadString(nameof(SavegameFmtBson), GameflowData);
-        DemoDelay = ReadDouble(nameof(DemoDelay), GameflowData);
-        WaterColor = ReadArray<double>(nameof(WaterColor), GameflowData);
-        DrawDistanceFade = ReadDouble(nameof(DrawDistanceFade), GameflowData);
-        DrawDistanceMax = ReadDouble(nameof(DrawDistanceMax), GameflowData);
         Injections = ReadNullableArray<string>(nameof(Injections), GameflowData);
         ConvertDroppedGuns = ReadBool(nameof(ConvertDroppedGuns), GameflowData, false);
-        Strings = ReadDictionary<string, string>(nameof(Strings), GameflowData);
+        EnableTR2ItemDrops = ReadBool(nameof(EnableTR2ItemDrops), GameflowData, false);
+        EnableKillerPushblocks = ReadBool(nameof(EnableKillerPushblocks), GameflowData, false);
+        EnforcedConfig = ReadDictionary<string, object>(nameof(EnforcedConfig), GameflowData);
+        HiddenConfig = ReadArray<string>(nameof(HiddenConfig), GameflowData)?.ToList();
+        BaseStrings = ReadDictionary<string, string>(nameof(BaseStrings), GameflowData);
 
-        _additionalFiles.Add(MainMenuPicture);
+        AddAdditionalBackupFile(MainMenuPicture);
+        AddAdditionalBackupFile("cfg/base_strings.json5");
+        AddAdditionalBackupFile("cfg/tr1/strings.json5");
+        AddAdditionalBackupFile("cfg/tr1-ub/strings.json5", "strings_ub.json5");
 
-        Levels = new List<AbstractTRScriptedLevel>();
+        Levels.Clear();
         JArray levels = JArray.Parse(ReadString(nameof(Levels), GameflowData));
 
-        int levelID = 0;
         foreach (JToken levelToken in levels)
         {
-            JObject levelData = levelToken as JObject;
-            TR1ScriptedLevel level = new();
+            var data = levelToken as JObject;
+            var level = new TR1ScriptedLevel();
 
-            level.Type = ReadEnum<LevelType>(nameof(level.Type), levelData);
+            level.Type = ReadEnum(nameof(level.Type), data, LevelType.Normal);
             switch (level.Type)
             {
                 case LevelType.Gym:
@@ -164,226 +134,292 @@ public class TR1Script : AbstractTRScript
                     Levels.Add(level);
                     level.Sequence = level.OriginalSequence = (ushort)Levels.Count; // Gym always first
                     break;
-                
-                case LevelType.Cutscene:
-                    TR1ScriptedLevel parentLevel = FindParentLevel(levelID);
-                    if (parentLevel != null)
-                    {
-                        parentLevel.CutSceneLevel = level;
-                    }
-                    break;
-
-                case LevelType.Title:
-                    _frontEnd = new TR1FrontEnd
-                    {
-                        TitleLevel = level
-                    };
-                    break;
 
                 case LevelType.Current:
                     _atiCurrent = level;
                     break;
+
+                case LevelType.Dummy:
+                    continue;
             }
 
-            level.Name = ReadString("Title", levelData);
-            level.LevelFile = ReadString("File", levelData);
-            level.Music = ReadInt(nameof(level.Music), levelData);
-            level.Injections = ReadNullableArray<string>(nameof(level.Injections), levelData);
-            level.InheritInjections = ReadNullableBool(nameof(level.InheritInjections), levelData);
-            level.Demo = ReadNullableBool(nameof(level.Demo), levelData);
-            level.DrawDistanceFade = ReadNullableDouble(nameof(level.DrawDistanceFade), levelData);
-            level.DrawDistanceMax = ReadNullableDouble(nameof(level.DrawDistanceMax), levelData);
-            level.UnobtainableKills = ReadNullableInt(nameof(level.UnobtainableKills), levelData);
-            level.UnobtainablePickups = ReadNullableInt(nameof(level.UnobtainablePickups), levelData);
-            level.LaraType = (uint?)ReadNullableInt(nameof(level.LaraType), levelData);
-
-            level.ItemDrops = new();
-            string dropsKey = nameof(level.ItemDrops).ToLowerSnake();
-            if (levelData.ContainsKey(dropsKey))
-            {
-                JArray drops = JArray.Parse(ReadString(dropsKey, levelData));
-                foreach (JToken dropToken in drops)
-                {
-                    JObject dropData = dropToken as JObject;
-                    TR1ItemDrop drop = new();
-                    drop.EnemyNum = ReadInt(nameof(drop.EnemyNum), dropData);
-                    drop.ObjectIds = ReadArray<int>(nameof(drop.ObjectIds), dropData)
-                        .Select(i => (TR1Items)i).ToList();
-                    level.ItemDrops.Add(drop);
-                }
-            }
-            
-            Dictionary<string, string> strings = ReadDictionary<string, string>("Strings", levelData);
-            foreach (string key in strings.Keys)
-            {
-                if (key.StartsWith("key"))
-                {
-                    level.AddKey(strings[key]);
-                }
-                else if (key.StartsWith("pickup"))
-                {
-                    level.AddPickup(strings[key]);
-                }
-                else if (key.StartsWith("puzzle"))
-                {
-                    level.AddPuzzle(strings[key]);
-                }
-            }
-
-
-            level.Sequences = new List<BaseLevelSequence>();
-            JArray sequences = JArray.Parse(ReadString(nameof(level.Sequence), levelData));
-            foreach (JToken levelSequence in sequences)
-            {
-                JObject sequenceData = levelSequence as JObject;
-                BaseLevelSequence sequence;
-                LevelSequenceType sequenceType = ReadEnum<LevelSequenceType>(nameof(sequence.Type), sequenceData);
-                sequence = sequenceType switch
-                {
-                    LevelSequenceType.Play_FMV => new FMVLevelSequence
-                    {
-                        FmvPath = ReadString("FmvPath", sequenceData)
-                    },
-                    LevelSequenceType.Display_Picture => new DisplayPictureLevelSequence
-                    {
-                        PicturePath = ReadString("PicturePath", sequenceData),
-                        DisplayTime = ReadDouble("DisplayTime", sequenceData)
-                    },
-                    LevelSequenceType.Loading_Screen => new LoadingScreenSequence
-                    {
-                        PicturePath = ReadString("PicturePath", sequenceData),
-                        DisplayTime = ReadDouble("DisplayTime", sequenceData)
-                    },
-                    LevelSequenceType.Total_Stats => new TotalStatsLevelSequence
-                    {
-                        PicturePath = ReadString("PicturePath", sequenceData)
-                    },
-                    LevelSequenceType.Level_Stats or LevelSequenceType.Exit_To_Level or LevelSequenceType.Exit_To_Cine => new LevelExitLevelSequence
-                    {
-                        LevelId = ReadInt("LevelId", sequenceData)
-                    },
-                    LevelSequenceType.Set_Cam_X or LevelSequenceType.Set_Cam_Y or LevelSequenceType.Set_Cam_Z or LevelSequenceType.Set_Cam_Angle => new SetCamLevelSequence
-                    {
-                        Value = ReadInt("Value", sequenceData)
-                    },
-                    LevelSequenceType.Give_Item => new GiveItemLevelSequence
-                    {
-                        ObjectId = (TR1Items)ReadInt("ObjectId", sequenceData),
-                        Quantity = ReadInt("Quantity", sequenceData)
-                    },
-                    LevelSequenceType.Play_Synced_Audio => new PlaySyncedAudioLevelSequence
-                    {
-                        AudioId = ReadInt("AudioId", sequenceData)
-                    },
-                    LevelSequenceType.Mesh_Swap => new MeshSwapLevelSequence
-                    {
-                        Object1ID = ReadInt("Object1Id", sequenceData),
-                        Object2ID = ReadInt("Object2Id", sequenceData),
-                        MeshID = ReadInt("MeshId", sequenceData)
-                    },
-                    LevelSequenceType.Setup_Bacon_Lara => new SetupBaconLaraSequence
-                    {
-                        AnchorRoom = ReadInt("AnchorRoom", sequenceData)
-                    },
-                    _ => new BaseLevelSequence(),
-                };
-                sequence.Type = sequenceType;
-                level.Sequences.Add(sequence);
-            }
-
-            level.SetDefaults();
-            ++levelID;
+            ReadLevel(level, data);
         }
 
         Levels[^1].IsFinalLevel = true;
+
+        if (GameflowData.ContainsKey("title"))
+        {
+            var title = new TR1ScriptedLevel();
+            _frontEnd = new()
+            {
+                TitleLevel = title,
+            };
+            ReadLevel(title, JObject.Parse(ReadString("title", GameflowData)));
+        }
+
+        if (GameflowData.ContainsKey("cutscenes"))
+        {
+            var cutscenes = JArray.Parse(ReadString("cutscenes", GameflowData));
+            for (int i = 0; i < cutscenes.Count; i++)
+            {
+                var parentLevel = Levels.Cast<TR1ScriptedLevel>()
+                    .First(l => l.Sequences.Any(s => s is PlayCutsceneSequence p && p.CutsceneId == i));
+                if (parentLevel is not null)
+                {
+                    var cutscene = new TR1ScriptedLevel();
+                    parentLevel.CutSceneLevel = cutscene;
+                    ReadLevel(cutscene, cutscenes[i] as JObject);
+                }
+            }
+        }
+
+        if (GameflowData.ContainsKey("demos"))
+        {
+            var demos = JArray.Parse(ReadString("demos", GameflowData));
+            foreach (JToken demoToken in demos)
+            {
+                var path = ReadString("Path", demoToken as JObject);
+                if (Levels.Find(l => l.LevelFile == path) is TR1ScriptedLevel level)
+                {
+                    level.Demo = true;
+                }
+            }
+        }
     }
 
-    public override void ReadConfigJson(string json)
+    private static void ReadLevel(TR1ScriptedLevel level, JObject levelData)
     {
-        ConfigData = JObject.Parse(json);
+        level.LevelFile = ReadString("Path", levelData);
+        level.MusicTrack = ReadInt(nameof(level.MusicTrack), levelData);
+        level.Injections = ReadNullableArray<string>(nameof(level.Injections), levelData);
+        level.InheritInjections = ReadNullableBool(nameof(level.InheritInjections), levelData);
+        level.Demo = ReadNullableBool(nameof(level.Demo), levelData);
+        level.FogStart = ReadNullableDouble(nameof(level.FogStart), levelData);
+        level.FogEnd = ReadNullableDouble(nameof(level.FogEnd), levelData);
+        level.UnobtainableKills = ReadNullableInt(nameof(level.UnobtainableKills), levelData);
+        level.UnobtainablePickups = ReadNullableInt(nameof(level.UnobtainablePickups), levelData);
+        if (ReadString(nameof(level.LaraType), levelData, null) is string type)
+        {
+            level.LaraType = TRXNaming.GetTR1Type(type);
+        }
 
-        StartLaraHitpoints          = ReadInt(nameof(StartLaraHitpoints), ConfigData, 1000);
-        DisableHealingBetweenLevels = ReadBool(nameof(DisableHealingBetweenLevels), ConfigData, false);
-        DisableMedpacks             = ReadBool(nameof(DisableMedpacks), ConfigData, false);
-        DisableMagnums              = ReadBool(nameof(DisableMagnums), ConfigData, false);
-        DisableUzis                 = ReadBool(nameof(DisableUzis), ConfigData, false);
-        DisableShotgun              = ReadBool(nameof(DisableShotgun), ConfigData, false);
-        EnableDeathsCounter         = ReadBool(nameof(EnableDeathsCounter), ConfigData, true);
-        EnableEnemyHealthbar        = ReadBool(nameof(EnableEnemyHealthbar), ConfigData, true);
-        EnableEnhancedLook          = ReadBool(nameof(EnableEnhancedLook), ConfigData, true);
-        EnableShotgunFlash          = ReadBool(nameof(EnableShotgunFlash), ConfigData, true);
-        FixShotgunTargeting         = ReadBool(nameof(FixShotgunTargeting), ConfigData, true);
-        EnableNumericKeys           = ReadBool(nameof(EnableNumericKeys), ConfigData, true);
-        EnableTr3Sidesteps          = ReadBool(nameof(EnableTr3Sidesteps), ConfigData, true);
-        EnableCheats                = ReadBool(nameof(EnableCheats), ConfigData, false);
-        EnableBraid                 = ReadBool(nameof(EnableBraid), ConfigData, false);
-        EnableDetailedStats         = ReadBool(nameof(EnableDetailedStats), ConfigData, true);
-        EnableCompassStats          = ReadBool(nameof(EnableCompassStats), ConfigData, true);
-        EnableTotalStats            = ReadBool(nameof(EnableTotalStats), ConfigData, true);
-        EnableTimerInInventory      = ReadBool(nameof(EnableTimerInInventory), ConfigData, true);
-        EnableSmoothBars            = ReadBool(nameof(EnableSmoothBars), ConfigData, true);
-        EnableFadeEffects           = ReadBool(nameof(EnableFadeEffects), ConfigData, true);
-        MenuStyle                   = ReadEnum(nameof(MenuStyle), ConfigData, TRMenuStyle.PC);
-        HealthbarShowingMode        = ReadEnum(nameof(HealthbarShowingMode), ConfigData, TRHealthbarMode.FlashingOrDefault);
-        HealthbarLocation           = ReadEnum(nameof(HealthbarLocation), ConfigData, TRUILocation.TopLeft);
-        HealthbarColor              = ReadEnum(nameof(HealthbarColor), ConfigData, TRUIColour.Red);
-        AirbarShowingMode           = ReadEnum(nameof(AirbarShowingMode), ConfigData, TRAirbarMode.Default);
-        AirbarLocation              = ReadEnum(nameof(AirbarLocation), ConfigData, TRUILocation.TopRight);
-        AirbarColor                 = ReadEnum(nameof(AirbarColor), ConfigData, TRUIColour.Blue);
-        EnemyHealthbarLocation      = ReadEnum(nameof(EnemyHealthbarLocation), ConfigData, TRUILocation.BottomLeft);
-        EnemyHealthbarColor         = ReadEnum(nameof(EnemyHealthbarColor), ConfigData, TRUIColour.Grey);
-        FixTihocanSecretSound       = ReadBool(nameof(FixTihocanSecretSound), ConfigData, true);
-        FixPyramidSecretTrigger     = ReadBool(nameof(FixPyramidSecretTrigger), ConfigData, true);
-        FixFloorDataIssues          = ReadBool(nameof(FixFloorDataIssues), ConfigData, true);
-        FixSecretsKillingMusic      = ReadBool(nameof(FixSecretsKillingMusic), ConfigData, true);
-        FixSpeechesKillingMusic     = ReadBool(nameof(FixSpeechesKillingMusic), ConfigData, true);
-        FixDescendingGlitch         = ReadBool(nameof(FixDescendingGlitch), ConfigData, false);
-        FixWallJumpGlitch           = ReadBool(nameof(FixWallJumpGlitch), ConfigData, false);
-        FixBridgeCollision          = ReadBool(nameof(FixBridgeCollision), ConfigData, true);
-        FixQwopGlitch               = ReadBool(nameof(FixQwopGlitch), ConfigData, false);
-        FixAlligatorAi              = ReadBool(nameof(FixAlligatorAi), ConfigData, true);
-        ChangePierreSpawn           = ReadBool(nameof(ChangePierreSpawn), ConfigData, true);
-        FovValue                    = ReadInt(nameof(FovValue), ConfigData, 65);
-        FovVertical                 = ReadBool(nameof(FovVertical), ConfigData, true);
-        EnableDemo                  = ReadBool(nameof(EnableDemo), ConfigData, true);
-        EnableFmv                   = ReadBool(nameof(EnableFmv), ConfigData, true);
-        EnableCine                  = ReadBool(nameof(EnableCine), ConfigData, true);
-        EnableMusicInMenu           = ReadBool(nameof(EnableMusicInMenu), ConfigData, true);
-        EnableMusicInInventory      = ReadBool(nameof(EnableMusicInInventory), ConfigData, true);
-        DisableTrexCollision        = ReadBool(nameof(DisableTrexCollision), ConfigData, false);
-        ResolutionWidth             = ReadInt(nameof(ResolutionWidth), ConfigData, -1);
-        ResolutionHeight            = ReadInt(nameof(ResolutionHeight), ConfigData, -1);
-        EnableRoundShadow           = ReadBool(nameof(EnableRoundShadow), ConfigData, true);
-        Enable3dPickups             = ReadBool(nameof(Enable3dPickups), ConfigData, true);
-        ScreenshotFormat            = ReadEnum(nameof(ScreenshotFormat), ConfigData, TRScreenshotFormat.JPG);
-        AnisotropyFilter            = ReadDouble(nameof(AnisotropyFilter), ConfigData, 16);
-        WalkToItems                 = ReadBool(nameof(WalkToItems), ConfigData, false);
-        MaximumSaveSlots            = ReadInt(nameof(MaximumSaveSlots), ConfigData, 25);
-        RevertToPistols             = ReadBool(nameof(RevertToPistols), ConfigData, false);
-        EnableEnhancedSaves         = ReadBool(nameof(EnableEnhancedSaves), ConfigData, true);
-        EnablePitchedSounds         = ReadBool(nameof(EnablePitchedSounds), ConfigData, true);
-        EnableJumpTwists            = ReadBool(nameof(EnableJumpTwists), ConfigData, true);
-        EnabledInvertedLook         = ReadBool(nameof(EnabledInvertedLook), ConfigData, false);
-        CameraSpeed                 = ReadInt(nameof(CameraSpeed), ConfigData, 5);
-        EnableSwingCancel           = ReadBool(nameof(EnableSwingCancel), ConfigData, true);
-        EnableTr2Jumping            = ReadBool(nameof(EnableTr2Jumping), ConfigData, false);
+        level.ItemDrops = [];
+        string dropsKey = nameof(level.ItemDrops).ToLowerSnake();
+        if (levelData.ContainsKey(dropsKey))
+        {
+            JArray drops = JArray.Parse(ReadString(dropsKey, levelData));
+            foreach (JToken dropToken in drops)
+            {
+                JObject dropData = dropToken as JObject;
+                TR1ItemDrop drop = new();
+                drop.EnemyNum = ReadInt(nameof(drop.EnemyNum), dropData);
+                drop.ObjectIds = [.. ReadArray<int>(nameof(drop.ObjectIds), dropData).Select(i => (TR1Items)i)];
+                level.ItemDrops.Add(drop);
+            }
+        }
 
-        EnableGameModes             = ReadBool(nameof(EnableGameModes), ConfigData, true);
-        EnableSaveCrystals          = ReadBool(nameof(EnableSaveCrystals), ConfigData, false);
-        LoadMusicTriggers           = ReadBool(nameof(LoadMusicTriggers), ConfigData, true);
-        LoadCurrentMusic            = ReadBool(nameof(LoadCurrentMusic), ConfigData, true);
-        FixBearAi                   = ReadBool(nameof(FixBearAi), ConfigData, true);
-        EnableUwRoll                = ReadBool(nameof(EnableUwRoll), ConfigData, false);
-        EnableEidosLogo             = ReadBool(nameof(EnableEidosLogo), ConfigData, true);
-        EnableBuffering             = ReadBool(nameof(EnableBuffering), ConfigData, false);
-        EnableLeanJumping           = ReadBool(nameof(EnableLeanJumping), ConfigData, false);
-        EnableConsole               = ReadBool(nameof(EnableConsole), ConfigData, true);
+        level.Sequences = [];
+        JArray sequences = JArray.Parse(ReadString(nameof(level.Sequence), levelData));
+        foreach (JToken levelSequence in sequences)
+        {
+            JObject sequenceData = levelSequence as JObject;
+            BaseLevelSequence sequence;
+            LevelSequenceType sequenceType = ReadEnum(nameof(sequence.Type), sequenceData, LevelSequenceType.Unknown);
+            sequence = sequenceType switch
+            {
+                LevelSequenceType.Play_FMV => new FMVLevelSequence
+                {
+                    FmvId = ReadInt("FmvId", sequenceData),
+                },
+                LevelSequenceType.Display_Picture or LevelSequenceType.Loading_Screen => new DisplayPictureSequence
+                {
+                    Path = ReadString(nameof(DisplayPictureSequence.Path), sequenceData),
+                    DisplayTime = ReadNullableDouble(nameof(DisplayPictureSequence.DisplayTime), sequenceData),
+                    FadeInTime = ReadNullableDouble(nameof(DisplayPictureSequence.FadeInTime), sequenceData),
+                    FadeOutTime = ReadNullableDouble(nameof(DisplayPictureSequence.FadeOutTime), sequenceData),
+                },
+                LevelSequenceType.Total_Stats => new TotalStatsLevelSequence
+                {
+                    BackgroundPath = ReadString("BackgroundPath", sequenceData),
+                },
+                LevelSequenceType.Play_Cutscene => new PlayCutsceneSequence
+                {
+                    CutsceneId = ReadInt("CutsceneId", sequenceData),
+                },
+                LevelSequenceType.Set_Cutscene_Pos => new SetCutscenePosSequence
+                {
+                    X = ReadNullableInt("X", sequenceData),
+                    Y = ReadNullableInt("Y", sequenceData),
+                    Z = ReadNullableInt("Z", sequenceData),
+                },
+                LevelSequenceType.Set_Cutscene_Angle => new SetCutsceneAngleSequence
+                {
+                    Value = ReadInt("Value", sequenceData),
+                },
+                LevelSequenceType.Give_Item => new GiveItemLevelSequence
+                {
+                    ObjectId = ReadItem("ObjectId", sequenceData),
+                    Quantity = ReadInt("Quantity", sequenceData)
+                },
+                LevelSequenceType.Play_Music => new PlayMusicLevelSequence
+                {
+                    MusicTrack = ReadInt("MusicTrack", sequenceData),
+                },
+                LevelSequenceType.Mesh_Swap => new MeshSwapLevelSequence
+                {
+                    Object1ID = ReadItem("Object1Id", sequenceData),
+                    Object2ID = ReadItem("Object2Id", sequenceData),
+                    MeshID = ReadInt("MeshId", sequenceData)
+                },
+                LevelSequenceType.Setup_Bacon_Lara => new SetupBaconLaraSequence
+                {
+                    AnchorRoom = ReadInt("AnchorRoom", sequenceData)
+                },
+                _ => new BaseLevelSequence(),
+            };
+
+            if (sequenceType != LevelSequenceType.Unknown)
+            {
+                sequence.Type = sequenceType;
+                level.Sequences.Add(sequence);
+            }
+        }
+
+        level.SetDefaults();
+    }
+
+    public void ReadStrings(string directoryName)
+    {
+        var data = JObject.Parse(File.ReadAllText(Path.Combine(directoryName, "base_strings.json5")));
+        LanguageName = ReadString(nameof(LanguageName), data);
+        BaseStrings = ReadDictionary<string, string>("GameStrings", data);
+
+        bool gold = Levels.Count < 6; // Hmm
+        data = JObject.Parse(File.ReadAllText(Path.Combine(directoryName, $"strings{(gold ? "_ub" : string.Empty)}.json5")));
+        JArray levels = JArray.Parse(ReadString(nameof(Levels), data));
+        if (AssaultLevel == null)
+        {
+            levels.Insert(0, null);
+        }
+
+        int levelID = 0;
+        foreach (JToken levelToken in levels)
+        {
+            if (levelToken is not JObject levelData)
+            {
+                ++levelID;
+                continue;
+            }
+
+            string levelName = ReadString("title", levelData);
+            if (levelName == "Dummy")
+            {
+                continue;
+            }
+
+            TR1ScriptedLevel level = null;
+            if (levelID == 0)
+            {
+                level = AssaultLevel as TR1ScriptedLevel;
+            }
+            else if (levelID - 1 < Levels.Count)
+            {
+                level = Levels[levelID - 1] as TR1ScriptedLevel;
+            }
+            else if (levelID - 1 == levels.Count)
+            {
+                level = _frontEnd.TitleLevel;
+            }
+            else if (levelID == levels.Count)
+            {
+                level = _atiCurrent;
+            }
+
+            ++levelID;
+            if (level == null)
+            {
+                continue;
+            }
+
+            level.Name = levelName;
+            level.ObjectText = ReadObjectText("objects", levelData);
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (level.ObjectText.TryGetValue(TR1Items.Key1_S_P + i, out var text))
+                {
+                    level.Keys.Add(text.Name);
+                }
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                if (level.ObjectText.TryGetValue(TR1Items.Puzzle1_S_P + i, out var text))
+                {
+                    level.Puzzles.Add(text.Name);
+                }
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                if (level.ObjectText.TryGetValue(TR1Items.Quest1_S_P + i, out var text))
+                {
+                    level.Pickups.Add(text.Name);
+                }
+            }
+        }
+
+        ObjectStrings = ReadObjectText("objects", data);
+        GameStrings = ReadDictionary<string, string>("GameStrings", data);
+
+        if (data.ContainsKey("cutscenes"))
+        {
+            var cutscenes = JArray.Parse(ReadString("cutscenes", data));
+            for (int i = 0; i < cutscenes.Count; i++)
+            {
+                var cutLevel = Levels.Cast<TR1ScriptedLevel>()
+                    .Where(l => l.Sequences.Any(s => s is PlayCutsceneSequence p && p.CutsceneId == i))
+                    .Select(l => l.CutSceneLevel).First();
+                if (cutLevel is not null)
+                {
+                    cutLevel.Name = ReadString("title", cutscenes[i] as JObject);
+                }
+            }
+        }
+    }
+
+    private static Dictionary<TR1Items, TRXObjectText> ReadObjectText(string key, JObject data)
+    {
+        var objData = ReadDictionary<string, Dictionary<string, object>>(key, data);
+        var objText = new Dictionary<TR1Items, TRXObjectText>();
+        foreach (var (k, v) in objData)
+        {
+            var type = TRXNaming.GetTR1Type(k);
+            if (type == TR1Items.Unknown)
+            {
+                continue;
+            }
+
+            objText[type] = new();
+            if (v.TryGetValue("names", out var names) && names is JArray arr && arr.Count > 0)
+            {
+                objText[type].Name = arr[0].ToString();
+            }
+            if (v.TryGetValue("name", out var name))
+            {
+                objText[type].Name = name.ToString();
+            }
+            if (v.TryGetValue("description", out var desc))
+            {
+                objText[type].Description = desc.ToString();
+            }
+        }
+        return objText;
     }
 
     private static string ReadString(string key, JObject data)
     {
-        string result = ReadString(key, data, null) ?? throw new ArgumentException("Invalid/missing value for " + key);
-        return result;
+        return ReadString(key, data, null)
+            ?? throw new ArgumentException("Invalid/missing value for " + key);
     }
 
     private static string ReadString(string key, JObject data, string defaultValue)
@@ -397,6 +433,12 @@ public class TR1Script : AbstractTRScript
         string result = data[key].ToString();
         data.Remove(key);
         return result;
+    }
+
+    private static TR1Items ReadItem(string key, JObject data)
+    {
+        string result = ReadString(key, data);
+        return TRXNaming.GetTR1Type(result);
     }
 
     private static int ReadInt(string key, JObject data)
@@ -492,17 +534,6 @@ public class TR1Script : AbstractTRScript
         return double.TryParse(result, out double value) ? value : defaultValue;
     }
 
-    private static T ReadEnum<T>(string key, JObject data)
-    {
-        key = key.ToLowerSnake();
-        if (!data.ContainsKey(key))
-        {
-            throw new ArgumentException("Invalid/missing value for " + key);
-        }
-
-        return ReadEnum(key, data, default(T));
-    }
-
     private static T ReadEnum<T>(string key, JObject data, T defaultValue)
     {
         key = key.ToLowerSnake();
@@ -537,22 +568,7 @@ public class TR1Script : AbstractTRScript
     private static Dictionary<K, V> ReadDictionary<K, V>(string key, JObject data)
     {
         string d = ReadString(key, data, string.Empty);
-        return d.Length == 0 ? new() : JsonConvert.DeserializeObject<Dictionary<K, V>>(d);
-    }
-
-    private TR1ScriptedLevel FindParentLevel(int cutsceneLevelID)
-    {
-        foreach (AbstractTRScriptedLevel level in Levels)
-        {
-            TR1ScriptedLevel lvl = level as TR1ScriptedLevel;
-            BaseLevelSequence sequence = lvl.Sequences.Find(s => s.Type == LevelSequenceType.Exit_To_Cine);
-            if (sequence != null && (sequence as LevelExitLevelSequence).LevelId == cutsceneLevelID)
-            {
-                return lvl;
-            }
-        }
-
-        return null;
+        return d.Length == 0 ? [] : JsonConvert.DeserializeObject<Dictionary<K, V>>(d);
     }
 
     protected override void CalculateEdition()
@@ -562,152 +578,39 @@ public class TR1Script : AbstractTRScript
 
     protected override void Stamp()
     {
-        Strings["HEADING_INVENTORY"] = ApplyStamp(Strings["HEADING_INVENTORY"]);
-        Strings["INV_ITEM_GAME"] = ApplyStamp(Strings["INV_ITEM_GAME"]);
+        BaseStrings["HEADING_INVENTORY"] = ApplyStamp(BaseStrings["HEADING_INVENTORY"]);
+        ObjectStrings[TR1Items.PassportOpen_M_H].Name =
+            ApplyStamp(ObjectStrings[TR1Items.PassportOpen_M_H].Name);
     }
 
     public override string SerialiseScriptToJson()
     {
-        JObject data = new();
+        JObject data = [];
 
         Write(nameof(MainMenuPicture), MainMenuPicture, data);
-        Write(nameof(SavegameFmtLegacy), SavegameFmtLegacy, data);
-        Write(nameof(SavegameFmtBson), SavegameFmtBson, data);
-        Write(nameof(DemoDelay), DemoDelay, data);
-        Write(nameof(WaterColor), WaterColor, data);
-        Write(nameof(DrawDistanceFade), DrawDistanceFade, data);
-        Write(nameof(DrawDistanceMax), DrawDistanceMax, data);
         Write(nameof(ConvertDroppedGuns), ConvertDroppedGuns, data);
+        Write(nameof(EnableTR2ItemDrops), EnableTR2ItemDrops, data);
+        Write(nameof(EnableKillerPushblocks), EnableKillerPushblocks, data);
+
         if (Injections != null)
         {
             Write(nameof(Injections), Injections, data);
         }
 
-        Write(nameof(Levels), BuildLevels(), data);
+        {
+            var title = SerializeLevel((FrontEnd as TR1FrontEnd).TitleLevel);
+            Write(nameof(title), title, data);
+        }
 
-        Write(nameof(Strings), Strings, data);
+        WriteLevels(data);
+
+        Write(nameof(EnforcedConfig), EnforcedConfig, data);
+        Write(nameof(HiddenConfig), HiddenConfig, data);
 
         // Add anything else from the original data that we may not have captured.
         data.Merge(GameflowData);
 
         return JsonConvert.SerializeObject(data, Formatting.Indented);
-    }
-
-    public override string SerialiseConfigToJson(string existingData)
-    {
-        JObject data = new();
-
-        Write(nameof(StartLaraHitpoints), StartLaraHitpoints, data);
-        Write(nameof(DisableHealingBetweenLevels), DisableHealingBetweenLevels, data);
-        Write(nameof(DisableMedpacks), DisableMedpacks, data);
-        Write(nameof(DisableMagnums), DisableMagnums, data);
-        Write(nameof(DisableUzis), DisableUzis, data);
-        Write(nameof(DisableShotgun), DisableShotgun, data);
-        Write(nameof(EnableDeathsCounter), EnableDeathsCounter, data);
-        Write(nameof(EnableEnemyHealthbar), EnableEnemyHealthbar, data);
-        Write(nameof(EnableEnhancedLook), EnableEnhancedLook, data);
-        Write(nameof(EnableShotgunFlash), EnableShotgunFlash, data);
-        Write(nameof(FixShotgunTargeting), FixShotgunTargeting, data);
-        Write(nameof(EnableNumericKeys), EnableNumericKeys, data);
-        Write(nameof(EnableTr3Sidesteps), EnableTr3Sidesteps, data);
-        Write(nameof(EnableCheats), EnableCheats, data);
-        Write(nameof(EnableBraid), EnableBraid, data);
-        Write(nameof(EnableDetailedStats), EnableDetailedStats, data);
-        Write(nameof(EnableCompassStats), EnableCompassStats, data);
-        Write(nameof(EnableTotalStats), EnableTotalStats, data);
-        Write(nameof(EnableTimerInInventory), EnableTimerInInventory, data);
-        Write(nameof(EnableSmoothBars), EnableSmoothBars, data);
-        Write(nameof(EnableFadeEffects), EnableFadeEffects, data);
-        WriteKebab(nameof(MenuStyle), MenuStyle, data);
-        WriteKebab(nameof(HealthbarShowingMode), HealthbarShowingMode, data);
-        WriteKebab(nameof(HealthbarLocation), HealthbarLocation, data);
-        WriteKebab(nameof(HealthbarColor), HealthbarColor, data);
-        WriteKebab(nameof(AirbarShowingMode), AirbarShowingMode, data);
-        WriteKebab(nameof(AirbarLocation), AirbarLocation, data);
-        WriteKebab(nameof(AirbarColor), AirbarColor, data);
-        WriteKebab(nameof(EnemyHealthbarLocation), EnemyHealthbarLocation, data);
-        WriteKebab(nameof(EnemyHealthbarColor), EnemyHealthbarColor, data);
-        Write(nameof(FixTihocanSecretSound), FixTihocanSecretSound, data);
-        Write(nameof(FixPyramidSecretTrigger), FixPyramidSecretTrigger, data);
-        Write(nameof(FixFloorDataIssues), FixFloorDataIssues, data);
-        Write(nameof(FixSecretsKillingMusic), FixSecretsKillingMusic, data);
-        Write(nameof(FixSpeechesKillingMusic), FixSpeechesKillingMusic, data);
-        Write(nameof(FixDescendingGlitch), FixDescendingGlitch, data);
-        Write(nameof(FixWallJumpGlitch), FixWallJumpGlitch, data);
-        Write(nameof(FixBridgeCollision), FixBridgeCollision, data);
-        Write(nameof(FixQwopGlitch), FixQwopGlitch, data);
-        Write(nameof(FixAlligatorAi), FixAlligatorAi, data);
-        Write(nameof(ChangePierreSpawn), ChangePierreSpawn, data);
-        Write(nameof(FovValue), FovValue, data);
-        Write(nameof(FovVertical), FovVertical, data);
-        Write(nameof(EnableDemo), EnableDemo, data);
-        Write(nameof(EnableFmv), EnableFmv, data);
-        Write(nameof(EnableCine), EnableCine, data);
-        Write(nameof(EnableMusicInMenu), EnableMusicInMenu, data);
-        Write(nameof(EnableMusicInInventory), EnableMusicInInventory, data);
-        Write(nameof(DisableTrexCollision), DisableTrexCollision, data);
-        Write(nameof(ResolutionWidth), ResolutionWidth, data);
-        Write(nameof(ResolutionHeight), ResolutionHeight, data);
-        Write(nameof(EnableRoundShadow), EnableRoundShadow, data);
-        Write(nameof(Enable3dPickups), Enable3dPickups, data);
-        WriteKebab(nameof(ScreenshotFormat), ScreenshotFormat, data);
-        Write(nameof(AnisotropyFilter), AnisotropyFilter, data);
-        Write(nameof(WalkToItems), WalkToItems, data);
-        Write(nameof(MaximumSaveSlots), MaximumSaveSlots, data);
-        Write(nameof(RevertToPistols), RevertToPistols, data);
-        Write(nameof(EnableEnhancedSaves), EnableEnhancedSaves, data);
-        Write(nameof(EnablePitchedSounds), EnablePitchedSounds, data);
-        Write(nameof(EnableJumpTwists), EnableJumpTwists, data);
-        Write(nameof(EnabledInvertedLook), EnabledInvertedLook, data);
-        Write(nameof(CameraSpeed), CameraSpeed, data);
-        Write(nameof(EnableSwingCancel), EnableSwingCancel, data);
-        Write(nameof(EnableTr2Jumping), EnableTr2Jumping, data);
-        Write(nameof(EnableGameModes), EnableGameModes, data);
-        Write(nameof(EnableSaveCrystals), EnableSaveCrystals, data);
-        Write(nameof(FixBearAi), FixBearAi, data);
-        Write(nameof(LoadCurrentMusic), LoadCurrentMusic, data);
-        Write(nameof(LoadMusicTriggers), LoadMusicTriggers, data);
-        Write(nameof(EnableUwRoll), EnableUwRoll, data);
-        Write(nameof(EnableEidosLogo), EnableEidosLogo, data);
-        Write(nameof(EnableBuffering), EnableBuffering, data);
-        Write(nameof(EnableLeanJumping), EnableLeanJumping, data);
-        Write(nameof(EnableConsole), EnableConsole, data);
-
-        // The existing data will have been re-read at this stage (T1M stores runtime config
-        // in the same file so this may well have changed between saves in TRGE). Re-scan this
-        // data, but in any case fall back to what was read when initially loaded.
-        if (existingData != null)
-        {
-            JObject existingExternalData = GetExistingExternalData(data, existingData);
-            if (existingExternalData != null)
-            {
-                ConfigData = existingExternalData;
-            }
-        }
-
-        data.Merge(ConfigData);
-
-        return JsonConvert.SerializeObject(data, Formatting.Indented);
-    }
-
-    private static JObject GetExistingExternalData(JObject convertedData, string externalJsonData)
-    {
-        try
-        {
-            JObject externalData = JObject.Parse(externalJsonData);
-            foreach (KeyValuePair<string, JToken> pair in convertedData)
-            {
-                if (externalData.ContainsKey(pair.Key))
-                {
-                    externalData.Remove(pair.Key);
-                }
-            }
-            return externalData;
-        }
-        catch
-        {
-            return null;
-        }
     }
 
     private static void Write<T>(string key, T value, JObject data)
@@ -723,53 +626,50 @@ public class TR1Script : AbstractTRScript
         }
     }
 
-    private static void WriteKebab<T>(string key, T value, JObject data)
+    private void WriteLevels(JObject data)
     {
-        key = key.ToLowerSnake();
-        data[key] = JToken.FromObject(value.ToString().ToLowerKebab());
-    }
+        JArray levels = [];
+        JArray cutscenes = [];
+        JArray demos = [];
 
-    private JArray BuildLevels()
-    {
-        JArray levels = new()
+        if (AssaultLevel is TR1ScriptedLevel gym)
         {
-            SerializeLevel(AssaultLevel as TR1ScriptedLevel)
-        };
+            levels.Add(SerializeLevel(gym));
+        }
 
-        List<AbstractTRScriptedLevel> enabledLevels = Levels.FindAll(l => l.Enabled);
-        List<AbstractTRScriptedLevel> cutsceneLevels = new();
-
-        int cutsceneLevelID = enabledLevels.Count;
-        foreach (TR1ScriptedLevel level in enabledLevels.Cast<TR1ScriptedLevel>())
+        var enabledLevels = Levels.FindAll(l => l.Enabled).Cast<TR1ScriptedLevel>();
+        foreach (TR1ScriptedLevel level in enabledLevels)
         {
+            levels.Add(SerializeLevel(level));
             if (level.HasCutScene)
             {
-                LevelExitLevelSequence cutSequence = level.Sequences.Find(s => s.Type == LevelSequenceType.Exit_To_Cine) as LevelExitLevelSequence;
-                cutSequence.LevelId = ++cutsceneLevelID;
-                cutsceneLevels.Add(level.CutSceneLevel);
+                var cutSequence = level.Sequences.OfType<PlayCutsceneSequence>().First();
+                cutSequence.CutsceneId = cutscenes.Count;
+                cutscenes.Add(SerializeLevel(level.CutSceneLevel as TR1ScriptedLevel));
+            }            
+            if (level.Demo ?? false)
+            {
+                demos.Add(SerializeLevel(level));
             }
-            levels.Add(SerializeLevel(level));
         }
 
-        foreach (TR1ScriptedLevel level in cutsceneLevels.Cast<TR1ScriptedLevel>())
-        {
-            levels.Add(SerializeLevel(level));
-        }
-
-        levels.Add(SerializeLevel((FrontEnd as TR1FrontEnd).TitleLevel));
         levels.Add(SerializeLevel(_atiCurrent));
 
-        return levels;
+        Write(nameof(levels), levels, data);
+        Write(nameof(demos), demos, data);
+        Write(nameof(cutscenes), cutscenes, data);
     }
 
-    private JObject SerializeLevel(TR1ScriptedLevel level)
+    private static JObject SerializeLevel(TR1ScriptedLevel level)
     {
-        JObject levelObj = new();
+        JObject levelObj = [];
 
-        Write("Title", level.Name, levelObj);
-        Write("File", level.LevelFile, levelObj);
-        Write(nameof(level.Type), level.Type, levelObj);
-        Write(nameof(level.Music), level.Music, levelObj);
+        Write("Path", level.LevelFile, levelObj);
+        if (level.Type != LevelType.Normal && level.Type != LevelType.Dummy)
+        {
+            Write(nameof(level.Type), level.Type, levelObj);
+        }
+        Write(nameof(level.MusicTrack), level.MusicTrack, levelObj);
 
         if (level.Injections != null)
         {
@@ -787,32 +687,32 @@ public class TR1Script : AbstractTRScript
         {
             Write(nameof(level.WaterColor), level.WaterColor, levelObj);
         }
-        if (level.DrawDistanceFade.HasValue)
+        if (level.FogStart.HasValue)
         {
-            Write(nameof(level.DrawDistanceFade), level.DrawDistanceFade.Value, levelObj);
+            Write(nameof(level.FogStart), level.FogStart.Value, levelObj);
         }
-        if (level.DrawDistanceMax.HasValue)
+        if (level.FogEnd.HasValue)
         {
-            Write(nameof(level.DrawDistanceMax), level.DrawDistanceMax.Value, levelObj);
+            Write(nameof(level.FogEnd), level.FogEnd.Value, levelObj);
         }
 
         Write("Sequence", BuildSequences(level), levelObj);
 
-        JObject strings = new();
-        for (int i = 0; i < level.Keys.Count; i++)
-        {
-            Write("key" + (i + 1), level.Keys[i], strings);
-        }
-        for (int i = 0; i < level.Pickups.Count; i++)
-        {
-            Write("pickup" + (i + 1), level.Pickups[i], strings);
-        }
-        for (int i = 0; i < level.Puzzles.Count; i++)
-        {
-            Write("puzzle" + (i + 1), level.Puzzles[i], strings);
-        }
+        //JObject strings = [];
+        //for (int i = 0; i < level.Keys.Count; i++)
+        //{
+        //    Write("key" + (i + 1), level.Keys[i], strings);
+        //}
+        //for (int i = 0; i < level.Pickups.Count; i++)
+        //{
+        //    Write("pickup" + (i + 1), level.Pickups[i], strings);
+        //}
+        //for (int i = 0; i < level.Puzzles.Count; i++)
+        //{
+        //    Write("puzzle" + (i + 1), level.Puzzles[i], strings);
+        //}
 
-        Write("Strings", strings, levelObj);
+        //Write("Strings", strings, levelObj);
 
         if (level.UnobtainableKills.HasValue)
         {
@@ -822,13 +722,9 @@ public class TR1Script : AbstractTRScript
         {
             Write(nameof(level.UnobtainablePickups), level.UnobtainablePickups.Value, levelObj);
         }
-        if (level.Demo.HasValue)
-        {
-            Write(nameof(level.Demo), level.Demo.Value, levelObj);
-        }
         if (level.LaraType.HasValue)
         {
-            Write(nameof(level.LaraType), level.LaraType.Value, levelObj);
+            Write(nameof(level.LaraType), TRXNaming.GetName(level.LaraType.Value), levelObj);
         }
 
         return levelObj;
@@ -836,7 +732,7 @@ public class TR1Script : AbstractTRScript
 
     private static JArray BuildItemDrops(TR1ScriptedLevel level)
     {
-        JArray items = new();
+        JArray items = [];
 
         foreach (TR1ItemDrop drop in level.ItemDrops)
         {
@@ -846,25 +742,144 @@ public class TR1Script : AbstractTRScript
         return items;
     }
 
-    private JArray BuildSequences(TR1ScriptedLevel level)
+    private static JArray BuildSequences(TR1ScriptedLevel level)
     {
-        JArray sequences = new();
+        JArray sequences = [];
 
         foreach (BaseLevelSequence sequence in level.Sequences)
         {
-            if (sequence.Type == LevelSequenceType.Fix_Pyramid_Secret
-                && Edition.ExeVersion >= new Version(2, 14))
-            {
-                // Legacy sequence type, which will prevent T1M launching if present in 2.14+
-                continue;
-            }
-
             JObject seq = JObject.FromObject(sequence, _mainSerializer);
             Write(nameof(seq.Type), sequence.Type, seq);
             sequences.Add(seq);
         }
 
         return sequences;
+    }
+
+    public void WriteStrings(string directoryName)
+    {
+        {
+            var data = new JObject();
+            Write(nameof(LanguageName), LanguageName, data);
+            Write(nameof(GameStrings), BaseStrings, data);
+
+            File.WriteAllText(Path.Combine(directoryName, "base_strings.json5"),
+                JsonConvert.SerializeObject(data, Formatting.Indented));
+        }
+
+        {
+            var data = new JObject();
+            JArray levels = [];
+            JArray cutscenes = [];
+            JArray demos = [];
+
+            if (AssaultLevel is TR1ScriptedLevel gym)
+            {
+                levels.Add(SerializeLevelText(gym));
+            }
+
+            var enabledLevels = Levels.FindAll(l => l.Enabled).Cast<TR1ScriptedLevel>();
+            foreach (TR1ScriptedLevel level in enabledLevels)
+            {
+                levels.Add(SerializeLevelText(level));
+                if (level.HasCutScene)
+                {
+                    cutscenes.Add(SerializeLevelText(level.CutSceneLevel as TR1ScriptedLevel));
+                }
+                if (level.Demo ?? false)
+                {
+                    demos.Add(SerializeLevelText(level));
+                }
+            }
+
+            levels.Add(SerializeLevelText(_atiCurrent));
+
+            Write(nameof(levels), levels, data);
+            Write(nameof(demos), demos, data);
+            Write(nameof(cutscenes), cutscenes, data);
+            if (SerializeObjectText(ObjectStrings) is JObject objText)
+            {
+                Write("objects", objText, data);
+            }
+            Write(nameof(GameStrings), GameStrings, data);
+
+            File.WriteAllText(Path.Combine(directoryName, "strings.json5"),
+                JsonConvert.SerializeObject(data, Formatting.Indented));
+        }
+    }
+
+    private static JObject SerializeLevelText(TR1ScriptedLevel level)
+    {
+        var data = new JObject();
+        if (level.Name != null)
+        {
+            Write("title", level.Name, data);
+        }
+        if (SerializeObjectText(level.ObjectText, level) is JObject objText)
+        {
+            Write("objects", objText, data);
+        }
+        
+        return data;
+    }
+
+    private static JObject SerializeObjectText(Dictionary<TR1Items, TRXObjectText> text, TR1ScriptedLevel level = null)
+    {
+        if (level == null && (text == null || text.Count == 0))
+        {
+            return null;
+        }
+
+        if (level != null)
+        {
+            level.ObjectText ??= [];
+            for (int i = 0; i < 4 && i < level.Keys.Count; i++)
+            {
+                if (!level.ObjectText.TryGetValue(TR1Items.Key1_S_P + i, out var objText))
+                {
+                    level.ObjectText[TR1Items.Key1_S_P + i] = objText = new();
+                }
+                objText.Name = level.Keys[i];
+            }
+            for (int i = 0; i < 4 && i < level.Puzzles.Count; i++)
+            {
+                if (!level.ObjectText.TryGetValue(TR1Items.Puzzle1_S_P + i, out var objText))
+                {
+                    level.ObjectText[TR1Items.Puzzle1_S_P + i] = objText = new();
+                }
+                objText.Name = level.Puzzles[i];
+            }
+            for (int i = 0; i < 4 && i < level.Pickups.Count; i++)
+            {
+                if (!level.ObjectText.TryGetValue(TR1Items.Quest1_S_P + i, out var objText))
+                {
+                    level.ObjectText[TR1Items.Quest1_S_P + i] = objText = new();
+                }
+                objText.Name = level.Pickups[i];
+            }
+            text = level.ObjectText;
+        }
+
+        if (text == null || text.Count == 0)
+        {
+            return null;
+        }
+
+        var data = new JObject();
+        foreach (var (k, v) in text)
+        {
+            var objData = new JObject();
+            if (v.Name != null)
+            {
+                Write(nameof(v.Name), v.Name, objData);
+            }
+            if (v.Description != null)
+            {
+                Write(nameof(v.Description), v.Description, objData);
+            }
+            Write(TRXNaming.GetName(k), objData, data);
+        }
+        return data;
     }
 
     #region Obsolete

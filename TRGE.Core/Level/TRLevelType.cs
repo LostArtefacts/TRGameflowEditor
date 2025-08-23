@@ -2,10 +2,9 @@
 
 public enum LevelType
 {
-    Title,
+    Dummy,
     Gym,
     Normal,
-    Cutscene,
     Current,
     Bonus,
 }

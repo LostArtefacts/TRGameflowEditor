@@ -41,7 +41,7 @@ internal class TRIOCoord : ITRConfigProvider
     protected OperationMode _mode;
 
     protected string _editDirectory;
-    protected string _orignalScriptFile, _backupScriptFile, _orignalGoldScriptFile,_backupGoldScriptFile, _scriptConfigFile, _originalTRConfigFile, _backupTRConfigFile;
+    protected string _orignalScriptFile, _backupScriptFile, _orignalGoldScriptFile, _backupGoldScriptFile, _scriptConfigFile;
     protected string _originalDirectory, _directoryConfigFile;
 
     internal string OriginalDirectory => _originalDirectory;
@@ -69,7 +69,6 @@ internal class TRIOCoord : ITRConfigProvider
         _mode = Directory.Exists(path) ? OperationMode.Directory : OperationMode.File;
         _orignalScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path, false) : path;
         _orignalGoldScriptFile = _mode == OperationMode.Directory ? FindScriptFile(path, true) : path;
-        _originalTRConfigFile = _mode == OperationMode.Directory ? FindConfigFile(path) : path;
         _originalDirectory = _mode == OperationMode.Directory ? path : new FileInfo(_orignalScriptFile).DirectoryName;
 
         // Verify that the script and level editors are compatible - this
@@ -108,8 +107,6 @@ internal class TRIOCoord : ITRConfigProvider
         {
             TRScriptFile = _orignalScriptFile == null ? null : new FileInfo(_orignalScriptFile),
             TRScriptBackupFile = _backupScriptFile == null ? null : new FileInfo(_backupScriptFile),
-            TRConfigFile = _originalTRConfigFile == null ? null : new FileInfo(_originalTRConfigFile),
-            TRConfigBackupFile = _backupTRConfigFile == null ? null : new FileInfo(_backupTRConfigFile),
             InternalConfigFile = new FileInfo(_scriptConfigFile),
             WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
             OutputDirectory = new DirectoryInfo(GetOutputDirectory()),
@@ -124,8 +121,6 @@ internal class TRIOCoord : ITRConfigProvider
             {
                 TRScriptFile = new FileInfo(_orignalGoldScriptFile),
                 TRScriptBackupFile = _backupGoldScriptFile == null ? null : new FileInfo(_backupGoldScriptFile),
-                TRConfigFile = _originalTRConfigFile == null ? null : new FileInfo(_originalTRConfigFile),
-                TRConfigBackupFile = _backupTRConfigFile == null ? null : new FileInfo(_backupTRConfigFile),
                 InternalConfigFile = null,
                 WIPOutputDirectory = new DirectoryInfo(GetWIPOutputDirectory()),
                 OutputDirectory = new DirectoryInfo(GetOutputDirectory()),
@@ -173,8 +168,14 @@ internal class TRIOCoord : ITRConfigProvider
                     return gold ? null : TRRScript.TR1PlaceholderName;
                 }
 
-                // Guess that it's TombATI
-                throw new PlatformNotSupportedException("The use of TombATI is not supported. Please upgrade to TR1X - https://github.com/LostArtefacts/TR1X/");
+                if (File.Exists(Path.Combine(path, "../TR1X.exe")) || File.Exists(Path.Combine(path, "../Tomb1Main.exe")))
+                {
+                    throw new PlatformNotSupportedException("Please upgrade to the latest version of TR1X - https://github.com/LostArtefacts/TR1X/");
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException("The use of TombATI is not supported. Please upgrade to TR1X - https://github.com/LostArtefacts/TR1X/");
+                }
             }
 
             bool isTR2 = TR2LevelNames.AsList.All(l => File.Exists(Path.Combine(path, l)));
@@ -191,12 +192,6 @@ internal class TRIOCoord : ITRConfigProvider
 
             throw new MissingScriptException(string.Format("No valid Tomb Raider script file was found in {0}.", path));
         }
-        return fi?.FullName;
-    }
-
-    private static string FindConfigFile(string path)
-    {
-        FileInfo fi = TRScriptFactory.FindConfigFile(new DirectoryInfo(path));
         return fi?.FullName;
     }
 
@@ -217,10 +212,6 @@ internal class TRIOCoord : ITRConfigProvider
                 if (_orignalScriptFile != null)
                 {
                     filesToBackup.Add(_orignalScriptFile);
-                }
-                if (_originalTRConfigFile != null)
-                {
-                    filesToBackup.Add(_originalTRConfigFile);
                 }
             }
 
@@ -258,13 +249,13 @@ internal class TRIOCoord : ITRConfigProvider
             AbstractTRScriptedLevel assaultLevel = script.AssaultLevel;
             if (assaultLevel != null)
             {
-                backupLevels(new() { assaultLevel });
+                backupLevels([assaultLevel]);
             }
 
             AbstractTRScript goldScript = null;
             if (_orignalGoldScriptFile != null)
             {
-                filesToBackup.Add(_orignalGoldScriptFile);
+                //filesToBackup.Add(_orignalGoldScriptFile);
                 goldScript = TRScriptFactory.OpenScript(_orignalGoldScriptFile);
                 backupLevels(goldScript.Levels);
             }
@@ -276,8 +267,8 @@ internal class TRIOCoord : ITRConfigProvider
                 _backupArgs.ProgressTarget += filesToBackup.Count;
                 FireBackupProgressChanged();
 
-                List<string> failures = new();
-                List<string> exts = new() { ".PHD", ".TR2", ".TR4", ".TRC" };
+                List<string> failures = [];
+                List<string> exts = [".PHD", ".TR2", ".TR4", ".TRC"];
                 foreach (string file in filesToBackup)
                 {
                     if (!exts.Contains(Path.GetExtension(file).ToUpper()))
@@ -297,17 +288,19 @@ internal class TRIOCoord : ITRConfigProvider
                 }
             }
 
-            filesToBackup.AddRange(script.GetAdditionalBackupFiles()
-                .Select(f => GetOriginalFilePath(f)));
+            var additionalFiles = script.GetAdditionalBackupFiles().ToDictionary();
             if (goldScript != null)
             {
-                filesToBackup.AddRange(goldScript.GetAdditionalBackupFiles()
-                    .Select(f => GetOriginalFilePath(f)));
+                additionalFiles = new[] { additionalFiles, goldScript.GetAdditionalBackupFiles() }
+                    .SelectMany(d => d)
+                    .ToLookup(pair => pair.Key, pair => pair.Value)
+                    .ToDictionary(group => group.Key, group => group.First());
+                additionalFiles[_orignalGoldScriptFile] = script.Edition.GoldScriptBak;
             }
 
             TestTRRCommon(filesToBackup, script);
 
-            _backupArgs.ProgressTarget += filesToBackup.Count * 2;
+            _backupArgs.ProgressTarget += (filesToBackup.Count + additionalFiles.Count) * 2;
             FireBackupProgressChanged();
 
             foreach (string file in filesToBackup)
@@ -319,21 +312,25 @@ internal class TRIOCoord : ITRConfigProvider
                 FireBackupProgressChanged(1);
             }
 
+            foreach (var (src, bak) in additionalFiles)
+            {
+                var srcName = GetOriginalFilePath(src);
+                var tarName = Path.Combine(backupDI.FullName, Path.GetFileName(bak));
+                IOExtensions.CopyFile(srcName, tarName, false);
+                FireBackupProgressChanged(1);
+
+                tarName = Path.Combine(outputDI.FullName, Path.GetFileName(bak));
+                IOExtensions.CopyFile(srcName, outputDI, false);
+                FireBackupProgressChanged(1);
+            }
+
             if (_orignalScriptFile != null)
             {
                 _backupScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalScriptFile).Name);
             }
             if (_orignalGoldScriptFile != null)
             {
-                _backupGoldScriptFile = Path.Combine(backupDirectory, new FileInfo(_orignalGoldScriptFile).Name);
-            }
-            if (_originalTRConfigFile != null)
-            {
-                _backupTRConfigFile = Path.Combine(backupDirectory, new FileInfo(_originalTRConfigFile).Name);
-            }
-            else
-            {
-                _backupTRConfigFile = null;
+                _backupGoldScriptFile = Path.Combine(backupDirectory, script.Edition.GoldScriptBak);
             }
         }
         else
@@ -397,10 +394,6 @@ internal class TRIOCoord : ITRConfigProvider
         {
             expectedFiles.Add(scriptEditor.GoldEditor.BackupFile.Name);
         }
-        if (_originalTRConfigFile != null)
-        {
-            expectedFiles.Add(scriptEditor.BackupTRConfigFile.Name);
-        }
 
         if (scriptEditor.Edition.AssaultCourseSupported)
         {
@@ -432,11 +425,11 @@ internal class TRIOCoord : ITRConfigProvider
         }
 
         expectedFiles.AddRange(scriptEditor.Script.GetAdditionalBackupFiles()
-                .Select(f => Path.GetFileName(f)));
+                .Select(f => Path.GetFileName(f.Value)));
         if (scriptEditor.GoldEditor != null)
         {
             expectedFiles.AddRange(scriptEditor.GoldEditor.Script.GetAdditionalBackupFiles()
-                .Select(f => Path.GetFileName(f)));
+                .Select(f => Path.GetFileName(f.Value)));
         }
 
         backupDI.ClearExcept(expectedFiles, TREditor.TargetFileExtensions);

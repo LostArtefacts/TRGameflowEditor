@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using TRGE.Core.Script;
 
 namespace TRGE.Core;
 
@@ -17,9 +18,6 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         get => _io.TRScriptBackupFile;
         set => _io.TRScriptBackupFile = value;
     }
-
-    public FileInfo TRConfigFile => _io.TRConfigFile;
-    public FileInfo BackupTRConfigFile => _io.TRConfigBackupFile;
 
     public FileInfo InternalConfigFile
     {
@@ -83,14 +81,9 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         LoadConfig();
 
         (Script = script).Read(BackupFile);
-        if (BackupTRConfigFile != null)
+        if (script is IStringSplitScript stringScript)
         {
-            Script.ReadConfig(BackupTRConfigFile);
-        }
-
-        if (script is TRRScript trrScript)
-        {
-            trrScript.ReadStrings(_io.BackupDirectory.FullName);
+            stringScript.ReadStrings(_io.BackupDirectory.FullName);
         }
 
         TRPatchTester.Test(Edition, _io);
@@ -425,11 +418,6 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
             string outputPath = GetScriptWIPOutputPath();
             Script.Write(outputPath);
         }
-
-        if (TRConfigFile != null)
-        {
-            Script.WriteConfig(GetTRConfigWIPOutputPath(), TRConfigFile.FullName);
-        }
     }
 
     /// <summary>
@@ -519,11 +507,6 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
             GoldEditor.BackupFile.CopyTo(GoldEditor.OriginalFile.FullName, true);
         }
 
-        if (TRConfigFile != null)
-        {
-            BackupTRConfigFile.CopyTo(TRConfigFile.FullName, true);
-        }
-
         while (File.Exists(InternalConfigFile.FullName))
         {
             InternalConfigFile.Delete(); //issue #39
@@ -537,29 +520,14 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
         return Path.Combine(WIPOutputDirectory.FullName, OriginalFile.Name);
     }
 
-    protected string GetTRConfigWIPOutputPath()
-    {
-        return Path.Combine(WIPOutputDirectory.FullName, TRConfigFile.Name);
-    }
-
     internal string GetScriptOutputPath()
     {
         return Path.Combine(OutputDirectory.FullName, OriginalFile.Name);
     }
 
-    internal string GetConfigOutputPath()
-    {
-        return TRConfigFile == null ? null : Path.Combine(OutputDirectory.FullName, TRConfigFile.Name);
-    }
-
     internal AbstractTRScript LoadBackupScript()
     {
-        AbstractTRScript script = LoadScript(BackupFile?.FullName);
-        if (BackupTRConfigFile != null)
-        {
-            script.ReadConfig(BackupTRConfigFile);
-        }
-        return script;
+        return LoadScript(BackupFile?.FullName);
     }
 
     internal AbstractTRScript LoadRandomisationBaseScript()
@@ -571,6 +539,10 @@ public abstract class AbstractTRScriptEditor : AbstractTRGEEditor
     {
         AbstractTRScript script = CreateScript();
         script.Read(filePath);
+        if (script is IStringSplitScript stringScript)
+        {
+            stringScript.ReadStrings(_io.BackupDirectory.FullName);
+        }
         return script;
     }
 

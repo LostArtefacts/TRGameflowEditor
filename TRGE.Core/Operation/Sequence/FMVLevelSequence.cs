@@ -2,5 +2,5 @@
 
 public class FMVLevelSequence : BaseLevelSequence
 {
-    public string FmvPath { get; set; }
+    public int FmvId { get; set; }
 }
