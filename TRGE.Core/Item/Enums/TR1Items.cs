@@ -2,6 +2,7 @@
 
 public enum TR1Items
 {
+    Unknown = -1,
     Lara                   = 0,
     LaraPistolAnim_H       = 1,
     LaraShotgunAnim_H      = 2,

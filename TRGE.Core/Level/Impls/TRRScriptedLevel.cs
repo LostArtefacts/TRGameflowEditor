@@ -1,6 +1,4 @@
-﻿using System.Reflection.Emit;
-
-namespace TRGE.Core;
+﻿namespace TRGE.Core;
 
 public class TRRScriptedLevel : AbstractTRScriptedLevel
 {

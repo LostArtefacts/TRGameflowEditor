@@ -9,11 +9,6 @@ public abstract class AbstractTRScript
         Read(file?.FullName);
     }
 
-    public void ReadConfig(FileInfo file)
-    {
-        ReadConfig(file.FullName);
-    }
-
     public virtual void Read(string filePath)
     {
         //All we can go on to begin with is the file name to determine a generic edition.
@@ -32,20 +27,6 @@ public abstract class AbstractTRScript
             case ".JSON":
             case ".JSON5":
                 ReadScriptJson(File.ReadAllText(filePath));
-                break;
-            default:
-                throw new UnsupportedScriptException();
-        }
-    }
-
-    public void ReadConfig(string filePath)
-    {
-        string ext = Path.GetExtension(filePath).ToUpper();
-        switch (ext)
-        {
-            case ".JSON":
-            case ".JSON5":
-                ReadConfigJson(File.ReadAllText(filePath));
                 break;
             default:
                 throw new UnsupportedScriptException();
@@ -78,6 +59,10 @@ public abstract class AbstractTRScript
             case ".JSON":
             case ".JSON5":
                 File.WriteAllText(filePath, SerialiseScriptToJson());
+                if (this is TR1Script tr1Script)
+                {
+                    tr1Script.WriteStrings(Path.GetDirectoryName(filePath));
+                }
                 break;
             default:
                 throw new UnsupportedScriptException();
@@ -146,8 +131,9 @@ public abstract class AbstractTRScript
         return gameString + stamp;
     }
 
-    public List<string> GetAdditionalBackupFiles() => _additionalFiles;
-    public virtual void AddAdditionalBackupFile(string file) => _additionalFiles.Add(file);
+    public Dictionary<string, string> GetAdditionalBackupFiles() => _additionalFiles;
+    public virtual void AddAdditionalBackupFile(string sourceName, string backupName = null)
+        => _additionalFiles[sourceName] = backupName ?? sourceName;
 
-    protected List<string> _additionalFiles = new();
+    protected Dictionary<string, string> _additionalFiles = [];
 }

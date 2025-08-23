@@ -37,10 +37,9 @@ public class TREdition : ICloneable
         Title = "Tomb Raider I (TR1X)",
         Version = TRVersion.TR1,
         Hardware = Hardware.PC,
-        ScriptName = "../cfg/TR1X_gameflow.json5",
-        GoldScriptName = "../cfg/TR1X_gameflow_ub.json5",
-        ConfigName = "../cfg/TR1X.json5",
-        DefaultConfig = "{}",
+        ScriptName = "../cfg/tr1/gameflow.json5",
+        GoldScriptName = "../cfg/tr1-ub/gameflow.json5",
+        GoldScriptBak = "gameflow_ub.json5",
         LevelCompleteOffset = 0,
         SecretBonusesSupported = false,
         SunsetsSupported = false,
@@ -226,12 +225,9 @@ public class TREdition : ICloneable
     public bool Remastered { get; internal set; }
     public string ScriptName { get; set; }
     public string GoldScriptName { get; set; }
+    public string GoldScriptBak { get; set; }
     public bool HasScript => ScriptName != null;
     public bool HasGold => GoldScriptName != null;
-    public string ConfigName { get; internal set; }
-    public bool HasConfig => ConfigName != null;
-    public string DefaultConfig { get; internal set; }
-    public bool HasDefaultConfig => DefaultConfig != null;
     public Hardware Hardware { get; internal set; }
     /// <summary>
     /// Indicates which level in the game is the final level. The offset

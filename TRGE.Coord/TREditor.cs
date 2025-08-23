@@ -191,12 +191,6 @@ public class TREditor
             }
         }
 
-        if (ScriptEditor.Edition.HasConfig)
-        {
-            string targetScriptFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, ScriptEditor.Edition.ConfigName)));
-            IOExtensions.CopyFile(ScriptEditor.GetConfigOutputPath(), new DirectoryInfo(targetScriptFolder), true);
-        }
-
         List<AbstractTRScriptedLevel> levels = new(ScriptEditor.Levels);
 
         if (_scriptEditor.Edition.Remastered && _scriptEditor.LevelSequencingOrganisation != Organisation.Default)
@@ -243,16 +237,19 @@ public class TREditor
             }
         }
 
-        List<string> additionalFiles = ScriptEditor.Script.GetAdditionalBackupFiles();
+        var additionalFiles = ScriptEditor.Script.GetAdditionalBackupFiles();
         if (ScriptEditor.GoldEditor != null)
         {
-            additionalFiles.AddRange(ScriptEditor.GoldEditor.Script.GetAdditionalBackupFiles());
+            additionalFiles = new[] { additionalFiles, ScriptEditor.GoldEditor.Script.GetAdditionalBackupFiles() }
+                .SelectMany(d => d)
+                .ToLookup(pair => pair.Key, pair => pair.Value)
+                .ToDictionary(group => group.Key, group => group.First());
         }
 
-        foreach (string additionalFile in additionalFiles.Distinct())
+        foreach (var (src, bak) in additionalFiles)
         {
-            string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, "../", additionalFile)));
-            string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(additionalFile));
+            string targetFolder = Path.GetFullPath(Path.GetDirectoryName(Path.Combine(_targetDirectory, "../", src)));
+            string outputFile = Path.Combine(_outputDirectory, Path.GetFileName(bak));
             IOExtensions.CopyFile(outputFile, new DirectoryInfo(targetFolder), true);
         }
 

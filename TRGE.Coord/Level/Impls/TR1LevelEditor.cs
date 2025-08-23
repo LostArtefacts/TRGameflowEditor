@@ -1,5 +1,4 @@
-﻿using TRGE.Coord.Properties;
-using TRGE.Core;
+﻿using TRGE.Core;
 using TRLevelControl;
 using TRLevelControl.Helpers;
 using TRLevelControl.Model;
@@ -14,22 +13,6 @@ public class TR1LevelEditor : BaseTRLevelEditor
         : base(io, edition)
     {
         _control = new();
-        MoveTitles();
-    }
-
-    private void MoveTitles()
-    {
-        string titleReg = Path.Combine(_io.BackupDirectory.FullName, "title.webp");
-        if (File.Exists(titleReg))
-        {
-            File.WriteAllBytes(titleReg, Resources.TR1XTitleRegular);
-        }
-
-        titleReg = Path.Combine(_io.BackupDirectory.FullName, "title_ub.webp");
-        if (File.Exists(titleReg))
-        {
-            File.WriteAllBytes(titleReg, Resources.TR1XTitleUB);
-        }
     }
 
     private TR1Level ReadLevel(string lvl)

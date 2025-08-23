@@ -61,24 +61,24 @@ public class TR1ScriptedLevel : AbstractTRScriptedLevel
             return;
         }
 
-        BaseLevelSequence sequence = level.Sequences.Find(s => s.Type == LevelSequenceType.Level_Stats);
-        if (sequence is LevelExitLevelSequence levelStatsSequence)
-        {
-            levelStatsSequence.LevelId = _sequence;
-        }
+        //BaseLevelSequence sequence = level.Sequences.Find(s => s.Type == LevelSequenceType.Level_Stats);
+        //if (sequence is LevelExitLevelSequence levelStatsSequence)
+        //{
+        //    levelStatsSequence.LevelId = _sequence;
+        //}
 
-        sequence = level.Sequences.Find(s => s.Type == LevelSequenceType.Exit_To_Level);
-        if (sequence is LevelExitLevelSequence levelExitSequence)
-        {
-            levelExitSequence.LevelId = _sequence + 1;
-        }
+        //sequence = level.Sequences.Find(s => s.Type == LevelSequenceType.Exit_To_Level);
+        //if (sequence is LevelExitLevelSequence levelExitSequence)
+        //{
+        //    levelExitSequence.LevelId = _sequence + 1;
+        //}
     }
 
-    public int Music { get; set; }
+    public int MusicTrack { get; set; }
     public override ushort TrackID
     {
-        get => (ushort)Music;
-        set => Music = value;
+        get => (ushort)MusicTrack;
+        set => MusicTrack = value;
     }
     public override bool HasFMV { get; set; }
 
@@ -90,22 +90,22 @@ public class TR1ScriptedLevel : AbstractTRScriptedLevel
         set { }
     }
 
-    public override bool SupportsCutScenes => HasSequence(LevelSequenceType.Exit_To_Cine);
+    public override bool SupportsCutScenes => HasSequence(LevelSequenceType.Play_Cutscene);
 
     public override AbstractTRScriptedLevel CutSceneLevel { get; set; }
 
     public override bool RemovesWeapons
     {
-        get => HasSequence(LevelSequenceType.Remove_Guns);
+        get => HasSequence(LevelSequenceType.Remove_Weapons);
         set
         {
             if (value)
             {
-                AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Guns }, false);
+                AddSequenceBefore(LevelSequenceType.Loop_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Weapons }, false);
             }
             else
             {
-                RemoveSequence(LevelSequenceType.Remove_Guns);
+                RemoveSequence(LevelSequenceType.Remove_Weapons);
             }
         }
     }
@@ -117,7 +117,7 @@ public class TR1ScriptedLevel : AbstractTRScriptedLevel
         {
             if (value)
             {
-                AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Ammo }, false);
+                AddSequenceBefore(LevelSequenceType.Loop_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Ammo }, false);
             }
             else
             {
@@ -133,7 +133,7 @@ public class TR1ScriptedLevel : AbstractTRScriptedLevel
         {
             if (value)
             {
-                AddSequenceBefore(LevelSequenceType.Start_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Medipacks }, false);
+                AddSequenceBefore(LevelSequenceType.Loop_Game, new BaseLevelSequence { Type = LevelSequenceType.Remove_Medipacks }, false);
             }
             else
             {
@@ -163,14 +163,16 @@ public class TR1ScriptedLevel : AbstractTRScriptedLevel
 
     public string[] Injections { get; set; }
     public bool? InheritInjections { get; set; }
-    public uint? LaraType { get; set; }
+    public TR1Items? LaraType { get; set; }
     public bool? Demo { get; set; }
     public double[] WaterColor { get; set; }
-    public double? DrawDistanceFade { get; set; }
-    public double? DrawDistanceMax { get; set; }
+    public double? FogStart { get; set; }
+    public double? FogEnd { get; set; }
     public int? UnobtainablePickups { get; set; }
     public int? UnobtainableKills { get; set; }
     public List<TR1ItemDrop> ItemDrops { get; set; }
+
+    public Dictionary<TR1Items, TRXObjectText> ObjectText { get; set; }
 
     public void ResetInjections()
     {
@@ -249,7 +251,7 @@ public class TR1ScriptedLevel : AbstractTRScriptedLevel
     {
         if (count > 0)
         {
-            AddSequenceAfter(LevelSequenceType.Start_Game, new GiveItemLevelSequence
+            AddSequenceBefore(LevelSequenceType.Loop_Game, new GiveItemLevelSequence
             {
                 Type = LevelSequenceType.Give_Item,
                 ObjectId = item,
