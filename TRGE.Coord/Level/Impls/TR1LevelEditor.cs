@@ -36,7 +36,7 @@ public class TR1LevelEditor : BaseTRLevelEditor
         if (scriptEditor.Edition.IsCommunityPatch)
         {
             // #84 If randomizing unarmed locations, keep a reference to the same RNG that is used to randomize the levels
-            TR1ScriptEditor editor = scriptEditor as TR1ScriptEditor;
+            TRXScriptEditor editor = scriptEditor as TRXScriptEditor;
             if (_randomiseUnarmedLocations = editor.UnarmedLevelOrganisation == Organisation.Random)
             {
                 _unarmedRng = editor.UnarmedLevelRNG.Create();

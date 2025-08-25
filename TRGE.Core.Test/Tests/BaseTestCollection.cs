@@ -18,9 +18,9 @@ public class BaseTestCollection : AbstractTestCollection
         File.Delete(_testOutputPath);
     }
 
-    internal TR23Script SaveAndReload(TR23Script script)
+    internal TR3Script SaveAndReload(TR3Script script)
     {
         File.WriteAllBytes(_testOutputPath, script.SerialiseScriptToBin());
-        return TRScriptFactory.OpenScript(_testOutputPath) as TR23Script;
+        return TRScriptFactory.OpenScript(_testOutputPath) as TR3Script;
     }
 }

@@ -9,6 +9,7 @@ public enum LevelSequenceType
     Remove_Scions,
     Remove_Ammo,
     Remove_Medipacks,
+    Remove_Flares,
     Give_Item,
     Setup_Bacon_Lara,
     Loading_Screen,
@@ -22,5 +23,9 @@ public enum LevelSequenceType
     Set_Cutscene_Pos,
     Set_Cutscene_Angle,
     Flip_Map,
-    Mesh_Swap,    
+    Mesh_Swap,
+    Add_Secret_Reward,
+    Enable_Sunset,
+    Set_Lara_Start_Anim,
+    Disable_Floor,
 }

@@ -15,6 +15,6 @@ public class TROpDef
 
     public override string ToString()
     {
-        return TR23OpDefs.GetName(this);
+        return TR3OpDefs.GetName(this);
     }
 }

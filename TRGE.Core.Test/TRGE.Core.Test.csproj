@@ -11,6 +11,5 @@
   <ItemGroup>
     <ProjectReference Include="..\TRGE.Coord\TRGE.Coord.csproj" />
     <ProjectReference Include="..\TRGE.Core\TRGE.Core.csproj" />
-    <ProjectReference Include="..\TRGE.Extension\TRGE.Extension.csproj" />
   </ItemGroup>
 </Project>

@@ -26,7 +26,7 @@ public class TR2PCManagedDirectoryIOTests : BaseTestCollection
         TREditor editor = TRCoord.Instance.Open(_dataDirectory);
 
         Assert.IsTrue(editor.ScriptEditor.BackupFile.Exists);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
         sm.LevelSelectEnabled = true;
         sm.UnarmedLevelOrganisation = Organisation.Manual;
         List<MutableTuple<string, string, bool>> unarmedData = sm.UnarmedLevelData;
@@ -61,7 +61,7 @@ public class TR2PCManagedDirectoryIOTests : BaseTestCollection
 
         Dictionary<string, string> originalChecksums = GetChecksums();
 
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
         sm.LevelSequencingOrganisation = Organisation.Random;
         sm.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
         editor.Save();

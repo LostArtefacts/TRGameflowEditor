@@ -45,7 +45,7 @@ public class TR1Tests
         editor.ScriptEditor.GameTrackOrganisation = Organisation.Random;
         editor.ScriptEditor.GameTrackRNG = new RandomGenerator(20220731);
 
-        TR1ScriptEditor scriptEd = editor.ScriptEditor as TR1ScriptEditor;
+        TRXScriptEditor scriptEd = editor.ScriptEditor as TRXScriptEditor;
         scriptEd.UnarmedLevelOrganisation = Organisation.Random;
         scriptEd.RandomUnarmedLevelCount = 2;
         scriptEd.UnarmedLevelRNG = new RandomGenerator(20220731);
@@ -66,7 +66,7 @@ public class TR1Tests
         editor.ScriptEditor.EnabledLevelRNG = new RandomGenerator(20220731);
         editor.ScriptEditor.RandomEnabledLevelCount = 5;
 
-        TR1ScriptEditor scriptEd = editor.ScriptEditor as TR1ScriptEditor;
+        TRXScriptEditor scriptEd = editor.ScriptEditor as TRXScriptEditor;
         scriptEd.UnarmedLevelOrganisation = Organisation.Random;
         scriptEd.RandomUnarmedLevelCount = 2;
         scriptEd.UnarmedLevelRNG = new RandomGenerator(20220731);
@@ -87,7 +87,7 @@ public class TR1Tests
         editor.ScriptEditor.EnabledLevelRNG = new RandomGenerator(20220731);
         editor.ScriptEditor.RandomEnabledLevelCount = 5;
 
-        TR1ScriptEditor scriptEd = editor.ScriptEditor as TR1ScriptEditor;
+        TRXScriptEditor scriptEd = editor.ScriptEditor as TRXScriptEditor;
         scriptEd.MedilessLevelOrganisation = Organisation.Random;
         scriptEd.RandomMedilessLevelCount = 3;
         scriptEd.MedilessLevelRNG = new RandomGenerator(20220731);

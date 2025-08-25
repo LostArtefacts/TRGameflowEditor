@@ -12,7 +12,7 @@ public abstract class AbstractTR23ItemTestCollection : BaseTestCollection
     [TestSequence(0)]
     protected virtual void TestLoadItems()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         foreach (TRItem item in ExpectedItems)
         {
             TRItem checkItem = sm.LevelManager.ItemProvider.GetItem(item.ID);

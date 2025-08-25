@@ -13,7 +13,7 @@ public class TR2PCManagedIOTests : AbstractTR23ManagedIOTestCollection
     {
         List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> bonusData;
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
         bonusData = sm.LevelSecretBonusData;
 
         sm.SecretBonusOrganisation = Organisation.Random;
@@ -21,7 +21,7 @@ public class TR2PCManagedIOTests : AbstractTR23ManagedIOTestCollection
 
         editor.Save();
         
-        sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         
         //CollectionAssert.AreEqual is failing here for some reason, hence the more manual approach
         List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = sm.LevelSecretBonusData;

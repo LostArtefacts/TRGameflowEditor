@@ -99,6 +99,7 @@ public abstract class AbstractTRLevelManager
 
     internal void SetLevelSequencing()
     {
+        var currentFirstLevel = Levels.Find(l => l.Sequence == 1);
         AbstractTRScriptedLevel currentFinalLevel = Levels.Find(l => l.IsFinalLevel);
 
         // Set enabled levels first
@@ -135,9 +136,16 @@ public abstract class AbstractTRLevelManager
             FireLevelModificationEvent(currentFinalLevel, TRScriptedLevelModification.SequenceChanged);
             FireLevelModificationEvent(newFinalLevel, TRScriptedLevelModification.SequenceChanged);
         }
+
+        var newFirstLevel = Levels.Find(l => l.Sequence == 1);
+        if (currentFirstLevel != newFirstLevel)
+        {
+            FirstLevelChanged(currentFirstLevel, newFirstLevel);
+        }
     }
 
     protected virtual void FinalLevelChanged(AbstractTRScriptedLevel oldFinalLevel, AbstractTRScriptedLevel newFinalLevel) { }
+    protected virtual void FirstLevelChanged(AbstractTRScriptedLevel oldFinalLevel, AbstractTRScriptedLevel newFinalLevel) { }
 
     private void SetSequence(AbstractTRScriptedLevel level, ushort newSeq)
     {
@@ -354,11 +362,11 @@ public abstract class AbstractTRLevelManager
 
         if (tracks[TRAudioCategory.Title].Count > 0)
         {
-            TitleSoundID = tracks[TRAudioCategory.Title].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
+            TitleSoundID = ConvertTrackID(tracks[TRAudioCategory.Title].RandomSelection(rand, 1, exclusions: exclusions)[0].ID);
         }
         if (tracks[TRAudioCategory.Secret].Count > 0)
         {
-            SecretSoundID = tracks[TRAudioCategory.Secret].RandomSelection(rand, 1, exclusions: exclusions)[0].ID;
+            SecretSoundID = ConvertTrackID(tracks[TRAudioCategory.Secret].RandomSelection(rand, 1, exclusions: exclusions)[0].ID);
         }
         if (tracks[TRAudioCategory.Ambient].Count > 0)
         {
@@ -382,20 +390,24 @@ public abstract class AbstractTRLevelManager
                 if (level.Enabled)
                 {
                     //level.TrackID = levelTracks[i].ID;
-                    level.TrackID = levelTracks[nextTrack++].ID;
+                    level.TrackID = ConvertTrackID(levelTracks[nextTrack++].ID);
                 }
             }
 
             if (Edition.AssaultCourseSupported)
             {
                 //AssaultLevel.TrackID = levelTracks[levelTracks.Count - 1].ID;
-                AssaultLevel.TrackID = levelTracks[nextTrack++].ID;
+                AssaultLevel.TrackID = ConvertTrackID(levelTracks[nextTrack++].ID);
             }
         }
         RandomiseGameTracksImpl(rand);
     }
 
     internal virtual void RandomiseGameTracksImpl(Random rand) { }
+    protected virtual ushort ConvertTrackID(ushort trackID)
+    {
+        return trackID;
+    }
 
     internal void RestoreGameTracks(AbstractTRScript originalScript)
     {
@@ -495,18 +507,25 @@ public abstract class AbstractTRLevelManager
 
     internal void RandomiseSunsets(List<AbstractTRScriptedLevel> basisLevels)
     {
-        RandomiseLevelsWithOperation
-        (
-            SunsetRNG,
-            RandomSunsetCount,
-            basisLevels,
-            new TROperation(TR23OpDefs.Sunset, ushort.MaxValue, true)
-        );
+        var enabledLevels = basisLevels.Select(l => GetLevel(l.ID)).Where(l => l.Enabled).ToList();
+        var levelSet = enabledLevels.RandomSelection(SunsetRNG.Create(), RandomSunsetCount);
+        foreach (var level in Levels)
+        {
+            if (levelSet.Contains(level) && !level.HasSunset)
+            {
+                level.HasSunset = true;
+                FireLevelModificationEvent(level, TR3OpDefs.Sunset);
+            }
+            else
+            {
+                level.HasSunset = false;
+            }
+        }
     }
 
     internal List<AbstractTRScriptedLevel> GetSunsetLevels()
     {
-        return GetLevelsWithOperation(TR23OpDefs.Sunset, true);
+        return GetLevelsWithOperation(TR3OpDefs.Sunset, true);
     }
 
     internal uint GetSunsetLevelCount()

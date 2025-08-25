@@ -43,7 +43,7 @@ public abstract class AbstractTR3ItemTestCollection : AbstractTR23ItemTestCollec
     [TestSequence(0)]
     protected override void TestLoadItems()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         Assert.IsTrue(sm.LevelManager.ItemProvider is TR3ItemProvider);
         base.TestLoadItems();
     }

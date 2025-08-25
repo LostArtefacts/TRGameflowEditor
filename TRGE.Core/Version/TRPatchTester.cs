@@ -5,6 +5,12 @@ namespace TRGE.Core;
 
 public static class TRPatchTester
 {
+    private static readonly Dictionary<TRVersion, Version> _minVersions = new()
+    {
+        [TRVersion.TR1] = new(4, 14, 2),
+        [TRVersion.TR2] = new(1, 4, 2),
+    };
+
     public static void Test(TREdition edition, TRScriptIOArgs ioArgs)
     {
         if (edition.Remastered)
@@ -15,10 +21,8 @@ public static class TRPatchTester
         switch (edition.Version)
         {
             case TRVersion.TR1:
-                TestForTR1Main(edition, ioArgs);
-                break;
             case TRVersion.TR2:
-                TestForTR2Main(edition, ioArgs);
+                TestForTRX(edition, ioArgs);
                 break;
             case TRVersion.TR3:
                 TestForTR3Main(edition, ioArgs);
@@ -26,23 +30,17 @@ public static class TRPatchTester
         }
     }
 
-    private static void TestForTR1Main(TREdition edition, TRScriptIOArgs ioArgs)
+    private static void TestForTRX(TREdition edition, TRScriptIOArgs ioArgs)
     {
-        edition.IsCommunityPatch = ioArgs.TRScriptFile != null;
-        if (!edition.IsCommunityPatch)
+        edition.IsCommunityPatch = true;
+        edition.ExeVersion = CalculateProductVersion(
+            Path.Combine(ioArgs.OriginalDirectory.FullName, $"../{edition.Version.ToString().ToUpper()}X.exe"));
+        if (edition.ExeVersion != null
+            && _minVersions.TryGetValue(edition.Version, out var minVersion)
+            && edition.ExeVersion < minVersion)
         {
-            edition.ScriptName = null;
+            throw new PlatformNotSupportedException($"The minimum supported version of {edition.Version}X is {minVersion}.");
         }
-        else
-        {
-            edition.ExeVersion = CalculateProductVersion(Path.Combine(ioArgs.OriginalDirectory.FullName, "../TR1X.exe"));
-        }
-    }
-
-    private static void TestForTR2Main(TREdition edition, TRScriptIOArgs ioArgs)
-    {
-        string dllPath = Path.GetFullPath(Path.Combine(ioArgs.OriginalDirectory.FullName, "../TR2Main.dll"));
-        edition.IsCommunityPatch = File.Exists(dllPath);
     }
 
     private static void TestForTR3Main(TREdition edition, TRScriptIOArgs ioArgs)
@@ -74,7 +72,7 @@ public static class TRPatchTester
                 }
             }
 
-            int[] parts = new int[] { 0, 0, 0 };
+            int[] parts = [0, 0, 0];
             string[] productParts = version.Split('.');
             for (int i = 0; i < parts.Length && i < productParts.Length; i++)
             {

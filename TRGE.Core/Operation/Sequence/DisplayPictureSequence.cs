@@ -6,4 +6,5 @@ public class DisplayPictureSequence : BaseLevelSequence
     public double? DisplayTime { get; set; }
     public double? FadeInTime { get; set; }
     public double? FadeOutTime { get; set; }
+    public bool? Legal { get; set; }
 }

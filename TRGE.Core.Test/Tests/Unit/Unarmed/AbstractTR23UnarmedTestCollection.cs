@@ -16,7 +16,7 @@ public abstract class AbstractTR23UnarmedTestCollection : BaseTestCollection
         _expectedLevels = new List<AbstractTRScriptedLevel>();
         for (int i = 0; i < LevelNames.Length; i++)
         {
-            _expectedLevels.Add(new TR2ScriptedLevel
+            _expectedLevels.Add(new TR3ScriptedLevel
             {
                 Name = LevelNames[i],
                 LevelFile = LevelFileNames[i]
@@ -31,12 +31,12 @@ public abstract class AbstractTR23UnarmedTestCollection : BaseTestCollection
         RandomGenerator rng = new(RandomGenerator.Type.Date);
         List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         sm.AmmolessLevelOrganisation = Organisation.Random;
         sm.AmmolessLevelRNG = rng;
         sm.RandomAmmolessLevelCount = 2;
         sm.RandomiseAmmolessLevels();
-        List<TR2ScriptedLevel> levels = sm.GetAmmolessLevels();
+        List<TR3ScriptedLevel> levels = sm.GetAmmolessLevels();
         CollectionAssert.AreEquivalent(levels, expectedLevels);
     }
 
@@ -47,12 +47,12 @@ public abstract class AbstractTR23UnarmedTestCollection : BaseTestCollection
         RandomGenerator rng = new(RandomGenerator.Type.Date);
         List<AbstractTRScriptedLevel> expectedLevels = _expectedLevels.RandomSelection(rng.Create(), 2);
 
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         sm.UnarmedLevelOrganisation = Organisation.Random;
         sm.UnarmedLevelRNG = rng;
         sm.RandomUnarmedLevelCount = 2;
         sm.RandomiseUnarmedLevels();
-        List<TR2ScriptedLevel> levels = sm.GetUnarmedLevels();
+        List<TR3ScriptedLevel> levels = sm.GetUnarmedLevels();
         CollectionAssert.AreEquivalent(levels, expectedLevels);
     }
 
@@ -66,7 +66,7 @@ public abstract class AbstractTR23UnarmedTestCollection : BaseTestCollection
             _expectedLevels[1]
         };
 
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, bool>> ammolessLevelData = sm.AmmolessLevelData;
         for (int i = 0; i < ammolessLevelData.Count; i++)
         {
@@ -87,7 +87,7 @@ public abstract class AbstractTR23UnarmedTestCollection : BaseTestCollection
             _expectedLevels[1]
         };
 
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, bool>> unarmedLevelData = sm.UnarmedLevelData;
         for (int i = 0; i < unarmedLevelData.Count; i++)
         {

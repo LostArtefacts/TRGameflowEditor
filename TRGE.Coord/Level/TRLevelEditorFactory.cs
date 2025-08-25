@@ -59,7 +59,7 @@ public static class TRLevelEditorFactory
             type.Type,
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
             null,
-            new object[] { io, edition },
+            [io, edition],
             null
         );
     }

@@ -16,7 +16,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
         _expectedLevels = new List<AbstractTRScriptedLevel>();
         for (int i = 0; i < LevelNames.Length; i++)
         {
-            _expectedLevels.Add(new TR2ScriptedLevel
+            _expectedLevels.Add(new TR3ScriptedLevel
             {
                 Name = LevelNames[i],
                 LevelFile = LevelFileNames[i]
@@ -29,7 +29,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
     protected virtual void TestLoadLevels()
     {
         InitialiseLevels();
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         CollectionAssert.AreEqual(sm.LevelManager.Levels, _expectedLevels);
     }
 
@@ -41,7 +41,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
         RandomGenerator rng = new(RandomGenerator.Type.Date);
         _expectedLevels.Randomise(rng.Create());
 
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         string[] newLevelNames = new string[LevelNames.Length];
         sm.LevelManager.LevelModified += delegate (object sender, TRScriptedLevelEventArgs e)
         {
@@ -64,7 +64,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
     {
         InitialiseLevels();
         _expectedLevels.Reverse();
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         List<Tuple<string, string>> levelSequencingData = sm.LevelSequencing;
         levelSequencingData.Reverse();
         sm.LevelSequencing = levelSequencingData;
@@ -94,7 +94,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
     protected void TestLevelCountChange()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
         sm.EnabledLevelOrganisation = Organisation.Manual;
         List<MutableTuple<string, string, bool>> status = sm.EnabledLevelStatus;
         status[1].Item3 = false;
@@ -104,7 +104,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
         editor.Save();
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        sm = editor.ScriptEditor as TR23ScriptEditor;
+        sm = editor.ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, bool>> reloadedStatus = sm.EnabledLevelStatus;
 
         Assert.AreEqual(status.Count, reloadedStatus.Count);
@@ -121,7 +121,7 @@ public abstract class AbstractTR23LevelTestCollection : BaseTestCollection
     protected void TestLevelCountRandomisation()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
         sm.EnabledLevelOrganisation = Organisation.Random;
         sm.EnabledLevelRNG = new RandomGenerator(1986);
         sm.RandomEnabledLevelCount = 5;

@@ -21,7 +21,7 @@ public abstract class AbstractTR23AudioTestCollection : BaseTestCollection
     [TestSequence(0)]
     protected void TestLoadTracks()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
         try
         {
@@ -37,7 +37,7 @@ public abstract class AbstractTR23AudioTestCollection : BaseTestCollection
     [TestSequence(1)]
     protected void TestPlayTrack()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         using MemoryStream ms = new(sm.GetTrackData(SampleTrack));
         //new SoundPlayer(ms).PlaySync();
     }
@@ -46,7 +46,7 @@ public abstract class AbstractTR23AudioTestCollection : BaseTestCollection
     [TestSequence(2)]
     protected void TestSetTracks()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
         foreach (MutableTuple<string, string, ushort> levelData in trackData)
         {
@@ -80,7 +80,7 @@ public abstract class AbstractTR23AudioTestCollection : BaseTestCollection
     protected void TestRandomiseTracks()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
 
         sm.GameTrackOrganisation = Organisation.Random;
@@ -96,7 +96,7 @@ public abstract class AbstractTR23AudioTestCollection : BaseTestCollection
     protected void TestRandomiseTracksExcludingBlank()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, ushort>> trackData = sm.GameTrackData;
 
         sm.GameTrackOrganisation = Organisation.Random;
@@ -119,7 +119,7 @@ public abstract class AbstractTR23AudioTestCollection : BaseTestCollection
     protected void TestRandomiseTracksReload()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
 
         sm.GameTrackOrganisation = Organisation.Random;
         sm.GameTrackRNG = new RandomGenerator(RandomGenerator.Type.Date);
