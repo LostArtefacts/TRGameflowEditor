@@ -16,7 +16,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(0)]
     protected void TestLoadCutScenes()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         Assert.AreEqual(sm.LevelsSupportCutScenes, ExpectedCutScenes);
     }
 
@@ -24,7 +24,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(1)]
     protected void TestSetCutScenes()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         if (sm.LevelsSupportCutScenes)
         {
             sm.LevelsHaveCutScenes = !ExpectedCutScenes;
@@ -36,7 +36,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(2)]
     protected void TestLoadFrontEndFMV()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         Assert.AreEqual(sm.FrontEndHasFMV, ExpectedFrontEndFMV);
     }
 
@@ -44,7 +44,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(3)]
     protected void TestSetFrontEndFMV()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         sm.FrontEndHasFMV = !ExpectedFrontEndFMV;
         Assert.AreNotEqual(sm.FrontEndHasFMV, ExpectedFrontEndFMV);
     }
@@ -53,7 +53,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(4)]
     protected void TestLoadLevelsFMV()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         Assert.AreEqual(sm.LevelsSupportFMVs, ExpectedLevelsFMV);
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(5)]
     protected void TestSetLevelsFMV()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         if (sm.LevelsSupportFMVs)
         {
             sm.LevelsHaveFMV = !ExpectedLevelsFMV;
@@ -73,7 +73,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(6)]
     protected void TestLoadLevelsStartAnimation()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         Assert.AreEqual(sm.LevelsSupportStartAnimations, ExpectedLevelsStartAnimation);
     }
 
@@ -81,7 +81,7 @@ public abstract class AbstractTR23InterruptionTestCollection : BaseTestCollectio
     [TestSequence(7)]
     protected void TestSetLevelsStartAnimation()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         if (sm.LevelsSupportStartAnimations)
         {
             sm.LevelsHaveStartAnimation = !ExpectedLevelsStartAnimation;

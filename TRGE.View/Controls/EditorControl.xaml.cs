@@ -129,7 +129,7 @@ public partial class EditorControl : UserControl
 
     private void Reload()
     {
-        _options.Load(Editor.ScriptEditor as TR23ScriptEditor);
+        _options.Load(Editor.ScriptEditor as TR3ScriptEditor);
         _dirty = false;
         FireEditorStateChanged();
     }
@@ -203,7 +203,7 @@ public partial class EditorControl : UserControl
             try
             {
                 Editor.ImportSettings(dlg.FileName);
-                _options.Load(Editor.ScriptEditor as TR23ScriptEditor);
+                _options.Load(Editor.ScriptEditor as TR3ScriptEditor);
             }
             catch (Exception e)
             {

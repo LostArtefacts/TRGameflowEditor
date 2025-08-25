@@ -11,12 +11,9 @@ public abstract class AbstractTRScript
 
     public virtual void Read(string filePath)
     {
-        //All we can go on to begin with is the file name to determine a generic edition.
-        //Subclasses should implement CalculateEdition and call it as appropriate while reading the data.
-        Edition = filePath.ToLower().Contains("tombpsx") ? TREdition.GenericPSX : TREdition.GenericPC;
-
-        string ext = Path.GetExtension(filePath).ToUpper();
-        switch (ext)
+        // All we can go on to begin with is the file name to determine a generic edition.
+        // Subclasses should implement CalculateEdition and call it as appropriate while reading the data.
+        switch (Path.GetExtension(filePath).ToUpper())
         {
             case ".DAT":
                 using (BinaryReader br = new(new FileStream(filePath, FileMode.Open)))
@@ -59,7 +56,7 @@ public abstract class AbstractTRScript
             case ".JSON":
             case ".JSON5":
                 File.WriteAllText(filePath, SerialiseScriptToJson());
-                if (this is TR1Script tr1Script)
+                if (this is TRXScript tr1Script)
                 {
                     tr1Script.WriteStrings(Path.GetDirectoryName(filePath));
                 }

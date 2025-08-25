@@ -6,7 +6,7 @@ namespace TRGE.Core.Test;
 public class TR2PCScriptIOTests : AbstractTestCollection
 {
     private string _validFilePath, _invalidFilePath;
-    private TR23Script _script;
+    private TR3Script _script;
 
     [ClassInitialize]
     protected override void Setup()
@@ -40,9 +40,9 @@ public class TR2PCScriptIOTests : AbstractTestCollection
         try
         {
             AbstractTRScript script = TRScriptFactory.OpenScript(_validFilePath);
-            Assert.IsTrue(script is TR23Script);
+            Assert.IsTrue(script is TR3Script);
             Assert.IsTrue(script.Edition.Equals(TREdition.TR2PC));
-            _script = script as TR23Script;
+            _script = script as TR3Script;
         }
         catch (UnsupportedScriptException)
         {

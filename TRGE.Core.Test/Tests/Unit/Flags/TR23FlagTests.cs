@@ -10,11 +10,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestCheatFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestCheatFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestCheatFlag(TR23Script script)
+    private void TestCheatFlag(TR3Script script)
     {
         Assert.IsFalse(script.CheatsIgnored);
         script.CheatsIgnored = true;
@@ -27,11 +27,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestDemosFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestDemosFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestDemosFlag(TR23Script script)
+    private void TestDemosFlag(TR3Script script)
     {
         Assert.IsFalse(script.DemosDisabled);
         script.DemosDisabled = true;
@@ -44,11 +44,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestDemoModeFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestDemoModeFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestDemoModeFlag(TR23Script script)
+    private void TestDemoModeFlag(TR3Script script)
     {
         Assert.IsFalse(script.DemoVersion);
         script.DemoVersion = true;
@@ -61,11 +61,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestDozyFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestDozyFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestDozyFlag(TR23Script script)
+    private void TestDozyFlag(TR3Script script)
     {
         Assert.IsFalse(script.DozyEnabled);
         script.DozyEnabled = true;
@@ -86,11 +86,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestGymFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestGymFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestGymFlag(TR23Script script)
+    private void TestGymFlag(TR3Script script)
     {
         Assert.IsTrue(script.GymEnabled);
         script.GymEnabled = false;
@@ -103,11 +103,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestLevelSelectionFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestLevelSelectionFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestLevelSelectionFlag(TR23Script script)
+    private void TestLevelSelectionFlag(TR3Script script)
     {
         Assert.IsFalse(script.LevelSelectEnabled);
         script.LevelSelectEnabled = true;
@@ -120,11 +120,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestOptionRingFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestOptionRingFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestOptionRingFlag(TR23Script script)
+    private void TestOptionRingFlag(TR3Script script)
     {
         Assert.IsFalse(script.OptionRingDisabled);
         script.OptionRingDisabled = true;
@@ -137,11 +137,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestSaveLoadFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestSaveLoadFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestSaveLoadFlag(TR23Script script)
+    private void TestSaveLoadFlag(TR3Script script)
     {
         Assert.IsFalse(script.SaveLoadDisabled);
         script.SaveLoadDisabled = true;
@@ -154,11 +154,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestScreensizingFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestScreensizingFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestScreensizingFlag(TR23Script script)
+    private void TestScreensizingFlag(TR3Script script)
     {
         Assert.IsFalse(script.ScreensizingDisabled);
         script.ScreensizingDisabled = true;
@@ -171,11 +171,11 @@ public class TR23FlagTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestTitleScreenFlag(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestTitleScreenFlag(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestTitleScreenFlag(TR23Script script)
+    private void TestTitleScreenFlag(TR3Script script)
     {
         string exitToTitle = script.GameStrings1[8];
         Assert.IsFalse(script.TitleDisabled);

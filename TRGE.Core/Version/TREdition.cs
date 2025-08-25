@@ -2,36 +2,6 @@
 
 public class TREdition : ICloneable
 {
-    public static readonly TREdition GenericPC = new()
-    {
-        Title = "Unknown (PC)",
-        Version = TRVersion.Unknown,
-        Hardware = Hardware.PC,
-        LevelCompleteOffset = 0,
-        SecretBonusesSupported = false,
-        SunsetsSupported = false,
-        SecretSoundSupported = false,
-        AssaultCourseSupported = false,
-        UnarmedLevelCount = 0,
-        AmmolessLevelCount = 0,
-        SunsetLevelCount = 0
-    };
-
-    public static readonly TREdition GenericPSX = new()
-    {
-        Title = "Unknown (PSX)",
-        Version = TRVersion.Unknown,
-        Hardware = Hardware.PSX,
-        LevelCompleteOffset = 0,
-        SecretBonusesSupported = false,
-        SunsetsSupported = false,
-        SecretSoundSupported = false,
-        AssaultCourseSupported = false,
-        UnarmedLevelCount = 0,
-        AmmolessLevelCount = 0,
-        SunsetLevelCount = 0
-    };
-
     public static readonly TREdition TR1PC = new()
     {
         Title = "Tomb Raider I (TR1X)",
@@ -68,10 +38,12 @@ public class TREdition : ICloneable
 
     public static readonly TREdition TR2PC = new()
     {
-        Title = "Tomb Raider II (Classic)",
+        Title = "Tomb Raider II (TR2X)",
         Version = TRVersion.TR2,
-        ScriptName = "TOMBPC.dat",
         Hardware = Hardware.PC,
+        ScriptName = "../cfg/tr2/gameflow.json5",
+        GoldScriptName = "../cfg/tr2-gm/gameflow.json5",
+        GoldScriptBak = "gameflow_gm.json5",
         LevelCompleteOffset = 0,
         SecretBonusesSupported = true,
         SunsetsSupported = true,
@@ -95,54 +67,6 @@ public class TREdition : ICloneable
         AssaultCourseSupported = true,
         UnarmedLevelCount = 2,
         AmmolessLevelCount = 1,
-        SunsetLevelCount = 0
-    };
-
-    public static readonly TREdition TR2PSX = new()
-    {
-        Title = "Tomb Raider II (PSX)",
-        Version = TRVersion.TR2,
-        ScriptName = "TOMBPSX.dat",
-        Hardware = Hardware.PSX,
-        LevelCompleteOffset = 0,
-        SecretBonusesSupported = true,
-        SunsetsSupported = true,
-        SecretSoundSupported = true,
-        AssaultCourseSupported = true,
-        UnarmedLevelCount = 2,
-        AmmolessLevelCount = 1,
-        SunsetLevelCount = 1
-    };
-
-    public static readonly TREdition TR2PSXBeta = new()
-    {
-        Title = "Tomb Raider II (PSX BETA)",
-        Version = TRVersion.TR2,
-        ScriptName = "TOMBPSX.dat",
-        Hardware = Hardware.PSX,
-        LevelCompleteOffset = 0,
-        SecretBonusesSupported = true,
-        SunsetsSupported = true,
-        SecretSoundSupported = true,
-        AssaultCourseSupported = true,
-        UnarmedLevelCount = 2,
-        AmmolessLevelCount = 1,
-        SunsetLevelCount = 1
-    };
-
-    public static readonly TREdition TR2G = new()
-    {
-        Title = "Tomb Raider II Gold",
-        Version = TRVersion.TR2G,
-        ScriptName = "TOMBPC.dat",
-        Hardware = Hardware.PC,
-        LevelCompleteOffset = 1,
-        SecretBonusesSupported = true,
-        SunsetsSupported = true,
-        SecretSoundSupported = true,
-        AssaultCourseSupported = true,
-        UnarmedLevelCount = 0,
-        AmmolessLevelCount = 0,
         SunsetLevelCount = 0
     };
 
@@ -178,42 +102,10 @@ public class TREdition : ICloneable
         SunsetLevelCount = 0
     };
 
-    public static readonly TREdition TR3PSX = new()
-    {
-        Title = "Tomb Raider III (PSX)",
-        Version = TRVersion.TR3,
-        ScriptName = "TOMBPSX.dat",
-        Hardware = Hardware.PSX,
-        LevelCompleteOffset = 1,
-        SecretBonusesSupported = false,
-        SunsetsSupported = false,
-        SecretSoundSupported = false,
-        AssaultCourseSupported = true,
-        UnarmedLevelCount = 1,
-        AmmolessLevelCount = 1,
-        SunsetLevelCount = 0
-    };
-
-    public static readonly TREdition TR3G = new()
-    {
-        Title = "Tomb Raider III Gold",
-        Version = TRVersion.TR3G,
-        ScriptName = "TOMBPC.dat",
-        Hardware = Hardware.PC,
-        LevelCompleteOffset = 0,
-        SecretBonusesSupported = false,
-        SunsetsSupported = false,
-        SecretSoundSupported = false,
-        AssaultCourseSupported = false,
-        UnarmedLevelCount = 0,
-        AmmolessLevelCount = 0,
-        SunsetLevelCount = 0
-    };
-
-    public static readonly IReadOnlyList<TREdition> All = new List<TREdition>
-    {
-        TR1PC, TR1RM, TR2PC, TR2RM, TR2G, TR2PSXBeta, TR2PSX, TR3PC, TR3RM, TR3G, TR3PSX
-    };
+    public static readonly IReadOnlyList<TREdition> All =
+    [
+        TR1PC, TR1RM, TR2PC, TR2RM, TR3PC, TR3RM,
+    ];
 
     public static TREdition From(Hardware hardware, TRVersion version, bool remastered)
     {

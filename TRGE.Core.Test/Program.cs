@@ -12,15 +12,7 @@ class Program
 
         #region BasicIO
         RunTest(new TR2PCScriptIOTests());
-        RunTest(new TR2GPCScriptIOTests());
-
-        RunTest(new TR2PSXScriptIOTests());
-        RunTest(new TR2PSXBetaScriptIOTests());
-
         RunTest(new TR3PCScriptIOTests());
-        RunTest(new TR3GPCScriptIOTests());
-
-        RunTest(new TR3PSXScriptIOTests());
         #endregion
         
         #region ManagedIO
@@ -58,26 +50,12 @@ class Program
 
         #region Levels
         RunTest(new TR2PCLevelTests());
-        RunTest(new TR2GPCLevelTests());
-
-        RunTest(new TR2PSXLevelTests());
-        RunTest(new TR2PSXBetaLevelTests());
-
         RunTest(new TR3PCLevelTests());
-        RunTest(new TR3GPCLevelTests());
-        RunTest(new TR3PSXLevelTests());
         #endregion
 
         #region Unarmed
         RunTest(new TR2PCUnarmedTests());
-        RunTest(new TR2GPCUnarmedTests());
-
-        RunTest(new TR2PSXUnarmedTests());
-        RunTest(new TR2PSXBetaUnarmedTests());
-
         RunTest(new TR3PCUnarmedTests());
-        RunTest(new TR3GPCUnarmedTests());
-        RunTest(new TR3PSXUnarmedTests());
         #endregion
 
         #region Items
@@ -118,11 +96,6 @@ class Program
 
         #region Import/Export
         RunTest(new TR2PCImportExportTests());
-        #endregion
-
-        #region Extensions
-        RunTest(new TR2ExtensionTests());
-        RunTest(new TR2GExtensionTests());
         #endregion
 
         #region RandoLock

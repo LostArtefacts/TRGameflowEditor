@@ -9,21 +9,11 @@ internal static class TRScriptedLevelFactory
             return new TRRLevelManager(script as TRRScript);
         }
 
-        switch (script.Edition.Version)
+        return script.Edition.Version switch
         {
-            case TRVersion.TR1:
-                if (script is TR1Script)
-                {
-                    return new TR1LevelManager(script as TR1Script);
-                }
-                return new TR1ATILevelManager(script as TR1ATIScript);
-            case TRVersion.TR2:
-            case TRVersion.TR2G:
-            case TRVersion.TR3:
-            case TRVersion.TR3G:
-                return new TR23LevelManager(script as TR23Script);
-            default:
-                return null;
-        }
+            TRVersion.TR1 or TRVersion.TR2 => new TRXLevelManager(script as TRXScript),
+            TRVersion.TR3 or TRVersion.TR3G => new TR3LevelManager(script as TR3Script),
+            _ => null,
+        };
     }
 }

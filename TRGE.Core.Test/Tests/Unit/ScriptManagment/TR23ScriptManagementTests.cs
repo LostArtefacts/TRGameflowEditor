@@ -20,20 +20,20 @@ public class TR23ScriptManagementTests : BaseTestCollection
     {
         AbstractTRScriptEditor scriptMan = TRCoord.Instance.Open(file).ScriptEditor;
         Assert.IsFalse(scriptMan == null);
-        Assert.IsTrue(scriptMan is TR23ScriptEditor);
+        Assert.IsTrue(scriptMan is TR3ScriptEditor);
         Assert.IsTrue(scriptMan.OriginalFile.FullName.Equals(file.FullName));
     }
 
     [TestMethod]
     protected void TestBackup()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[0]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[0]).ScriptEditor as TR3ScriptEditor;
         Assert.IsFalse(sm.BackupFile == null);
         Assert.IsTrue(sm.BackupFile.Exists);
         try
         {
             AbstractTRScript script = TRScriptFactory.OpenScript(sm.BackupFile);
-            Assert.IsTrue(script is TR23Script);
+            Assert.IsTrue(script is TR3Script);
             Assert.IsTrue(script.Edition == sm.Script.Edition);
         }
         catch (UnsupportedScriptException)

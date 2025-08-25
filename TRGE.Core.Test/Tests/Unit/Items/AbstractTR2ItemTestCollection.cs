@@ -42,8 +42,8 @@ public abstract class AbstractTR2ItemTestCollection : AbstractTR23ItemTestCollec
     [TestSequence(0)]
     protected override void TestLoadItems()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-        Assert.IsTrue(sm.LevelManager.ItemProvider is TR2ItemProvider);
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
+        Assert.IsTrue(sm.LevelManager.ItemProvider is TR3ItemProvider);
         base.TestLoadItems();
     }
 
@@ -51,7 +51,7 @@ public abstract class AbstractTR2ItemTestCollection : AbstractTR23ItemTestCollec
     [TestSequence(1)]
     protected void TestRandomiseItems()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> originalBonusData = sm.LevelSecretBonusData;
 
         sm.SecretBonusOrganisation = Organisation.Random;
@@ -96,7 +96,7 @@ public abstract class AbstractTR2ItemTestCollection : AbstractTR23ItemTestCollec
         // prove randomisation is consistent.
 
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
 
         sm.SecretBonusOrganisation = Organisation.Random;
         sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
@@ -121,8 +121,8 @@ public abstract class AbstractTR2ItemTestCollection : AbstractTR23ItemTestCollec
     [TestMethod]
     protected void TestItemEnum()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
-        foreach (TR2ScriptedLevel level in sm.LevelManager.Levels.Cast<TR2ScriptedLevel>())
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
+        foreach (TR3ScriptedLevel level in sm.LevelManager.Levels.Cast<TR3ScriptedLevel>())
         {
             level.GetBonusItemIDs();
             level.GetStartInventoryItemIDs();
@@ -132,16 +132,16 @@ public abstract class AbstractTR2ItemTestCollection : AbstractTR23ItemTestCollec
     [TestMethod]
     protected void TestReorganiseItems()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         sm.SecretBonusOrganisation = Organisation.Manual;
             
-        Dictionary<string, List<TRItem>> originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
+        Dictionary<string, List<TRItem>> originalBonusData = (sm.LevelManager as TR3LevelManager).GetLevelBonusItems();
         CollectionAssert.AreNotEqual(originalBonusData, ManualBonusData);
 
         List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> newBonusData = ConvertManualBonusData(sm);
         sm.LevelSecretBonusData = newBonusData;
 
-        originalBonusData = (sm.LevelManager as TR23LevelManager).GetLevelBonusItems();
+        originalBonusData = (sm.LevelManager as TR3LevelManager).GetLevelBonusItems();
         foreach (string levelFile in ManualBonusData.Keys)
         {
             Assert.IsTrue(originalBonusData.ContainsKey(levelFile));
@@ -149,7 +149,7 @@ public abstract class AbstractTR2ItemTestCollection : AbstractTR23ItemTestCollec
         }
     }
 
-    private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ConvertManualBonusData(TR23ScriptEditor sm)
+    private List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ConvertManualBonusData(TR3ScriptEditor sm)
     {
         List<MutableTuple<string, string, List<MutableTuple<ushort, TRItemCategory, string, int>>>> ret = new();
         foreach (string levelFile in ManualBonusData.Keys)

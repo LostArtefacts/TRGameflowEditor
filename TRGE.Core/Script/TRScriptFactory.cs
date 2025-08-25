@@ -20,9 +20,8 @@ public static class TRScriptFactory
         uint scriptVersion = GetDatFileVersion(ioArgs.TRScriptFile?.FullName);
         return scriptVersion switch
         {
-            TR1ATIScript.Version => new TR1ATIScriptEditor(ioArgs, openOption),
-            TR1Script.Version => new TR1ScriptEditor(ioArgs, openOption),
-            TR23Script.Version => new TR23ScriptEditor(ioArgs, openOption),
+            TRXScript.Version => new TRXScriptEditor(ioArgs, openOption),
+            TR3Script.Version => new TR3ScriptEditor(ioArgs, openOption),
             _ => throw new UnsupportedScriptException(string.Format("An unsupported script version ({0}) was found in {1}.", scriptVersion, ioArgs.TRScriptFile.Name)),
         };
     }
@@ -37,7 +36,7 @@ public static class TRScriptFactory
             {
                 script = Path.GetFullPath(Path.Combine(dir, edition.GoldScriptName));
             }
-            else if (edition.HasScript)
+            else if (!gold && edition.HasScript)
             {
                 script = Path.GetFullPath(Path.Combine(dir, edition.ScriptName));
             }
@@ -77,9 +76,8 @@ public static class TRScriptFactory
             TRRScript.TR3PlaceholderName => new TRRScript(TRVersion.TR3),
             _ => GetDatFileVersion(filePath) switch
             {
-                TR1ATIScript.Version => new TR1ATIScript(),
-                TR1Script.Version => new TR1Script(),
-                TR23Script.Version => new TR23Script(),
+                TRXScript.Version => new TRXScript(),
+                TR3Script.Version => new TR3Script(),
                 _ => throw new UnsupportedScriptException(),
             },
         };
@@ -91,7 +89,7 @@ public static class TRScriptFactory
     {
         if (filePath == null)
         {
-            return TR1ATIScript.Version;
+            return 0;
         }
 
         string ext = Path.GetExtension(filePath).ToUpper();
@@ -104,7 +102,7 @@ public static class TRScriptFactory
                 }
             case ".JSON":
             case ".JSON5":
-                return TR1Script.Version;
+                return TRXScript.Version;
             default:
                 return 0;
         }

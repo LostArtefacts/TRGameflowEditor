@@ -12,7 +12,7 @@ public class TR2RandoLockTestCollection : BaseTestCollection
 
         //initially randomise the level order
         TREditor editor = TRCoord.Instance.Open(_validScripts[0]);
-        TR23ScriptEditor scriptEditor = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor scriptEditor = editor.ScriptEditor as TR3ScriptEditor;
         scriptEditor.LevelSequencingOrganisation = Organisation.Random;
         scriptEditor.LevelSunsetOrganisation = Organisation.Random; scriptEditor.RandomSunsetLevelCount = 4;
         scriptEditor.GameTrackOrganisation = Organisation.Random;
@@ -28,9 +28,9 @@ public class TR2RandoLockTestCollection : BaseTestCollection
         scriptEditor.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.Date);
         editor.Save();
 
-        TR23Script script = new();
+        TR3Script script = new();
         script.Read(_validScripts[0]);
-        TR23LevelManager lm = TRScriptedLevelFactory.GetLevelManager(script) as TR23LevelManager;
+        TR3LevelManager lm = TRScriptedLevelFactory.GetLevelManager(script) as TR3LevelManager;
         var levels1 = lm.GetSequencing();
         var sunsets1 = lm.GetSunsetData(scriptEditor.LevelManager.Levels);
         var tracks1 = lm.GetTrackData(scriptEditor.LevelManager.Levels);
@@ -43,7 +43,7 @@ public class TR2RandoLockTestCollection : BaseTestCollection
         Assert.IsFalse(TRInterop.RandomisationSupported);
 
         editor = TRCoord.Instance.Open(_validScripts[0]);
-        scriptEditor = editor.ScriptEditor as TR23ScriptEditor;
+        scriptEditor = editor.ScriptEditor as TR3ScriptEditor;
         
         scriptEditor.LevelSequencingOrganisation = Organisation.Random;
         scriptEditor.LevelSunsetOrganisation = Organisation.Random; scriptEditor.RandomSunsetLevelCount = 5;
@@ -62,9 +62,9 @@ public class TR2RandoLockTestCollection : BaseTestCollection
         editor.Save();
 
         //the previous randomisations should still be in place, so lines 50-62 should be redundant
-        script = new TR23Script();
+        script = new TR3Script();
         script.Read(_validScripts[0]);
-        lm = TRScriptedLevelFactory.GetLevelManager(script) as TR23LevelManager;
+        lm = TRScriptedLevelFactory.GetLevelManager(script) as TR3LevelManager;
         var levels2 = lm.GetSequencing();
         var sunsets2 = lm.GetSunsetData(scriptEditor.LevelManager.Levels);
         var tracks2 = lm.GetTrackData(scriptEditor.LevelManager.Levels);
@@ -121,7 +121,7 @@ public class TR2RandoLockTestCollection : BaseTestCollection
         try
         {
             TREditor editor = TRCoord.Instance.Open(@"RandoLock");
-            TR23ScriptEditor scriptEditor = editor.ScriptEditor as TR23ScriptEditor;
+            TR3ScriptEditor scriptEditor = editor.ScriptEditor as TR3ScriptEditor;
             scriptEditor.LevelSequencingOrganisation = Organisation.Random;
             scriptEditor.LevelSunsetOrganisation = Organisation.Random; scriptEditor.RandomSunsetLevelCount = 4;
             scriptEditor.GameTrackOrganisation = Organisation.Random;

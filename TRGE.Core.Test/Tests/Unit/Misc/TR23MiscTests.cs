@@ -11,11 +11,11 @@ public class TR23MiscTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestDemoTime(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestDemoTime(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
         }
     }
 
-    private void TestDemoTime(TR23Script script)
+    private void TestDemoTime(TR3Script script)
     {
         uint newDemoTime = script.DemoTimeSeconds + 300;
         script.DemoTimeSeconds = newDemoTime;
@@ -28,12 +28,12 @@ public class TR23MiscTests : BaseTestCollection
     {
         foreach (string scriptFile in _validScripts)
         {
-            TestDemoLevels(TRScriptFactory.OpenScript(scriptFile) as TR23Script);
+            TestDemoLevels(TRScriptFactory.OpenScript(scriptFile) as TR3Script);
             TestDisableDemos(scriptFile);
         }
     }
 
-    private void TestDemoLevels(TR23Script script)
+    private void TestDemoLevels(TR3Script script)
     {
         List<AbstractTRScriptedLevel> levels = script.Levels;
         levels.Insert(0, script.AssaultLevel);
@@ -42,7 +42,7 @@ public class TR23MiscTests : BaseTestCollection
         Assert.AreEqual(script.NumDemoLevels, 0);
         Assert.AreEqual(script.NumPlayableLevels, levels.Count);
 
-        TR23Script reloadedScript = SaveAndReload(script);
+        TR3Script reloadedScript = SaveAndReload(script);
         Assert.AreEqual(reloadedScript.NumDemoLevels, 0);
         Assert.AreEqual(reloadedScript.NumPlayableLevels, levels.Count);
     }
@@ -50,13 +50,13 @@ public class TR23MiscTests : BaseTestCollection
     private static void TestDisableDemos(string scriptFile)
     {
         TREditor editor = TRCoord.Instance.Open(scriptFile);
-        TR23ScriptEditor scriptEditor = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor scriptEditor = editor.ScriptEditor as TR3ScriptEditor;
         scriptEditor.DemosEnabled = false;
         editor.Save();
 
-        scriptEditor = TRCoord.Instance.Open(scriptFile).ScriptEditor as TR23ScriptEditor;
+        scriptEditor = TRCoord.Instance.Open(scriptFile).ScriptEditor as TR3ScriptEditor;
         Assert.IsFalse(scriptEditor.DemosEnabled);
-        Assert.AreEqual((scriptEditor.Script as TR23Script).NumDemoLevels, 0);
+        Assert.AreEqual((scriptEditor.Script as TR3Script).NumDemoLevels, 0);
     }
 
     [TestMethod]

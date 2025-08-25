@@ -4,48 +4,48 @@ public class Tomb3ScriptedLevel : TR3ScriptedLevel
 {
     public override bool HasRain
     {
-        get => HasActiveOperation(TR23OpDefs.HasRain);
+        get => HasActiveOperation(TR3OpDefs.HasRain);
         set
         {
             if (value)
             {
-                EnsureOperation(new TROperation(TR23OpDefs.HasRain, ushort.MaxValue, true));
+                EnsureOperation(new TROperation(TR3OpDefs.HasRain, ushort.MaxValue, true));
             }
             else
             {
-                SetOperationActive(TR23OpDefs.HasRain, value);
+                SetOperationActive(TR3OpDefs.HasRain, value);
             }
         }
     }
 
     public override bool HasSnow
     {
-        get => HasActiveOperation(TR23OpDefs.HasSnow);
+        get => HasActiveOperation(TR3OpDefs.HasSnow);
         set
         {
             if (value)
             {
-                EnsureOperation(new TROperation(TR23OpDefs.HasSnow, ushort.MaxValue, true));
+                EnsureOperation(new TROperation(TR3OpDefs.HasSnow, ushort.MaxValue, true));
             }
             else
             {
-                SetOperationActive(TR23OpDefs.HasSnow, value);
+                SetOperationActive(TR3OpDefs.HasSnow, value);
             }
         }
     }
 
     public override bool HasColdWater
     {
-        get => HasActiveOperation(TR23OpDefs.IsCold);
+        get => HasActiveOperation(TR3OpDefs.IsCold);
         set
         {
             if (value)
             {
-                EnsureOperation(new TROperation(TR23OpDefs.IsCold, ushort.MaxValue, true));
+                EnsureOperation(new TROperation(TR3OpDefs.IsCold, ushort.MaxValue, true));
             }
             else
             {
-                SetOperationActive(TR23OpDefs.IsCold, value);
+                SetOperationActive(TR3OpDefs.IsCold, value);
             }
         }
     }

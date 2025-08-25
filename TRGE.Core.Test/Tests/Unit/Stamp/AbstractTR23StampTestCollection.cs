@@ -13,13 +13,13 @@ public abstract class AbstractTR23StampTestCollection : BaseTestCollection
     protected virtual void TestStampGame()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23Script script = editor.ScriptEditor.Script as TR23Script;
+        TR3Script script = editor.ScriptEditor.Script as TR3Script;
         Assert.AreEqual(script.GameStrings1[GameIndex], "Game");
         editor.Save();
         Assert.AreNotEqual(script.GameStrings1[GameIndex], "Game");
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        script = editor.ScriptEditor.Script as TR23Script;
+        script = editor.ScriptEditor.Script as TR3Script;
         Assert.AreEqual(script.GameStrings1[GameIndex], "Game");
     }
 
@@ -27,13 +27,13 @@ public abstract class AbstractTR23StampTestCollection : BaseTestCollection
     protected virtual void TestStampInventory()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23Script script = editor.ScriptEditor.Script as TR23Script;
+        TR3Script script = editor.ScriptEditor.Script as TR3Script;
         Assert.AreEqual(script.GameStrings1[InventoryIndex], "INVENTORY");
         editor.Save();
         Assert.AreNotEqual(script.GameStrings1[InventoryIndex], "INVENTORY");
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        script = editor.ScriptEditor.Script as TR23Script;
+        script = editor.ScriptEditor.Script as TR3Script;
         Assert.AreEqual(script.GameStrings1[InventoryIndex], "INVENTORY");
     }
 
@@ -47,28 +47,28 @@ public abstract class AbstractTR23StampTestCollection : BaseTestCollection
         TRInterop.ScriptModificationStamp[TRLanguage.English] = "ÀÈÌÒÙàèìòùÁÉÍÓÚÝáéíóúýÂÊÎÔÛâêîôûÄËÏÖÜŸäëïöüÿß";
 
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23Script script = editor.ScriptEditor.Script as TR23Script;
+        TR3Script script = editor.ScriptEditor.Script as TR3Script;
 
         SaveAndTestLanguage(editor, script, TRLanguage.French, "Modifi)e");
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        script = editor.ScriptEditor.Script as TR23Script;
+        script = editor.ScriptEditor.Script as TR3Script;
         SaveAndTestLanguage(editor, script, TRLanguage.German, "Ge~andert");
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        script = editor.ScriptEditor.Script as TR23Script;
+        script = editor.ScriptEditor.Script as TR3Script;
         SaveAndTestLanguage(editor, script, TRLanguage.American, "Test US");
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        script = editor.ScriptEditor.Script as TR23Script;
+        script = editor.ScriptEditor.Script as TR3Script;
         SaveAndTestLanguage(editor, script, TRLanguage.Japanese, "テスト");
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        script = editor.ScriptEditor.Script as TR23Script;
+        script = editor.ScriptEditor.Script as TR3Script;
         SaveAndTestLanguage(editor, script, TRLanguage.English, "$A$E$I$O$U$a$e$i$o$u)A)E)I)O)U)Y)a)e)i)o)u)y(A(E(I(O(U(a(e(i(o(u~A~E~I~O~U~Y~a~e~i~o~u~y=");
     }
 
-    private void SaveAndTestLanguage(TREditor editor, TR23Script script, TRLanguage lang, string expectedResult)
+    private void SaveAndTestLanguage(TREditor editor, TR3Script script, TRLanguage lang, string expectedResult)
     {
         script.TRLanguage = lang;
         editor.Save();

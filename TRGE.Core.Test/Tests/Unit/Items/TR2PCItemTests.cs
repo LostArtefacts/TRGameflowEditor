@@ -27,7 +27,7 @@ public class TR2PCItemTests : AbstractTR2ItemTestCollection
     [TestMethod]
     protected void TestRandomiseItemsOutput()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         sm.SecretBonusOrganisation = Organisation.Random;
         sm.SecretBonusRNG = new RandomGenerator(RandomGenerator.Type.UnixTime);
         int r = sm.SecretBonusRNG.Value;
@@ -65,7 +65,7 @@ public class TR2PCItemTests : AbstractTR2ItemTestCollection
     [TestMethod]
     protected void TestRandomiseItemsShotgun()
     {
-        TR23ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]).ScriptEditor as TR3ScriptEditor;
         sm.LevelSequencingOrganisation = Organisation.Random;
         sm.LevelSequencingRNG = new RandomGenerator(RandomGenerator.Type.Date);
         sm.UnarmedLevelOrganisation = Organisation.Random;
@@ -77,11 +77,11 @@ public class TR2PCItemTests : AbstractTR2ItemTestCollection
         sm.RandomiseUnarmedLevels();
         sm.RandomiseBonuses();
 
-        TRItem shotgun = (sm.LevelManager.ItemProvider as TR2ItemProvider).Shotgun;
+        TRItem shotgun = (sm.LevelManager.ItemProvider as TR3ItemProvider).Shotgun;
         for (int i = 0; i < sm.LevelManager.Levels.Count; i++)
         {
             AbstractTRScriptedLevel level = sm.LevelManager.Levels[i];
-            if ((level as TR2ScriptedLevel).GetBonusItems(sm.LevelManager.ItemProvider as TR2ItemProvider).Contains(shotgun))
+            if ((level as TR3ScriptedLevel).GetBonusItems(sm.LevelManager.ItemProvider as TR3ItemProvider).Contains(shotgun))
             {
                 //should only appear if this level or a previous level removes weapons
                 bool weaponsRemoved = false;
@@ -102,7 +102,7 @@ public class TR2PCItemTests : AbstractTR2ItemTestCollection
     protected void TestEnablingSecrets()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
 
         sm.LevelSecretSupportOrganisation = Organisation.Manual;
         List<MutableTuple<string, string, bool>> secretSupport = sm.LevelSecretSupport;
@@ -124,7 +124,7 @@ public class TR2PCItemTests : AbstractTR2ItemTestCollection
         editor.Save();
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        sm = editor.ScriptEditor as TR23ScriptEditor;
+        sm = editor.ScriptEditor as TR3ScriptEditor;
         Assert.IsTrue(sm.LevelManager.GetLevel(AbstractTRScriptedLevel.CreateID("HOUSE")).HasSecrets);
     }
 
@@ -132,7 +132,7 @@ public class TR2PCItemTests : AbstractTR2ItemTestCollection
     protected void TestEnablingSunsets()
     {
         TREditor editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        TR23ScriptEditor sm = editor.ScriptEditor as TR23ScriptEditor;
+        TR3ScriptEditor sm = editor.ScriptEditor as TR3ScriptEditor;
 
         sm.LevelSunsetOrganisation = Organisation.Manual;
         List<MutableTuple<string, string, bool>> sunsetData = sm.LevelSunsetData;
@@ -145,7 +145,7 @@ public class TR2PCItemTests : AbstractTR2ItemTestCollection
         editor.Save();
 
         editor = TRCoord.Instance.Open(_validScripts[ScriptFileIndex]);
-        sm = editor.ScriptEditor as TR23ScriptEditor;
+        sm = editor.ScriptEditor as TR3ScriptEditor;
 
         sunsetData = sm.LevelSunsetData;
         foreach (MutableTuple<string, string, bool> levelInfo in sunsetData)

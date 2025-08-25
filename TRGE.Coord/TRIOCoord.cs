@@ -159,6 +159,11 @@ internal class TRIOCoord : ITRConfigProvider
         FileInfo fi = TRScriptFactory.FindScriptFile(new DirectoryInfo(path), gold);
         if (fi == null)
         {
+            if (gold)
+            {
+                return null;
+            }
+
             // Test Remasters and use fake scripts. This is ugly.
             bool isTR1 = TR1LevelNames.AsList.All(l => File.Exists(Path.Combine(path, l)));
             if (isTR1)
@@ -191,6 +196,14 @@ internal class TRIOCoord : ITRConfigProvider
             }
 
             throw new MissingScriptException(string.Format("No valid Tomb Raider script file was found in {0}.", path));
+        }
+        else
+        {
+            if (fi.Extension.Equals(".dat", StringComparison.CurrentCultureIgnoreCase)
+                && TR2LevelNames.AsList.All(l => File.Exists(Path.Combine(path, l))))
+            {
+                throw new PlatformNotSupportedException("The use of OG TR2 is not supported. Please upgrade to TR2X - https://github.com/LostArtefacts/TR2X/");
+            }
         }
         return fi?.FullName;
     }

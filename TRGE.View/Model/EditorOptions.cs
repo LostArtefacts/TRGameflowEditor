@@ -11,7 +11,7 @@ namespace TRGE.View.Model;
 public class EditorOptions : INotifyPropertyChanged, IAudioDataProvider
 {
     #region Properties
-    private TR23ScriptEditor _editor;
+    private TR3ScriptEditor _editor;
 
     private bool _titleEnabled, _levelSelectEnabled, _saveLoadEnabled, _optionRingEnabled;
     private bool _fmvsEnabled, _cutscenesEnabled, _startAnimationsEnabled, _cheatsEnabled, _dozyViable, _dozyEnabled;
@@ -566,7 +566,7 @@ public class EditorOptions : INotifyPropertyChanged, IAudioDataProvider
     #endregion
 
     #region IO
-    public void Load(TR23ScriptEditor editor)
+    public void Load(TR3ScriptEditor editor)
     {
         _editor = editor;
         TitleEnabled = editor.TitleScreenEnabled;
